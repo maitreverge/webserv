@@ -1,36 +1,7 @@
 #pragma once
 
-// Includes all ANSII color codes
+#include "libraries.hpp"
 #include "colors.hpp"
-
-// Libraries
-#include <iostream>
-#include <iostream>
-#include <fstream>
-#include <istream>
-#include <ostream>
-#include <sstream>
-#include <cstdlib>
-#include <stdio.h>
-#include <string>
-#include <map>
-#include <vector>
-#include <algorithm>
-
-// Using keywords
-using std::string;
-using std::cout;
-using std::endl;
-using std::cin;
-using std::fstream;
-using std::ifstream;
-using std::ofstream;
-using std::ostream;
-using std::stringstream;
-using std::exception;
-using std::getline;
-using std::map;
-using std::vector;
 
 // ---------------------  Templates functions  ---------------------
 
@@ -66,7 +37,7 @@ void	printNoEndl( const T& obj ){
  * @param obj 
  */
 template< typename T >
-void	printColor( string COLOR, const T& obj ){
+void	printColor( const string& COLOR, const T& obj ){
 
 	cout << COLOR << obj << RESET << endl;
 }
@@ -79,7 +50,7 @@ void	printColor( string COLOR, const T& obj ){
  * @param obj 
  */
 template< typename T >
-void	printColorNoEndl( string COLOR, const T& obj ){
+void	printColorNoEndl( const string& COLOR, const T& obj ){
 
 	cout << COLOR << obj << RESET;
 }
