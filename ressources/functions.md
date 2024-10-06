@@ -1,3 +1,56 @@
+<a id="summary"></a>
+<hr>
+<details><summary>**Table of Contents**</summary>
+<br>
+
+- [EXECVE](#EXECVE)
+- [DUP](#DUP)
+- [DUP2](#DUP2)
+- [PIPE](#PIPE)
+- [STRERROR](#STRERROR)
+- [GAI_STRERROR](#GAI_STRERROR)
+- [FORK](#FORK)
+- [SOCKETPAIR](#SOCKETPAIR)
+- [HTONS](#HTONS)
+- [HTONL](#HTONL)
+- [NTOHS](#NTOHS)
+- [NTOHL](#NTOHL)
+- [SELECT](#SELECT)
+- [POLL](#POLL)
+- [EPOLL_CREATE](#EPOLL_CREATE)
+- [EPOLL_CTL](#EPOLL_CTL)
+- [EPOLL_WAIT](#EPOLL_WAIT)
+- [KQUEUE](#KQUEUE)
+- [SOCKET](#SOCKET)
+- [ACCEPT](#ACCEPT)
+- [LISTEN](#LISTEN)
+- [SEND](#SEND)
+- [RECV](#RECV)
+- [CHDIR](#CHDIR)
+- [BIND](#BIND)
+- [CONNECT](#CONNECT)
+- [GETADDRINFO](#GETADDRINFO)
+- [FREEADDRINFO](#FREEADDRINFO)
+- [SETSOCKOPT](#SETSOCKOPT)
+- [GETSOCKNAME](#GETSOCKNAME)
+- [GETPROTOBYNAME](#GETPROTOBYNAME)
+- [FCNTL](#FCNTL)
+- [CLOSE](#CLOSE)
+- [WRITE](#WRITE)
+- [WAITPID](#WAITPID)
+- [KILL](#KILL)
+- [SIGNAL](#SIGNAL)
+- [ACCESS](#ACCESS)
+- [STAT](#STAT)
+- [OPEN](#OPEN)
+- [OPENDIR](#OPENDIR)
+- [READDIR](#READDIR)
+- [CLOSEDIR](#CLOSEDIR)
+
+</details>
+<hr>
+
+
 ## EXECVE
 
 The `execve` function is a standard C function that replaces the current process image with a new process image.
@@ -32,8 +85,6 @@ int main() {
 
 
 [Back to Summary](#summary)
-
----------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------
 ## DUP
@@ -230,6 +281,7 @@ int main() {
 
 *In this example, the program uses an error code (EAI_NONAME) returned by getaddrinfo and passes it to gai_strerror to get a human-readable error message, which is then printed to the console.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 
 ## FORK
@@ -324,6 +376,7 @@ int main() {
 *In this C++ example, `socketpair` creates two connected sockets (sv[0] and sv[1]). A message is written to the first socket (sv[0]), and the message is read from the second socket (sv[1]). The program then prints the received message using `std::cout` to demonstrate IPC between the two sockets.*
 
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 
 ## HTONS
@@ -359,6 +412,7 @@ int main() {
 
 *In this C++ example, `htons` is used to convert the port number 8080 from host byte order to network byte order. The original host order and the converted network order are then printed using `std::cout` to illustrate the byte order conversion.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 
 ## HTONL
@@ -394,6 +448,7 @@ int main() {
 
 *In this C++ example, `htonl` converts the IP address 192.168.0.1 (represented as 0xC0A80001 in hex) from host byte order to network byte order. The original host and network order values are printed using `std::cout` in hexadecimal format to illustrate the conversion.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 
 ## NTOHS
@@ -429,6 +484,7 @@ int main() {
 
 *In this C++ example, `ntohs` is used to convert the network byte order port number 0x1F90 (which is 8080 in decimal) to host byte order. The original network order and the converted host order values are printed using `std::cout` to demonstrate the byte order conversion.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 
 ## NTOHL
@@ -464,6 +520,7 @@ int main() {
 
 *In this C++ example, `ntohl` is used to convert the IP address `0xC0A80001` (which corresponds to 192.168.0.1 in decimal) from network byte order to host byte order. The original network and converted host order values are printed using `std::cout` in hexadecimal format to illustrate the conversion.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 
 ## SELECT
@@ -521,6 +578,7 @@ int main() {
 *In this C++ example, `select` is used to monitor the standard input (`stdin`). The program sets a timeout of 5 seconds and checks if there is data available to read. If data becomes available within the timeout, it prints a message indicating that data is ready; otherwise, it reports a timeout.*
 
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 
 ## POLL
@@ -574,6 +632,7 @@ int main() {
 
 *In this C++ example, `poll` is used to monitor the standard input (stdin). The program sets a timeout of 5 seconds, and if data becomes available within that time, it prints a message indicating that data is ready to be read. Otherwise, it reports a timeout.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 ## EPOLL_CREATE
 
@@ -620,6 +679,7 @@ int main() {
 
 *In this C++ example, `epoll_create` is used to create an `epoll` instance. The file descriptor for the `epoll` instance is printed using `std::cout`, and the `epoll` instance is closed afterward using close. Although the size argument is ignored in modern implementations, it must still be greater than 0.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 ## EPOLL_CTL
 
@@ -676,6 +736,7 @@ int main() {
 
 *In this C++ example, `epoll_ctl` is used to add the standard input (stdin) file descriptor to an `epoll` instance for monitoring input events. The `EPOLL_CTL_ADD` operation is used to add the file descriptor, and `EPOLLIN` is specified as the event to monitor (indicating that input is available). The file descriptor is then added to the `epoll` instance, and afterward, the `epoll` instance is closed.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 ## EPOLL_WAIT
 
@@ -745,6 +806,7 @@ int main() {
 
 *In this C++ example, `epoll_wait` is used to wait for events on the standard input (stdin) file descriptor monitored by an `epoll` instance. The function waits for up to 10 seconds. If an input event occurs, the program prints a message indicating data is available; otherwise, it reports a timeout.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 ## KQUEUE
 
@@ -792,6 +854,7 @@ int main() {
 
 *In this C++ example, `kqueue` is used to create a new kernel event queue. The program prints the file descriptor associated with the new `kqueue`. Although no specific events are monitored in this simple example, `kqueue` can be used to watch for events on file descriptors, signals, or timers. After creating the `kqueue`, the program closes it.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 ## SOCKET
 
@@ -836,6 +899,7 @@ int main() {
 
 *In this C++ example, `socket` is used to create a new TCP `socket` using IPv4 (AF_INET) and the stream socket type (SOCK_STREAM). The program prints the file descriptor for the `socket` and then closes the `socket` after it is no longer needed.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 ## ACCEPT
 
@@ -919,6 +983,7 @@ int main() {
 
 *In this C++ example, a TCP socket is created and bound to port 8080. The server listens for incoming connections, and accept is used to accept a connection request from a client. The server prints a message when a connection is accepted and closes the sockets afterward.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 ## LISTEN
 
@@ -988,6 +1053,7 @@ int main() {
 
 *In this C++ example, a TCP socket is created and bound to port 8080. The listen function is called to prepare the socket for incoming connections, with a backlog of 10, meaning the server can queue up to 10 pending connection requests. After that, the program waits for connections (though this example doesn't include the accept step). The socket is then closed.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 ## SEND
 
@@ -1057,6 +1123,7 @@ int main() {
 
 *In this C++ example, a TCP socket is created and connected to a server running on localhost at port 8080. The send function is used to send the message "Hello, Server!" to the server. The number of bytes sent is printed, and the socket is closed after the transmission is complete.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 ## RECV
 
@@ -1127,6 +1194,7 @@ int main() {
 
 *In this C++ example, a TCP socket is created and connected to a server running on localhost at port 8080. The `recv` function is used to receive data from the server and store it in a buffer. After receiving the message, it prints the message and closes the socket.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 
 ## CHDIR
@@ -1161,6 +1229,7 @@ int main() {
 *In this example, the program changes the current working directory to `/tmp` using `chdir`. If `chdir` succeeds, it prints "Changed the current working directory to /tmp".*
 *If `chdir` fails, it prints "Failed to change the current working directory.".*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 ## BIND
 
@@ -1224,6 +1293,7 @@ int main() {
 
 *In this C++ example, a TCP socket is created, and the `bind` function is used to associate it with port 8080 on any available network interface (INADDR_ANY). After binding, a message is printed confirming the operation, and the socket is closed. In a complete server application, the next steps would typically involve listening for and accepting connections.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 ## CONNECT
 
@@ -1287,6 +1357,7 @@ int main() {
 
 *In this C++ example, a TCP socket is created and configured to connect to a server running on localhost at port 8080. The connect function is called to establish the connection. If the connection is successful, a message is printed to confirm it, and the socket is closed afterward. This code is typically found in a client application that needs to communicate with a server.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 ## GETADDRINFO
 
@@ -1347,6 +1418,7 @@ int main() {
 
 *In this C++ example, the `getaddrinfo` function is used to resolve the hostname "localhost" and the service "8080". The hints structure specifies that both IPv4 and IPv6 addresses are acceptable. If successful, it prints the address family and socket type for each resolved address. Finally, the memory allocated by `getaddrinfo` is freed. This function is commonly used in client applications to set up a socket for communication.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 ## FREEADDRINFO
 
@@ -1401,6 +1473,7 @@ int main() {
 
 *In this C++ example, the `getaddrinfo` function is used to resolve the hostname "localhost" and the service "8080". After using the resolved addresses (though not explicitly shown here), the `freeaddrinfo` function is called to free the allocated memory. This step is crucial in preventing memory leaks in applications that dynamically allocate memory for address information.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 ## SETSOCKOPT
 
@@ -1453,6 +1526,7 @@ int main() {
 
 *In this C++ example, a TCP socket is created, and the `setsockopt` function is used to set the SO_REUSEADDR option, which allows the socket to reuse the address. If successful, a message is printed confirming the operation. Finally, the socket is closed. This function is commonly used in server applications to allow multiple sockets to bind to the same address and port.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 ## GETSOCKNAME
 
@@ -1526,6 +1600,7 @@ int main() {
 
 *In this C++ example, a TCP socket is created and bound to port 8080 on any available interface. The `getsockname` function is then used to retrieve the address the socket is bound to, which is printed to the console. Finally, the socket is closed. This function is particularly useful for confirming that the socket has been bound to the expected address and port.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 ## GETPROTOBYNAME
 
@@ -1568,6 +1643,7 @@ int main() {
 
 *In this C++ example, the `getprotobyname` function is called with the protocol name "tcp". If successful, it retrieves and prints the protocol's name and number. This function is useful for applications that need to work with specific protocols and requires knowledge of the protocol names used in the network programming context.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 ## FCNTL
 
@@ -1625,6 +1701,7 @@ int main() {
 
 *In this C++ example, a file named "example.txt" is opened with read and write permissions. The `fcntl` function is then used to retrieve the current flags of the file descriptor, followed by setting the file descriptor to non-blocking mode. If successful, a message is printed confirming the operation. Finally, the file descriptor is closed. This function is commonly used in network programming to manage socket properties and behavior.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 ## CLOSE
 
@@ -1666,6 +1743,7 @@ int main() {
 *In this example, the program attempts to open the file myfile.txt in read-only mode. If the file is opened successfully, it prints "File opened successfully.". Then it attempts to close the file. If the file is closed successfully, it prints "File closed successfully.".*
 *If the file cannot be closed, it prints "Failed to close file.".*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 ## WRITE
 
@@ -1716,6 +1794,7 @@ int main() {
 
 *In this C++ example, a file named "output.txt" is opened for writing. The write function is called to write the string "Hello, World!" to the file. If successful, it prints the number of bytes written to the console. Finally, the file descriptor is closed. This function is commonly used for outputting data to files or sockets in low-level programming.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 
 
@@ -1759,6 +1838,7 @@ int main() {
 *In this example, the program creates a new process using `fork`. If `fork` fails, it prints "Failed to fork.".*
 *If `fork` succeeds, the child process prints "This is the child process.", and the parent process waits for the specific child to exit before printing "This is the parent process, child has exited.".*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 
 ## KILL
@@ -1791,6 +1871,7 @@ int main() {
 *In this example, the program sends the `SIGSTOP` signal to itself using kill. This will cause the process to stop. Note that you can continue the process with the `fg` command if you're running it in a terminal.*
 
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 
 ## SIGNAL
@@ -1831,6 +1912,7 @@ int main() {
 *In this example, the program sets a function `handle_sigint` to handle the `SIGINT` signal (usually generated by the `Ctrl+C` command).*
 *If the `SIGINT` signal is caught, the program prints "Caught signal 2". The program runs indefinitely, printing "Running..." every second, until it receives a `SIGINT` signal.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 
 ## ACCESS
@@ -1864,6 +1946,7 @@ int main() {
 
 *In this example, the program checks if the file myfile.txt exists. If the file exists, it prints "File exists.", otherwise it prints "File doesn't exist.".*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 ## STAT
 
@@ -1910,6 +1993,7 @@ int main() {
 
 *In this C++ example, the `stat` function is used to retrieve information about the file "example.txt". If successful, it prints the file size in bytes, its permissions in octal format, and the last modified time. This function is useful for applications that need to manage or display metadata about files and directories.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 
 ## OPEN
@@ -1947,6 +2031,7 @@ int main() {
 *In this example, the program attempts to open the file myfile.txt in read-only mode. If the file is opened successfully, it prints "File opened successfully." and then closes the file.*
 *If the file cannot be opened, it prints "Failed to open file.".*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 
 ## OPENDIR
@@ -1983,6 +2068,7 @@ int main() {
 *In this example, the program opens the directory `/tmp` using `opendir` and stores the directory stream in `dir`. If `opendir` succeeds, it prints "Opened the directory /tmp". If `opendir` fails, it prints "Failed to open the directory /tmp.".*
 *After it's done with the directory, it closes the directory stream using `closedir`.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 ## READDIR
 
@@ -2031,6 +2117,7 @@ int main() {
 
 *In this C++ example, the opendir function is used to open the current directory. The `readdir` function is then called in a loop to read and print the names of all entries in the directory until there are no more entries. Finally, the directory is closed with closedir. This function is useful for applications that need to list files and directories within a specified directory.*
 
+[Back to Summary](#summary)
 ---------------------------------------------------------------------------------
 ## CLOSEDIR
 
@@ -2082,3 +2169,5 @@ int main() {
 ```
 
 *In this C++ example, the `closedir` function is called after reading all entries from a directory. It releases the resources associated with the directory stream opened by opendir. If successful, it prints a confirmation message. Closing the directory is important to prevent resource leaks in applications that handle file system operations.*
+
+[Back to Summary](#summary)
