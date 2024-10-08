@@ -13,7 +13,8 @@ ORANGE = \033[93m
 CC = c++
 
 # Compiler flags
-FLAGS = -Wall -Wextra -Werror -Wshadow -Wno-reorder -std=c++98
+FLAGS = -Wall -Wextra -Werror -Wshadow -std=c++98
+# -Wno-reorder ce flag est potentiellement source d'ennuie 
 
 # Source files
 SRC_DIR := src
