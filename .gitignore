@@ -31,6 +31,8 @@
 *.out
 *.app
 
+# macOS
+.DS_Store
 # Custom
 webserv
 docs_dan
