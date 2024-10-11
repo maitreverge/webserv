@@ -37,6 +37,16 @@ void    send_to_all(int except)
     }
 }
 
+void    send_resp(int client)
+{  
+        if  (FD_ISSET(client, &write_set))
+		{			
+			sprintf(send_buffer, "bravo rema\n");
+            if (send(client, send_buffer, strlen(send_buffer), 0) == -1)
+                err(NULL);    
+		}
+}
+
 int     main(int ac, char **av)
 {
     // if (ac != 3)
@@ -100,6 +110,7 @@ int     main(int ac, char **av)
 
                     sprintf(send_buffer, "server: client %d just arrived\n", clients[clientfd].id);
                     send_to_all(clientfd);
+			
                 }
 				else if (fd == serverfd2)
 				{
@@ -114,6 +125,7 @@ int     main(int ac, char **av)
 
 					sprintf(send_buffer, "server: client %d just arrived\n", clients[clientfd2].id);
 					send_to_all(clientfd2);
+					send_resp(clientfd2);
 				}
                 else
                 {
@@ -128,6 +140,7 @@ int     main(int ac, char **av)
                     }
                     else
                     {
+						send_resp(fd);
                         for (int i = 0, j = strlen(clients[fd].msg); i < ret; i++, j++)
                         {
                             clients[fd].msg[j] = recv_buffer[i];
