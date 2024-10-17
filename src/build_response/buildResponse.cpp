@@ -99,5 +99,12 @@ ostream& operator<<( ostream& output_stream, const buildResponse& right_input ){
 
 void buildResponse::buildBody( vector<char>& bodyInput){
 
+	// Extract the vector towards a string.
+	string tempBody = std::string( bodyInput.begin(), bodyInput.end());
 	
+	_body += HTTP_HEADER_BODY_BOUNDARY;
+	_body += tempBody;
+
+	// Calculate size of body for headers. (!= from lenght() )
+	_bodyLenght = tempBody.size();
 }

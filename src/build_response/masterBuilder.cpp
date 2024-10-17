@@ -3,8 +3,17 @@
 vector<char> masterBuilder( vector<char> &bodyInput ){
 
 	// Builder class
-	buildReponse builder;
+	buildResponse builder;
+	
 	// string headers, body, cookies;
+
+	/*
+		! HEADERS and BODY DELIMITORS
+
+	The end of the headers section and the start of the body is marked by a blank line (\r\n\r\n).
+	
+	Within the headers section, each header is separated by a newline (\r\n).
+	*/
 
 	// ! STEP 1 : Make BODY
 	builder.buildBody(bodyInput);
@@ -16,6 +25,7 @@ vector<char> masterBuilder( vector<char> &bodyInput ){
 	builder.buildExtras();
 
 	builder.assembleResponse();
+
 
 
 	return builder.getHttpResponse();
