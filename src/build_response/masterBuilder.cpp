@@ -1,6 +1,6 @@
 #include "buildResponse.hpp"
 
-vector<char> masterBuilder( vector<char> &bodyInput ){
+vector<char> masterBuilder( vector<char> &bodyInput, u_int8_t errorCode ){
 
 	// Builder class
 	buildResponse builder;
@@ -19,7 +19,7 @@ vector<char> masterBuilder( vector<char> &bodyInput ){
 	builder.buildBody(bodyInput);
 	
 	// ! STEP 2 : Make HEADERS
-	builder.buildHeaders();
+	builder.buildHeaders( errorCode );
 
 	// ! STEP 3 : Make EXTRAS-HEADERS (session ID, cookies, and non-mandatory headers)
 	builder.buildExtras();

@@ -65,10 +65,11 @@ public:
 	void	setTransfertEncoding( string );
 	void	setContentLenght( string );
 
-	void	setBody( string input );
+	void	setBody( string );
 
 	// *		---------------- METHODS ----------------
 	void buildBody( vector<char>& );
+	void buildHeaders( u_int8_t );
 
 };
 

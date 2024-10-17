@@ -108,3 +108,8 @@ void buildResponse::buildBody( vector<char>& bodyInput){
 	// Calculate size of body for headers. (!= from lenght() )
 	_bodyLenght = tempBody.size();
 }
+
+void buildResponse::buildHeaders( u_int8_t errorCode ){
+
+	
+}
