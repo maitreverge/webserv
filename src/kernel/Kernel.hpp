@@ -10,18 +10,19 @@ struct Client
 {
 	int					id;
 	std::vector<char>	request;
-	sockaddr 			address;	 
+	sockaddr 			address;
 };
 
 class Kernel
 {
-	Config 				conf;
-	std::vector<Client> clients;
-	fd_set				actualSet;
-	fd_set 				readSet;
-	fd_set 				writeSet;
-	std::vector<char>	write_buffer;
-	std::vector<char>	read_buffer;
+	Config 				_conf;
+	std::vector<Client> _clients;
+	fd_set				_actualSet;
+	fd_set 				_readSet;
+	fd_set 				_writeSet;
+	std::vector<char>	_write_buffer;
+	std::vector<char>	_read_buffer;
+	int					_maxFd; 
 
 	public:
 		Kernel(void);
@@ -30,5 +31,6 @@ class Kernel
 		Kernel & operator=(const Kernel & rhs);	
 
 		void setup();
+		void catchClient(int);
 
 };

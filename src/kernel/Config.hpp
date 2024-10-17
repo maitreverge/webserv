@@ -5,12 +5,12 @@
 #include <cstring>
 struct Config
 {
-	short int						max_client;
+	short int						maxClient;
 	std::vector<struct sockaddr_in> sockAddress;
 
 	Config()
 	{
-		max_client = 1024;
+		maxClient = 1024;
 		struct sockaddr_in server1;
 		// bzero(&vector_sockaddrr[i], sizeof(vector_sockaddrr[i]));
 		std::memset(&server1, 0, sizeof(server1));
