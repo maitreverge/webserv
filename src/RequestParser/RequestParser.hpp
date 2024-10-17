@@ -34,8 +34,8 @@ class RequestParser
 		std::map<std::string, std::string>	getHeaders() const;
 		
 		std::string	charVectorToString(const std::vector<char>& vector);
-		void		parse(const std::vector<char>& data); // will set the attributes
+		void		parse(const std::vector<char>& data);
 		RequestLine parseRequestLine(const std::string& requestLine);
-
-		void	displayAttributes() const;
+		void		trim(std::string& str);
+		void		displayAttributes() const;
 };

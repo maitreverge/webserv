@@ -40,14 +40,20 @@ std::string	RequestParser::charVectorToString(const std::vector<char>& vector)
 	return (std::string(vector.begin(), vector.end()));
 }
 
+void	RequestParser::trim(std::string& str)
+{
+	str.erase(0, str.find_first_not_of(" \t"));
+	str.erase(str.find_last_not_of(" \t") + 1);
+}
+
 void	RequestParser::parse(const std::vector<char>& data)
 {
 	// declare char* str
 	const char *http_request_c = "GET /index.html HTTP/1.1\r\n"
-							"Host: localhost\r\n"
-							"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36\r\n"
-							"Accept: text/html\r\n"
-							"Connection: keep-alive\r\n"
+							"    Host: localhost\r\n"
+							"User-Agent       :        Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36\r\n"
+							"Accept: text/html             \r\n"
+							"               Connection: keep-alive\r\n"
 							"\r\n";
 	
 	// convert to vector
@@ -73,19 +79,17 @@ void	RequestParser::parse(const std::vector<char>& data)
 		_HTTP_version = parsedRequest.http_version;
 	}
 
+	// add key/value pairs to map headers
 	std::string headerLine;
-	while (std::getline(requestStream, headerLine) && !headerLine.empty()) {
+	while (std::getline(requestStream, headerLine) && !headerLine.empty())
+	{
 		size_t colonPos = headerLine.find(':');
 		if (colonPos != std::string::npos) {
 			std::string key = headerLine.substr(0, colonPos);
-			std::string value = headerLine.substr(colonPos + 1); // Récupérer tout ce qui suit le ':'
-			// Éliminer les espaces au début et à la fin du value
-			
-			key.erase(0, key.find_first_not_of(" \t")); // Supprimer les espaces au début
-			key.erase(key.find_last_not_of(" \t") + 1); // Supprimer les espaces à la fin
-			value.erase(0, value.find_first_not_of(" \t")); // Supprimer les espaces au début
-			value.erase(value.find_last_not_of(" \t") + 1); // Supprimer les espaces à la fin
-			_headers[key] = value; // Ajouter le header au map
+			std::string value = headerLine.substr(colonPos + 1);
+			trim(key);
+			trim(value);
+			_headers[key] = value;
 		}
 	}
 }
@@ -99,28 +103,32 @@ RequestLine RequestParser::parseRequestLine(const std::string& requestLine)
 	std::istringstream iss(requestLine);
 	iss >> request.method >> request.uri >> request.http_version;
 	std::string remainingData;
-	if (iss >> remainingData || request.method.empty() || request.uri.empty() || request.http_version.empty())
+	if (iss >> 	remainingData || request.method.empty() || request.uri.empty() || request.http_version.empty())
 	{
 		isValid = false;
 	}
-	std::cout << request.http_version << std::endl;
-	std::cout << request.method << std::endl;
-	std::cout << request.uri << std::endl;
+	if (request.http_version != "HTTP/1.1")
+		isValid = false;
+	if (request.method != "GET" && request.method != "POST" && request.method != "DELETE")
+		isValid = false;
+	// std::cout << request.http_version << std::endl;
+	// std::cout << request.method << std::endl;
+	// std::cout << request.uri << std::endl;
 	return request;
 }
 
 void	RequestParser::displayAttributes() const
 {
-	// printNoEndl("Method:");
-	// print(_method);
-	// printNoEndl("URI:");
-	// print(_URI);
-	// printNoEndl("HTTP_VERSION:");
-	// print(_HTTP_version);
+	printNoEndl("Method:");
+	print(_method);
+	printNoEndl("URI:");
+	print(_URI);
+	printNoEndl("HTTP_VERSION:");
+	print(_HTTP_version);
 	printNoEndl("isValid:");
 	print(isValid);
-	// for (std::map<std::string, std::string>::const_iterator it = _headers.begin(); it != _headers.end(); it++)
-	// {
-	// 	print(it->first + ":" + it->second);
-	// }
+	for (std::map<std::string, std::string>::const_iterator it = _headers.begin(); it != _headers.end(); it++)
+	{
+		print(it->first + ":" + it->second);
+	}
 }
