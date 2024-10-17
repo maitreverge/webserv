@@ -28,6 +28,9 @@ private:
 	// Body
 	string _body;
 
+	// Utils
+	u_int32_t _bodyLenght; // TODO : getter, setter and init list
+
 	// TODO : Create variables for coockies
 
 protected:
