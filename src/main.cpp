@@ -24,4 +24,5 @@ int main(int ac, char **av, char **envp)
 	(void)(envp);
 	
 	Kernel kernel;
+	kernel.setup();
 }
