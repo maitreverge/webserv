@@ -8,6 +8,7 @@ int main(int ac, char **av, char **envp){
 
 
 	parser.parse(data);
+	print("Display Attributes:");
 	parser.displayAttributes();
 
 }
