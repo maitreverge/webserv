@@ -3,19 +3,6 @@
 
 buildResponse::buildResponse( void ){
 
-	// TODO : List init some values ?
-}
-
-
-buildResponse::buildResponse( const buildResponse& copy ) :
-	_httpResponse(copy._httpResponse),
-	_statusLine(copy._statusLine),
-	_timeStamp(copy._timeStamp),
-	_contentType(copy._contentType),
-	_transfertEncoding(copy._transfertEncoding),
-	_contentLenght(copy._contentLenght),
-	_body(copy._body){
-
 	// Building mimeTypes 
 	static const map<string, string> temp = {
 		// Textual Content Types
@@ -51,20 +38,32 @@ buildResponse::buildResponse( const buildResponse& copy ) :
 }
 
 
-buildResponse& buildResponse::operator=( const buildResponse& right_operator ){
-	if (this != &right_operator){
+buildResponse::buildResponse( const buildResponse& copy ) :
+	_httpResponse(copy._httpResponse),
+	_statusLine(copy._statusLine.str()),
+	_timeStamp(copy._timeStamp.str()),
+	_contentType(copy._contentType.str()),
+	_transfertEncoding(copy._transfertEncoding.str()),
+	_contentLenght(copy._contentLenght.str()),
+	_body(copy._body),
+	_mimeTypes(copy._mimeTypes){}
 
-		// Reassign every value with the getter value 
-		this->_httpResponse = right_operator.getHttpResponse();
-		
-		this->_statusLine = right_operator.getStatusLine();
-		this->_timeStamp = right_operator.getTimeStamp();
-		this->_contentType = right_operator.getContentType();
-		this->_transfertEncoding = right_operator.getTransfertEncoding();
-		this->_contentLenght = right_operator.getContentLenght();
-		this->_body = right_operator.getBody();
-	}
-	return *this;
+
+buildResponse& buildResponse::operator=(const buildResponse& right_operator){
+    if (this != &right_operator)
+	{
+        // Reassign every value with the getter value 
+        this->_httpResponse = right_operator._httpResponse;
+        
+        this->_statusLine.str(right_operator._statusLine.str());
+        this->_timeStamp.str(right_operator._timeStamp.str());
+        this->_contentType.str(right_operator._contentType.str());
+        this->_transfertEncoding.str(right_operator._transfertEncoding.str());
+        this->_contentLenght.str(right_operator._contentLenght.str());
+        this->_body = right_operator._body;
+        this->_mimeTypes = right_operator._mimeTypes;
+    }
+    return *this;
 }
 
 // ! DESTRUCTOR
@@ -83,27 +82,21 @@ buildResponse::~buildResponse( void ){
 
 // *	------------------- GETTERS ----------------------------------
 const vector<char>& buildResponse::getHttpResponse( void )const{ return _httpResponse; }
-const string &buildResponse::getStatusLine( void )const{ return _statusLine; }
-const string &buildResponse::getTimeStamp( void )const{ return _timeStamp; }
-const string &buildResponse::getContentType( void )const{ return _contentType; }
-const string &buildResponse::getTransfertEncoding( void )const{ return _transfertEncoding; }
-const string &buildResponse::getContentLenght( void )const{ return _contentLenght; }
+const stringstream &buildResponse::getStatusLine( void )const{ return _statusLine; }
+const stringstream &buildResponse::getTimeStamp( void )const{ return _timeStamp; }
+const stringstream &buildResponse::getContentType( void )const{ return _contentType; }
+const stringstream &buildResponse::getTransfertEncoding( void )const{ return _transfertEncoding; }
+const stringstream &buildResponse::getContentLenght( void )const{ return _contentLenght; }
 const string &buildResponse::getBody( void )const{ return _body; }
 
 
 // *	------------------- SETTERS ----------------------------------
 
-// ! could be string or char* as an input
-void buildResponse::setHttpResponse( vector<char> input){
-
-	// TODO : concatenate to the vector on differents ways depending if it's a string, a vector or a `char*`
-}
-
-void	buildResponse::setStatusLine( string input ){ _statusLine = input; }
-void	buildResponse::setTimeStamp( string input ){ _timeStamp = input; }
-void	buildResponse::setContentType( string input ){ _contentType = input; }
-void	buildResponse::setTransfertEncoding( string input ){ _transfertEncoding = input; }
-void	buildResponse::setContentLenght( string input ){ _contentLenght = input; }
+void	buildResponse::setStatusLine( string input ){ _statusLine << input; }
+void	buildResponse::setTimeStamp( string input ){ _timeStamp << input; }
+void	buildResponse::setContentType( string input ){ _contentType << input; }
+void	buildResponse::setTransfertEncoding( string input ){ _transfertEncoding << input; }
+void	buildResponse::setContentLenght( string input ){ _contentLenght << input; }
 void	buildResponse::setBody( string input ){ _body = input; }
 
 
@@ -111,19 +104,19 @@ void	buildResponse::setBody( string input ){ _body = input; }
 ostream& operator<<( ostream& output_stream, const buildResponse& right_input ){
 	
 	output_stream << BOLD_HIGH_INTENSITY_GREEN << "Status Line = \n";
-	output_stream << right_input.getStatusLine();
+	output_stream << right_input.getStatusLine().str();
 
 	output_stream << BOLD_BLUE << "\n\nTimeStamp = \n";
-	output_stream << right_input.getTimeStamp();
+	output_stream << right_input.getTimeStamp().str();
 
 	output_stream << BOLD_BLUE << "\n\nContent-Type = \n";
-	output_stream << right_input.getContentType();
+	output_stream << right_input.getContentType().str();
 
 	output_stream << BOLD_BLUE << "\n\nTransfert-Encoding = \n";
-	output_stream << right_input.getTransfertEncoding();
+	output_stream << right_input.getTransfertEncoding().str();
 
 	output_stream << BOLD_BLUE << "\n\nContent-Lenght = \n";
-	output_stream << right_input.getContentLenght();
+	output_stream << right_input.getContentLenght().str();
 
 	output_stream << BOLD_HIGH_INTENSITY_RED << "\n\nHTTP BODY = \n";
 	output_stream << right_input.getBody();
@@ -131,7 +124,7 @@ ostream& operator<<( ostream& output_stream, const buildResponse& right_input ){
 	return output_stream;
 }
 
-void buildResponse::buildBody( vector<char>& bodyInput){
+void buildResponse::buildBody( vector<char>& bodyInput ){
 
 	// Extract the vector towards a string.
 	string tempBody = std::string( bodyInput.begin(), bodyInput.end());
@@ -194,27 +187,45 @@ void buildResponse::buildHeaders( e_errorCodes &errorCode, string &fileName ){
 		_masterHeader	<< _statusLine.str()
 						<< _timeStamp.str()
 						<< _contentType.str()
-						<< (_bodyLenght ? _contentLenght.str() : _transfertEncoding.str())
-						<< HTTP_REPONSE_SEPARATOR; 
-	}	
+						<< (_bodyLenght ? _contentLenght.str() : _transfertEncoding.str());
+	}
+	// ! Potential hangling HTTP_SEPARATOR if there is extra headers or not !!!!
 }
 
+/**
+ * @brief Constructs the Content-Type header value based on the file type.
+ *
+ * This method takes a file name or path, extracts its extension, and constructs
+ * a Content-Type header value in the format "type/extension". The type is determined
+ * by the extractType method.
+ *
+ * @param typeFile The name or path of the file from which to extract the extension.
+ * @return A stringstream containing the constructed Content-Type header value.
+ */
 stringstream buildResponse::buildContentType( string typeFile )const{
 
 	stringstream result;
 	string type, extension;
 
-	// Extract the extension
 	string::size_type extensionIndex = typeFile.find_last_of(".");
 	extension = typeFile.substr(extensionIndex + 1);
 
-	// Building the MIME "image/jpeg" key_paired value.
 	type = extractType(extension);
 	result << type << "/" << extension;
 
 	return result;
 }
 
+/**
+ * @brief Extracts the MIME type based on the file extension.
+ * 
+ * This function searches for the provided file extension in the MIME types map.
+ * If the extension is found, it returns the corresponding MIME type.
+ * If the extension is not found, it returns the default MIME type "application/octet-stream".
+ * 
+ * @param extension The file extension for which the MIME type is to be extracted.
+ * @return A string representing the MIME type corresponding to the given file extension.
+ */
 string buildResponse::extractType( string& extension ) const {
     
     map<string, string>::const_iterator it = _mimeTypes.find(extension);
