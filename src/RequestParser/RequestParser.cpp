@@ -1,6 +1,9 @@
 #include "RequestParser.hpp"
 #include "../../includes/master.hpp"
 
+/**========================================================================
+ *                  CONSTRUCTORS / DESTRUCTOR / INIT
+ *========================================================================**/
 Headers::Headers() :
 	Connection(""),
 	ContentType(""),
@@ -17,6 +20,9 @@ RequestParser::RequestParser() : 	_method(""),
 
 RequestParser::~RequestParser() {}
 
+/**========================================================================
+ *                           GETTERS
+ *========================================================================**/
 std::string							RequestParser::getMethod() const
 {
 	return (_method);
@@ -37,6 +43,9 @@ Headers	RequestParser::getHeaders() const
 	return (_Headers);
 }
 
+/**========================================================================
+ *                           UTILS
+ *========================================================================**/
 std::string	RequestParser::charVectorToString(const std::vector<char>& vector)
 {
 	return (std::string(vector.begin(), vector.end()));
@@ -47,7 +56,9 @@ void	RequestParser::trim(std::string& str)
 	str.erase(0, str.find_first_not_of(" \t"));
 	str.erase(str.find_last_not_of(" \t") + 1);
 }
-
+/**========================================================================
+ *                           ACTION
+ *========================================================================**/
 /**========================================================================
  *                           PARSE
  * ! tmp_http_request_vector to be renamed to http_request_vector
@@ -134,9 +145,6 @@ std::map<std::string, std::string> RequestParser::extractCookies(std::vector<std
 	return cookiesMap;
 }
 
-
-
-
 void	RequestParser::extractHeaders()
 {
 	std::map<std::string, std::vector<std::string> >::const_iterator it = _tmpHeaders.begin();
@@ -160,6 +168,9 @@ void	RequestParser::extractHeaders()
 		_Headers.Cookie = extractCookies(it->second);
 }
 
+/**========================================================================
+ *                           DISPLAY
+ *========================================================================**/
 void RequestParser::displayAttributes() const
 {
 	print("------ ATTRIBUTES ------");
