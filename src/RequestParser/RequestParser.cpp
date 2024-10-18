@@ -23,13 +23,13 @@ RequestParser::~RequestParser() {}
 /**========================================================================
  *                           GETTERS
  *========================================================================**/
-std::string	RequestParser::getMethod() const {return (_method);}
+std::string	RequestParser::getMethod() const 		{return (_method);}
 
-std::string	RequestParser::getURI() const {return (_URI);}
+std::string	RequestParser::getURI() const 			{return (_URI);}
 
-std::string	RequestParser::getHTTP_version() const {return (_HTTP_version);}
+std::string	RequestParser::getHTTP_version() const	{return (_HTTP_version);}
 
-Headers	RequestParser::getHeaders() const{return (_Headers);}
+Headers	RequestParser::getHeaders() const			{return (_Headers);}
 
 /**========================================================================
  *                           UTILS
@@ -98,6 +98,16 @@ void	RequestParser::handleHeaderLines(std::istringstream& requestStream)
 
 }
 
+void	RequestParser::extractHeaders()
+{
+	assignHeader("Host", _Headers.Host);
+	assignHeader("Connection", _Headers.Connection);
+	assignHeader("Content-Type", _Headers.ContentType);
+	assignHeader("Accept", _Headers.Accept);
+	assignHeader("Content-Length", _Headers.ContentLength);
+	assignHeader("Cookie", _Headers.Cookie);
+}
+
 void	RequestParser::assignHeader(const std::string& key, std::string& headerField)
 {
 	std::map<std::string, std::vector<std::string> >::const_iterator it = _tmpHeaders.find(key);
@@ -125,16 +135,6 @@ void	RequestParser::assignHeader(const std::string& key, std::map<std::string, s
 	std::map<std::string, std::vector<std::string> >::const_iterator it = _tmpHeaders.find(key);
 	if (it != _tmpHeaders.end() && !it->second.empty())
 		headerField = extractCookies(it->second);
-}
-
-void	RequestParser::extractHeaders()
-{
-	assignHeader("Host", _Headers.Host);
-	assignHeader("Connection", _Headers.Connection);
-	assignHeader("Content-Type", _Headers.ContentType);
-	assignHeader("Accept", _Headers.Accept);
-	assignHeader("Content-Length", _Headers.ContentLength);
-	assignHeader("Cookie", _Headers.Cookie);
 }
 
 std::map<std::string, std::string> RequestParser::extractCookies(std::vector<std::string> vec)
@@ -178,22 +178,29 @@ void RequestParser::displayAttributes() const
 void		RequestParser::displayHeaders() const
 {
 	print("-------- HEADERS -------");
-	print("Connection: " + _Headers.Connection);
-	print("ContentType: " + _Headers.ContentType);
-	print("Host: " + _Headers.Host);
-	printNoEndl("Accept: ");
-	for (size_t i = 0; i < _Headers.Accept.size(); ++i)
+	if (_Headers.Connection.length())
+		print("Connection: " + _Headers.Connection);
+	if (_Headers.ContentType.length())
+		print("ContentType: " + _Headers.ContentType);
+	if (_Headers.Host.length())
+		print("Host: " + _Headers.Host);
+	if (_Headers.Accept.size())
 	{
-		printNoEndl(_Headers.Accept[i]);
-		if (i < _Headers.Accept.size() - 1)
-			printNoEndl(", ");
+		printNoEndl("Accept: ");
+		for (size_t i = 0; i < _Headers.Accept.size(); ++i)
+		{
+			printNoEndl(_Headers.Accept[i]);
+			if (i < _Headers.Accept.size() - 1)
+				printNoEndl(", ");
+		}
+		print("");
 	}
-	print("");
 	std::cout << "ContentLength: " << _Headers.ContentLength << std::endl; 
-	std::map<std::string, std::string>::const_iterator it = _Headers.Cookie.begin();
-	print("Cookie: ");
-	for (; it != _Headers.Cookie.end(); it++)
+	if (_Headers.Cookie.size())
 	{
-		print("	" + it->first + " => " + it->second);
+		std::map<std::string, std::string>::const_iterator it = _Headers.Cookie.begin();
+		print("Cookie: ");
+		for (; it != _Headers.Cookie.end(); it++)
+			print("	" + it->first + " => " + it->second);
 	}
 }

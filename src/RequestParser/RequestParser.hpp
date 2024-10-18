@@ -32,10 +32,6 @@ class RequestParser
 		bool												_isValid;
 		std::map<std::string, std::vector<std::string> >	_tmpHeaders;
 		Headers												_Headers;
-
-		// coplien
-		RequestParser(const RequestParser& other);
-		RequestParser& operator=(const RequestParser& rhs);
 		
 		// utils
 		void		trim(std::string& str);
@@ -45,13 +41,13 @@ class RequestParser
 		void	handleFirstLine(std::istringstream& requestStream);
 		void	handleHeaderLines(std::istringstream& requestStream);
 		void	extractHeaders();
-		std::map<std::string, std::string>	extractCookies(std::vector<std::string> vec);
-
 		void	assignHeader(const std::string& key, std::string& value);
 		void	assignHeader(const std::string& key, std::vector<std::string>& headerField);
 		void	assignHeader(const std::string& key, size_t& headerField);
 		void	assignHeader(const std::string& key, std::map<std::string, std::string>& cookieField);
+		std::map<std::string, std::string>	extractCookies(std::vector<std::string> vec);
 		void	displayHeaders() const;
+	
 	public:
 		//coplien
 		RequestParser();
