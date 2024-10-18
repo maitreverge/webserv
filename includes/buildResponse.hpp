@@ -17,6 +17,10 @@ private:
 	buildResponse( const buildResponse& copy );
 	buildResponse& operator=( const buildResponse& right_operator );
 
+	// Methods
+	stringstream buildContentType( string )const;
+	string extractType( string& )const;
+
 	// Output Final Answer
 	vector<char> _httpResponse;
 	
@@ -74,7 +78,7 @@ public:
 
 	// *		---------------- METHODS ----------------
 	void buildBody( vector<char>& );
-	void buildHeaders( e_errorCodes );
+	void buildHeaders( e_errorCodes&, string& );
 
 };
 

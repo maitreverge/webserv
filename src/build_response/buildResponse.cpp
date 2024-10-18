@@ -102,14 +102,122 @@ void buildResponse::buildBody( vector<char>& bodyInput){
 	// Extract the vector towards a string.
 	string tempBody = std::string( bodyInput.begin(), bodyInput.end());
 	
-	_body += HTTP_HEADER_BODY_BOUNDARY;
+	_body += HTTP_REPONSE_SEPARATOR;
 	_body += tempBody;
 
 	// Calculate size of body for headers. (!= from lenght() )
 	_bodyLenght = tempBody.size();
 }
 
-void buildResponse::buildHeaders( u_int8_t errorCode ){
+void buildResponse::buildHeaders( e_errorCodes &errorCode, string &fileName ){
 
-	
+	// Status line
+	{
+		_statusLine << HTTP_PROTOCOL
+					<< SPACE
+					<< errorCode
+					<< SPACE 
+					<< codes.getCodes(errorCode) // TODO : plug the class
+					<< HTTP_REPONSE_SEPARATOR;
+	}
+
+	// TimeStamp
+	{
+		// TODO Implement a TimeStamp generator
+		_timeStamp	<< "Date:"
+					<< SPACE 
+					<< "Wed, 11 Oct 2024 10:24:12 GMT"
+					<< HTTP_REPONSE_SEPARATOR;
+	}
+
+	/*
+		! NOTE
+		Using multipart in responses is less common and is typically reserved
+		for specialized cases rather than everyday web browsing scenarios.
+		For Webserv, implementing multipart responses would be more
+		of an advanced feature rather than a core requirement.
+	*/
+	// * Content-Type (if body)
+	if (_bodyLenght)
+	{
+		_contentType	<< "Content-Type:"
+						<< SPACE 
+						<< "???" // TODO : generate a correct _contentType depending on what I'm about to recieve 
+						<< HTTP_REPONSE_SEPARATOR;
+	}
+
+	// ContentLenght
+	{
+		_contentLenght	<< "Content-Lenght:"
+						<< SPACE
+						<< _bodyLenght
+						<< HTTP_REPONSE_SEPARATOR;
+	}
+
+	// Building Final Headers
+	{
+		_masterHeader	<< _statusLine.str()
+						<< _timeStamp.str()
+						<< _contentType.str()
+						<< (_bodyLenght ? _contentLenght.str() : _transfertEncoding.str())
+						<< HTTP_REPONSE_SEPARATOR; 
+	}	
 }
+
+stringstream buildResponse::buildContentType( string typeFile )const{
+
+	stringstream result;
+	string type, extension;
+
+	string::size_type extensionIndex = typeFile.find_last_of(".");
+	extension = typeFile.substr(extensionIndex + 1);
+
+
+	type = extractType(extension);
+	result << type << "/" << extension;
+
+	return result;
+}
+
+string buildResponse::extractType( string& extension ) const {
+    
+	static const std::map<string, string> mimeTypes = {
+        
+		// Textual Content Types
+        std::make_pair("html", "text/html"),
+        std::make_pair("htm", "text/html"),
+        std::make_pair("txt", "text/plain"),
+        std::make_pair("css", "text/css"),
+        std::make_pair("xml", "text/xml"),
+        
+		// Application Content Types
+        std::make_pair("js", "application/javascript"),
+        std::make_pair("json", "application/json"),
+        std::make_pair("pdf", "application/pdf"),
+        std::make_pair("zip", "application/zip"),
+        
+		// Image Content Types
+        std::make_pair("jpeg", "image/jpeg"),
+        std::make_pair("jpg", "image/jpeg"),
+        std::make_pair("png", "image/png"),
+        std::make_pair("gif", "image/gif"),
+        std::make_pair("webp", "image/webp"),
+        std::make_pair("bmp", "image/bmp"),
+        
+		// Audio and Video Content Types
+        std::make_pair("mp3", "audio/mp3"),
+        std::make_pair("mpeg", "audio/mpeg"),
+        std::make_pair("ogg", "audio/ogg"),
+        std::make_pair("wav", "audio/wav"),
+        std::make_pair("mp4", "video/mp4"),
+        std::make_pair("webm", "video/webm"),
+        std::make_pair("ogv", "video/ogg")
+    };
+
+    map<string, string>::const_iterator it = mimeTypes.find(extension);
+    if (it != mimeTypes.end())
+        return it->second;
+    else
+        return "application/octet-stream"; // Default MIME type
+}
+

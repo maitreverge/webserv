@@ -1,6 +1,7 @@
 {
 	"files.associations": {
 		"cstdio": "cpp",
-		"iosfwd": "cpp"
+		"iosfwd": "cpp",
+		"map": "cpp"
 	}
 }
