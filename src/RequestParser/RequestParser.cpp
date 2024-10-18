@@ -1,19 +1,21 @@
 #include "RequestParser.hpp"
 #include "../../includes/master.hpp"
 
-RequestParser::RequestParser() : 
-_method(""),
-_URI(""),
-_HTTP_version(""),
-isValid(true)
-{
-	// print("RequestParser class created\n");
-}
+Headers::Headers() :
+	Connection(""),
+	ContentType(""),
+	Host(""),
+	Accept(),
+	ContentLength(0),
+	Cookie() {}
 
-RequestParser::~RequestParser()
-{
-	// print("RequestParser class destroyed\n");
-}
+RequestParser::RequestParser() : 	_method(""),
+									_URI(""),
+									_HTTP_version(""),
+									_isValid(true),
+									_Headers() {}
+
+RequestParser::~RequestParser() {}
 
 std::string							RequestParser::getMethod() const
 {
@@ -30,9 +32,9 @@ std::string							RequestParser::getHTTP_version() const
 	return (_HTTP_version);
 }
 
-std::map<std::string, std::vector<std::string> >	RequestParser::getHeaders() const
+Headers	RequestParser::getHeaders() const
 {
-	return (_headers);
+	return (_Headers);
 }
 
 std::string	RequestParser::charVectorToString(const std::vector<char>& vector)
@@ -82,11 +84,11 @@ void	RequestParser::handleFirstLine(std::istringstream& requestStream)
 		iss >> _method >> _URI >> _HTTP_version;
 		std::string remainingData;
 		if (iss >> 	remainingData || _method.empty() || _URI.empty() || _HTTP_version.empty())
-			isValid = false;
+			_isValid = false;
 		if (_HTTP_version != "HTTP/1.1")
-			isValid = false;
+			_isValid = false;
 		if (_method != "GET" && _method != "POST" && _method != "DELETE")
-			isValid = false;
+			_isValid = false;
 	}
 
 }
@@ -107,7 +109,7 @@ void	RequestParser::handleHeaderLines(std::istringstream& requestStream)
 			while (std::getline(valueStream, singleValue, ','))
 			{
 				trim(singleValue);
-				_headers[key].push_back(singleValue);
+				_tmpHeaders[key].push_back(singleValue);
 			}
 		}
 	}
@@ -137,51 +139,40 @@ std::map<std::string, std::string> RequestParser::extractCookies(std::vector<std
 
 void	RequestParser::extractHeaders()
 {
-	std::map<std::string, std::vector<std::string> >::const_iterator it = _headers.begin();
-	it = _headers.find("Host");
-	if (it != _headers.end() && !it->second.empty())
+	std::map<std::string, std::vector<std::string> >::const_iterator it = _tmpHeaders.begin();
+	it = _tmpHeaders.find("Host");
+	if (it != _tmpHeaders.end() && !it->second.empty())
 		_Headers.Host = it->second[0];
-	it = _headers.find("Connection");
-	if (it != _headers.end() && !it->second.empty())
+	it = _tmpHeaders.find("Connection");
+	if (it != _tmpHeaders.end() && !it->second.empty())
 		_Headers.Connection = it->second[0];
-	it = _headers.find("Content-Type");
-	if (it != _headers.end() && !it->second.empty())
+	it = _tmpHeaders.find("Content-Type");
+	if (it != _tmpHeaders.end() && !it->second.empty())
 		_Headers.ContentType = it->second[0];
-	it = _headers.find("Accept");
-	if (it != _headers.end() && !it->second.empty())
+	it = _tmpHeaders.find("Accept");
+	if (it != _tmpHeaders.end() && !it->second.empty())
 		_Headers.Accept = it->second;
-	it = _headers.find("Content-Length");
-	if (it != _headers.end() && !it->second.empty())
+	it = _tmpHeaders.find("Content-Length");
+	if (it != _tmpHeaders.end() && !it->second.empty())
 		_Headers.ContentLength = atoi(it->second[0].c_str());
-	it = _headers.find("Cookie");
-	if (it != _headers.end() && !it->second.empty())
+	it = _tmpHeaders.find("Cookie");
+	if (it != _tmpHeaders.end() && !it->second.empty())
 		_Headers.Cookie = extractCookies(it->second);
 }
 
 void RequestParser::displayAttributes() const
 {
-	print("\nATTRIBUTES:");
+	print("------ ATTRIBUTES ------");
 	print("Method: " + _method);
 	print("URI: " + _URI);
 	print("HTTP_VERSION: " + _HTTP_version);
-	printNoEndl("isValid: "); print(isValid);
-	std::map<std::string, std::vector<std::string> >::const_iterator it = _headers.begin();
-	for (;it != _headers.end(); ++it)
-	{
-		std::string output = it->first + ": ";
-		for (size_t i = 0; i < it->second.size(); i++)
-		{
-			output += it->second[i];
-			if (i < it->second.size() - 1)
-				output += ", ";
-		}
-		print(output);
-	}
+	printNoEndl("_isValid: "); print(_isValid);
+	displayHeaders();
 }
 
 void		RequestParser::displayHeaders() const
 {
-	print("\nHEADERS:");
+	print("-------- HEADERS -------");
 	print("Connection: " + _Headers.Connection);
 	print("ContentType: " + _Headers.ContentType);
 	print("Host: " + _Headers.Host);
