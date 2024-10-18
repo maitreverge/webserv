@@ -36,7 +36,7 @@ class RequestParser
 		std::string	getURI() const;
 		std::string	getHTTP_version() const;
 		std::map<std::string, std::vector<std::string> >	getHeaders() const;
-		
+		std::map<std::string, std::string>	extractCookies(std::vector<std::string> vec);
 		void		handleHeaderLines(std::istringstream& requestStream);
 		void		handleFirstLine(std::istringstream& requestStream);
 		std::string	charVectorToString(const std::vector<char>& vector);

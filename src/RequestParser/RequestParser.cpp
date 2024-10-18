@@ -69,7 +69,6 @@ void	RequestParser::parse(const std::vector<char>& tmp_http_request_vector)
 	handleFirstLine(requestStream);
 	handleHeaderLines(requestStream);
 	extractHeaders();
-
 }
 
 void	RequestParser::handleFirstLine(std::istringstream& requestStream)
@@ -102,7 +101,6 @@ void	RequestParser::handleHeaderLines(std::istringstream& requestStream)
 			std::string key = headerLine.substr(0, colonPos);
 			std::string value = headerLine.substr(colonPos + 1);
 			trim(key); trim(value);
-
 			std::istringstream valueStream(value);
 			std::string singleValue;
 			while (std::getline(valueStream, singleValue, ','))
@@ -115,21 +113,30 @@ void	RequestParser::handleHeaderLines(std::istringstream& requestStream)
 
 }
 
+std::map<std::string, std::string> RequestParser::extractCookies(std::vector<std::string> vec)
+{
+	std::map<std::string, std::string> cookiesMap;
+	for (std::vector<std::string>::iterator it = vec.begin(); it != vec.end(); ++it)
+	{
+		size_t equalPos = it->find('=');
+		if (equalPos != std::string::npos)
+		{
+			std::string key = it->substr(0, equalPos);
+			std::string value = it->substr(equalPos + 1);
+			trim(key);
+			trim(value);
+			cookiesMap[key] = value;
+		}
+	}
+	return cookiesMap;
+}
+
+
+
+
 void	RequestParser::extractHeaders()
 {
 	std::map<std::string, std::vector<std::string> >::const_iterator it = _headers.begin();
-	for (it;it != _headers.end(); ++it)
-	{
-		std::string output = it->first + ": ";
-		for (size_t i = 0; i < it->second.size(); i++)
-		{
-			output += it->second[i];
-			if (i < it->second.size() - 1)
-				output += ", ";
-		}
-		print(output);
-	}
-
 	it = _headers.find("Host");
 	if (it != _headers.end() && !it->second.empty())
 		_Headers.Host = it->second[0];
@@ -145,12 +152,14 @@ void	RequestParser::extractHeaders()
 	it = _headers.find("Content-Length");
 	if (it != _headers.end() && !it->second.empty())
 		_Headers.ContentLength = atoi(it->second[0].c_str());
-	
-
+	it = _headers.find("Cookie");
+	if (it != _headers.end() && !it->second.empty())
+		_Headers.Cookie = extractCookies(it->second);
 }
 
 void RequestParser::displayAttributes() const
 {
+	print("\nATTRIBUTES:");
 	print("Method: " + _method);
 	print("URI: " + _URI);
 	print("HTTP_VERSION: " + _HTTP_version);
@@ -171,12 +180,11 @@ void RequestParser::displayAttributes() const
 
 void		RequestParser::displayHeaders() const
 {
-	print("HEADERS:");
+	print("\nHEADERS:");
 	print("Connection: " + _Headers.Connection);
 	print("ContentType: " + _Headers.ContentType);
 	print("Host: " + _Headers.Host);
 	printNoEndl("Accept: ");
-	std::vector<std::string>::const_iterator it = _Headers.Accept.begin();
 	for (size_t i = 0; i < _Headers.Accept.size(); ++i)
 	{
 		printNoEndl(_Headers.Accept[i]);
@@ -185,5 +193,10 @@ void		RequestParser::displayHeaders() const
 	}
 	print("");
 	std::cout << "ContentLength: " << _Headers.ContentLength << std::endl; 
+	std::map<std::string, std::string>::const_iterator it = _Headers.Cookie.begin();
 	print("Cookie: ");
+	for (; it != _Headers.Cookie.end(); it++)
+	{
+		print("	" + it->first + " => " + it->second);
+	}
 }
