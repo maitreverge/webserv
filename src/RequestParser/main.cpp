@@ -1,7 +1,7 @@
 #include "../../includes/master.hpp"
 #include "RequestParser.hpp"
 
-int main(int ac, char **av, char **envp){
+int main(void){
 
 	RequestParser parser;
 	const std::vector<char> data;

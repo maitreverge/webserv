@@ -58,9 +58,9 @@ void	RequestParser::parse(const std::vector<char>& tmp_http_request_vector)
 					"GET /index.html HTTP/1.1\r\n"
 					"    Host: localhost\r\n"
 					"Accept: text/html ,  text/plain           \r\n"
-					"Content-Type       :    text/html    \r\n"
+					"Content-Type       :    text/css    \r\n"
 					"               Content-Length: 1432\r\n"
-					"               Cookie: key=value, kapouet=pouic\r\n"
+					"               Cookie: text=html, kapouet=pouic\r\n"
 					"Connection       :    keep-alive       , close   \r\n"
 					"\r\n";
 	// convert to vector
@@ -69,6 +69,7 @@ void	RequestParser::parse(const std::vector<char>& tmp_http_request_vector)
 	handleFirstLine(requestStream);
 	handleHeaderLines(requestStream);
 	extractHeaders();
+	(void)tmp_http_request_vector;
 }
 
 void	RequestParser::handleFirstLine(std::istringstream& requestStream)
@@ -165,7 +166,7 @@ void RequestParser::displayAttributes() const
 	print("HTTP_VERSION: " + _HTTP_version);
 	printNoEndl("isValid: "); print(isValid);
 	std::map<std::string, std::vector<std::string> >::const_iterator it = _headers.begin();
-	for (it;it != _headers.end(); ++it)
+	for (;it != _headers.end(); ++it)
 	{
 		std::string output = it->first + ": ";
 		for (size_t i = 0; i < it->second.size(); i++)

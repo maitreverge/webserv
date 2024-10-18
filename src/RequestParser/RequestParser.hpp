@@ -10,7 +10,7 @@ struct Headers {
 	std::string							ContentType;
 	std::string							Host;
 	std::vector<std::string>			Accept;
-	u_int32_t							ContentLength;
+	size_t								ContentLength;
 	std::map<std::string, std::string>	Cookie;
 };
 
