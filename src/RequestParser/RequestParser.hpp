@@ -62,5 +62,5 @@ class RequestParser
 		void		displayHeaders() const;
 
 		// main method
-		void		parse(const std::vector<char>& data);
+		void		parse(const std::vector<char> data);
 };

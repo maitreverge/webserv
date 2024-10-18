@@ -5,6 +5,7 @@
 #include <vector>
 #include <Config.hpp>
 #include <iostream>
+#include <RequestParser.hpp>
 
 struct Client
 {

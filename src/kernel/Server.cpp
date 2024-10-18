@@ -1,10 +1,9 @@
 #include <Server.hpp>
 
-
 Server::Server(sockaddr_in sockAddr, int & maxFd, fd_set & actualSet, fd_set & readSet, fd_set & writeSet)
 : _sockAddr(sockAddr), _maxFd(maxFd), _actualSet(actualSet), _readSet(readSet), _writeSet(writeSet) 
 {
-	this->_readBuffer.resize(300);
+	this->_readBuffer.resize(3000);
 	this->_maxFd = this->_fd = socket(AF_INET, SOCK_STREAM, 0);	
 	FD_SET(this->_fd, &_actualSet);	
 	bind(this->_fd, reinterpret_cast<const sockaddr *>
@@ -57,7 +56,14 @@ void Server::listenClient()
 				this->_readBuffer.resize(static_cast<size_t>(ret));
 				for (size_t i = 0; i < this->_readBuffer.size(); i++)				
 					std::cout << this->_readBuffer[i];
-				std::cout << std::endl;				
+				std::cout << std::endl;		
+				RequestParser parser;
+				
+				
+				parser.parse(this->_readBuffer);
+				this->_readBuffer.resize(3000);
+				// this->_readBuffer.clear();
+				parser.displayAttributes();		
 			}
 		}	
 	}

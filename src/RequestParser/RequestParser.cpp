@@ -64,25 +64,25 @@ void	RequestParser::trim(std::string& str)
  * ! tmp_http_request_vector to be renamed to http_request_vector
  * ! once connection to kernel done
  *========================================================================**/
-void	RequestParser::parse(const std::vector<char>& tmp_http_request_vector)
+void	RequestParser::parse(const std::vector<char> http_request_vector)
 {
 	// declare char* str
-	const char *http_request_c =
-					"GET /index.html HTTP/1.1\r\n"
-					"    Host: localhost\r\n"
-					"Accept: text/html ,  text/plain           \r\n"
-					"Content-Type       :    text/css    \r\n"
-					"               Content-Length: 1432\r\n"
-					"               Cookie: text=html, kapouet=pouic\r\n"
-					"Connection       :    keep-alive       , close   \r\n"
-					"\r\n";
+	// const char *http_request_c =
+	// 				"GET /index.html HTTP/1.1\r\n"
+	// 				"    Host: localhost\r\n"
+	// 				"Accept: text/html ,  text/plain           \r\n"
+	// 				"Content-Type       :    text/css    \r\n"
+	// 				"               Content-Length: 1432\r\n"
+	// 				"               Cookie: text=html, kapouet=pouic\r\n"
+	// 				"Connection       :    keep-alive       , close   \r\n"
+	// 				"\r\n";
 	// convert to vector
-	std::vector<char> http_request_vector(http_request_c, http_request_c + strlen(http_request_c));
+	// std::vector<char> http_request_vector(http_request_c, http_request_c + strlen(http_request_c));
 	std::istringstream requestStream(charVectorToString(http_request_vector));
 	handleFirstLine(requestStream);
 	handleHeaderLines(requestStream);
 	extractHeaders();
-	(void)tmp_http_request_vector;
+	// (void)tmp_http_request_vector;
 }
 
 void	RequestParser::handleFirstLine(std::istringstream& requestStream)
