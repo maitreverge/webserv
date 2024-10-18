@@ -1,10 +1,10 @@
-#include "../../includes/master.hpp"
-#include "RequestParser.hpp"
+// #include "../../includes/master.hpp"
+// #include "RequestParser.hpp"
 
-int main(void){
+// int main(void){
 
-	RequestParser parser;
-	const std::vector<char> data;
-	parser.parse(data);
-	parser.displayAttributes();
-}
+// 	RequestParser parser;
+// 	const std::vector<char> data;
+// 	parser.parse(data);
+// 	parser.displayAttributes();
+// }
