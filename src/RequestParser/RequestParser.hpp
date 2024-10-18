@@ -14,11 +14,17 @@ struct RequestLine {
 class RequestParser
 {
 	private:
-		std::string							_method;
-		std::string							_URI;
-		std::string							_HTTP_version;
-		bool								isValid;
-		std::map<std::string, std::string>	_headers;
+		std::string											_method;
+		std::string											_URI;
+		std::string											_HTTP_version;
+		bool												isValid;
+		std::map<std::string, std::vector<std::string> >	_headers;
+		std::vector<std::string>							_Accept;
+		std::string											_Connection;
+		u_int32_t											_ContentLength;
+		std::string											_ContentType;
+		std::string											_Host;
+		std::map<std::string, std::string>					_Cookie;
 
 		RequestParser(const RequestParser& other);
 		RequestParser& operator=(const RequestParser& rhs);
@@ -31,7 +37,7 @@ class RequestParser
 		std::string	getMethod() const;
 		std::string	getURI() const;
 		std::string	getHTTP_version() const;
-		std::map<std::string, std::string>	getHeaders() const;
+		std::map<std::string, std::vector<std::string> >	getHeaders() const;
 		
 		void		handleHeaders(std::istringstream& requestStream);
 		void		handleFirstLine(std::istringstream& requestStream);

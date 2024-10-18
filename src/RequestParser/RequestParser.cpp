@@ -30,7 +30,7 @@ std::string							RequestParser::getHTTP_version() const
 	return (_HTTP_version);
 }
 
-std::map<std::string, std::string>	RequestParser::getHeaders() const
+std::map<std::string, std::vector<std::string> >	RequestParser::getHeaders() const
 {
 	return (_headers);
 }
@@ -54,13 +54,15 @@ void	RequestParser::trim(std::string& str)
 void	RequestParser::parse(const std::vector<char>& tmp_http_request_vector)
 {
 	// declare char* str
-	const char *http_request_c = "GET /index.html HTTP/1.1\r\n"
-							"    Host: localhost\r\n"
-							"User-Agent       :        Mozilla/5.0 (Windows NT 10.0; \
-Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36\r\n"
-							"Accept: text/html             \r\n"
-							"               Connection: keep-alive\r\n"
-							"\r\n";
+	const char *http_request_c =
+					"GET /index.html HTTP/1.1\r\n"
+					"    Host: localhost\r\n"
+					"Accept: text/html ,  text/plain           \r\n"
+					"Content-Type       :    text/html    \r\n"
+					"               Content-Length: 1432\r\n"
+					"               Cookie: key=value, kapouet=pouic\r\n"
+					"Connection       :    keep-alive       , close   \r\n"
+					"\r\n";
 	// convert to vector
 	std::vector<char> http_request_vector(http_request_c, http_request_c + strlen(http_request_c));
 	std::istringstream requestStream(charVectorToString(http_request_vector));
@@ -98,23 +100,35 @@ void	RequestParser::handleHeaders(std::istringstream& requestStream)
 			std::string key = headerLine.substr(0, colonPos);
 			std::string value = headerLine.substr(colonPos + 1);
 			trim(key); trim(value);
-			_headers[key] = value;
+
+			std::istringstream valueStream(value);
+			std::string singleValue;
+			while (std::getline(valueStream, singleValue, ','))
+			{
+				trim(singleValue);
+				_headers[key].push_back(singleValue);
+			}
 		}
 	}
 
 }
 
-void	RequestParser::displayAttributes() const
+void RequestParser::displayAttributes() const
 {
-	printNoEndl("Method:");
-	print(_method);
-	printNoEndl("URI:");
-	print(_URI);
-	printNoEndl("HTTP_VERSION:");
-	print(_HTTP_version);
-	printNoEndl("isValid:");
-	print(isValid);
-	for (std::map<std::string, std::string>::const_iterator it = _headers.begin();
-			it != _headers.end(); it++)
-		print(it->first + ":" + it->second);
+	print("Method: " + _method);
+	print("URI: " + _URI);
+	print("HTTP_VERSION: " + _HTTP_version);
+	printNoEndl("isValid: "); print(isValid);
+	std::map<std::string, std::vector<std::string> >::const_iterator it = _headers.begin();
+	for (it;it != _headers.end(); ++it)
+	{
+		std::string output = it->first + ": ";
+		for (size_t i = 0; i < it->second.size(); i++)
+		{
+			output += it->second[i];
+			if (i < it->second.size() - 1)
+				output += ", ";
+		}
+		print(output);
+	}
 }
