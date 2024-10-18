@@ -2,8 +2,11 @@
 
 #include "utils_templates.hpp"
 #include "libraries.hpp"
+#include "errorCode.hpp"
 
-#define HTTP_HEADER_BODY_BOUNDARY "\r\n"
+#define HTTP_REPONSE_SEPARATOR "\r\n"
+#define HTTP_PROTOCOL "HTTP/1.1"
+#define SPACE " "
 
 class buildResponse
 {
@@ -18,13 +21,15 @@ private:
 	vector<char> _httpResponse;
 	
 	// Headers
-	string _statusLine;
-	string _timeStamp; // TODO : need to code a timestamp generator
-	string _contentType;
+	stringstream _masterHeader; // TODO : getter, setter, init list and <<
 
-	string _transfertEncoding; // ! OPTION ONE
+	stringstream _statusLine;
+	stringstream _timeStamp; // TODO : need to code a timestamp generator
+	stringstream _contentType;
+
+	stringstream _transfertEncoding; // ! OPTION ONE
 	//             OR
-	string _contentLenght; // ! OPTION TWO
+	stringstream _contentLenght; // ! OPTION TWO
 
 	// Body
 	string _body;
@@ -69,7 +74,7 @@ public:
 
 	// *		---------------- METHODS ----------------
 	void buildBody( vector<char>& );
-	void buildHeaders( u_int8_t );
+	void buildHeaders( e_errorCodes );
 
 };
 
