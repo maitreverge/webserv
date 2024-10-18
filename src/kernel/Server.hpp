@@ -3,9 +3,9 @@
 #include <sys/select.h>
 #include <netinet/in.h>
 #include <vector>
-#include <Config.hpp>
+#include "Config.hpp"
 #include <iostream>
-#include <RequestParser.hpp>
+#include "RequestParser.hpp"
 
 struct Client
 {
@@ -29,6 +29,8 @@ class Server
 	fd_set &			_readSet;
 	fd_set &			_writeSet;
 
+	// RequestParser 		_parser;
+	RequestParser 		_parser;
 	public:
 
 		Server(sockaddr_in sockaddr, int & maxFd, fd_set & actualSet, fd_set & readSet, fd_set & writeSet);

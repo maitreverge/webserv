@@ -37,8 +37,7 @@ void Server::catchClient()
 void Server::listenClient()
 {	
 	for (size_t i = 0; i < this->_clients.size(); i++)
-	{
-		// std::cout << "listen" << std::endl;
+	{	
 		if (FD_ISSET(this->_clients[i].fd, &this->_readSet))
 		{
 			ssize_t ret = recv(this->_clients[i].fd, this->_readBuffer.data(), this->_readBuffer.size(), 0);
@@ -57,13 +56,12 @@ void Server::listenClient()
 				for (size_t i = 0; i < this->_readBuffer.size(); i++)				
 					std::cout << this->_readBuffer[i];
 				std::cout << std::endl;		
-				RequestParser parser;
+				RequestParser 		_parser;
 				
 				
-				parser.parse(this->_readBuffer);
-				this->_readBuffer.resize(3000);
-				// this->_readBuffer.clear();
-				parser.displayAttributes();		
+				_parser.parse(this->_readBuffer);
+				_readBuffer.resize(3000);				
+				_parser.displayAttributes();		
 			}
 		}	
 	}
