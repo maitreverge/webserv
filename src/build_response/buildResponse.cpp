@@ -14,7 +14,41 @@ buildResponse::buildResponse( const buildResponse& copy ) :
 	_contentType(copy._contentType),
 	_transfertEncoding(copy._transfertEncoding),
 	_contentLenght(copy._contentLenght),
-	_body(copy._body){}
+	_body(copy._body){
+
+	// Building mimeTypes 
+	static const map<string, string> temp = {
+		// Textual Content Types
+		std::make_pair("html", "text"),
+		std::make_pair("htm", "text"),
+		std::make_pair("txt", "text"),
+		std::make_pair("css", "text"),
+		std::make_pair("xml", "text"),
+		// Application Content Types
+		std::make_pair("js", "application"),
+		std::make_pair("json", "application"),
+		std::make_pair("pdf", "application"),
+		std::make_pair("zip", "application"),
+		// Image Content Types
+		std::make_pair("jpeg", "image"),
+		std::make_pair("jpg", "image"),
+		std::make_pair("png", "image"),
+		std::make_pair("gif", "image"),
+		std::make_pair("webp", "image"),
+		std::make_pair("bmp", "image"),
+		// Audio Content Types
+		std::make_pair("mp3", "audio"),
+		std::make_pair("mpeg", "audio"),
+		std::make_pair("ogg", "audio"),
+		std::make_pair("wav", "audio"),
+		// Video Content Types
+		std::make_pair("mp4", "video"),
+		std::make_pair("webm", "video"),
+		std::make_pair("ogv", "video")
+	};
+
+	_mimeTypes = temp;
+}
 
 
 buildResponse& buildResponse::operator=( const buildResponse& right_operator ){
@@ -140,9 +174,10 @@ void buildResponse::buildHeaders( e_errorCodes &errorCode, string &fileName ){
 	// * Content-Type (if body)
 	if (_bodyLenght)
 	{
+		string contentType = buildContentType(fileName).str();
 		_contentType	<< "Content-Type:"
 						<< SPACE 
-						<< "???" // TODO : generate a correct _contentType depending on what I'm about to recieve 
+						<< contentType
 						<< HTTP_REPONSE_SEPARATOR;
 	}
 
@@ -169,10 +204,11 @@ stringstream buildResponse::buildContentType( string typeFile )const{
 	stringstream result;
 	string type, extension;
 
+	// Extract the extension
 	string::size_type extensionIndex = typeFile.find_last_of(".");
 	extension = typeFile.substr(extensionIndex + 1);
 
-
+	// Building the MIME "image/jpeg" key_paired value.
 	type = extractType(extension);
 	result << type << "/" << extension;
 
@@ -181,43 +217,9 @@ stringstream buildResponse::buildContentType( string typeFile )const{
 
 string buildResponse::extractType( string& extension ) const {
     
-	static const std::map<string, string> mimeTypes = {
-        
-		// Textual Content Types
-        std::make_pair("html", "text/html"),
-        std::make_pair("htm", "text/html"),
-        std::make_pair("txt", "text/plain"),
-        std::make_pair("css", "text/css"),
-        std::make_pair("xml", "text/xml"),
-        
-		// Application Content Types
-        std::make_pair("js", "application/javascript"),
-        std::make_pair("json", "application/json"),
-        std::make_pair("pdf", "application/pdf"),
-        std::make_pair("zip", "application/zip"),
-        
-		// Image Content Types
-        std::make_pair("jpeg", "image/jpeg"),
-        std::make_pair("jpg", "image/jpeg"),
-        std::make_pair("png", "image/png"),
-        std::make_pair("gif", "image/gif"),
-        std::make_pair("webp", "image/webp"),
-        std::make_pair("bmp", "image/bmp"),
-        
-		// Audio and Video Content Types
-        std::make_pair("mp3", "audio/mp3"),
-        std::make_pair("mpeg", "audio/mpeg"),
-        std::make_pair("ogg", "audio/ogg"),
-        std::make_pair("wav", "audio/wav"),
-        std::make_pair("mp4", "video/mp4"),
-        std::make_pair("webm", "video/webm"),
-        std::make_pair("ogv", "video/ogg")
-    };
-
-    map<string, string>::const_iterator it = mimeTypes.find(extension);
-    if (it != mimeTypes.end())
+    map<string, string>::const_iterator it = _mimeTypes.find(extension);
+    if (it != _mimeTypes.end())
         return it->second;
     else
         return "application/octet-stream"; // Default MIME type
 }
-

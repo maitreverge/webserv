@@ -21,6 +21,8 @@ private:
 	stringstream buildContentType( string )const;
 	string extractType( string& )const;
 
+	const map<string, string> _mimeTypes;
+
 	// Output Final Answer
 	vector<char> _httpResponse;
 	
