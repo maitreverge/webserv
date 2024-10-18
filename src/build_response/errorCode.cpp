@@ -27,13 +27,13 @@ errorCode::errorCode( void ){
  * 
  * @throws std::out_of_range If the provided error code enumeration is not found in the map.
  */
-const string& errorCode::getCode( e_errorCodes codeInput )const{
+const string &errorCode::getCode( const e_errorCodes &codeInput )const{
 
 	return _mapErrorCode.at(codeInput);
 }
 
 
-const string& errorCode::getCorrespondingString(e_errorCodes inputCode) const {
+const string errorCode::getCorrespondingString( e_errorCodes inputCode) const {
     
 	switch (inputCode)
 	{

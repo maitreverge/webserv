@@ -90,11 +90,11 @@ public:
 	~errorCode();
 
 	// Returns the corresponding String to every ErrorCode given. 
-	const string& getCode( e_errorCodes )const;
+	const string &getCode( const e_errorCodes& )const;
 
 private:
 
 	map<e_errorCodes, const string> _mapErrorCode;
 	
-	const string& getCorrespondingString(e_errorCodes)const;
+	const string getCorrespondingString(e_errorCodes)const;
 };

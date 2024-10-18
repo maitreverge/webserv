@@ -1,52 +1,53 @@
-#include "buildResponse.hpp"
+#include "../../includes/buildResponse.hpp"
 
 
 buildResponse::buildResponse( void ){
 
 	// Building mimeTypes 
-	static const map<string, string> temp = {
-		// Textual Content Types
-		std::make_pair("html", "text"),
-		std::make_pair("htm", "text"),
-		std::make_pair("txt", "text"),
-		std::make_pair("css", "text"),
-		std::make_pair("xml", "text"),
-		// Application Content Types
-		std::make_pair("js", "application"),
-		std::make_pair("json", "application"),
-		std::make_pair("pdf", "application"),
-		std::make_pair("zip", "application"),
-		// Image Content Types
-		std::make_pair("jpeg", "image"),
-		std::make_pair("jpg", "image"),
-		std::make_pair("png", "image"),
-		std::make_pair("gif", "image"),
-		std::make_pair("webp", "image"),
-		std::make_pair("bmp", "image"),
-		// Audio Content Types
-		std::make_pair("mp3", "audio"),
-		std::make_pair("mpeg", "audio"),
-		std::make_pair("ogg", "audio"),
-		std::make_pair("wav", "audio"),
-		// Video Content Types
-		std::make_pair("mp4", "video"),
-		std::make_pair("webm", "video"),
-		std::make_pair("ogv", "video")
-	};
+	map<string, string> temp;
+
+	// Textual Content Types
+	temp.insert(std::make_pair("html", "text"));
+	temp.insert(std::make_pair("htm", "text"));
+	temp.insert(std::make_pair("txt", "text"));
+	temp.insert(std::make_pair("css", "text"));
+	temp.insert(std::make_pair("xml", "text"));
+	// Application Content Types
+	temp.insert(std::make_pair("js", "application"));
+	temp.insert(std::make_pair("json", "application"));
+	temp.insert(std::make_pair("pdf", "application"));
+	temp.insert(std::make_pair("zip", "application"));
+	// Image Content Types
+	temp.insert(std::make_pair("jpeg", "image"));
+	temp.insert(std::make_pair("jpg", "image"));
+	temp.insert(std::make_pair("png", "image"));
+	temp.insert(std::make_pair("gif", "image"));
+	temp.insert(std::make_pair("webp", "image"));
+	temp.insert(std::make_pair("bmp", "image"));
+	// Audio Content Types
+	temp.insert(std::make_pair("mp3", "audio"));
+	temp.insert(std::make_pair("mpeg", "audio"));
+	temp.insert(std::make_pair("ogg", "audio"));
+	temp.insert(std::make_pair("wav", "audio"));
+	// Video Content Types
+	temp.insert(std::make_pair("mp4", "video"));
+	temp.insert(std::make_pair("webm", "video"));
+	temp.insert(std::make_pair("ogv", "video"));
 
 	_mimeTypes = temp;
 }
 
 
 buildResponse::buildResponse( const buildResponse& copy ) :
+	_mimeTypes(copy._mimeTypes),
 	_httpResponse(copy._httpResponse),
 	_statusLine(copy._statusLine.str()),
 	_timeStamp(copy._timeStamp.str()),
 	_contentType(copy._contentType.str()),
 	_transfertEncoding(copy._transfertEncoding.str()),
 	_contentLenght(copy._contentLenght.str()),
-	_body(copy._body),
-	_mimeTypes(copy._mimeTypes){}
+	_body(copy._body)
+	{}
 
 
 buildResponse& buildResponse::operator=(const buildResponse& right_operator){
@@ -124,7 +125,7 @@ ostream& operator<<( ostream& output_stream, const buildResponse& right_input ){
 	return output_stream;
 }
 
-void buildResponse::buildBody( vector<char>& bodyInput ){
+void buildResponse::buildBody( const vector<char>& bodyInput ){
 
 	// Extract the vector towards a string.
 	string tempBody = std::string( bodyInput.begin(), bodyInput.end());
@@ -136,15 +137,17 @@ void buildResponse::buildBody( vector<char>& bodyInput ){
 	_bodyLenght = tempBody.size();
 }
 
-void buildResponse::buildHeaders( e_errorCodes &errorCode, string &fileName ){
+void buildResponse::buildHeaders( const e_errorCodes &errCode, const string &fileName ){
 
 	// Status line
+	errorCode codes;
+
 	{
 		_statusLine << HTTP_PROTOCOL
 					<< SPACE
-					<< errorCode
+					<< errCode
 					<< SPACE 
-					<< codes.getCodes(errorCode) // TODO : plug the class
+					<< codes.getCode(errCode) // TODO : plug the class
 					<< HTTP_REPONSE_SEPARATOR;
 	}
 

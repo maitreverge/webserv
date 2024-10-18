@@ -77,8 +77,8 @@ public:
 	void	setBody( string );
 
 	// *		---------------- METHODS ----------------
-	void buildBody( vector<char>& );
-	void buildHeaders( e_errorCodes&, string& );
+	void buildBody( const vector<char>& );
+	void buildHeaders( const e_errorCodes&, const string& );
 	void assembleResponse( void );
 
 
