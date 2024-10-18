@@ -1,23 +1,26 @@
 #include <Server.hpp>
 
-Server::Server(fd_set & _actualSet, int & maxFd)
+
+Server::Server(int & maxFd, fd_set & actualSet, fd_set & readSet, fd_set & writeSet)
+: _maxFd(maxFd), _actualSet(actualSet), _readSet(readSet), _writeSet(writeSet) 
 {
-	int serverFd = socket(AF_INET, SOCK_STREAM, 0);
-	maxFd = serverFd;
-	bind(serverFd, reinterpret_cast<const sockaddr *>(&this->_conf.sockAddress.at(0)), sizeof(_conf.sockAddress.at(0)));
+	this->_maxFd = this->_fd = socket(AF_INET, SOCK_STREAM, 0);
+	
+	bind(this->_fd, reinterpret_cast<const sockaddr *>
+		(&this->_conf.sockAddress.at(0)), sizeof(_conf.sockAddress.at(0)));
 	FD_ZERO(&_actualSet);
-	FD_SET(serverFd, &_actualSet);
-	listen(serverFd, this->_conf.maxClient);
+	FD_SET(this->_fd, &_actualSet);
+	listen(this->_fd, this->_conf.maxClient);
 }
 
-void Server::catchClient(int serverFd)
+void Server::catchClient()
 {
-	if (FD_ISSET(serverFd, &this->_readSet))
+	if (FD_ISSET(this->_fd, &this->_readSet))
 	{	
 		Client client;
 		client.id = 1;
 		socklen_t len;
-		int clientFd = accept(serverFd, reinterpret_cast<sockaddr *>(&client.address), &len);
+		int clientFd = accept(this->_fd, reinterpret_cast<sockaddr *>(&client.address), &len);
 		if (clientFd < 0)
 			std::cout << "error client" << std::endl;
 	

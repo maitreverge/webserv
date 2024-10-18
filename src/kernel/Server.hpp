@@ -19,8 +19,14 @@ class Server
 	std::vector<Client> _clients;
 	std::vector<char>	_write_buffer;
 	std::vector<char>	_read_buffer;
+	int					_fd;
+
+	int	&				_maxFd;
+	fd_set &			_actualSet;
+	fd_set &			_readSet;
+	fd_set &			_writeSet;
 
 	public:
-		Server(fd_set & actualSet, int & maxFd);
-		void catchClient(int serverFd);
+		Server(int & maxFd, fd_set & actualSet, fd_set & readSet, fd_set & writeSet);
+		void catchClient();
 };

@@ -8,10 +8,13 @@ class Kernel
 {
 	Config 				_conf;
 	std::vector<Server> _servers;
+
 	fd_set				_actualSet;
 	fd_set 				_readSet;
 	fd_set 				_writeSet;
 	int					_maxFd; 
+
+
 	public:
 		Kernel(void);
 		~Kernel(void);
@@ -19,6 +22,5 @@ class Kernel
 		Kernel & operator=(const Kernel & rhs);	
 
 		void setup();
-		void catchClient(int);
 
 };

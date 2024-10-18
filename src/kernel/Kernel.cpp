@@ -3,6 +3,8 @@
 Kernel::Kernel(void)
 {
 	std::cout << "hello from kernel" << std::endl;
+
+
 }
 Kernel::~Kernel(void)
 {
@@ -45,23 +47,27 @@ Kernel & Kernel::operator=(const Kernel &)
 // }
 void Kernel::setup()
 {
-	int serverFd = socket(AF_INET, SOCK_STREAM, 0);
-	int maxFd = serverFd;
-	bind(serverFd, reinterpret_cast<const sockaddr *>(&this->_conf.sockAddress.at(0)), sizeof(_conf.sockAddress.at(0)));
-	FD_ZERO(&_actualSet);
-	FD_SET(serverFd, &_actualSet);
-	listen(serverFd, this->_conf.maxClient);
+	// int serverFd = socket(AF_INET, SOCK_STREAM, 0);
+	// int maxFd = serverFd;
+	// bind(serverFd, reinterpret_cast<const sockaddr *>(&this->_conf.sockAddress.at(0)), sizeof(_conf.sockAddress.at(0)));
+	// FD_ZERO(&_actualSet);
+	// FD_SET(serverFd, &_actualSet);
+	// listen(serverFd, this->_conf.maxClient);
 	
+	Server server1(this->_maxFd, this->_actualSet, this->_readSet, this->_writeSet);
+	this->_servers.push_back(server1);
+
 	while (true)
 	{
 		this->_readSet = this->_writeSet = this->_actualSet;
 
-		if (select(maxFd + 1, &this->_readSet, &this->_writeSet, 0, NULL) < 0)
+		if (select(this->_maxFd + 1, &this->_readSet, &this->_writeSet, 0, NULL) < 0)
 		{	
 			std::cout << "error select" << std::endl;
 			continue;
 		}
-		catchClient(serverFd);
+		this->_servers.back().catchClient();
+		// catchClient(serverFd);
 		// if (FD_ISSET(serverFd, &this->_readSet))
 		// {	
 		// 	Client client;
