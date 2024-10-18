@@ -3,9 +3,10 @@
 Kernel::Kernel(void)
 {
 	std::cout << "hello from kernel" << std::endl;
-	this->setup()
+	this->setup();
 
 }
+
 Kernel::~Kernel(void)
 {
 
