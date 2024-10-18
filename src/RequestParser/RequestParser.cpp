@@ -46,6 +46,45 @@ void	RequestParser::trim(std::string& str)
 	str.erase(str.find_last_not_of(" \t") + 1);
 }
 
+void	RequestParser::handleFirstLine(std::vector<char> http_request_vector)
+{
+	std::istringstream requestStream(charVectorToString(http_request_vector));
+	std::string firstLine;
+	if (std::getline(requestStream, firstLine))
+	{
+		std::istringstream iss(firstLine);
+		iss >> _method >> _URI >> _HTTP_version;
+		std::string remainingData;
+		if (iss >> 	remainingData || _method.empty() || _URI.empty() || _HTTP_version.empty())
+		{
+			isValid = false;
+		}
+		if (_HTTP_version != "HTTP/1.1")
+			isValid = false;
+		if (_method != "GET" && _method != "POST" && _method != "DELETE")
+			isValid = false;
+	}
+
+}
+
+void	RequestParser::handleHeaders(std::vector<char> http_request_vector)
+{
+	std::istringstream requestStream(charVectorToString(http_request_vector));
+	std::string headerLine;
+	while (std::getline(requestStream, headerLine) && !headerLine.empty())
+	{
+		size_t colonPos = headerLine.find(':');
+		if (colonPos != std::string::npos) {
+			std::string key = headerLine.substr(0, colonPos);
+			std::string value = headerLine.substr(colonPos + 1);
+			trim(key);
+			trim(value);
+			_headers[key] = value;
+		}
+	}
+
+}
+
 void	RequestParser::parse(const std::vector<char>& data)
 {
 	// declare char* str
@@ -59,63 +98,11 @@ void	RequestParser::parse(const std::vector<char>& data)
 	// convert to vector
 	std::vector<char> http_request_vector(http_request_c, http_request_c + strlen(http_request_c));
 
-	// display vector
-	// print("Display Vector:");
-	// for (std::vector<char>::const_iterator it = http_request_vector.begin(); it != http_request_vector.end(); it++)
-	// {
-	// 	std::cout << *it;
-	// }
-
-
 	// declar vars to get first line
-	std::istringstream requestStream(charVectorToString(http_request_vector));
-	std::string firstLine;
-
-	if (std::getline(requestStream, firstLine))
-	{
-		RequestLine parsedRequest = parseRequestLine(firstLine);
-		_method = parsedRequest.method;
-		_URI = parsedRequest.uri;
-		_HTTP_version = parsedRequest.http_version;
-	}
-
-	// add key/value pairs to map headers
-	std::string headerLine;
-	while (std::getline(requestStream, headerLine) && !headerLine.empty())
-	{
-		size_t colonPos = headerLine.find(':');
-		if (colonPos != std::string::npos) {
-			std::string key = headerLine.substr(0, colonPos);
-			std::string value = headerLine.substr(colonPos + 1);
-			trim(key);
-			trim(value);
-			_headers[key] = value;
-		}
-	}
+	handleFirstLine(http_request_vector);
+	handleHeaders(http_request_vector);
 }
 
-
-
-RequestLine RequestParser::parseRequestLine(const std::string& requestLine)
-{
-	RequestLine request;
-
-	std::istringstream iss(requestLine);
-	iss >> request.method >> request.uri >> request.http_version;
-	std::string remainingData;
-	if (iss >> 	remainingData || request.method.empty() || request.uri.empty() || request.http_version.empty())
-	{
-		isValid = false;
-	}
-	if (request.http_version != "HTTP/1.1")
-		isValid = false;
-	if (request.method != "GET" && request.method != "POST" && request.method != "DELETE")
-		isValid = false;
-	// std::cout << request.http_version << std::endl;
-	// std::cout << request.method << std::endl;
-	// std::cout << request.uri << std::endl;
-	return request;
-}
 
 void	RequestParser::displayAttributes() const
 {

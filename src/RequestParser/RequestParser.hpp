@@ -33,6 +33,8 @@ class RequestParser
 		std::string	getHTTP_version() const;
 		std::map<std::string, std::string>	getHeaders() const;
 		
+		void		handleHeaders(std::vector<char> http_request_vector);
+		void		handleFirstLine(std::vector<char> http_request_vector);
 		std::string	charVectorToString(const std::vector<char>& vector);
 		void		parse(const std::vector<char>& data);
 		RequestLine parseRequestLine(const std::string& requestLine);
