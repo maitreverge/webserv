@@ -3,6 +3,7 @@
 #include <sys/select.h>
 #include <sys/socket.h>
 #include <Server.hpp>
+#include <algorithm>
 
 class Kernel
 {
@@ -14,6 +15,7 @@ class Kernel
 	fd_set 				_writeSet;
 	int					_maxFd; 
 
+	static void callCatch(Server & server);
 
 	public:
 		Kernel(void);
