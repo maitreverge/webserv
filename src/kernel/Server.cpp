@@ -11,7 +11,7 @@ Server::Server(sockaddr_in sockAddr, int & maxFd, fd_set & actualSet, fd_set & r
 	listen(this->_fd, this->_conf.maxClient);	
 }
 
-void Server::catchClient()
+void Server::catchClients()
 {	
 	if (FD_ISSET(this->_fd, &this->_readSet))
 	{		
@@ -34,7 +34,7 @@ void Server::catchClient()
 	}
 }
 
-void Server::listenClient()
+void Server::listenClients()
 {	
 	for (size_t i = 0; i < this->_clients.size(); i++)
 	{	
@@ -56,13 +56,20 @@ void Server::listenClient()
 				for (size_t i = 0; i < this->_readBuffer.size(); i++)				
 					std::cout << this->_readBuffer[i];
 				std::cout << std::endl;		
-				RequestParser 		_parser;
 				
-				
-				_parser.parse(this->_readBuffer);
-				_readBuffer.resize(3000);				
-				_parser.displayAttributes();		
+				this->_parser.parse(this->_readBuffer);
+				this->_readBuffer.resize(3000);				
+				this->_parser.displayAttributes();		
 			}
 		}	
+	}
+}
+
+void Server::exitClients()
+{
+	for (size_t i = 0; i < this->_clients.size(); i++)
+	{
+		if (this->_clients[i].fd != -1)
+			close(this->_clients[i].fd)
 	}
 }

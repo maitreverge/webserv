@@ -28,12 +28,13 @@ class Server
 	fd_set &			_actualSet;
 	fd_set &			_readSet;
 	fd_set &			_writeSet;
-
-	// RequestParser 		_parser;
+	
 	RequestParser 		_parser;
+
 	public:
 
 		Server(sockaddr_in sockaddr, int & maxFd, fd_set & actualSet, fd_set & readSet, fd_set & writeSet);
-		void catchClient();
-		void listenClient();
+		void catchClients();
+		void listenClients();
+		void exitClients();
 };

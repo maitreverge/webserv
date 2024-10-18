@@ -34,7 +34,7 @@ class RequestParser
 		Headers												_Headers;
 
 		// coplien
-		// RequestParser(const RequestParser& other)
+		// RequestParser(const RequestParser& other);
 		RequestParser& operator=(const RequestParser& rhs);
 		
 		// utils
