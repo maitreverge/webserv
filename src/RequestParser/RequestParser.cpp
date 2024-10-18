@@ -67,7 +67,9 @@ void	RequestParser::parse(const std::vector<char>& tmp_http_request_vector)
 	std::vector<char> http_request_vector(http_request_c, http_request_c + strlen(http_request_c));
 	std::istringstream requestStream(charVectorToString(http_request_vector));
 	handleFirstLine(requestStream);
-	handleHeaders(requestStream);
+	handleHeaderLines(requestStream);
+	extractHeaders();
+
 }
 
 void	RequestParser::handleFirstLine(std::istringstream& requestStream)
@@ -89,7 +91,7 @@ void	RequestParser::handleFirstLine(std::istringstream& requestStream)
 
 }
 
-void	RequestParser::handleHeaders(std::istringstream& requestStream)
+void	RequestParser::handleHeaderLines(std::istringstream& requestStream)
 {
 	std::string headerLine;
 	while (std::getline(requestStream, headerLine) && !headerLine.empty())
@@ -113,6 +115,40 @@ void	RequestParser::handleHeaders(std::istringstream& requestStream)
 
 }
 
+void	RequestParser::extractHeaders()
+{
+	std::map<std::string, std::vector<std::string> >::const_iterator it = _headers.begin();
+	for (it;it != _headers.end(); ++it)
+	{
+		std::string output = it->first + ": ";
+		for (size_t i = 0; i < it->second.size(); i++)
+		{
+			output += it->second[i];
+			if (i < it->second.size() - 1)
+				output += ", ";
+		}
+		print(output);
+	}
+
+	it = _headers.find("Host");
+	if (it != _headers.end() && !it->second.empty())
+		_Headers.Host = it->second[0];
+	it = _headers.find("Connection");
+	if (it != _headers.end() && !it->second.empty())
+		_Headers.Connection = it->second[0];
+	it = _headers.find("Content-Type");
+	if (it != _headers.end() && !it->second.empty())
+		_Headers.ContentType = it->second[0];
+	it = _headers.find("Accept");
+	if (it != _headers.end() && !it->second.empty())
+		_Headers.Accept = it->second;
+	it = _headers.find("Content-Length");
+	if (it != _headers.end() && !it->second.empty())
+		_Headers.ContentLength = atoi(it->second[0].c_str());
+	
+
+}
+
 void RequestParser::displayAttributes() const
 {
 	print("Method: " + _method);
@@ -131,4 +167,23 @@ void RequestParser::displayAttributes() const
 		}
 		print(output);
 	}
+}
+
+void		RequestParser::displayHeaders() const
+{
+	print("HEADERS:");
+	print("Connection: " + _Headers.Connection);
+	print("ContentType: " + _Headers.ContentType);
+	print("Host: " + _Headers.Host);
+	printNoEndl("Accept: ");
+	std::vector<std::string>::const_iterator it = _Headers.Accept.begin();
+	for (size_t i = 0; i < _Headers.Accept.size(); ++i)
+	{
+		printNoEndl(_Headers.Accept[i]);
+		if (i < _Headers.Accept.size() - 1)
+			printNoEndl(", ");
+	}
+	print("");
+	std::cout << "ContentLength: " << _Headers.ContentLength << std::endl; 
+	print("Cookie: ");
 }

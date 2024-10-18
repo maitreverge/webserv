@@ -5,10 +5,13 @@
 #include <cstring>
 #include <sstream>
 
-struct RequestLine {
-    std::string method;
-    std::string uri;
-    std::string http_version;
+struct Headers {
+	std::string							Connection;
+	std::string							ContentType;
+	std::string							Host;
+	std::vector<std::string>			Accept;
+	u_int32_t							ContentLength;
+	std::map<std::string, std::string>	Cookie;
 };
 
 class RequestParser
@@ -19,12 +22,7 @@ class RequestParser
 		std::string											_HTTP_version;
 		bool												isValid;
 		std::map<std::string, std::vector<std::string> >	_headers;
-		std::vector<std::string>							_Accept;
-		std::string											_Connection;
-		u_int32_t											_ContentLength;
-		std::string											_ContentType;
-		std::string											_Host;
-		std::map<std::string, std::string>					_Cookie;
+		Headers												_Headers;
 
 		RequestParser(const RequestParser& other);
 		RequestParser& operator=(const RequestParser& rhs);
@@ -39,11 +37,13 @@ class RequestParser
 		std::string	getHTTP_version() const;
 		std::map<std::string, std::vector<std::string> >	getHeaders() const;
 		
-		void		handleHeaders(std::istringstream& requestStream);
+		void		handleHeaderLines(std::istringstream& requestStream);
 		void		handleFirstLine(std::istringstream& requestStream);
 		std::string	charVectorToString(const std::vector<char>& vector);
 		void		parse(const std::vector<char>& data);
-		RequestLine parseRequestLine(const std::string& requestLine);
 		void		trim(std::string& str);
 		void		displayAttributes() const;
+		void		displayHeaders() const;
+		void		extractHeaders();
+
 };
