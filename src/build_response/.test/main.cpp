@@ -15,6 +15,9 @@ vector<char> masterBuilder( const vector<char> &bodyInput, const e_errorCodes &e
 	// ! STEP 3 : Make EXTRAS-HEADERS (session ID, cookies, and non-mandatory headers)
 	// builder.buildExtrasHeaders();
 
+	cout << "helooooooooooooooooooooooooooooooo" << endl;
+	cout << builder << endl;
+
 	builder.assembleResponse();
 
 	return builder.getHttpResponse();
@@ -45,14 +48,18 @@ int main(int ac, char**av){
 	cout << "raw file =" << endl;
 	cout << streamBuffer.str() << endl;
 
-	vector<char> htmlVector(streamBuffer.str().begin(), streamBuffer.str().end());
+	string buffbuff = streamBuffer.str();
 
-	vector<char> answer = masterBuilder(htmlVector, CODE_200_OK, "index.html");
+	vector<char> htmlVector(buffbuff.begin(), buffbuff.end());
+
+	vector<char> answer = masterBuilder(htmlVector, CODE_408_REQUEST_TIMEOUT, "index.html");
 
 
 	cout << "Answer =" << endl;
 
 	string coucou(answer.begin(), answer.end());
 	cout << coucou << endl;
+
+	// g++ main.cpp ../buildResponse.cpp ../errorCode.cpp -I ../../../includes/ -g
 
 }

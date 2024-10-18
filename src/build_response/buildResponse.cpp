@@ -1,40 +1,41 @@
 #include "../../includes/buildResponse.hpp"
 
 
-buildResponse::buildResponse( void ){
+buildResponse::buildResponse( void ) :
+	_bodyLenght(0){
 
 	// Building mimeTypes 
-	map<string, string> temp;
+	// map<string, string> temp;
 
 	// Textual Content Types
-	temp.insert(std::make_pair("html", "text"));
-	temp.insert(std::make_pair("htm", "text"));
-	temp.insert(std::make_pair("txt", "text"));
-	temp.insert(std::make_pair("css", "text"));
-	temp.insert(std::make_pair("xml", "text"));
+	_mimeTypes.insert(std::make_pair("html", "text"));
+	_mimeTypes.insert(std::make_pair("htm", "text"));
+	_mimeTypes.insert(std::make_pair("txt", "text"));
+	_mimeTypes.insert(std::make_pair("css", "text"));
+	_mimeTypes.insert(std::make_pair("xml", "text"));
 	// Application Content Types
-	temp.insert(std::make_pair("js", "application"));
-	temp.insert(std::make_pair("json", "application"));
-	temp.insert(std::make_pair("pdf", "application"));
-	temp.insert(std::make_pair("zip", "application"));
+	_mimeTypes.insert(std::make_pair("js", "application"));
+	_mimeTypes.insert(std::make_pair("json", "application"));
+	_mimeTypes.insert(std::make_pair("pdf", "application"));
+	_mimeTypes.insert(std::make_pair("zip", "application"));
 	// Image Content Types
-	temp.insert(std::make_pair("jpeg", "image"));
-	temp.insert(std::make_pair("jpg", "image"));
-	temp.insert(std::make_pair("png", "image"));
-	temp.insert(std::make_pair("gif", "image"));
-	temp.insert(std::make_pair("webp", "image"));
-	temp.insert(std::make_pair("bmp", "image"));
+	_mimeTypes.insert(std::make_pair("jpeg", "image"));
+	_mimeTypes.insert(std::make_pair("jpg", "image"));
+	_mimeTypes.insert(std::make_pair("png", "image"));
+	_mimeTypes.insert(std::make_pair("gif", "image"));
+	_mimeTypes.insert(std::make_pair("webp", "image"));
+	_mimeTypes.insert(std::make_pair("bmp", "image"));
 	// Audio Content Types
-	temp.insert(std::make_pair("mp3", "audio"));
-	temp.insert(std::make_pair("mpeg", "audio"));
-	temp.insert(std::make_pair("ogg", "audio"));
-	temp.insert(std::make_pair("wav", "audio"));
+	_mimeTypes.insert(std::make_pair("mp3", "audio"));
+	_mimeTypes.insert(std::make_pair("mpeg", "audio"));
+	_mimeTypes.insert(std::make_pair("ogg", "audio"));
+	_mimeTypes.insert(std::make_pair("wav", "audio"));
 	// Video Content Types
-	temp.insert(std::make_pair("mp4", "video"));
-	temp.insert(std::make_pair("webm", "video"));
-	temp.insert(std::make_pair("ogv", "video"));
+	_mimeTypes.insert(std::make_pair("mp4", "video"));
+	_mimeTypes.insert(std::make_pair("webm", "video"));
+	_mimeTypes.insert(std::make_pair("ogv", "video"));
 
-	_mimeTypes = temp;
+	// _mimeTypes(_mimeTypes);
 }
 
 
@@ -46,8 +47,7 @@ buildResponse::buildResponse( const buildResponse& copy ) :
 	_contentType(copy._contentType.str()),
 	_transfertEncoding(copy._transfertEncoding.str()),
 	_contentLenght(copy._contentLenght.str()),
-	_body(copy._body)
-	{}
+	_body(copy._body){}
 
 
 buildResponse& buildResponse::operator=(const buildResponse& right_operator){
@@ -72,6 +72,7 @@ buildResponse::~buildResponse( void ){
 
 	// TODO : clean the httpResponse on each run ??
 	_httpResponse.clear();
+	_masterHeader.clear();
 
 	_statusLine.clear();
 	_timeStamp.clear();
@@ -122,6 +123,8 @@ ostream& operator<<( ostream& output_stream, const buildResponse& right_input ){
 	output_stream << BOLD_HIGH_INTENSITY_RED << "\n\nHTTP BODY = \n";
 	output_stream << right_input.getBody();
 
+	output_stream << RESET;
+
 	return output_stream;
 }
 
@@ -142,23 +145,19 @@ void buildResponse::buildHeaders( const e_errorCodes &errCode, const string &fil
 	// Status line
 	errorCode codes;
 
-	{
 		_statusLine << HTTP_PROTOCOL
 					<< SPACE
 					<< errCode
 					<< SPACE 
 					<< codes.getCode(errCode) // TODO : plug the class
 					<< HTTP_REPONSE_SEPARATOR;
-	}
 
 	// TimeStamp
-	{
 		// TODO Implement a TimeStamp generator
 		_timeStamp	<< "Date:"
 					<< SPACE 
 					<< "Wed, 11 Oct 2024 10:24:12 GMT"
 					<< HTTP_REPONSE_SEPARATOR;
-	}
 
 	/*
 		! NOTE
@@ -168,30 +167,26 @@ void buildResponse::buildHeaders( const e_errorCodes &errCode, const string &fil
 		of an advanced feature rather than a core requirement.
 	*/
 	// * Content-Type (if body)
-	if (_bodyLenght)
+	if (this->_bodyLenght > 0) // does not works
 	{
 		string contentType = buildContentType(fileName).str();
 		_contentType	<< "Content-Type:"
 						<< SPACE 
-						<< contentType
+						<< contentType // ! BUG : outputs everytime text/html
 						<< HTTP_REPONSE_SEPARATOR;
 	}
 
 	// ContentLenght
-	{
-		_contentLenght	<< "Content-Lenght:"
-						<< SPACE
-						<< _bodyLenght
-						<< HTTP_REPONSE_SEPARATOR;
-	}
+	_contentLenght	<< "Content-Lenght:"
+					<< SPACE
+					<< _bodyLenght
+					<< HTTP_REPONSE_SEPARATOR;
 
 	// Building Final Headers
-	{
-		_masterHeader	<< _statusLine.str()
-						<< _timeStamp.str()
-						<< _contentType.str()
-						<< (_bodyLenght ? _contentLenght.str() : _transfertEncoding.str());
-	}
+	_masterHeader	<< _statusLine.str()
+					<< _timeStamp.str()
+					<< _contentType.str()
+					<< (_bodyLenght ? _contentLenght.str() : _transfertEncoding.str());
 	// ! Potential hangling HTTP_SEPARATOR if there is extra headers or not !!!!
 }
 
@@ -205,7 +200,7 @@ void buildResponse::buildHeaders( const e_errorCodes &errCode, const string &fil
  * @param typeFile The name or path of the file from which to extract the extension.
  * @return A stringstream containing the constructed Content-Type header value.
  */
-stringstream buildResponse::buildContentType( string typeFile )const{
+stringstream buildResponse::buildContentType( const string &typeFile )const{
 
 	stringstream result;
 	string type, extension;
@@ -229,7 +224,7 @@ stringstream buildResponse::buildContentType( string typeFile )const{
  * @param extension The file extension for which the MIME type is to be extracted.
  * @return A string representing the MIME type corresponding to the given file extension.
  */
-string buildResponse::extractType( string& extension ) const {
+string buildResponse::extractType( const string& extension ) const {
     
     map<string, string>::const_iterator it = _mimeTypes.find(extension);
     if (it != _mimeTypes.end())

@@ -6,7 +6,7 @@
 
 #define HTTP_REPONSE_SEPARATOR "\r\n"
 #define HTTP_PROTOCOL "HTTP/1.1"
-#define SPACE 0x20
+#define SPACE " "
 
 class buildResponse
 {
@@ -18,8 +18,8 @@ private:
 	buildResponse& operator=( const buildResponse& right_operator );
 
 	// Methods
-	stringstream buildContentType( string )const;
-	string extractType( string& )const;
+	stringstream buildContentType( const string& )const;
+	string extractType( const string& )const;
 
 	map<string, string> _mimeTypes;
 
