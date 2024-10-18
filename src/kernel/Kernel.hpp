@@ -16,6 +16,7 @@ class Kernel
 	int					_maxFd; 
 
 	static void callCatch(Server & server);
+	static void callListen(Server & server);
 
 	public:
 		Kernel(void);

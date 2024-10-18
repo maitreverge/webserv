@@ -9,6 +9,7 @@
 struct Client
 {
 	int					id;
+	int					fd;
 	std::vector<char>	request;
 	sockaddr 			address;
 };
@@ -31,4 +32,5 @@ class Server
 
 		Server(sockaddr_in sockaddr, int & maxFd, fd_set & actualSet, fd_set & readSet, fd_set & writeSet);
 		void catchClient();
+		void listenClient();
 };

@@ -3,7 +3,7 @@
 Kernel::Kernel(void)
 {
 	std::cout << "hello from kernel" << std::endl;
-
+	this->setup()
 
 }
 Kernel::~Kernel(void)
@@ -53,8 +53,12 @@ Kernel & Kernel::operator=(const Kernel &)
 
 void Kernel::callCatch(Server & server)
 {
-	std::cout << "callcatch" << std::endl;
 	server.catchClient();
+}
+
+void Kernel::callListen(Server & server)
+{
+	server.listenClient();
 }
 
 void Kernel::setup()
@@ -74,24 +78,21 @@ void Kernel::setup()
 	for (size_t i = 0; i < this->_conf.sockAddress.size(); i++)
 	{
 		Server server(this->_conf.sockAddress[i], this->_maxFd, this->_actualSet, this->_readSet, this->_writeSet);
-		this->_servers.push_back(server);
-		std::cout << "newserver" << std::endl;
-			std::cout << "maxfd" << this->_maxFd << std::endl;
+		this->_servers.push_back(server);	
 	}
-	std::cout << "maxfd" << this->_maxFd << std::endl;
+	
 
 	while (true)
 	{
 		this->_readSet = this->_writeSet = this->_actualSet;
-	std::cout << "before select" << std::endl;
+
 		if (select(this->_maxFd + 1, &this->_readSet, &this->_writeSet, 0, NULL) < 0)
 		{	
 			std::cout << "error select" << std::endl;
 			continue;
 		}
-			std::cout << "after select" << std::endl;
 		std::for_each(this->_servers.begin(), this->_servers.end(), this->callCatch);
-
+		std::for_each(this->_servers.begin(), this->_servers.end(), this->callListen);
 
 		// this->_servers.back().catchClient();
 		// catchClient(serverFd);
