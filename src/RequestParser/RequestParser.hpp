@@ -42,15 +42,21 @@ class RequestParser
 		std::string	charVectorToString(const std::vector<char>& vector);
 
 		// action
-		void		initializeHeaders();
-		void		handleFirstLine(std::istringstream& requestStream);
-		void		handleHeaderLines(std::istringstream& requestStream);
+		void	handleFirstLine(std::istringstream& requestStream);
+		void	handleHeaderLines(std::istringstream& requestStream);
+		void	extractHeaders();
 		std::map<std::string, std::string>	extractCookies(std::vector<std::string> vec);
-		void		extractHeaders();
+
+		void	assignHeader(const std::string& key, std::string& value);
+		void	assignHeader(const std::string& key, std::vector<std::string>& headerField);
+		void	assignHeader(const std::string& key, size_t& headerField);
+		void	assignHeader(const std::string& key, std::map<std::string, std::string>& cookieField);
+		void	displayHeaders() const;
 	public:
 		//coplien
 		RequestParser();
 		~RequestParser();
+	
 		// getters
 		std::string	getMethod() const;
 		std::string	getURI() const;
@@ -58,8 +64,9 @@ class RequestParser
 		Headers		getHeaders() const;
 
 		// display methods
-		void		displayAttributes() const;
-		void		displayHeaders() const;
+		void 		displayParsingResult() const;
+		//! display methods must be changed in file server.cpp!
+		void	displayAttributes() const;
 
 		// main method
 		void		parse(const std::vector<char> data);
