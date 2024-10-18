@@ -234,3 +234,13 @@ string buildResponse::extractType( string& extension ) const {
     else
         return "application/octet-stream"; // Default MIME type
 }
+
+void buildResponse::assembleResponse( void ){
+
+	string assemble;
+
+	assemble += _masterHeader.str();
+	assemble += _body;
+
+	_httpResponse.insert(_httpResponse.end(), assemble.begin(), assemble.end());
+}

@@ -6,7 +6,7 @@
 
 #define HTTP_REPONSE_SEPARATOR "\r\n"
 #define HTTP_PROTOCOL "HTTP/1.1"
-#define SPACE " "
+#define SPACE 0x20
 
 class buildResponse
 {
@@ -79,6 +79,8 @@ public:
 	// *		---------------- METHODS ----------------
 	void buildBody( vector<char>& );
 	void buildHeaders( e_errorCodes&, string& );
+	void assembleResponse( void );
+
 
 };
 
