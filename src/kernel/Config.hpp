@@ -31,5 +31,12 @@ struct Config
 		server3.sin_addr.s_addr = htonl(INADDR_ANY);
 		server3.sin_port = htons(1512);
 		sockAddress.push_back(server3);
+
+		struct sockaddr_in server4;	
+		std::memset(&server4, 0, sizeof(server4));
+		server4.sin_family = AF_INET;
+		server4.sin_addr.s_addr = htonl(INADDR_ANY);
+		server4.sin_port = htons(80);
+		sockAddress.push_back(server4);
 	}
 };

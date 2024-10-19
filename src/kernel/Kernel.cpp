@@ -5,6 +5,7 @@ bool Kernel::_exit = false;
 Kernel::Kernel(void)
 {
 	std::cout << "hello from kernel" << std::endl;
+	
 	this->setup();
 	this->launch();
 }

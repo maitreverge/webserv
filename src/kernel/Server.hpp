@@ -8,6 +8,8 @@
 #include "RequestParser.hpp"
 #include <arpa/inet.h>
 
+#define BUFF_SIZE 4096
+
 struct Client
 {
 	int					id;
@@ -41,11 +43,15 @@ class Server
 	
 	RequestParser 		_parser;
 
+	void displayClient(Client & client);
+	void welcomeClient(Client & client);
+	void exitClient(size_t index);
 	void exitClients();
 
 	public:
 
-		Server(sockaddr_in & sockaddr, int & maxFd, fd_set & actualSet, fd_set & readSet, fd_set & writeSet);
+		Server(sockaddr_in & sockaddr, int & maxFd, fd_set & actualSet,
+			fd_set & readSet, fd_set & writeSet);
 		void catchClients();
 		void listenClients();
 		void exitServer();
