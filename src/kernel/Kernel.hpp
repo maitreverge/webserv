@@ -4,8 +4,6 @@
 #include <sys/socket.h>
 #include <Server.hpp>
 #include <algorithm>
-#include <csignal>
-#include <termios.h>
 
 class Kernel
 {
@@ -19,8 +17,7 @@ class Kernel
 
 	static void callCatch(Server & server);
 	static void callListen(Server & server);
-	static void	signalHandle(int);
-	void 		disableSignalEcho();
+	static void callExit(Server & server);
 
 	public:
 

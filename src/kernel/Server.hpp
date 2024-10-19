@@ -6,13 +6,23 @@
 #include "Config.hpp"
 #include <iostream>
 #include "RequestParser.hpp"
+#include <arpa/inet.h>
 
 struct Client
 {
 	int					id;
 	int					fd;
 	std::vector<char>	request;
-	sockaddr 			address;
+	sockaddr_in 		address;
+	socklen_t 			len;
+
+	Client()
+	{
+		id = 0;
+		fd = 0;		
+		memset(&address, 0, sizeof(address));
+		len = sizeof(address);
+	}
 };
 
 class Server
@@ -31,10 +41,12 @@ class Server
 	
 	RequestParser 		_parser;
 
+	void exitClients();
+
 	public:
 
-		Server(sockaddr_in sockaddr, int & maxFd, fd_set & actualSet, fd_set & readSet, fd_set & writeSet);
+		Server(sockaddr_in & sockaddr, int & maxFd, fd_set & actualSet, fd_set & readSet, fd_set & writeSet);
 		void catchClients();
 		void listenClients();
-		void exitClients();
+		void exitServer();
 };

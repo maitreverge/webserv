@@ -1,25 +1,12 @@
 #include "Kernel.hpp"
 
-// Kernel::_exit = false;
+bool Kernel::_exit = false;
+
 Kernel::Kernel(void)
 {
 	std::cout << "hello from kernel" << std::endl;
 	this->setup();
 	this->launch();
-}
-
-void Kernel::signalHandle(int)
-{
-	std::cout << "Bye bye!" << std::endl;
-	Kernel::_exit = true;
-}
-
-void Kernel::disableSignalEcho()
-{
-    struct termios tty;
-    tcgetattr(STDIN_FILENO, &tty);     
-    tty.c_lflag &= ~ECHOCTL;  
-    tcsetattr(STDIN_FILENO, TCSANOW, &tty); 
 }
 
 void Kernel::callCatch(Server & server)
@@ -34,13 +21,11 @@ void Kernel::callListen(Server & server)
 
 void Kernel::callExit(Server & server)
 {
-	server.exitClients();
+	server.exitServer();
 }
 
 void Kernel::setup()
-{	
-	signal(2, this->signalHandle);
-	disableSignalEcho();
+{
 	FD_ZERO(&this->_actualSet);
 	for (size_t i = 0; i < this->_conf.sockAddress.size(); i++)
 	{

@@ -1,26 +1,38 @@
 #include <Server.hpp>
 
-Server::Server(sockaddr_in sockAddr, int & maxFd, fd_set & actualSet, fd_set & readSet, fd_set & writeSet)
+Server::Server(sockaddr_in & sockAddr, int & maxFd, fd_set & actualSet, fd_set & readSet, fd_set & writeSet)
 : _sockAddr(sockAddr), _maxFd(maxFd), _actualSet(actualSet), _readSet(readSet), _writeSet(writeSet) 
-{
+{	
 	this->_readBuffer.resize(3000);
 	this->_maxFd = this->_fd = socket(AF_INET, SOCK_STREAM, 0);	
 	FD_SET(this->_fd, &_actualSet);	
-	bind(this->_fd, reinterpret_cast<const sockaddr *>
-		(&this->_sockAddr), sizeof(this->_sockAddr));
-	listen(this->_fd, this->_conf.maxClient);	
+	if (bind(this->_fd, reinterpret_cast<const sockaddr *>
+		(&this->_sockAddr), sizeof(this->_sockAddr)) < 0)
+		std::cout << "error bind from socket: " << ntohs(this->_sockAddr.sin_port) << std::endl;
+	if (listen(this->_fd, this->_conf.maxClient) < 0)
+		std::cout << "error listen" << std::endl;
+}
+
+void displayClient(Client & client)
+{
+	std::cout << "new client:" << std::endl;
+	std::cout << "fd: " << client.fd << std::endl;
+	std::cout << "family: " << client.address.sin_family << std::endl;
+	std::cout << "address: " << inet_ntoa(client.address.sin_addr) << std::endl;
+	std::cout << "port: " << ntohs(client.address.sin_port) << std::endl;
+	for (int i = 0; i < 8; i++)
+		std::cout << "sin zero: " << ntohl(client.address.sin_zero[i]) << std::endl;
 }
 
 void Server::catchClients()
 {	
 	if (FD_ISSET(this->_fd, &this->_readSet))
 	{		
-		Client client;
-		client.id = 1;
-		socklen_t len;
-		client.fd = accept(this->_fd, reinterpret_cast<sockaddr *>(&client.address), &len);
+		Client client;			
+		client.fd = accept(this->_fd, reinterpret_cast<sockaddr *>(&client.address), &client.len);
 		if (client.fd < 0)
-			std::cout << "error client" << std::endl;
+			std::cout << "error client" << std::endl;		
+		displayClient(client);
 		FD_SET(client.fd, &this->_actualSet);
 		this->_maxFd = std::max(this->_maxFd, client.fd);
 		this->_clients.push_back(client);					
@@ -65,11 +77,17 @@ void Server::listenClients()
 	}
 }
 
+void Server::exitServer()
+{
+	exitClients();
+	close(this->_fd);	
+}
+
 void Server::exitClients()
 {
 	for (size_t i = 0; i < this->_clients.size(); i++)
 	{
 		if (this->_clients[i].fd != -1)
-			close(this->_clients[i].fd)
+			close(this->_clients[i].fd);
 	}
 }
