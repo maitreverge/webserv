@@ -3,9 +3,7 @@
 
 buildResponse::buildResponse( void ){
 
-	// Building mimeTypes 
-	// map<string, string> temp;
-
+	// TODO : check all correctness extensions 
 	// Textual Content Types
 	_mimeTypes.insert(std::make_pair("html", "text/html"));
 	_mimeTypes.insert(std::make_pair("htm", "text/htm"));
@@ -34,7 +32,6 @@ buildResponse::buildResponse( void ){
 	_mimeTypes.insert(std::make_pair("webm", "video/webm"));
 	_mimeTypes.insert(std::make_pair("ogv", "video/ogv"));
 
-	// _mimeTypes(_mimeTypes);
 }
 
 buildResponse::buildResponse( const buildResponse& copy ){ static_cast<void>(copy); }
@@ -46,8 +43,8 @@ buildResponse& buildResponse::operator=(const buildResponse& right_operator){
     return *this;
 }
 
-// ! DESTRUCTOR
 buildResponse::~buildResponse( void ){}
+
 
 // *	------------------- GETTERS ----------------------------------
 const vector<char>& buildResponse::getHttpResponse( void )const{ return _httpResponse; }
@@ -72,6 +69,7 @@ void	buildResponse::setBody( string input ){ _body = input; }
 
 ostream& operator<<( ostream& output_stream, const buildResponse& right_input ){
 	
+	// TODO : Check a correct output of the class
 	output_stream << BOLD_HIGH_INTENSITY_GREEN << "Status Line = \n";
 	output_stream << right_input.getStatusLine();
 
@@ -89,6 +87,7 @@ ostream& operator<<( ostream& output_stream, const buildResponse& right_input ){
 
 	output_stream << BOLD_HIGH_INTENSITY_RED << "\n\nHTTP BODY = \n";
 	output_stream << right_input.getBody();
+
 
 	output_stream << RESET;
 
@@ -109,8 +108,9 @@ void buildResponse::buildBody( const vector<char>& bodyInput ){
 
 void buildResponse::buildHeaders( const e_errorCodes &errCode, const string &fileName ){
 
-	// Status line
+	// TODO : This errorCode class needs to be at higher scope, or maybe turn its members into static method
 	errorCode codes;
+
 	stringstream	streamStatusLine,
 					streamTimeStamp,
 					streamContentType,
@@ -127,11 +127,9 @@ void buildResponse::buildHeaders( const e_errorCodes &errCode, const string &fil
 	
 	_statusLine = streamStatusLine.str();
 
-	// TimeStamp
-	// TODO Implement a TimeStamp generator
 	streamTimeStamp	<< "Date:"
 					<< SPACE 
-					<< "Wed, 11 Oct 2024 10:24:12 GMT"
+					<< timeStamp::getTime() // ! TimeStamp here
 					<< HTTP_REPONSE_SEPARATOR;
 
 	_timeStamp = streamTimeStamp.str();

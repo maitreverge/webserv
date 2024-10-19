@@ -3,6 +3,7 @@
 #include "utils_templates.hpp"
 #include "libraries.hpp"
 #include "errorCode.hpp"
+#include "timeStamp.hpp"
 
 #define HTTP_REPONSE_SEPARATOR "\r\n"
 #define HTTP_PROTOCOL "HTTP/1.1"
@@ -13,6 +14,7 @@ class buildResponse
 
 private:
 
+	// TODO : clean the class
 	// Useless Coplian methods
 	buildResponse( const buildResponse& copy );
 	buildResponse& operator=( const buildResponse& right_operator );

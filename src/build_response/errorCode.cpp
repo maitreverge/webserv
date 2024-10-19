@@ -37,6 +37,7 @@ const string errorCode::getCorrespondingString( e_errorCodes inputCode) const {
     
 	switch (inputCode)
 	{
+		// TODO : ADD all errors codes in errorCode.hpp
         case CODE_100_CONTINUE: return "Continue";
         case CODE_101_SWITCHING_PROTOCOLS: return "Switching Protocols";
         case CODE_200_OK: return "OK";
