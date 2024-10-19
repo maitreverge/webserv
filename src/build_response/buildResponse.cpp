@@ -1,104 +1,71 @@
-#include "../../includes/buildResponse.hpp"
+#include "../../includes/buildResponse.hpp" // relative path for local
 
 
-buildResponse::buildResponse( void ) :
-	_bodyLenght(0){
+buildResponse::buildResponse( void ){
 
 	// Building mimeTypes 
 	// map<string, string> temp;
 
 	// Textual Content Types
-	_mimeTypes.insert(std::make_pair("html", "text"));
-	_mimeTypes.insert(std::make_pair("htm", "text"));
-	_mimeTypes.insert(std::make_pair("txt", "text"));
-	_mimeTypes.insert(std::make_pair("css", "text"));
-	_mimeTypes.insert(std::make_pair("xml", "text"));
+	_mimeTypes.insert(std::make_pair("html", "text/html"));
+	_mimeTypes.insert(std::make_pair("htm", "text/htm"));
+	_mimeTypes.insert(std::make_pair("txt", "text/txt"));
+	_mimeTypes.insert(std::make_pair("css", "text/css"));
+	_mimeTypes.insert(std::make_pair("xml", "text/xml"));
 	// Application Content Types
-	_mimeTypes.insert(std::make_pair("js", "application"));
-	_mimeTypes.insert(std::make_pair("json", "application"));
-	_mimeTypes.insert(std::make_pair("pdf", "application"));
-	_mimeTypes.insert(std::make_pair("zip", "application"));
+	_mimeTypes.insert(std::make_pair("js", "application/javascript")); // FIXME doubt on this one
+	_mimeTypes.insert(std::make_pair("json", "application/json"));
+	_mimeTypes.insert(std::make_pair("pdf", "application/pdf"));
+	_mimeTypes.insert(std::make_pair("zip", "application/zip"));
 	// Image Content Types
-	_mimeTypes.insert(std::make_pair("jpeg", "image"));
-	_mimeTypes.insert(std::make_pair("jpg", "image"));
-	_mimeTypes.insert(std::make_pair("png", "image"));
-	_mimeTypes.insert(std::make_pair("gif", "image"));
-	_mimeTypes.insert(std::make_pair("webp", "image"));
-	_mimeTypes.insert(std::make_pair("bmp", "image"));
+	_mimeTypes.insert(std::make_pair("jpeg", "image/jpeg"));
+	_mimeTypes.insert(std::make_pair("jpg", "image/jpg"));
+	_mimeTypes.insert(std::make_pair("png", "image/png"));
+	_mimeTypes.insert(std::make_pair("gif", "image/gif"));
+	_mimeTypes.insert(std::make_pair("webp", "image/webp"));
+	_mimeTypes.insert(std::make_pair("bmp", "image/bmp"));
 	// Audio Content Types
-	_mimeTypes.insert(std::make_pair("mp3", "audio"));
-	_mimeTypes.insert(std::make_pair("mpeg", "audio"));
-	_mimeTypes.insert(std::make_pair("ogg", "audio"));
-	_mimeTypes.insert(std::make_pair("wav", "audio"));
+	_mimeTypes.insert(std::make_pair("mp3", "audio/mp3"));
+	_mimeTypes.insert(std::make_pair("mpeg", "audio/mpeg"));
+	_mimeTypes.insert(std::make_pair("ogg", "audio/ogg"));
+	_mimeTypes.insert(std::make_pair("wav", "audio/wav"));
 	// Video Content Types
-	_mimeTypes.insert(std::make_pair("mp4", "video"));
-	_mimeTypes.insert(std::make_pair("webm", "video"));
-	_mimeTypes.insert(std::make_pair("ogv", "video"));
+	_mimeTypes.insert(std::make_pair("mp4", "video/mp4"));
+	_mimeTypes.insert(std::make_pair("webm", "video/webm"));
+	_mimeTypes.insert(std::make_pair("ogv", "video/ogv"));
 
 	// _mimeTypes(_mimeTypes);
 }
 
-
-buildResponse::buildResponse( const buildResponse& copy ) :
-	_mimeTypes(copy._mimeTypes),
-	_httpResponse(copy._httpResponse),
-	_statusLine(copy._statusLine.str()),
-	_timeStamp(copy._timeStamp.str()),
-	_contentType(copy._contentType.str()),
-	_transfertEncoding(copy._transfertEncoding.str()),
-	_contentLenght(copy._contentLenght.str()),
-	_body(copy._body){}
+buildResponse::buildResponse( const buildResponse& copy ){ static_cast<void>(copy); }
 
 
 buildResponse& buildResponse::operator=(const buildResponse& right_operator){
-    if (this != &right_operator)
-	{
-        // Reassign every value with the getter value 
-        this->_httpResponse = right_operator._httpResponse;
-        
-        this->_statusLine.str(right_operator._statusLine.str());
-        this->_timeStamp.str(right_operator._timeStamp.str());
-        this->_contentType.str(right_operator._contentType.str());
-        this->_transfertEncoding.str(right_operator._transfertEncoding.str());
-        this->_contentLenght.str(right_operator._contentLenght.str());
-        this->_body = right_operator._body;
-        this->_mimeTypes = right_operator._mimeTypes;
-    }
+	
+	static_cast<void>(right_operator);
     return *this;
 }
 
 // ! DESTRUCTOR
-buildResponse::~buildResponse( void ){
-
-	// TODO : clean the httpResponse on each run ??
-	_httpResponse.clear();
-	_masterHeader.clear();
-
-	_statusLine.clear();
-	_timeStamp.clear();
-	_contentType.clear();
-	_transfertEncoding.clear();
-	_contentLenght.clear();
-	_body.clear();
-}
+buildResponse::~buildResponse( void ){}
 
 // *	------------------- GETTERS ----------------------------------
 const vector<char>& buildResponse::getHttpResponse( void )const{ return _httpResponse; }
-const stringstream &buildResponse::getStatusLine( void )const{ return _statusLine; }
-const stringstream &buildResponse::getTimeStamp( void )const{ return _timeStamp; }
-const stringstream &buildResponse::getContentType( void )const{ return _contentType; }
-const stringstream &buildResponse::getTransfertEncoding( void )const{ return _transfertEncoding; }
-const stringstream &buildResponse::getContentLenght( void )const{ return _contentLenght; }
+const string &buildResponse::getStatusLine( void )const{ return _statusLine; }
+const string &buildResponse::getTimeStamp( void )const{ return _timeStamp; }
+const string &buildResponse::getContentType( void )const{ return _contentType; }
+const string &buildResponse::getTransfertEncoding( void )const{ return _transfertEncoding; }
+const string &buildResponse::getContentLenght( void )const{ return _contentLenght; }
 const string &buildResponse::getBody( void )const{ return _body; }
 
 
 // *	------------------- SETTERS ----------------------------------
 
-void	buildResponse::setStatusLine( string input ){ _statusLine << input; }
-void	buildResponse::setTimeStamp( string input ){ _timeStamp << input; }
-void	buildResponse::setContentType( string input ){ _contentType << input; }
-void	buildResponse::setTransfertEncoding( string input ){ _transfertEncoding << input; }
-void	buildResponse::setContentLenght( string input ){ _contentLenght << input; }
+void	buildResponse::setStatusLine( string input ){ _statusLine = input; }
+void	buildResponse::setTimeStamp( string input ){ _timeStamp = input; }
+void	buildResponse::setContentType( string input ){ _contentType = input; }
+void	buildResponse::setTransfertEncoding( string input ){ _transfertEncoding = input; }
+void	buildResponse::setContentLenght( string input ){ _contentLenght = input; }
 void	buildResponse::setBody( string input ){ _body = input; }
 
 
@@ -106,19 +73,19 @@ void	buildResponse::setBody( string input ){ _body = input; }
 ostream& operator<<( ostream& output_stream, const buildResponse& right_input ){
 	
 	output_stream << BOLD_HIGH_INTENSITY_GREEN << "Status Line = \n";
-	output_stream << right_input.getStatusLine().str();
+	output_stream << right_input.getStatusLine();
 
 	output_stream << BOLD_BLUE << "\n\nTimeStamp = \n";
-	output_stream << right_input.getTimeStamp().str();
+	output_stream << right_input.getTimeStamp();
 
 	output_stream << BOLD_BLUE << "\n\nContent-Type = \n";
-	output_stream << right_input.getContentType().str();
+	output_stream << right_input.getContentType();
 
 	output_stream << BOLD_BLUE << "\n\nTransfert-Encoding = \n";
-	output_stream << right_input.getTransfertEncoding().str();
+	output_stream << right_input.getTransfertEncoding();
 
 	output_stream << BOLD_BLUE << "\n\nContent-Lenght = \n";
-	output_stream << right_input.getContentLenght().str();
+	output_stream << right_input.getContentLenght();
 
 	output_stream << BOLD_HIGH_INTENSITY_RED << "\n\nHTTP BODY = \n";
 	output_stream << right_input.getBody();
@@ -131,7 +98,7 @@ ostream& operator<<( ostream& output_stream, const buildResponse& right_input ){
 void buildResponse::buildBody( const vector<char>& bodyInput ){
 
 	// Extract the vector towards a string.
-	string tempBody = std::string( bodyInput.begin(), bodyInput.end());
+	string tempBody = std::string(bodyInput.begin(), bodyInput.end());
 	
 	_body += HTTP_REPONSE_SEPARATOR;
 	_body += tempBody;
@@ -144,20 +111,30 @@ void buildResponse::buildHeaders( const e_errorCodes &errCode, const string &fil
 
 	// Status line
 	errorCode codes;
+	stringstream	streamStatusLine,
+					streamTimeStamp,
+					streamContentType,
+					streamContentLenght,
+					streamMasterHeader,
+					stream;
 
-		_statusLine << HTTP_PROTOCOL
-					<< SPACE
-					<< errCode
-					<< SPACE 
-					<< codes.getCode(errCode) // TODO : plug the class
-					<< HTTP_REPONSE_SEPARATOR;
+	streamStatusLine	<< HTTP_PROTOCOL
+						<< SPACE
+						<< errCode
+						<< SPACE 
+						<< codes.getCode(errCode)
+						<< HTTP_REPONSE_SEPARATOR;
+	
+	_statusLine = streamStatusLine.str();
 
 	// TimeStamp
-		// TODO Implement a TimeStamp generator
-		_timeStamp	<< "Date:"
+	// TODO Implement a TimeStamp generator
+	streamTimeStamp	<< "Date:"
 					<< SPACE 
 					<< "Wed, 11 Oct 2024 10:24:12 GMT"
 					<< HTTP_REPONSE_SEPARATOR;
+
+	_timeStamp = streamTimeStamp.str();
 
 	/*
 		! NOTE
@@ -167,26 +144,34 @@ void buildResponse::buildHeaders( const e_errorCodes &errCode, const string &fil
 		of an advanced feature rather than a core requirement.
 	*/
 	// * Content-Type (if body)
-	if (this->_bodyLenght > 0) // does not works
+	if (this->_bodyLenght > 0)
 	{
-		string contentType = buildContentType(fileName).str();
-		_contentType	<< "Content-Type:"
-						<< SPACE 
-						<< contentType // ! BUG : outputs everytime text/html
-						<< HTTP_REPONSE_SEPARATOR;
+		string contentType = buildContentType(fileName);
+		streamContentType	<< "Content-Type:"
+							<< SPACE 
+							<< contentType 
+							<< HTTP_REPONSE_SEPARATOR;
+		
+		_contentType = streamContentType.str();
 	}
 
 	// ContentLenght
-	_contentLenght	<< "Content-Lenght:"
-					<< SPACE
-					<< _bodyLenght
-					<< HTTP_REPONSE_SEPARATOR;
+	streamContentLenght	<< "Content-Lenght:"
+						<< SPACE
+						<< _bodyLenght
+						<< HTTP_REPONSE_SEPARATOR;
+	
+	_contentLenght = streamContentLenght.str();
 
 	// Building Final Headers
-	_masterHeader	<< _statusLine.str()
-					<< _timeStamp.str()
-					<< _contentType.str()
-					<< (_bodyLenght ? _contentLenght.str() : _transfertEncoding.str());
+	streamMasterHeader	<< _statusLine
+						<< _timeStamp
+						<< _contentType
+						<< (_bodyLenght ? _contentLenght : _transfertEncoding);
+	
+	_masterHeader = streamMasterHeader.str();
+	
+	// FIXME
 	// ! Potential hangling HTTP_SEPARATOR if there is extra headers or not !!!!
 }
 
@@ -200,16 +185,14 @@ void buildResponse::buildHeaders( const e_errorCodes &errCode, const string &fil
  * @param typeFile The name or path of the file from which to extract the extension.
  * @return A stringstream containing the constructed Content-Type header value.
  */
-stringstream buildResponse::buildContentType( const string &typeFile )const{
+string buildResponse::buildContentType( const string &typeFile )const{
 
-	stringstream result;
-	string type, extension;
+	string result, extension;
 
 	string::size_type extensionIndex = typeFile.find_last_of(".");
 	extension = typeFile.substr(extensionIndex + 1);
 
-	type = extractType(extension);
-	result << type << "/" << extension;
+	result = extractType(extension);
 
 	return result;
 }
@@ -237,7 +220,7 @@ void buildResponse::assembleResponse( void ){
 
 	string assemble;
 
-	assemble += _masterHeader.str();
+	assemble += _masterHeader;
 	assemble += _body;
 
 	_httpResponse.insert(_httpResponse.end(), assemble.begin(), assemble.end());

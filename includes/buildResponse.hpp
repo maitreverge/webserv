@@ -18,7 +18,7 @@ private:
 	buildResponse& operator=( const buildResponse& right_operator );
 
 	// Methods
-	stringstream buildContentType( const string& )const;
+	string buildContentType( const string& )const;
 	string extractType( const string& )const;
 
 	map<string, string> _mimeTypes;
@@ -27,15 +27,15 @@ private:
 	vector<char> _httpResponse;
 	
 	// Headers
-	stringstream _masterHeader; // TODO : getter, setter, init list and <<
+	string _masterHeader; // TODO : getter, setter, init list and <<
 
-	stringstream _statusLine;
-	stringstream _timeStamp; // TODO : need to code a timestamp generator
-	stringstream _contentType;
+	string _statusLine;
+	string _timeStamp; // TODO : need to code a timestamp generator
+	string _contentType;
 
-	stringstream _transfertEncoding; // ! OPTION ONE
+	string _transfertEncoding; // ! OPTION ONE
 	//             OR
-	stringstream _contentLenght; // ! OPTION TWO
+	string _contentLenght; // ! OPTION TWO
 
 	// Body
 	string _body;
@@ -57,15 +57,15 @@ public:
 	// *		---------------- GETTERS ----------------
 	const vector<char> &getHttpResponse( void )const;
 
-	const stringstream &getStatusLine( void )const;
-	const stringstream &getTimeStamp( void )const;
-	const stringstream &getContentType( void )const;
-	const stringstream &getTransfertEncoding( void )const;
-	const stringstream &getContentLenght( void )const;
+	const string &getStatusLine( void )const;
+	const string &getTimeStamp( void )const;
+	const string &getContentType( void )const;
+	const string &getTransfertEncoding( void )const;
+	const string &getContentLenght( void )const;
 	
 	const string &getBody( void )const;
 	
-	// const string &get( void )const;
+	const string &get( void )const;
 	
 	// *		---------------- SETTERS ----------------
 	void	setStatusLine( string );
