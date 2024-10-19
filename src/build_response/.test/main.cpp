@@ -1,31 +1,12 @@
 #include "../../../includes/buildResponse.hpp"
 // #include "errorCode.hpp"
 
-vector<char> masterBuilder( const vector<char> &bodyInput, const e_errorCodes &errorCode, const string& fileName ){
-
-	// Builder class
-	buildResponse builder;
-	
-	// ! STEP 1 : Make BODY
-	builder.buildBody(bodyInput);
-	
-	// ! STEP 2 : Make HEADERS
-	builder.buildHeaders( errorCode, fileName );
-
-	// ! STEP 3 : Make EXTRAS-HEADERS (session ID, cookies, and non-mandatory headers)
-	// builder.buildExtrasHeaders();
-
-	cout << "helooooooooooooooooooooooooooooooo" << endl;
-	cout << builder << endl;
-
-	builder.assembleResponse();
-
-	return builder.getHttpResponse();
-}
-
 // using namespace std;
 
 #include "../../../includes/utils_templates.hpp"
+
+vector<char> masterBuilder( vector<char> &bodyInput, e_errorCodes errorCode, string& fileName );
+
 int main(int ac, char**av){
 
 	if (ac != 2)
@@ -34,7 +15,9 @@ int main(int ac, char**av){
 		exit(1);
 	}
 
-	ifstream htmlFile(av[1]);
+	string arg = av[1];
+
+	ifstream htmlFile(arg.c_str());
 
 	string stringBuffer;
 
@@ -52,7 +35,7 @@ int main(int ac, char**av){
 
 	vector<char> htmlVector(buffbuff.begin(), buffbuff.end());
 
-	vector<char> answer = masterBuilder(htmlVector, CODE_408_REQUEST_TIMEOUT, "index.html");
+	vector<char> answer = masterBuilder(htmlVector, CODE_408_REQUEST_TIMEOUT, arg);
 
 
 	cout << "Answer =" << endl;
@@ -60,6 +43,6 @@ int main(int ac, char**av){
 	string coucou(answer.begin(), answer.end());
 	cout << coucou << endl;
 
-	// g++ main.cpp ../buildResponse.cpp ../errorCode.cpp -I ../../../includes/ -g
+	// g++ main.cpp ../buildResponse.cpp ../masterBuilder.cpp ../errorCode.cpp -I ../../../includes/ -g 
 
 }
