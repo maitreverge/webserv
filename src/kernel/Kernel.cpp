@@ -5,7 +5,7 @@ bool Kernel::_exit = false;
 Kernel::Kernel(void)
 {
 	std::cout << "hello from kernel" << std::endl;
-	
+
 	this->setup();
 	this->launch();
 }
@@ -32,7 +32,8 @@ void Kernel::setup()
 	{
 		Server server(this->_conf.sockAddress[i], this->_maxFd,
 			this->_actualSet, this->_readSet, this->_writeSet);
-		this->_servers.push_back(server);	
+		if (server.setup())
+			this->_servers.push_back(server);	
 	}	
 }
 

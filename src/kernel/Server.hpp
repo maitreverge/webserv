@@ -7,14 +7,16 @@
 #include <iostream>
 #include "RequestParser.hpp"
 #include <arpa/inet.h>
+#include <algorithm>
 
 #define BUFF_SIZE 4096
+#define MAX_HDR_SIZE 8192
 
 struct Client
 {
 	int					id;
 	int					fd;
-	std::vector<char>	request;
+	std::vector<char>	message;
 	sockaddr_in 		address;
 	socklen_t 			len;
 
@@ -52,6 +54,7 @@ class Server
 
 		Server(sockaddr_in & sockaddr, int & maxFd, fd_set & actualSet,
 			fd_set & readSet, fd_set & writeSet);
+		bool setup();
 		void catchClients();
 		void listenClients();
 		void exitServer();
