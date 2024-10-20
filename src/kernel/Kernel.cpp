@@ -5,7 +5,8 @@ bool Kernel::_exit = false;
 Kernel::Kernel(void)
 {
 	std::cout << "hello from kernel" << std::endl;
-
+	
+	FD_ZERO(&this->_actualSet);
 	this->setup();
 	this->launch();
 }
@@ -26,8 +27,7 @@ void Kernel::callExit(Server & server)
 }
 
 void Kernel::setup()
-{
-	FD_ZERO(&this->_actualSet);
+{	
 	for (size_t i = 0; i < this->_conf.sockAddress.size(); i++)
 	{
 		Server server(this->_conf.sockAddress[i], this->_maxFd,
