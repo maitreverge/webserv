@@ -1,0 +1,3 @@
+Utiliser l'outil en ligne de commande HTTPie
+
+http --verbose GET http://localhost:1511 "Authorization: Bearer your_token"
