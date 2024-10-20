@@ -5,10 +5,8 @@ fd_set & actualSet, fd_set & readSet, fd_set & writeSet)
 	: _sockAddr(sockAddr), _maxFd(maxFd),
 	_actualSet(actualSet), _readSet(readSet), _writeSet(writeSet) 
 {	
-	this->_readBuffer.reserve(BUFF_SIZE);
-	this->_readBuffer.resize(BUFF_SIZE);
+	this->_readBuffer.reserve(BUFF_SIZE);	
 	this->_writeBuffer.reserve(BUFF_SIZE);
-	this->_writeBuffer.resize(BUFF_SIZE);
 }
 
 bool Server::setup()
@@ -18,11 +16,19 @@ bool Server::setup()
 		return std::cout << "error socket" << std::endl, false;
 	FD_SET(this->_fd, &_actualSet);
 	if (bind(this->_fd, reinterpret_cast<const sockaddr *>
-		(&this->_sockAddr), sizeof(this->_sockAddr)) < 0)	
-		return std::cout << "error bind from socket: " <<
-			ntohs(this->_sockAddr.sin_port) << std::endl, false;		
-	if (listen(this->_fd, this->_conf.maxClient) < 0)	
-		return std::cout << "error listen" << std::endl, false;
+		(&this->_sockAddr), sizeof(this->_sockAddr)) < 0)
+	{		
+		std::cout << "error bind from socket: " <<
+			ntohs(this->_sockAddr.sin_port) << std::endl;
+		this->exitServer();		
+		return false;		
+	}	
+	if (listen(this->_fd, this->_conf.maxClient) < 0)
+	{
+		std::cout << "error listen" << std::endl,
+		this->exitServer();
+		return false;
+	}	
 	return true;
 }
 
@@ -52,15 +58,16 @@ void Server::listenClients()
 	{	
 		if (FD_ISSET(this->_clients[i].fd, &this->_readSet))
 		{
+			this->_readBuffer.resize(BUFF_SIZE);
 			ssize_t ret = recv(this->_clients[i].fd, this->_readBuffer.data(),
 				this->_readBuffer.size(), 0);
 			if (ret < 0)
 			{
 				std::cout << "error recev" << std::endl;
-				exitClient(i);				
+				this->exitClient(i);				
 			}
 			else if (ret == 0)					
-				exitClient(i);		
+				this->exitClient(i);		
 			else
 			{					
 				std::cout << "client say: " << ret << std::endl;			
@@ -68,7 +75,11 @@ void Server::listenClients()
 				// 	std::cout << this->_readBuffer[j] << " int: " << static_cast<int>(this->_readBuffer[j]);
 				// std::cout << std::endl;	
 				if (ret + this->_clients[i].message.size() > MAX_HDR_SIZE)
-					std::cout << "error header size" << std::endl;				
+				{
+					std::cout << "error header size" << std::endl;//!	431 Request Header Fields Too Large			
+					this->exitClient(i);
+					continue;	
+				}
 				this->_clients[i].message.insert(this->_clients[i].message.end(), 
 					this->_readBuffer.begin(), this->_readBuffer.begin() + ret);
 
@@ -100,8 +111,7 @@ void Server::listenClients()
 					this->_parser.displayAttributes();	
 					this->_clients[i].message.clear();
 				}
-				this->_readBuffer.clear();
-				this->_readBuffer.resize(BUFF_SIZE);
+				this->_readBuffer.clear();				
 			}
 		}	
 	}
@@ -145,22 +155,19 @@ void Server::exitClient(size_t i)
 {
 	std::cout << "client exited" << std::endl;	
 	FD_CLR(this->_clients[i].fd, &this->_actualSet);
-	close(this->_clients[i].fd);
-	this->_clients[i].fd = -1;
+	close(this->_clients[i].fd);	
 	this->_clients.erase(this->_clients.begin() + i);
 }
 
 void Server::exitClients()
 {
 	for (size_t i = 0; i < this->_clients.size(); i++)
-	{
-		if (this->_clients[i].fd != -1)
-			close(this->_clients[i].fd);
-	}
+		close(this->_clients[i].fd);	
 }
 
 void Server::exitServer()
 {
-	exitClients();
+	this->exitClients();
+	FD_CLR(this->_fd, &this->_actualSet);
 	close(this->_fd);	
 }

@@ -47,7 +47,8 @@ void Kernel::launch()
 		if (select(this->_maxFd + 1, &this->_readSet, &this->_writeSet,
 			0, &timeout) < 0)
 		{	
-			std::cout << "error select" << std::endl;
+			if (!this->_exit)
+				std::cout << "error select" << std::endl;
 			continue;
 		}
 		if (this->_exit)

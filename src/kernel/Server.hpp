@@ -10,7 +10,7 @@
 #include <algorithm>
 
 #define BUFF_SIZE 4096
-#define MAX_HDR_SIZE 8192
+#define MAX_HDR_SIZE 8
 
 struct Client
 {
