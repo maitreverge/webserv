@@ -7,7 +7,8 @@
 Logger::Logger(const std::string& accessFile, const std::string& errorFile)
 {
 	_accessFile.open(accessFile.c_str(), std::ios::app);
-	if (!_accessFile.is_open())
+	_errorFile.open(errorFile.c_str(), std::ios::app);
+	if (!_accessFile.is_open() || !_errorFile.is_open())
 		std::cerr << "Erreur : Impossible d'ouvrir le fichier de log." << std::endl;
 }
 
