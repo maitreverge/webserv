@@ -32,6 +32,31 @@ bool Server::setup()
 	return true;
 }
 
+std::vector<char> buildHardResponseTest()
+{
+	std::stringstream ss;	
+	std::string strBody =
+"<html>\
+<head><title>My Styled Page</title></head>\
+<body style=\"background-color: #f0f0f0; text-align: center; padding: 50px;\">\
+<h1 style=\"color: #ff5733; font-family: Arial, sans-serif;\">Hello, World!</h1>\
+<p style=\"color: #555; font-size: 18px;\">This is a simple page with inline CSS.</p>\
+</body>\
+</html>";	
+	ss << 
+"HTTP/1.1 200 OK\r\n\
+Content-Type: text/html\r\n\
+Content-Length: "
+	<< strBody.size() <<
+"\r\n\
+Connection: keep-alive\r\n\
+\r\n\
+" << strBody;
+	std::string strtest(ss.str()); 
+	std::vector<char> res (strtest.begin(), strtest.end());
+	return res;
+}
+
 void Server::catchClients()
 {	
 	if (FD_ISSET(this->_fd, &this->_readSet))
@@ -48,23 +73,10 @@ void Server::catchClients()
 		FD_SET(client.fd, &this->_actualSet);
 		this->_maxFd = std::max(this->_maxFd, client.fd);
 		this->_clients.push_back(client);
-		// std::vector<char> welcome("welcome Bitch!\n","welcome Bitch!\n" + 15);
-		std::string strtest =
-"HTTP/1.1 200 OK\r\n\
-Content-Type: text/html\r\n\
-Content-Length: 315\r\n\
-Connection: keep-alive\r\n\
-\r\n\
-<html>\
-<head><title>My Styled Page</title></head>\
-<body style=\"background-color: #f0f0f0; text-align: center; padding: 50px;\">\
-<h1 style=\"color: #333; font-family: Arial, sans-serif;\">Hello, World!</h1>\
-<p style=\"color: #555; font-size: 18px;\">This is a simple page with inline CSS.</p>\
-</body>\
-</html>"
-;
-		std::vector<char> test (strtest.begin(), strtest.end());
-		replyClient(client, test);			
+
+		std::vector<char> welcome("welcome Bitch!\n","welcome Bitch!\n" + 15);		
+		std::vector<char> hardResp = buildHardResponseTest();
+		replyClient(client, hardResp);			
 	}
 }
 
@@ -85,35 +97,37 @@ void Server::listenClients()
 			else if (ret == 0)					
 				this->exitClient(i);		
 			else
-			{					
-				std::cout << "client say: " << ret << std::endl;	
-				if (ret + this->_clients[i].message.size() > MAX_HDR_SIZE)
-				{
-					std::cout << "error header size" << std::endl;//!	431 Request Header Fields Too Large			
-					this->exitClient(i);
-					continue;	
-				}
-				this->_clients[i].message.insert(this->_clients[i].message.end(), 
-					this->_readBuffer.begin(), this->_readBuffer.begin() + ret);
-
-				std::cout << "message client: " << std::endl;			
-				for (size_t j = 0; j < this->_clients[i].message.size(); j++)				
-					std::cout << this->_clients[i].message[j];
-				std::cout << std::endl;	
-				
-				if (std::search(this->_clients[i].message.begin(),
-					this->_clients[i].message.end(), "\r\n\r\n",
-					"\r\n\r\n" + 4) != this->_clients[i].message.end()
-					)
-				{						
-					this->_parser.parse(this->_clients[i].message);								
-					this->_parser.displayAttributes();	
-					this->_clients[i].message.clear();
-				}
-				this->_readBuffer.clear();				
-			}
+				this->handleClientRequest(i, ret);
 		}	
 	}
+}
+
+void Server::handleClientRequest(size_t i, ssize_t ret)
+{
+	std::cout << "client say: " << ret << std::endl;	
+	if (ret + this->_clients[i].message.size() > MAX_HDR_SIZE)
+	{
+		std::cout << "error header size" << std::endl;//!	431 Request Header Fields Too Large			
+		this->exitClient(i);
+		return;	
+	}
+	this->_clients[i].message.insert(this->_clients[i].message.end(), 
+		this->_readBuffer.begin(), this->_readBuffer.begin() + ret);
+
+	std::cout << "message client: " << std::endl;			
+	for (size_t j = 0; j < this->_clients[i].message.size(); j++)				
+		std::cout << this->_clients[i].message[j];
+	std::cout << std::endl;	
+	
+	if (std::search(this->_clients[i].message.begin(),
+		this->_clients[i].message.end(), "\r\n\r\n",
+		"\r\n\r\n" + 4) != this->_clients[i].message.end())
+	{						
+		this->_parser.parse(this->_clients[i].message);								
+		this->_parser.displayAttributes();	
+		this->_clients[i].message.clear();
+	}
+	this->_readBuffer.clear();
 }
 
 void Server::displayClient(Client & client)

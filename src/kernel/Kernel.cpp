@@ -56,7 +56,8 @@ void Kernel::launch()
 		std::for_each(this->_servers.begin(), this->_servers.end(),
 			this->callCatch);
 		std::for_each(this->_servers.begin(), this->_servers.end(),
-			this->callListen);		
+			this->callListen);
+		usleep(100);	
 	}
 
 	std::for_each(this->_servers.begin(), this->_servers.end(),
