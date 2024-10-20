@@ -131,10 +131,11 @@ void Server::displayClient(Client & client)
 
 void Server::welcomeClient(Client & client)
 {
-	std::string welcome = 	"HTTP/1.1 200 OKContent-Type: text/html"
-							"Content-Length: 1024"
-							"Connection: close"
-							"";
+	std::string welcome = "HTTP/1.1 200 OK\r\n"
+						"Content-Type: text/html\r\n"
+						"Content-Length: 0\r\n"
+						"Connection: keep-alive\r\n"
+						"\r\n";
 	this->_writeBuffer.assign(welcome.begin(), welcome.end());			
 	this->_readSet = this->_writeSet = this->_actualSet;		
 	if (select(this->_maxFd + 1, &this->_readSet, &this->_writeSet, 0, NULL)
