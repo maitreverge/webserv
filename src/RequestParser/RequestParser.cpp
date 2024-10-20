@@ -14,7 +14,8 @@ Headers::							Headers() :
 									ContentLength(0),
 									Cookie() {}
 
-RequestParser::RequestParser() : 	_method(""),
+RequestParser::RequestParser() : 	_client(NULL),
+									_method(""),
 									_URI(""),
 									_HTTP_version(""),
 									_isValid(true),
@@ -49,13 +50,17 @@ void	RequestParser::trim(std::string& str)
 /**========================================================================
  *                           ACTION
  *========================================================================**/
-void	RequestParser::parse(struct Client& client)
+void	RequestParser::parse(Client& client)
 {
-	std::istringstream requestStream(charVectorToString(client.message));
+	_client = &client;
+	std::istringstream requestStream(charVectorToString(_client->message));
 
 	handleFirstLine(requestStream);
 	handleHeaderLines(requestStream);
 	extractHeaders();
+	Logger::getInstance("access.log", "error.log").log("Request parsed", *this);
+
+	_client = NULL;
 }
 
 void	RequestParser::handleFirstLine(std::istringstream& requestStream)
@@ -74,7 +79,8 @@ void	RequestParser::handleFirstLine(std::istringstream& requestStream)
 		if (_method != "GET" && _method != "POST" && _method != "DELETE")
 			_isValid = false;
 	}
-
+	if (_isValid == 0)
+		Logger::getInstance("access.log", "error.log").log("Request first line wrong", *this);
 }
 
 void	RequestParser::handleHeaderLines(std::istringstream& requestStream)

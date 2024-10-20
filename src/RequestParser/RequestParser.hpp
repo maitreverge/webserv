@@ -28,6 +28,7 @@ class RequestParser
 {
 	private:
 		//attributes
+		struct Client										*_client;
 		std::string											_method;
 		std::string											_URI;
 		std::string											_HTTP_version;
