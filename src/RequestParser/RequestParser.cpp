@@ -178,7 +178,7 @@ void RequestParser::displayAttributes() const
 
 void		RequestParser::displayHeaders() const
 {
-	Logger::getInstance("access.log", "error.log").log("************ HELLO FROM LOGGER!!! ************");
+	Logger::getInstance("access.log", "error.log").log("************ HELLO FROM LOGGER!!! ************", *this);
 	print("-------- HEADERS -------");
 	if (_Headers.Connection.length())
 		print("Connection: " + _Headers.Connection);

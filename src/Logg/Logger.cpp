@@ -32,10 +32,22 @@ std::string Logger::getTimestamp()
 /**========================================================================
  *                           ACTION
  *========================================================================**/
-void Logger::log(const std::string& message)
+void Logger::log(const std::string& message, const RequestParser& obj)
+{
+	if (_accessFile.is_open())
+		_accessFile << getTimestamp() << " - " << obj.getMethod() << message << std::endl;
+}
+void Logger::log(const std::string& message, const Kernel& obj)
 {
 	if (_accessFile.is_open())
 		_accessFile << getTimestamp() << " - " << message << std::endl;
+	(void)obj;
+}
+void Logger::log(const std::string& message, const Server& obj)
+{
+	if (_accessFile.is_open())
+		_accessFile << getTimestamp() << " - " << message << std::endl;
+	(void)obj;
 }
 
 /**========================================================================

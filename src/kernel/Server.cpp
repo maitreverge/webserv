@@ -134,7 +134,7 @@ void Server::welcomeClient(Client & client)
 	std::string welcome = "HTTP/1.1 200 OK\r\n"
 						"Content-Type: text/html\r\n"
 						"Content-Length: 0\r\n"
-						"Connection: keep-alive\r\n"
+						"Connection: close\r\n"
 						"\r\n";
 	this->_writeBuffer.assign(welcome.begin(), welcome.end());			
 	this->_readSet = this->_writeSet = this->_actualSet;		
