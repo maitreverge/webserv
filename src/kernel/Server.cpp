@@ -107,7 +107,7 @@ void Server::listenClients()
 					"\r\n\r\n" + 4) != this->_clients[i].message.end()
 					)
 				{						
-					this->_parser.parse(this->_clients[i].message);								
+					this->_parser.parse(this->_clients[i]);								
 					this->_parser.displayAttributes();	
 					this->_clients[i].message.clear();
 				}

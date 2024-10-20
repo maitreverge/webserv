@@ -37,7 +37,7 @@ class RequestParser
 
 		// coplien
 		// RequestParser(const RequestParser& other);
-		RequestParser& operator=(const RequestParser& rhs);
+		// RequestParser& operator=(const RequestParser& rhs);
 		
 		// utils
 		void		trim(std::string& str);
@@ -71,5 +71,5 @@ class RequestParser
 		void	displayAttributes() const;
 
 		// main method
-		void		parse(const std::vector<char> data);
+		void	parse(struct Client& client);
 };

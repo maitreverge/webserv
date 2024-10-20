@@ -34,22 +34,32 @@ std::string Logger::getTimestamp()
  *========================================================================**/
 void Logger::log(const std::string& message, const RequestParser& obj)
 {
+	std::string logEntry = getTimestamp() + " - " + obj.getMethod() + message + "\n";
+	if (isConsoleOutput)
+		std::cout << logEntry;
 	if (_accessFile.is_open())
-		_accessFile << getTimestamp() << " - " << obj.getMethod() << message << std::endl;
+		_accessFile << logEntry;
 }
+
 void Logger::log(const std::string& message, const Kernel& obj)
 {
+	std::string logEntry = getTimestamp() + " - " + message + "\n";
+	if (isConsoleOutput)
+		std::cout << logEntry;
 	if (_accessFile.is_open())
-		_accessFile << getTimestamp() << " - " << message << std::endl;
-	(void)obj;
-}
-void Logger::log(const std::string& message, const Server& obj)
-{
-	if (_accessFile.is_open())
-		_accessFile << getTimestamp() << " - " << message << std::endl;
+		_accessFile << logEntry;
 	(void)obj;
 }
 
+void Logger::log(const std::string& message, const Server& obj)
+{
+	std::string logEntry = getTimestamp() + " - " + message + "\n";
+	if (isConsoleOutput)
+		std::cout << logEntry;
+	if (_accessFile.is_open())
+		_accessFile << logEntry;
+	(void)obj;
+}
 /**========================================================================
  *                       SINGLETON ACCESS
  *========================================================================**/

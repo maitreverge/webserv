@@ -1,6 +1,7 @@
 #include "RequestParser.hpp"
 #include "../../includes/master.hpp"
 #include "Logger.hpp"
+#include "Server.hpp"
 
 /**========================================================================
  *                  CONSTRUCTORS / DESTRUCTOR / INIT
@@ -48,9 +49,9 @@ void	RequestParser::trim(std::string& str)
 /**========================================================================
  *                           ACTION
  *========================================================================**/
-void	RequestParser::parse(const std::vector<char> http_request_vector)
+void	RequestParser::parse(struct Client& client)
 {
-	std::istringstream requestStream(charVectorToString(http_request_vector));
+	std::istringstream requestStream(charVectorToString(client.message));
 
 	handleFirstLine(requestStream);
 	handleHeaderLines(requestStream);

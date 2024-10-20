@@ -13,6 +13,8 @@ private:
 	std::ofstream	_accessFile;
 	std::ofstream	_errorFile;
 	std::string		getTimestamp();
+	bool			isConsoleOutput;
+	int				logLevel;
 
 public:
 	Logger(const std::string& accessFile, const std::string& errorFile);
