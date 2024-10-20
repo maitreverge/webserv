@@ -5,7 +5,9 @@ fd_set & actualSet, fd_set & readSet, fd_set & writeSet)
 	: _sockAddr(sockAddr), _maxFd(maxFd),
 	_actualSet(actualSet), _readSet(readSet), _writeSet(writeSet) 
 {	
+	this->_readBuffer.reserve(BUFF_SIZE);
 	this->_readBuffer.resize(BUFF_SIZE);
+	this->_writeBuffer.reserve(BUFF_SIZE);
 	this->_writeBuffer.resize(BUFF_SIZE);
 }
 
@@ -40,7 +42,7 @@ void Server::catchClients()
 		FD_SET(client.fd, &this->_actualSet);
 		this->_maxFd = std::max(this->_maxFd, client.fd);
 		this->_clients.push_back(client);
-		welcomeClient(client);			
+		// welcomeClient(client);			
 	}
 }
 
@@ -60,29 +62,46 @@ void Server::listenClients()
 			else if (ret == 0)					
 				exitClient(i);		
 			else
-			{
-				// std::search(this->_read"\r\n\")
-				if (this->_readBuffer.size() + this->_clients[i].message.size() > MAX_HDR_SIZE)
-					std::cout << "error header size" << std::endl;
-				this->_clients[i].message.insert(this->_clients[i].message.end(),
-					this->_readBuffer.begin(), this->_readBuffer.end());
-				if (std::search(this->_clients[i].message.end() - 4,
+			{					
+				std::cout << "client say: " << ret << std::endl;			
+				// for (ssize_t j = 0; j < ret; j++)				
+				// 	std::cout << this->_readBuffer[j] << " int: " << static_cast<int>(this->_readBuffer[j]);
+				// std::cout << std::endl;	
+				if (ret + this->_clients[i].message.size() > MAX_HDR_SIZE)
+					std::cout << "error header size" << std::endl;				
+				this->_clients[i].message.insert(this->_clients[i].message.end(), 
+					this->_readBuffer.begin(), this->_readBuffer.begin() + ret);
+
+				std::cout << "message client: " << std::endl;			
+				for (size_t j = 0; j < this->_clients[i].message.size(); j++)				
+					std::cout << this->_clients[i].message[j];
+				std::cout << std::endl;	
+
+				// std::string message_str(this->_clients[i].message.begin(), this->_clients[i].message.end());
+				// if (message_str.find("\\r\\n\\r\\n") != std::string::npos)
+				if (std::search(this->_clients[i].message.begin(),
+					this->_clients[i].message.end(), "\\r\\n\\r\\n",
+					"\\r\\n\\r\\n" + 4) != this->_clients[i].message.end()
+					||
+					std::search(this->_clients[i].message.begin(),
+					this->_clients[i].message.end(), "\\n\\n",
+					"\\n\\n" + 2) != this->_clients[i].message.end()
+					||
+					std::search(this->_clients[i].message.begin(),
+					this->_clients[i].message.end(), "\\r\\n",
+					"\\r\\n" + 2) != this->_clients[i].message.end()
+					||
+					std::search(this->_clients[i].message.begin(),
 					this->_clients[i].message.end(), "\r\n\r\n",
-					"\r\n\r\n" + 4) != this->_clients[i].message.end())
-				{
+					"\r\n\r\n" + 4) != this->_clients[i].message.end()
+					)
+				{						
 					this->_parser.parse(this->_clients[i].message);								
 					this->_parser.displayAttributes();	
 					this->_clients[i].message.clear();
 				}
-
-				for (size_t j = 0; j < this->_readBuffer.size(); j++)//!
-					std::cout << "client say: " << ret << std::endl;
-				this->_readBuffer.resize(static_cast<size_t>(ret));
-				for (size_t i = 0; i < this->_readBuffer.size(); i++)				
-					std::cout << this->_readBuffer[i];
-				std::cout << std::endl;		
-				
-					
+				this->_readBuffer.clear();
+				this->_readBuffer.resize(BUFF_SIZE);
 			}
 		}	
 	}
