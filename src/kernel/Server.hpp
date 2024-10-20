@@ -10,7 +10,7 @@
 #include <algorithm>
 
 #define BUFF_SIZE 4096
-#define MAX_HDR_SIZE 8
+#define MAX_HDR_SIZE 8192
 
 struct Client
 {
@@ -46,7 +46,7 @@ class Server
 	RequestParser 		_parser;
 
 	void displayClient(Client & client);
-	void welcomeClient(Client & client);
+	void replyClient(Client & client, std::vector<char> & response);
 	void exitClient(size_t index);
 	void exitClients();
 

@@ -48,7 +48,23 @@ void Server::catchClients()
 		FD_SET(client.fd, &this->_actualSet);
 		this->_maxFd = std::max(this->_maxFd, client.fd);
 		this->_clients.push_back(client);
-		// welcomeClient(client);			
+		// std::vector<char> welcome("welcome Bitch!\n","welcome Bitch!\n" + 15);
+		std::string strtest =
+"HTTP/1.1 200 OK\r\n\
+Content-Type: text/html\r\n\
+Content-Length: 315\r\n\
+Connection: keep-alive\r\n\
+\r\n\
+<html>\
+<head><title>My Styled Page</title></head>\
+<body style=\"background-color: #f0f0f0; text-align: center; padding: 50px;\">\
+<h1 style=\"color: #333; font-family: Arial, sans-serif;\">Hello, World!</h1>\
+<p style=\"color: #555; font-size: 18px;\">This is a simple page with inline CSS.</p>\
+</body>\
+</html>"
+;
+		std::vector<char> test (strtest.begin(), strtest.end());
+		replyClient(client, test);			
 	}
 }
 
@@ -70,10 +86,7 @@ void Server::listenClients()
 				this->exitClient(i);		
 			else
 			{					
-				std::cout << "client say: " << ret << std::endl;			
-				// for (ssize_t j = 0; j < ret; j++)				
-				// 	std::cout << this->_readBuffer[j] << " int: " << static_cast<int>(this->_readBuffer[j]);
-				// std::cout << std::endl;	
+				std::cout << "client say: " << ret << std::endl;	
 				if (ret + this->_clients[i].message.size() > MAX_HDR_SIZE)
 				{
 					std::cout << "error header size" << std::endl;//!	431 Request Header Fields Too Large			
@@ -87,22 +100,8 @@ void Server::listenClients()
 				for (size_t j = 0; j < this->_clients[i].message.size(); j++)				
 					std::cout << this->_clients[i].message[j];
 				std::cout << std::endl;	
-
-				// std::string message_str(this->_clients[i].message.begin(), this->_clients[i].message.end());
-				// if (message_str.find("\\r\\n\\r\\n") != std::string::npos)
+				
 				if (std::search(this->_clients[i].message.begin(),
-					this->_clients[i].message.end(), "\\r\\n\\r\\n",
-					"\\r\\n\\r\\n" + 4) != this->_clients[i].message.end()
-					||
-					std::search(this->_clients[i].message.begin(),
-					this->_clients[i].message.end(), "\\n\\n",
-					"\\n\\n" + 2) != this->_clients[i].message.end()
-					||
-					std::search(this->_clients[i].message.begin(),
-					this->_clients[i].message.end(), "\\r\\n",
-					"\\r\\n" + 2) != this->_clients[i].message.end()
-					||
-					std::search(this->_clients[i].message.begin(),
 					this->_clients[i].message.end(), "\r\n\r\n",
 					"\r\n\r\n" + 4) != this->_clients[i].message.end()
 					)
@@ -123,31 +122,37 @@ void Server::displayClient(Client & client)
 	std::cout << "fd: " << client.fd << std::endl;
 	std::cout << "family: " << client.address.sin_family << std::endl;
 	std::cout << "addres: " << inet_ntoa(client.address.sin_addr) << std::endl;
-	std::cout << "port: " << ntohs(client.address.sin_port) << std::endl;
-	for (int i = 0; i < 8; i++)
-		std::cout << "sin zero: " << ntohl(client.address.sin_zero[i])
-			<< std::endl;
+	std::cout << "port: " << ntohs(client.address.sin_port) << std::endl;	
 }
 
-void Server::welcomeClient(Client & client)
-{
-	std::string welcome = "welcome Bitch!\n";
-	this->_writeBuffer.assign(welcome.begin(), welcome.end());			
+void Server::replyClient(Client & client, std::vector<char> & response)
+{	
+	this->_writeBuffer.assign(response.begin(), response.end());			
 	this->_readSet = this->_writeSet = this->_actualSet;		
 	if (select(this->_maxFd + 1, &this->_readSet, &this->_writeSet, 0, NULL)
 		< 0)
-		std::cout << "error select" << std::endl;
-	if(FD_ISSET(client.fd, &this->_writeSet))
 	{
-		ssize_t ret = send(client.fd, this->_writeBuffer.data(),
-			this->_writeBuffer.size(), 0);
-		if (ret < 0)
+		std::cout << "error select" << std::endl;
+		return ;
+	}
+	if(!FD_ISSET(client.fd, &this->_writeSet))
+	{
+		std::cout << "error client not ready for response" << std::endl;
+		return ;
+	}
+	ssize_t ret;
+	char * writeHead = this->_writeBuffer.data();
+	size_t writeSize = this->_writeBuffer.size();
+	while (writeSize > 0)
+	{	
+		std::cout << "debug send data to client" << std::endl;	
+		if ((ret = send(client.fd, writeHead, writeSize, 0)) < 0)
 		{
 			std::cout << "error send" << std::endl;
 			return ;
-		}
-		else if (ret != static_cast<ssize_t>(this->_writeBuffer.size()))		
-			std::cout << "warning not all data sent" << std::endl;		
+		}		
+		writeHead += ret;
+		writeSize -= ret;			
 	}
 }
 
