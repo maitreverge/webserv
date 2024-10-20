@@ -32,6 +32,10 @@ class RequestParser
 		bool												_isValid;
 		std::map<std::string, std::vector<std::string> >	_tmpHeaders;
 		Headers												_Headers;
+
+		// coplien
+		// RequestParser(const RequestParser& other);
+		RequestParser& operator=(const RequestParser& rhs);
 		
 		// utils
 		void		trim(std::string& str);

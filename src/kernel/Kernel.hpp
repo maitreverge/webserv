@@ -17,13 +17,13 @@ class Kernel
 
 	static void callCatch(Server & server);
 	static void callListen(Server & server);
+	static void callExit(Server & server);
 
 	public:
+
+		static bool			_exit;
 		Kernel(void);
-		~Kernel(void);
-		Kernel(const Kernel & src);
-		Kernel & operator=(const Kernel & rhs);	
 
 		void setup();
-
+		void launch();
 };
