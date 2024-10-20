@@ -49,6 +49,10 @@
 		"stdexcept": "cpp",
 		"streambuf": "cpp",
 		"typeinfo": "cpp",
+<<<<<<< Updated upstream
 		"csignal": "cpp"
+=======
+		"ctime": "cpp"
+>>>>>>> Stashed changes
 	}
 }

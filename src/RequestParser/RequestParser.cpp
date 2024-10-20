@@ -1,5 +1,6 @@
 #include "RequestParser.hpp"
 #include "../../includes/master.hpp"
+#include "Logg.hpp"
 
 /**========================================================================
  *                  CONSTRUCTORS / DESTRUCTOR / INIT
@@ -177,6 +178,7 @@ void RequestParser::displayAttributes() const
 
 void		RequestParser::displayHeaders() const
 {
+	Logg::Logger::getInstance("access.log").log("************ HELLO FROM LOGGER!!! ************");
 	print("-------- HEADERS -------");
 	if (_Headers.Connection.length())
 		print("Connection: " + _Headers.Connection);
