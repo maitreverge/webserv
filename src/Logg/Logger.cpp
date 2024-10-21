@@ -9,7 +9,7 @@ Logger::Logger() : _logLevel(0), logToStdOut(1)
 	_accessFile.open("access.log", std::ios::app);
 	_errorFile.open("error.log", std::ios::app);
 	if (!_accessFile.is_open() || !_errorFile.is_open())
-		std::cerr << "Erreur : Impossible d'ouvrir le fichier de log." << std::endl;
+		Logger::getInstance().log("Erreur : Impossible d'ouvrir le fichier de log.");
 	(void)_logLevel;
 }
 
@@ -44,7 +44,7 @@ void Logger::log(const std::string& message)
 
 void Logger::log(const std::string& message, const RequestParser& obj)
 {
-	std::string logEntry = getTimestamp() + " - " + obj.getMethod() + message + "\n";
+	std::string logEntry = getTimestamp() + " - " + message + "\n";
 	if (logToStdOut)
 		std::cout << logEntry;
 	_accessFile << logEntry;

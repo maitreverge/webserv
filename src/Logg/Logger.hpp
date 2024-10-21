@@ -9,6 +9,14 @@
 
 class Kernel;
 
+typedef enum
+{
+	INFO,
+	DEBUG,
+	WARNING,
+	ERROR
+}	logLevel;
+
 class Logger
 {
 private:

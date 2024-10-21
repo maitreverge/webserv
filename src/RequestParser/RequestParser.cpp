@@ -57,6 +57,7 @@ void	RequestParser::parse(Client& client)
 	_Client = &client;
 	std::istringstream requestStream(charVectorToString(_Client->message));
 
+	Logger::getInstance().log("Request parsing started");
 	handleFirstLine(requestStream);
 	handleHeaderLines(requestStream);
 	extractHeaders();
