@@ -9,7 +9,7 @@ Logger::Logger() : _logLevel(0), logToStdOut(1)
 	_accessFile.open("access.log", std::ios::app);
 	_errorFile.open("error.log", std::ios::app);
 	if (!_accessFile.is_open() || !_errorFile.is_open())
-		Logger::getInstance().log("Erreur : Impossible d'ouvrir le fichier de log.");
+		Logger::getInstance().log(ERROR, "Erreur : Impossible d'ouvrir le fichier de log.");
 	(void)_logLevel;
 }
 
@@ -33,7 +33,7 @@ std::string Logger::getTimestamp()
 /**========================================================================
  *                           ACTION
  *========================================================================**/
-void Logger::log(const std::string& message)
+void Logger::log(logLevel logLevel, const std::string& message)
 {
 	std::string logEntry = getTimestamp() + " - " + message + "\n";
 	if (logToStdOut)
@@ -42,7 +42,7 @@ void Logger::log(const std::string& message)
 	_accessFile.flush();
 }
 
-void Logger::log(const std::string& message, const RequestParser& obj)
+void Logger::log(logLevel logLevel, const std::string& message, const RequestParser& obj)
 {
 	std::string logEntry = getTimestamp() + " - " + message + "\n";
 	if (logToStdOut)
@@ -51,7 +51,7 @@ void Logger::log(const std::string& message, const RequestParser& obj)
 	_accessFile.flush();
 }
 
-void Logger::log(const std::string& message, const Kernel& obj)
+void Logger::log(logLevel logLevel, const std::string& message, const Kernel& obj)
 {
 	std::string logEntry = getTimestamp() + " - " + message + "\n";
 	_accessFile << logEntry;
@@ -61,7 +61,7 @@ void Logger::log(const std::string& message, const Kernel& obj)
 	_accessFile.flush();
 }
 
-void Logger::log(const std::string& message, const Server& obj)
+void Logger::log(logLevel logLevel, const std::string& message, const Server& obj)
 {
 	std::string logEntry = getTimestamp() + " - " + message + "\n";
 	if (logToStdOut)

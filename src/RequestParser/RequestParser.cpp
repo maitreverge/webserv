@@ -57,11 +57,11 @@ void	RequestParser::parse(Client& client)
 	_Client = &client;
 	std::istringstream requestStream(charVectorToString(_Client->message));
 
-	Logger::getInstance().log("Request parsing started");
+	Logger::getInstance().log(INFO, "Request parsing started");
 	handleFirstLine(requestStream);
 	handleHeaderLines(requestStream);
 	extractHeaders();
-	Logger::getInstance().log("Request parsed", *this);
+	Logger::getInstance().log(INFO, "Request parsed", *this);
 	_Client = NULL;
 }
 
@@ -82,7 +82,7 @@ void	RequestParser::handleFirstLine(std::istringstream& requestStream)
 			_isValid = false;
 	}
 	if (_isValid == 0)
-		Logger::getInstance().log("Request first line wrong", *this);
+		Logger::getInstance().log(ERROR, "Request first line wrong", *this);
 }
 
 void	RequestParser::handleHeaderLines(std::istringstream& requestStream)

@@ -4,8 +4,8 @@ bool Kernel::_exit = false;
 
 Kernel::Kernel(void)
 {
-	Logger::getInstance().log("hello from kernel", *this);
-
+	Logger::getInstance().log(INFO, "hello from kernel", *this);	
+	FD_ZERO(&this->_actualSet);
 	this->setup();
 	this->launch();
 }
@@ -26,8 +26,7 @@ void Kernel::callExit(Server & server)
 }
 
 void Kernel::setup()
-{
-	FD_ZERO(&this->_actualSet);
+{	
 	for (size_t i = 0; i < this->_conf.sockAddress.size(); i++)
 	{
 		Server server(this->_conf.sockAddress[i], this->_maxFd,
@@ -48,7 +47,7 @@ void Kernel::launch()
 			0, &timeout) < 0)
 		{	
 			if (!this->_exit)
-				Logger::getInstance().log("error select");
+				Logger::getInstance().log(ERROR, "error select");
 			continue;
 		}
 		if (this->_exit)
@@ -56,7 +55,8 @@ void Kernel::launch()
 		std::for_each(this->_servers.begin(), this->_servers.end(),
 			this->callCatch);
 		std::for_each(this->_servers.begin(), this->_servers.end(),
-			this->callListen);		
+			this->callListen);
+		usleep(100);	
 	}
 
 	std::for_each(this->_servers.begin(), this->_servers.end(),

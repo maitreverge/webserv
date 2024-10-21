@@ -8,6 +8,8 @@
 #include <algorithm>
 #include "Logger.hpp"
 
+class Server;
+
 class Kernel
 {
 	Config 				_conf;
@@ -24,7 +26,7 @@ class Kernel
 
 	public:
 
-		static bool			_exit;
+		static bool		_exit;
 		Kernel(void);
 
 		void setup();

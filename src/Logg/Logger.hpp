@@ -8,6 +8,7 @@
 #include "Server.hpp"
 
 class Kernel;
+class Server;
 
 typedef enum
 {
@@ -29,10 +30,10 @@ private:
 public:
 	Logger();
 	~Logger();
-	void log(const std::string& message);
-	void log(const std::string& message, const Kernel& context);
-	void log(const std::string& message, const RequestParser& context);
-	void log(const std::string& message, const Server& context);
+	void log(logLevel logLevel, const std::string& message);
+	void log(logLevel logLevel, const std::string& message, const Kernel& context);
+	void log(logLevel logLevel, const std::string& message, const RequestParser& context);
+	void log(logLevel logLevel, const std::string& message, const Server& context);
 	static Logger& getInstance();
 
 };
