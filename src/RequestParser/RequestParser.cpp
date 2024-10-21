@@ -129,8 +129,21 @@ void	RequestParser::assignHeader(const std::string& key, std::string& headerFiel
 void	RequestParser::assignHeader(const std::string& key, std::vector<std::string>& headerField)
 {
 	std::map<std::string, std::vector<std::string> >::const_iterator it = _tmpHeaders.find(key);
+
 	if (it != _tmpHeaders.end() && !it->second.empty())
-		headerField = it->second;
+	{
+		for (std::vector<std::string>::const_iterator valueIt = it->second.begin();
+		     valueIt != it->second.end(); ++valueIt)
+		{
+			bool exists = false;
+			for (std::vector<std::string>::const_iterator it = headerField.begin();
+			     it != headerField.end(); it++)
+				if (*it == *valueIt)
+					exists = true;
+			if (!exists)
+				headerField.push_back(*valueIt);
+		}
+	}
 }
 
 void	RequestParser::assignHeader(const std::string& key, size_t& headerField)
@@ -187,7 +200,7 @@ void RequestParser::displayAttributes() const
 
 void		RequestParser::displayHeaders() const
 {
-	Logger::getInstance().log("************ HELLO FROM LOGGER!!! ************", *this);
+	// Logger::getInstance().log("************ HELLO FROM LOGGER!!! ************", *this);
 	print("-------- HEADERS -------");
 	if (_Headers.Connection.length())
 		print("Connection: " + _Headers.Connection);
@@ -197,14 +210,9 @@ void		RequestParser::displayHeaders() const
 		print("Host: " + _Headers.Host);
 	if (_Headers.Accept.size())
 	{
-		printNoEndl("Accept: ");
-		for (size_t i = 0; i < _Headers.Accept.size(); ++i)
-		{
-			printNoEndl(_Headers.Accept[i]);
-			if (i < _Headers.Accept.size() - 1)
-				printNoEndl(", ");
-		}
-		print("");
+		print("Accept: ");
+		for (size_t i = 0; i < _Headers.Accept.size(); i++)
+			print("	" + _Headers.Accept[i]);
 	}
 	std::cout << "ContentLength: " << _Headers.ContentLength << std::endl; 
 	if (_Headers.Cookie.size())
