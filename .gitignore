@@ -44,3 +44,5 @@ docs_dan
 .vscode
 .compiled
 access.log
+intra_binaries/ubuntu_tester
+intra_binaries/ubuntu_cgi_tester
