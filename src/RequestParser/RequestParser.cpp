@@ -14,7 +14,7 @@ Headers::							Headers() :
 									ContentLength(0),
 									Cookie() {}
 
-RequestParser::RequestParser() : 	_client(NULL),
+RequestParser::RequestParser() : 	_Client(NULL),
 									_method(""),
 									_URI(""),
 									_HTTP_version(""),
@@ -34,6 +34,8 @@ std::string	RequestParser::getHTTP_version() const	{return (_HTTP_version);}
 
 Headers	RequestParser::getHeaders() const			{return (_Headers);}
 
+Client*	RequestParser::getClient() const			{return (_Client);}
+
 /**========================================================================
  *                           UTILS
  *========================================================================**/
@@ -52,15 +54,15 @@ void	RequestParser::trim(std::string& str)
  *========================================================================**/
 void	RequestParser::parse(Client& client)
 {
-	_client = &client;
-	std::istringstream requestStream(charVectorToString(_client->message));
+	_Client = &client;
+	std::istringstream requestStream(charVectorToString(_Client->message));
 
 	handleFirstLine(requestStream);
 	handleHeaderLines(requestStream);
 	extractHeaders();
 	Logger::getInstance("access.log", "error.log").log("Request parsed", *this);
 
-	_client = NULL;
+	_Client = NULL;
 }
 
 void	RequestParser::handleFirstLine(std::istringstream& requestStream)

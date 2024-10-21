@@ -28,7 +28,7 @@ class RequestParser
 {
 	private:
 		//attributes
-		struct Client										*_client;
+		struct Client										*_Client;
 		std::string											_method;
 		std::string											_URI;
 		std::string											_HTTP_version;
@@ -65,6 +65,7 @@ class RequestParser
 		std::string	getURI() const;
 		std::string	getHTTP_version() const;
 		Headers		getHeaders() const;
+		Client		*getClient() const;
 
 		// display methods
 		void 		displayParsingResult() const;
