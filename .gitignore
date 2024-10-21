@@ -37,5 +37,6 @@
 webserv
 docs_dan
 
+.vscode
 .compiled
 access.log

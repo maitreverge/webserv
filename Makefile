@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: svidot <svidot@student.42.fr>              +#+  +:+       +#+         #
+#    By: dansylvain <dansylvain@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/28 13:41:27 by seblin            #+#    #+#              #
-#    Updated: 2024/10/17 12:48:34 by svidot           ###   ########.fr        #
+#    Updated: 2024/10/20 10:57:42 by dansylvain       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,8 @@ HDRFLAGS := $(foreach dir, $(HDRDIRS), -I$(dir))
 HDR = $(shell find . \( -name "*.hpp" -o -name "*.h" -o -name "*.tpp" \))
 SRC = $(shell find . -name "*.cpp" | sed 's|^\./||')
 OBJ = $(SRC:%.cpp=$(OBJ_DIR)/%.o)
+
+TEMP_FILE = .compiled
 
 .PHONY: all clean fclean re intro l newline backline emoticon nof
 
@@ -54,6 +56,7 @@ $(NAME) : $(OBJ)
 	@$(CXX) $(OBJ) $(LDFLAGS) -o $@
 	@echo "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b linked              ☑️\n\033[0m"
 	@echo -n "\033[?25h"
+	@touch $(TEMP_FILE)  # Create a temporary file after a successful build
 
 emoticon:
 	@echo "\n 💗 😀 😃 😍\n"
@@ -66,10 +69,12 @@ backline:
 	@echo "\033[A\033[A"
 
 design:
-	@echo "\e[8;50;120t"
-	@echo "\033[0;32m"
-	@./makescript.sh
-	@echo "					the HardTeam Compagny Copyright\033[0m"
+	@if [ ! -f $(TEMP_FILE) ]; then \
+		echo "\e[8;50;120t"; \
+		echo "\033[0;32m"; \
+		./makescript.sh; \
+		echo "					the HardTeam Compagny Copyright\033[0m"; \
+	fi
 
 clean:
 	@echo "\n ▫️  cleanning $(NAME) objects 🧻"
@@ -80,5 +85,6 @@ fclean:
 	@echo "\n ▫️  cleanning $(NAME) exec 🚽" 
 	@rm -f $(NAME)	
 	@$(MAKE) -s clean	
+	@rm -f $(TEMP_FILE)  # Remove the temporary file during fclean
 
 re: fclean backline all
