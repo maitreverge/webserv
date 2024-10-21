@@ -1,0 +1,10 @@
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 299
+Connection: keep-alive
+
+<html><head><title>My Styled Page</title></head><body style="background-color: #f0f0f0; text-align: center; padding: 50px;"><h1 style="color: #ff5733; font-family: Arial, sans-serif;">Hello, World!</h1><p style="color: #555; font-size: 18px;">This is a simple page with inline CSS.</p></body></html>
+telnet> Connection closed.

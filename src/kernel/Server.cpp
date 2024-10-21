@@ -33,6 +33,7 @@ bool Server::setup()
 	return true;
 }
 
+vector<char> masterBuilder( vector<char> &bodyInput, e_errorCodes errorCode, string& fileName );
 std::vector<char> buildHardResponseTest()
 {
 	std::stringstream ss;	
@@ -53,9 +54,15 @@ Content-Length: "
 Connection: keep-alive\r\n\
 \r\n\
 " << strBody;
+	printColor(BOLD_RED, strBody.size());
 	std::string strtest(ss.str()); 
 	std::vector<char> res (strtest.begin(), strtest.end());
-	return res;
+	 std::vector<char> flo (strBody.begin(), strBody.end());
+	
+	string flo_file_extension = "index.html";
+	
+	return masterBuilder(flo, (e_errorCodes)(200), flo_file_extension);
+	// return res;
 }
 
 void Server::catchClients()
@@ -77,7 +84,8 @@ void Server::catchClients()
 
 		std::vector<char> welcome("welcome Bitch!\n","welcome Bitch!\n" + 15);		
 		std::vector<char> hardResp = buildHardResponseTest();
-		replyClient(client, hardResp);			
+		replyClient(client, hardResp);
+		
 	}
 }
 

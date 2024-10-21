@@ -10,6 +10,7 @@
 #include <arpa/inet.h>
 #include <algorithm>
 #include "Logger.hpp"
+#include "buildResponse.hpp"
 
 #define BUFF_SIZE 4096
 #define MAX_HDR_SIZE 8192

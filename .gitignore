@@ -32,7 +32,11 @@
 *.app
 
 # macOS
-.DS_Store
+.DS_Store/
+
+# VS Code files
+.vscode/
+
 # Custom
 webserv
 docs_dan
