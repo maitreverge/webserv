@@ -4,7 +4,7 @@
 /**========================================================================
  *                           CONSTRUCTOR && DESTRUCTOR
  *========================================================================**/
-Logger::Logger() : _logLevel(0), logToStdOut(1)
+Logger::Logger() : logToStdOut(1), _logLevel(0)
 {
 	_accessFile.open("access.log", std::ios::app);
 	_errorFile.open("error.log", std::ios::app);
@@ -24,10 +24,7 @@ Logger::~Logger()
  *========================================================================**/
 std::string Logger::getTimestamp()
 {
-	std::time_t now = std::time(0);
-	char buffer[80];
-	std::strftime(buffer, 80, "%Y-%m-%d %H:%M:%S", std::localtime(&now));
-	return std::string(buffer);
+    return timeStamp::getTime();
 }
 
 /**========================================================================
@@ -40,6 +37,7 @@ void Logger::log(logLevel logLevel, const std::string& message)
 		std::cout << logEntry;
 	_accessFile << logEntry;
 	_accessFile.flush();
+	(void)logLevel;
 }
 
 void Logger::log(logLevel logLevel, const std::string& message, const RequestParser& obj)
@@ -49,6 +47,8 @@ void Logger::log(logLevel logLevel, const std::string& message, const RequestPar
 		std::cout << logEntry;
 	_accessFile << logEntry;
 	_accessFile.flush();
+	(void)logLevel;
+	(void)obj;
 }
 
 void Logger::log(logLevel logLevel, const std::string& message, const Kernel& obj)
@@ -59,6 +59,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const Kernel& ob
 		std::cout << logEntry;
 	(void)obj;
 	_accessFile.flush();
+	(void)logLevel;
 }
 
 void Logger::log(logLevel logLevel, const std::string& message, const Server& obj)
@@ -70,6 +71,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const Server& ob
 		_accessFile << logEntry;
 	_accessFile.flush();
 	(void)obj;
+	(void)logLevel;
 }
 /**========================================================================
  *                       SINGLETON ACCESS

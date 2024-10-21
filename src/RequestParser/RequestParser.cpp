@@ -85,6 +85,10 @@ void	RequestParser::handleFirstLine(std::istringstream& requestStream)
 		Logger::getInstance().log(ERROR, "Request first line wrong", *this);
 }
 
+/**========================================================================
+ *                           HANDLEHEADERLINES
+ FIXME   header content NOT reset between calls... 
+ *========================================================================**/
 void	RequestParser::handleHeaderLines(std::istringstream& requestStream)
 {
 	std::string headerLine;
