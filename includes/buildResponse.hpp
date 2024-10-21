@@ -41,7 +41,7 @@ private:
 	string _body;
 
 	// Utils
-	u_int32_t _bodyLenght;
+	size_t _bodyLenght;
 
 	// TODO : Create variables for coockies
 

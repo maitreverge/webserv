@@ -77,8 +77,7 @@ void Server::catchClients()
 		FD_SET(client.fd, &this->_actualSet);
 		this->_maxFd = std::max(this->_maxFd, client.fd);
 		this->_clients.push_back(client);
-
-		std::vector<char> welcome("welcome Bitch!\n","welcome Bitch!\n" + 15);		
+			
 		std::vector<char> hardResp = buildHardResponseTest();
 		replyClient(client, hardResp);		
 	}
@@ -109,7 +108,8 @@ void Server::listenClients()
 void Server::handleClientRequest(size_t i, ssize_t ret)
 {
 	std::cout << "client say: " << ret << std::endl;	
-	if (ret + this->_clients[i].message.size() > MAX_HDR_SIZE)
+	if (ret + static_cast<ssize_t>(this->_clients[i].message.size())
+		> MAX_HDR_SIZE)
 	{
 		Logger::getInstance().log(ERROR, "header size"); //!	431 Request Header Fields Too Large	
 		this->exitClient(i);
@@ -123,9 +123,10 @@ void Server::handleClientRequest(size_t i, ssize_t ret)
 		std::cout << this->_clients[i].message[j];
 	std::cout << std::endl;	
 	
+	std::string delimiter = "\r\n\r\n";
 	if (std::search(this->_clients[i].message.begin(),
-		this->_clients[i].message.end(), "\r\n\r\n",
-		"\r\n\r\n" + 4) != this->_clients[i].message.end())
+		this->_clients[i].message.end(), delimiter.begin(),
+		delimiter.end() - 1) != this->_clients[i].message.end())
 	{						
 		this->_parser.parse(this->_clients[i]);								
 		this->_parser.displayAttributes();	
@@ -163,7 +164,7 @@ void Server::replyClient(Client & client, std::vector<char> & response)
 		if ((ret = send(client.fd, writeHead, writeSize, 0)) < 0)		
 			return Logger::getInstance().log(WARNING, "send");		
 		writeHead += ret;
-		writeSize -= ret;			
+		writeSize -= static_cast<size_t>(ret);			
 	}
 }
 
@@ -172,7 +173,7 @@ void Server::exitClient(size_t i)
 	Logger::getInstance().log(INFO, "client exited");
 	FD_CLR(this->_clients[i].fd, &this->_actualSet);
 	close(this->_clients[i].fd);	
-	this->_clients.erase(this->_clients.begin() + i);
+	this->_clients.erase(this->_clients.begin() + static_cast<int>(i));
 }
 
 void Server::exitClients()
