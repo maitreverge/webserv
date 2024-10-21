@@ -14,42 +14,36 @@ class buildResponse
 
 private:
 
-	// TODO : clean the class
-	// Useless Coplian methods
+	// *		---------------- COPLIAN METHODS ----------------
 	buildResponse( const buildResponse& copy );
 	buildResponse& operator=( const buildResponse& right_operator );
 
-	// Methods
+	// *		---------------- PRIV METHODS ----------------
 	string buildContentType( const string& )const;
 	string extractType( const string& )const;
 
+	// *		---------------- ATTRIBUTES ----------------
 	map<string, string> _mimeTypes;
 
-	// Output Final Answer
+	// Final Answer
 	vector<char> _httpResponse;
 	
 	// Headers
-	string _masterHeader; // TODO : getter, setter, init list and <<
-
 	string _statusLine;
-	string _timeStamp; // TODO : need to code a timestamp generator
+	string _timeStamp;
 	string _contentType;
-
 	string _transfertEncoding; // ! OPTION ONE
-	//             OR
+	// !           OR
 	string _contentLenght; // ! OPTION TWO
 
-	// Body
+	// Main Blocks
+	string _masterHeader;
 	string _body;
 
 	// Utils
-	u_int32_t _bodyLenght; // TODO : getter, setter, init list and <<
+	u_int32_t _bodyLenght;
 
 	// TODO : Create variables for coockies
-
-protected:
-
-	// Some protected members
 
 public:
 
@@ -57,33 +51,30 @@ public:
 	~buildResponse();
 
 	// *		---------------- GETTERS ----------------
-	const vector<char> &getHttpResponse( void )const;
+	const vector<char>	&getHttpResponse( void )const;
 
-	const string &getStatusLine( void )const;
-	const string &getTimeStamp( void )const;
-	const string &getContentType( void )const;
-	const string &getTransfertEncoding( void )const;
-	const string &getContentLenght( void )const;
+	const string 		&getStatusLine( void )const;
+	const string 		&getTimeStamp( void )const;
+	const string 		&getContentType( void )const;
+	const string 		&getTransfertEncoding( void )const;
+	const string 		&getContentLenght( void )const;
 	
-	const string &getBody( void )const;
+	const string 		&getBody( void )const;
 	
-	const string &get( void )const;
+	const u_int32_t		&getBodyLenght( void )const;
 	
 	// *		---------------- SETTERS ----------------
-	void	setStatusLine( string );
-	void	setTimeStamp( string );
-	void	setContentType( string );
-	void	setTransfertEncoding( string );
-	void	setContentLenght( string );
+	void				setStatusLine( string );
+	void				setTimeStamp( string );
+	void				setContentType( string );
+	void				setTransfertEncoding( string );
+	void				setContentLenght( string );
+	void				setBody( string );
 
-	void	setBody( string );
-
-	// *		---------------- METHODS ----------------
-	void buildBody( const vector<char>& );
-	void buildHeaders( const e_errorCodes&, const string& );
-	void assembleResponse( void );
-
-
+	// *		---------------- PUB METHODS ----------------
+	void				buildBody( const vector<char>& );
+	void				buildHeaders( const e_errorCodes&, const string& );
+	void				assembleResponse( void );
 };
 
 ostream& operator<<( ostream& output_stream, const buildResponse& input );

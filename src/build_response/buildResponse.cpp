@@ -54,6 +54,7 @@ const string &buildResponse::getContentType( void )const{ return _contentType; }
 const string &buildResponse::getTransfertEncoding( void )const{ return _transfertEncoding; }
 const string &buildResponse::getContentLenght( void )const{ return _contentLenght; }
 const string &buildResponse::getBody( void )const{ return _body; }
+const u_int32_t	&buildResponse::getBodyLenght( void )const{ return _bodyLenght; }
 
 
 // *	------------------- SETTERS ----------------------------------
@@ -66,28 +67,30 @@ void	buildResponse::setContentLenght( string input ){ _contentLenght = input; }
 void	buildResponse::setBody( string input ){ _body = input; }
 
 
-
 ostream& operator<<( ostream& output_stream, const buildResponse& right_input ){
 	
-	// TODO : Check a correct output of the class
 	output_stream << BOLD_HIGH_INTENSITY_GREEN << "Status Line = \n";
 	output_stream << right_input.getStatusLine();
 
-	output_stream << BOLD_BLUE << "\n\nTimeStamp = \n";
+	output_stream << BOLD_BLUE << "\nTimeStamp = \n";
 	output_stream << right_input.getTimeStamp();
 
-	output_stream << BOLD_BLUE << "\n\nContent-Type = \n";
+	output_stream << BOLD_BLUE << "\nContent-Type = \n";
 	output_stream << right_input.getContentType();
 
-	output_stream << BOLD_BLUE << "\n\nTransfert-Encoding = \n";
-	output_stream << right_input.getTransfertEncoding();
+	if (right_input.getBodyLenght() > 0)
+	{
+		output_stream << BOLD_BLUE << "\nContent-Lenght = \n";
+		output_stream << right_input.getContentLenght();
+	}
+	else
+	{
+		output_stream << BOLD_BLUE << "\nTransfert-Encoding = \n";
+		output_stream << right_input.getTransfertEncoding();
+	}
 
-	output_stream << BOLD_BLUE << "\n\nContent-Lenght = \n";
-	output_stream << right_input.getContentLenght();
-
-	output_stream << BOLD_HIGH_INTENSITY_RED << "\n\nHTTP BODY = \n";
+	output_stream << BOLD_HIGH_INTENSITY_RED << "\nHTTP BODY = \n";
 	output_stream << right_input.getBody();
-
 
 	output_stream << RESET;
 
