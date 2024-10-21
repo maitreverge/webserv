@@ -60,7 +60,7 @@ void	RequestParser::parse(Client& client)
 	handleFirstLine(requestStream);
 	handleHeaderLines(requestStream);
 	extractHeaders();
-	Logger::getInstance("access.log", "error.log").log("Request parsed", *this);
+	Logger::getInstance().log("Request parsed", *this);
 
 	_Client = NULL;
 }
@@ -82,7 +82,7 @@ void	RequestParser::handleFirstLine(std::istringstream& requestStream)
 			_isValid = false;
 	}
 	if (_isValid == 0)
-		Logger::getInstance("access.log", "error.log").log("Request first line wrong", *this);
+		Logger::getInstance().log("Request first line wrong", *this);
 }
 
 void	RequestParser::handleHeaderLines(std::istringstream& requestStream)
@@ -137,7 +137,7 @@ void	RequestParser::assignHeader(const std::string& key, size_t& headerField)
 {
 	std::map<std::string, std::vector<std::string> >::const_iterator it = _tmpHeaders.find(key);
 	if (it != _tmpHeaders.end() && !it->second.empty())
-		headerField = atoi(it->second[0].c_str());
+		headerField = static_cast<size_t>(atoi(it->second[0].c_str()));
 }
 
 void	RequestParser::assignHeader(const std::string& key, std::map<std::string, std::string>& headerField)
@@ -187,7 +187,7 @@ void RequestParser::displayAttributes() const
 
 void		RequestParser::displayHeaders() const
 {
-	Logger::getInstance("access.log", "error.log").log("************ HELLO FROM LOGGER!!! ************", *this);
+	Logger::getInstance().log("************ HELLO FROM LOGGER!!! ************", *this);
 	print("-------- HEADERS -------");
 	if (_Headers.Connection.length())
 		print("Connection: " + _Headers.Connection);
