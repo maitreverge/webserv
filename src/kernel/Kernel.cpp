@@ -26,6 +26,7 @@ void Kernel::callExit(Server & server)
 	server.exitServer();
 }
 
+// ! Init a vector of Servers
 void Kernel::setup()
 {	
 	for (size_t i = 0; i < this->_conf.sockAddress.size(); i++)
@@ -37,6 +38,7 @@ void Kernel::setup()
 	}	
 }
 
+// Main loop for execution
 void Kernel::launch()
 {
 	while (true)
@@ -60,6 +62,7 @@ void Kernel::launch()
 		usleep(100);	
 	}
 
+	// Clean exiting each server if the main loop happens to exit
 	std::for_each(this->_servers.begin(), this->_servers.end(),
 		this->callExit);
 }

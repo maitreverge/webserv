@@ -62,6 +62,7 @@ void	RequestParser::parse(Client& client)
 	handleHeaderLines(requestStream);
 	extractHeaders();
 	Logger::getInstance().log(INFO, "Request parsed", *this);
+	// Brancher execution ici
 	_Client = NULL;
 }
 

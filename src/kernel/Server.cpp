@@ -64,6 +64,7 @@ Connection: keep-alive\r\n\
 	// return res;
 }
 
+// Function to append a new client to a <vector>client and then
 void Server::catchClients()
 {	
 	if (FD_ISSET(this->_fd, &this->_readSet))
@@ -127,10 +128,12 @@ void Server::handleClientRequest(size_t i, ssize_t ret)
 	if (std::search(this->_clients[i].message.begin(),
 		this->_clients[i].message.end(), delimiter.begin(),
 		delimiter.end() - 1) != this->_clients[i].message.end())
-	{						
+	{	
+		// PARSING DAN ICI					
 		this->_parser.parse(this->_clients[i]);								
 		this->_parser.displayAttributes();	
 		this->_clients[i].message.clear();
+		// PARSING DAN ICI					
 	}
 	this->_readBuffer.clear();
 }
