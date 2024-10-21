@@ -4,7 +4,7 @@ bool Kernel::_exit = false;
 
 Kernel::Kernel(void)
 {
-	Logger::getInstance().log("hello from kernel");
+	Logger::getInstance().log("hello from kernel", *this);
 
 	this->setup();
 	this->launch();

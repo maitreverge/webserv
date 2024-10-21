@@ -61,7 +61,6 @@ void	RequestParser::parse(Client& client)
 	handleHeaderLines(requestStream);
 	extractHeaders();
 	Logger::getInstance().log("Request parsed", *this);
-
 	_Client = NULL;
 }
 

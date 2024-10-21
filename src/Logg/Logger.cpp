@@ -4,7 +4,7 @@
 /**========================================================================
  *                           CONSTRUCTOR && DESTRUCTOR
  *========================================================================**/
-Logger::Logger() : _logLevel(0)
+Logger::Logger() : _logLevel(0), logToStdOut(1)
 {
 	_accessFile.open("access.log", std::ios::app);
 	_errorFile.open("error.log", std::ios::app);
@@ -36,39 +36,39 @@ std::string Logger::getTimestamp()
 void Logger::log(const std::string& message)
 {
 	std::string logEntry = getTimestamp() + " - " + message + "\n";
-	if (isConsoleOutput)
+	if (logToStdOut)
 		std::cout << logEntry;
-	if (_accessFile.is_open())
-		_accessFile << logEntry;
+	_accessFile << logEntry;
+	_accessFile.flush();
 }
 
 void Logger::log(const std::string& message, const RequestParser& obj)
 {
-	_accessFile.open("access.log", std::ios::app);
 	std::string logEntry = getTimestamp() + " - " + obj.getMethod() + message + "\n";
-	if (isConsoleOutput)
+	if (logToStdOut)
 		std::cout << logEntry;
 	_accessFile << logEntry;
-	_accessFile.close();
+	_accessFile.flush();
 }
 
 void Logger::log(const std::string& message, const Kernel& obj)
 {
 	std::string logEntry = getTimestamp() + " - " + message + "\n";
-	if (isConsoleOutput)
+	_accessFile << logEntry;
+	if (logToStdOut)
 		std::cout << logEntry;
-	if (_accessFile.is_open())
-		_accessFile << logEntry;
 	(void)obj;
+	_accessFile.flush();
 }
 
 void Logger::log(const std::string& message, const Server& obj)
 {
 	std::string logEntry = getTimestamp() + " - " + message + "\n";
-	if (isConsoleOutput)
+	if (logToStdOut)
 		std::cout << logEntry;
 	if (_accessFile.is_open())
 		_accessFile << logEntry;
+	_accessFile.flush();
 	(void)obj;
 }
 /**========================================================================
