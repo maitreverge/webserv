@@ -17,6 +17,7 @@ struct Headers
 	std::map<std::string, std::string>	Cookie;
 	
 	Headers();
+	void	reset();
 };
 
 /**========================================================================
@@ -28,11 +29,10 @@ class RequestParser
 {
 	private:
 		//attributes
-		struct Client										*_Client;
 		std::string											_method;
 		std::string											_URI;
 		std::string											_HTTP_version;
-		bool												_isValid;
+		bool												_isValid; //!TEST if it remains valid or not
 		std::map<std::string, std::vector<std::string> >	_tmpHeaders;
 		Headers												_Headers;
 
@@ -54,7 +54,8 @@ class RequestParser
 		void	assignHeader(const std::string& key, std::map<std::string, std::string>& cookieField);
 		std::map<std::string, std::string>	extractCookies(std::vector<std::string> vec);
 		void	displayHeaders() const;
-	
+		void	reset_values();
+
 	public:
 		//coplien
 		RequestParser();
@@ -65,7 +66,6 @@ class RequestParser
 		std::string	getURI() const;
 		std::string	getHTTP_version() const;
 		Headers		getHeaders() const;
-		Client		*getClient() const;
 
 		// display methods
 		void 		displayParsingResult() const;
