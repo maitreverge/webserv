@@ -32,6 +32,15 @@ std::string Logger::getTimestamp()
 /**========================================================================
  *                           ACTION
  *========================================================================**/
+void Logger::log(const std::string& message)
+{
+	std::string logEntry = getTimestamp() + " - " + message + "\n";
+	if (isConsoleOutput)
+		std::cout << logEntry;
+	if (_accessFile.is_open())
+		_accessFile << logEntry;
+}
+
 void Logger::log(const std::string& message, const RequestParser& obj)
 {
 	std::string logEntry = getTimestamp() + " - " + obj.getMethod() + message + "\n";

@@ -4,7 +4,7 @@ bool Kernel::_exit = false;
 
 Kernel::Kernel(void)
 {
-	std::cout << "hello from kernel" << std::endl;
+	Logger::getInstance().log("hello from kernel");
 
 	this->setup();
 	this->launch();
@@ -48,7 +48,7 @@ void Kernel::launch()
 			0, &timeout) < 0)
 		{	
 			if (!this->_exit)
-				std::cout << "error select" << std::endl;
+				Logger::getInstance().log("error select");
 			continue;
 		}
 		if (this->_exit)

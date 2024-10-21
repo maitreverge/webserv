@@ -1,9 +1,12 @@
+#pragma once
+
 #include <iostream>
 #include <vector>
 #include <sys/select.h>
 #include <sys/socket.h>
 #include <Server.hpp>
 #include <algorithm>
+#include "Logger.hpp"
 
 class Kernel
 {
