@@ -33,7 +33,6 @@ bool Server::setup()
 	return true;
 }
 
-vector<char> masterBuilder( vector<char> &bodyInput, e_errorCodes errorCode, string& fileName );
 std::vector<char> buildHardResponseTest()
 {
 	std::stringstream ss;	
@@ -72,11 +71,8 @@ void Server::catchClients()
 		Client client;			
 		client.fd = accept(this->_fd, reinterpret_cast<sockaddr *>
 			(&client.address), &client.len);
-		if (client.fd < 0)
-		{
-			Logger::getInstance().log(ERROR, "accept");	
-			return ;
-		}
+		if (client.fd < 0)		
+			return Logger::getInstance().log(ERROR, "accept");		
 		displayClient(client);
 		FD_SET(client.fd, &this->_actualSet);
 		this->_maxFd = std::max(this->_maxFd, client.fd);
@@ -84,8 +80,7 @@ void Server::catchClients()
 
 		std::vector<char> welcome("welcome Bitch!\n","welcome Bitch!\n" + 15);		
 		std::vector<char> hardResp = buildHardResponseTest();
-		replyClient(client, hardResp);
-		
+		replyClient(client, hardResp);		
 	}
 }
 
@@ -141,9 +136,11 @@ void Server::handleClientRequest(size_t i, ssize_t ret)
 
 void Server::displayClient(Client & client)
 {
-	// Logger::getInstance().log(ERROR, "new client: " + client.fd + " " + client.address.sin_family+ " "  + inet_ntoa(client.address.sin_addr)+ " " + ntohs(client.address.sin_port), *this);
 	std::stringstream ss;
-	ss << "new client:" << "fd: " << client.fd << " family: " << client.address.sin_family << " addres: " << inet_ntoa(client.address.sin_addr) << " port: " << ntohs(client.address.sin_port);
+	ss << "new client:" << "fd: " << client.fd << " family: "
+		<< client.address.sin_family << " addres: "
+		<< inet_ntoa(client.address.sin_addr) << " port: "
+		<< ntohs(client.address.sin_port);
 	Logger::getInstance().log(INFO, ss.str());
 }
 
@@ -152,27 +149,19 @@ void Server::replyClient(Client & client, std::vector<char> & response)
 	this->_writeBuffer.assign(response.begin(), response.end());			
 	this->_readSet = this->_writeSet = this->_actualSet;		
 	if (select(this->_maxFd + 1, &this->_readSet, &this->_writeSet, 0, NULL)
-		< 0)
-	{
-		Logger::getInstance().log(ERROR, "select");
-		return ;
-	}
-	if(!FD_ISSET(client.fd, &this->_writeSet))
-	{
-		Logger::getInstance().log(ERROR, "client not ready for response");
-		return ;
-	}
+		< 0)	
+		return Logger::getInstance().log(ERROR, "select");	
+	if(!FD_ISSET(client.fd, &this->_writeSet))	
+		return Logger::getInstance().
+			log(ERROR, "client not ready for response");	
 	ssize_t ret;
 	char * writeHead = this->_writeBuffer.data();
 	size_t writeSize = this->_writeBuffer.size();
 	while (writeSize > 0)
 	{	
 		Logger::getInstance().log(INFO, "debug send data to client");
-		if ((ret = send(client.fd, writeHead, writeSize, 0)) < 0)
-		{
-			Logger::getInstance().log(WARNING, "send");
-			return ;
-		}		
+		if ((ret = send(client.fd, writeHead, writeSize, 0)) < 0)		
+			return Logger::getInstance().log(WARNING, "send");		
 		writeHead += ret;
 		writeSize -= ret;			
 	}

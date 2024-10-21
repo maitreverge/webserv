@@ -15,6 +15,9 @@
 #define BUFF_SIZE 4096
 #define MAX_HDR_SIZE 8192
 
+vector<char> masterBuilder(vector<char> &bodyInput, e_errorCodes errorCode,
+	string& fileName);
+	
 struct Client
 {
 	int					id;
