@@ -41,7 +41,7 @@ private:
 	string _body;
 
 	// Utils
-	size_t _bodyLenght;
+	u_int64_t _bodyLenght;
 
 	// TODO : Create variables for coockies
 
@@ -61,7 +61,7 @@ public:
 	
 	const string 		&getBody( void )const;
 	
-	const u_int32_t		&getBodyLenght( void )const;
+	const u_int64_t		&getBodyLenght( void )const;
 	
 	// *		---------------- SETTERS ----------------
 	void				setStatusLine( string );

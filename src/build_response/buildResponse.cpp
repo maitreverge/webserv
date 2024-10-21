@@ -54,7 +54,7 @@ const string &buildResponse::getContentType( void )const{ return _contentType; }
 const string &buildResponse::getTransfertEncoding( void )const{ return _transfertEncoding; }
 const string &buildResponse::getContentLenght( void )const{ return _contentLenght; }
 const string &buildResponse::getBody( void )const{ return _body; }
-const u_int32_t	&buildResponse::getBodyLenght( void )const{ return _bodyLenght; }
+const u_int64_t	&buildResponse::getBodyLenght( void )const{ return _bodyLenght; }
 
 
 // *	------------------- SETTERS ----------------------------------
