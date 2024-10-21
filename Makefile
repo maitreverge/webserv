@@ -1,51 +1,84 @@
-# Program name
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: svidot <svidot@student.42.fr>              +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/07/28 13:41:27 by seblin            #+#    #+#              #
+#    Updated: 2024/10/17 12:48:34 by svidot           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME = webserv
+CXX = c++
 
-# Colors
-RESET = \033[0m
-BOLD = \033[1m
-RED = \033[91m
-GREEN = \033[92m
-YELLOW = \033[33m
-ORANGE = \033[93m
+HDRDIRS := $(shell find . \( -name '*.h' -o -name '*.hpp' -o -name '*.tpp' \) \
+	-exec dirname {} \; | sort -u)
+SRC_DIR = .
+OBJ_DIR = objects
+CFLAGS = $(HDRFLAGS) -g -Wall -Wextra -Werror -Wconversion -std=c++98
+LDFLAGS = 
 
-# Compiler
-CC = c++
+HDRFLAGS := $(foreach dir, $(HDRDIRS), -I$(dir))
+HDR = $(shell find . \( -name "*.hpp" -o -name "*.h" -o -name "*.tpp" \))
+SRC = $(shell find . -name "*.cpp" | sed 's|^\./||')
+OBJ = $(SRC:%.cpp=$(OBJ_DIR)/%.o)
 
-# Compiler flags
-FLAGS = -Wall -Wextra -Werror -Wshadow -Wno-reorder -std=c++98
+.PHONY: all clean fclean re intro l newline backline emoticon nof
 
-# Source files
-SRC_DIR := src
-SRC := $(wildcard $(SRC_DIR)/*.cpp)
+all: design emoticon $(NAME) 
 
-# Objects files
-OBJ_DIR := obj
-OBJ := $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRC))
+nof:
+	@$(eval CFLAGS = $(HDRFLAGS))
+	@:
+	
+TOG = 0
 
-# Includes
-INC = -I includes/
+$(OBJ_DIR)/%.o : $(SRC_DIR)/%.cpp $(HDR)
+	@if [ $(TOG) -eq 0 ]; then \
+		echo "\033[0;32m compiling...        🚀 "; \
+	fi;	
+	$(eval TOG=1)
+	@mkdir -p $(dir $@)
+	@$(CXX) $(CFLAGS) $< -c -o $@
 
-all: $(NAME)
+$(NAME) : $(OBJ)
+	@echo -n "\033[?25l"
+	@$(MAKE) -s backline
+	@echo "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b compiled            ✅\033[0m"	
+	@sleep .2
+	@echo "\033[0;36m linking...          🚀 "
+	@sleep .2
+	@$(MAKE) -s backline
+	@$(CXX) $(OBJ) $(LDFLAGS) -o $@
+	@echo "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b linked              ☑️\n\033[0m"
+	@echo -n "\033[?25h"
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	@mkdir -p $(@D)
-	@$(CC) $(FLAGS) $(INC) -c $< -o $@
+emoticon:
+	@echo "\n 💗 😀 😃 😍\n"
+	@mkdir -p $(OBJ_DIR)
 
-$(NAME): $(OBJ)
-	@echo "$(BOLD)$(RED)🛠️            Compiling $(NAME)...      🛠️$(RESET)"
-	@echo "\n"
-	@$(CC) $(FLAGS) $(OBJ) -o $(NAME)
-	@echo "$(BOLD)$(GREEN)🚀    $(NAME) fully compiled, ready to use     🚀$(RESET)"
+newline: 
+	@echo ""
+
+backline: 
+	@echo "\033[A\033[A"
+
+design:
+	@echo "\e[8;50;120t"
+	@echo "\033[0;32m"
+	@./makescript.sh
+	@echo "					the HardTeam Compagny Copyright\033[0m"
 
 clean:
-	@rm -rf $(OBJ_DIR)
-	@echo "$(BOLD)$(ORANGE)🌀     Cleaned .o $(NAME)'s files   🌀$(RESET)"
+	@echo "\n ▫️  cleanning $(NAME) objects 🧻"
+	@rm -rf $(OBJ_DIR) 
+	@$(MAKE) -s newline	
 
-fclean: clean
-	@rm -f $(NAME)
-	@echo "$(BOLD)$(ORANGE)🌀     Cleaned $(NAME) executable   🌀$(RESET)"
+fclean:
+	@echo "\n ▫️  cleanning $(NAME) exec 🚽" 
+	@rm -f $(NAME)	
+	@$(MAKE) -s clean	
 
-re: fclean all
-
-.PHONY: all clean fclean re
+re: fclean backline all
