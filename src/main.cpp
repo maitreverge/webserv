@@ -7,7 +7,7 @@ void disableSignalEcho()
 {
     struct termios tty;
     tcgetattr(STDIN_FILENO, &tty);     
-    tty.c_lflag &= ~ECHOCTL;  
+    tty.c_lflag &= static_cast<unsigned int>(~ECHOCTL);  
     tcsetattr(STDIN_FILENO, TCSANOW, &tty); 
 }
 
