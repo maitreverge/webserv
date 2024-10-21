@@ -4,12 +4,13 @@
 /**========================================================================
  *                           CONSTRUCTOR && DESTRUCTOR
  *========================================================================**/
-Logger::Logger()
+Logger::Logger() : _logLevel(0)
 {
 	_accessFile.open("access.log", std::ios::app);
 	_errorFile.open("error.log", std::ios::app);
 	if (!_accessFile.is_open() || !_errorFile.is_open())
 		std::cerr << "Erreur : Impossible d'ouvrir le fichier de log." << std::endl;
+	(void)_logLevel;
 }
 
 Logger::~Logger()
@@ -43,11 +44,12 @@ void Logger::log(const std::string& message)
 
 void Logger::log(const std::string& message, const RequestParser& obj)
 {
+	_accessFile.open("access.log", std::ios::app);
 	std::string logEntry = getTimestamp() + " - " + obj.getMethod() + message + "\n";
 	if (isConsoleOutput)
 		std::cout << logEntry;
-	if (_accessFile.is_open())
-		_accessFile << logEntry;
+	_accessFile << logEntry;
+	_accessFile.close();
 }
 
 void Logger::log(const std::string& message, const Kernel& obj)

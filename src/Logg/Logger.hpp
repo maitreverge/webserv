@@ -16,7 +16,7 @@ private:
 	std::ofstream	_errorFile;
 	std::string		getTimestamp();
 	bool			isConsoleOutput;
-	int				logLevel;
+	int				_logLevel;
 
 public:
 	Logger();

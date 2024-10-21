@@ -200,7 +200,7 @@ void RequestParser::displayAttributes() const
 
 void		RequestParser::displayHeaders() const
 {
-	// Logger::getInstance().log("************ HELLO FROM LOGGER!!! ************", *this);
+	Logger::getInstance().log("************ HELLO FROM LOGGER!!! ************", *this);
 	print("-------- HEADERS -------");
 	if (_Headers.Connection.length())
 		print("Connection: " + _Headers.Connection);
