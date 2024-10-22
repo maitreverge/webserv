@@ -121,10 +121,10 @@ void floSimulator(std::vector<char> part)
     static std::ofstream ofs("image_chat.jpeg", std::ios::binary);
     
     if (ofs.is_open()) {
-        ofs.write(part.data(), part.size());  // Ecrire chaque bloc de données dans le fichier
-        ofs.flush();  // S'assurer que toutes les données sont écrites sur le disque immédiatement
+        ofs.write(part.data(), part.size());  
+        ofs.flush();
     } else {
-        std::cerr << "Erreur : impossible d'ouvrir le fichier." << std::endl;
+        std::cout << "Erreur : impossible d'ouvrir le fichier." << std::endl;
     }
 }
 
