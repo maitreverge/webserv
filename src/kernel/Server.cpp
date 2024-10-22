@@ -120,10 +120,10 @@ void Server::handleClientRequest(size_t i, ssize_t ret)
 	this->_clients[i].message.insert(this->_clients[i].message.end(), 
 		this->_readBuffer.begin(), this->_readBuffer.begin() + ret);
 
-	std::cout << "message client: " << std::endl;		
+	std::cout << "\e[34mmessage client: " << std::endl;		
 	for (size_t j = 0; j < this->_clients[i].message.size(); j++)				
 		std::cout << this->_clients[i].message[j];
-	std::cout << std::endl;	
+	std::cout << "\e[0m" << std::endl;	
 	
 	if (!this->_clients[i].body)
 	{
@@ -138,14 +138,33 @@ void Server::handleClientRequest(size_t i, ssize_t ret)
 			this->_parser.parse(this->_clients[i]);								
 			this->_parser.displayParsingResult();
 			if (this->_parser.getMethod() == "POST")
+			{
 				this->_clients[i].body = true;
+				printColor(RED, "yeah POST!!!");
+
+				std::cout << "\e[34mmessage client: " << std::endl;		
+				for (size_t j = 0; j < this->_clients[i].message.size(); j++)				
+					std::cout << this->_clients[i].message[j];
+				std::cout << "\e[0m" << std::endl;
+			}
 			if (!this->_clients[i].body)
+			{
 				this->_clients[i].message.clear();
+				this->_clients[i].body = false;
+			}
 			else
 			{
 				this->_clients[i].message.erase(this->_clients[i].message.begin(),
 					it + 4);
 				// flo this->parser, message
+				std::cout << "\e[34mbody client: " << std::endl;		
+				for (size_t j = 0; j < this->_clients[i].message.size(); j++)				
+					std::cout << this->_clients[i].message[j];
+				std::cout << "+++\e[0m" << std::endl;
+				this->_clients[i].message.clear();
+				
+				this->_clients[i].body = false;
+				
 			}
 		}
 	}
