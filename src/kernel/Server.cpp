@@ -106,7 +106,10 @@ void Server::listenClients()
 
 void Server::handleClientRequest(size_t i, ssize_t ret)
 {
-	std::cout << "client say: " << ret << std::endl;	
+	std::cout << "client say: " << ret << std::endl;
+	if (!this->_clients[i].body)
+	{
+
 	if (ret + static_cast<ssize_t>(this->_clients[i].message.size())
 		> MAX_HDR_SIZE)
 	{
@@ -123,15 +126,37 @@ void Server::handleClientRequest(size_t i, ssize_t ret)
 	std::cout << std::endl;	
 	
 	std::string delimiter = "\r\n\r\n";
-	if (std::search(this->_clients[i].message.begin(),
-		this->_clients[i].message.end(), delimiter.begin(),
-		delimiter.end() - 1) != this->_clients[i].message.end())
+
+	std::vector<char>::iterator it = std::search(this->_clients[i].message.begin(),
+	this->_clients[i].message.end(), delimiter.begin(),
+	delimiter.end() - 1);
+	if (((std::vector<char>::iterator it = std::search(this->_clients[i].message.begin(),
+	this->_clients[i].message.end(), delimiter.begin(),
+	delimiter.end() - 1)) != this->_clients[i].message.end()))
 	{						
 		this->_parser.parse(this->_clients[i]);								
-		this->_parser.displayParsingResult();	
+		this->_parser.displayParsingResult();
+
 		this->_clients[i].message.clear();
 	}
+
+	// std::vector<char>::iterator it = std::search(this->_clients[i].message.begin(),
+	// 	this->_clients[i].message.end(), delimiter.begin(),
+	// 	delimiter.end() - 1);
+	// if (it != this->_clients[i].message.end())
+	// {						
+	// 	this->_parser.parse(this->_clients[i]);								
+	// 	this->_parser.displayParsingResult();
+
+	// 	this->_clients[i].message.clear();
+	// }
+
 	this->_readBuffer.clear();
+	}
+	else
+	{
+
+	}
 }
 
 void Server::displayClient(Client & client)

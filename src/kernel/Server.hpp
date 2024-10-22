@@ -25,6 +25,7 @@ struct Client
 	std::vector<char>	message;
 	sockaddr_in 		address;
 	socklen_t 			len;
+	bool				body;
 
 	Client()
 	{
@@ -32,6 +33,7 @@ struct Client
 		fd = 0;		
 		memset(&address, 0, sizeof(address));
 		len = sizeof(address);
+		body = false;
 	}
 };
 
