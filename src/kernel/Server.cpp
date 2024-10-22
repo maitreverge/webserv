@@ -111,22 +111,34 @@ void Server::listenClients()
 
 void Server::handleClientBody(size_t i, ssize_t ret)
 {
-	std::cout << "client body: " << ret << std::endl;
+	std::cout << "sequel client body: " << ret << std::endl;
 
 	this->_clients[i].message.insert(this->_clients[i].message.end(), 
 		this->_readBuffer.begin(), this->_readBuffer.begin() + ret);
 	
-	this->_clients[i].bodySize += this->_clients[i].message.size();
+	this->_clients[i].bodySize += ret;
 	if (this->_clients[i].bodySize > this->_parser.getHeaders().ContentLength)
-		std::cout << "error content size" << std::endl;
-	if (this->_clients[i].bodySize == this->_parser.getHeaders().ContentLength)
-		this->_clients[i].body = false;
-
-	// flo this->parser, message!
-	std::cout << "\e[36sequel body client: " << std::endl;		
+	{
+		std::cout << "sequel error content size" << " bs: " << this->_clients[i].bodySize << " cl: " << this->_parser.getHeaders().ContentLength << std::endl;
+		this->exitClient(i);
+		this->_readBuffer.clear();
+		return ;
+	}
+	std::cout << "\e[36msequel body client: " << std::endl;		
 	for (size_t j = 0; j < this->_clients[i].message.size(); j++)				
 		std::cout << this->_clients[i].message[j];
 	std::cout << "\e[0m" << std::endl;
+
+	if (this->_clients[i].bodySize == this->_parser.getHeaders().ContentLength)
+	{
+		std::cout << "sequel body termined" << std::endl;
+		this->_clients[i].body = false;
+		this->_clients[i].message.clear();
+		this->_clients[i].bodySize = 0;
+		this->_readBuffer.clear();
+	}
+
+	// flo this->parser, message!
 }
 
 void Server::handleClientRequest(size_t i, ssize_t ret)
@@ -174,21 +186,32 @@ void Server::handleClientRequest(size_t i, ssize_t ret)
 			std::cout << "\e[0m" << std::endl;
 
 			if (this->_parser.getHeaders().ContentLength > MAX_CNT_SIZE)
-				std::cout << "error max content size" << std::endl; //!
+			{
+				std::cout << "error max content size" << " cl: " << this->_parser.getHeaders().ContentLength << std::endl; //!
+				this->_readBuffer.clear();
+				this->exitClient(i);
+				return ;
+			}
 
 			this->_clients[i].bodySize += this->_clients[i].message.size();
 			if (this->_clients[i].bodySize > this->_parser.getHeaders().ContentLength)
-				std::cout << "error content size" << std::endl;
+			{
+				std::cout << "error content size" << " bs: " << this->_clients[i].bodySize << " cl: " << this->_parser.getHeaders().ContentLength << std::endl;
+				this->_readBuffer.clear();
+				this->exitClient(i);
+				return ;
+			}
 
 			if (this->_clients[i].bodySize == this->_parser.getHeaders().ContentLength)
 			{
 				std::cout << "body termined" << std::endl;
 				this->_clients[i].body = false;
+				this->_clients[i].message.clear();
+				this->_clients[i].bodySize = 0;
 			}
 			// flo this->parser, message!
-		}
-		else
-			this->_clients[i].message.clear();		
+		}		
+		this->_clients[i].message.clear();		
 	}
 	this->_readBuffer.clear();
 	
