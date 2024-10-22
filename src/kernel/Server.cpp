@@ -118,7 +118,7 @@ void Server::listenClients()
 
 void floSimulator(std::vector<char> part)
 {
-    static std::ofstream ofs("image_chat.jpeg", std::ios::binary | std::ios::app);
+    static std::ofstream ofs("image_chat.jpeg", std::ios::binary);
     
     if (ofs.is_open()) {
         ofs.write(part.data(), part.size());  // Ecrire chaque bloc de données dans le fichier
@@ -145,13 +145,13 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 	}
 
 	std::cout << "\e[36msequel body client: " << std::endl;		
-	for (size_t j = 0; j < this->_clients[i].message.size(); j++)				
-		std::cout << this->_clients[i].message[j];
+	// for (size_t j = 0; j < this->_clients[i].message.size(); j++)				
+	// 	std::cout << this->_clients[i].message[j];
 	std::cout << "\e[0m" << std::endl;
 
 	if (this->_clients[i].bodySize == this->_parser.getHeaders().ContentLength)
 	{
-		std::cout << "sequel body termined" << std::endl;
+		std::cout << "sequel body termined" << " var size " << this->_clients[i].message.size() << " bodysize " << this->_clients[i].bodySize << " ctnt len " << this->_parser.getHeaders().ContentLength << std::endl;
 		floSimulator(this->_clients[i].message);
 		this->_clients[i].body = false;
 		this->_clients[i].message.clear();
@@ -159,6 +159,7 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 		this->_readBuffer.clear();
 	}
 	floSimulator(this->_clients[i].message);
+	this->_clients[i].message.clear();
 	// flo this->parser, message!
 }
 
@@ -203,8 +204,8 @@ void Server::handleClientRequest(size_t i, ssize_t ret)
 				it + 4);
 
 			std::cout << "\e[34mstart body: " << std::endl;		
-			for (size_t j = 0; j < this->_clients[i].message.size(); j++)				
-				std::cout << this->_clients[i].message[j];
+			// for (size_t j = 0; j < this->_clients[i].message.size(); j++)				
+			// 	std::cout << this->_clients[i].message[j];
 			std::cout << "\e[0m" << std::endl;
 
 			if (this->_parser.getHeaders().ContentLength > MAX_CNT_SIZE)
