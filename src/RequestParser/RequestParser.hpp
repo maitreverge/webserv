@@ -16,7 +16,6 @@ struct Headers
 	size_t								ContentLength;
 	std::map<std::string, std::string>	Cookie;
 	
-	Headers();
 	void	reset();
 };
 
