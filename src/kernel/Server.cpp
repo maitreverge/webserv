@@ -109,6 +109,25 @@ void Server::listenClients()
 	}
 }
 
+// void floSimulator(std::vector<char> part)
+// {
+// 	static ofstream ofs("\\image_chat.jpeg", std::ios::binary);	
+// 	ofs.write(part.data(), part.size());
+// 	ofs.flush();
+// }
+
+void floSimulator(std::vector<char> part)
+{
+    static std::ofstream ofs("image_chat.jpeg", std::ios::binary | std::ios::app);
+    
+    if (ofs.is_open()) {
+        ofs.write(part.data(), part.size());  // Ecrire chaque bloc de données dans le fichier
+        ofs.flush();  // S'assurer que toutes les données sont écrites sur le disque immédiatement
+    } else {
+        std::cerr << "Erreur : impossible d'ouvrir le fichier." << std::endl;
+    }
+}
+
 void Server::handleClientBody(size_t i, ssize_t ret)
 {
 	std::cout << "sequel client body: " << ret << std::endl;
@@ -124,6 +143,7 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 		this->_readBuffer.clear();
 		return ;
 	}
+
 	std::cout << "\e[36msequel body client: " << std::endl;		
 	for (size_t j = 0; j < this->_clients[i].message.size(); j++)				
 		std::cout << this->_clients[i].message[j];
@@ -132,12 +152,13 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 	if (this->_clients[i].bodySize == this->_parser.getHeaders().ContentLength)
 	{
 		std::cout << "sequel body termined" << std::endl;
+		floSimulator(this->_clients[i].message);
 		this->_clients[i].body = false;
 		this->_clients[i].message.clear();
 		this->_clients[i].bodySize = 0;
 		this->_readBuffer.clear();
 	}
-
+	floSimulator(this->_clients[i].message);
 	// flo this->parser, message!
 }
 
@@ -156,10 +177,10 @@ void Server::handleClientRequest(size_t i, ssize_t ret)
 	this->_clients[i].message.insert(this->_clients[i].message.end(), 
 		this->_readBuffer.begin(), this->_readBuffer.begin() + ret);
 
-	std::cout << "\e[34mmessage client: " << std::endl;		
-	for (size_t j = 0; j < this->_clients[i].message.size(); j++)				
-		std::cout << this->_clients[i].message[j];
-	std::cout << "\e[0m" << std::endl;	
+	// std::cout << "\e[34mmessage client: " << std::endl;		
+	// for (size_t j = 0; j < this->_clients[i].message.size(); j++)				
+	// 	std::cout << this->_clients[i].message[j];
+	// std::cout << "\e[0m" << std::endl;	
 	
 	std::string delimiter = "\r\n\r\n";
 	std::vector<char>::iterator it = std::search
@@ -171,11 +192,12 @@ void Server::handleClientRequest(size_t i, ssize_t ret)
 	if (it != this->_clients[i].message.end())
 	{						
 		this->_parser.parse(this->_clients[i]);								
-		this->_parser.displayParsingResult();
+		// this->_parser.displayParsingResult();
 		if (this->_parser.getMethod() == "POST")
 		{
 			this->_clients[i].body = true;
 			printColor(RED, "yeah POST!!!");
+			std::cout << "CONTENT LENGHT: " <<  this->_parser.getHeaders().ContentLength << std::endl;
 
 			this->_clients[i].message.erase(this->_clients[i].message.begin(),
 				it + 4);
@@ -205,10 +227,12 @@ void Server::handleClientRequest(size_t i, ssize_t ret)
 			if (this->_clients[i].bodySize == this->_parser.getHeaders().ContentLength)
 			{
 				std::cout << "body termined" << std::endl;
+				floSimulator(this->_clients[i].message);
 				this->_clients[i].body = false;
 				this->_clients[i].message.clear();
-				this->_clients[i].bodySize = 0;
+				this->_clients[i].bodySize = 0;				
 			}
+			floSimulator(this->_clients[i].message);
 			// flo this->parser, message!
 		}		
 		this->_clients[i].message.clear();		
