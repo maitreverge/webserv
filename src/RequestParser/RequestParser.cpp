@@ -6,19 +6,10 @@
 /**========================================================================
  *                  CONSTRUCTORS / DESTRUCTOR / INIT
  *========================================================================**/
-Headers::							Headers() :
-									Connection(""),
-									ContentType(""),
-									Host(""),
-									Accept(),
-									ContentLength(0),
-									Cookie() {}
-
 RequestParser::RequestParser() : 	_method(""),
 									_URI(""),
 									_HTTP_version(""),
-									_isValid(true),
-									_Headers() {}
+									_isValid(true) {}
 
 RequestParser::~RequestParser() {}
 
@@ -83,8 +74,8 @@ void	RequestParser::reset_values()
 	_URI = "";
 	_HTTP_version = "";
 	_isValid = true;
-	_Headers.reset();
 	_tmpHeaders.clear();
+	_Headers.reset();
 }
 
 void	RequestParser::handleFirstLine(std::istringstream& requestStream)
