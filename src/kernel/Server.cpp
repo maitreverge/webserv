@@ -109,13 +109,13 @@ void Server::handleClientRequest(size_t i, ssize_t ret)
 	std::cout << "client say: " << ret << std::endl;
 	if (!this->_clients[i].body)
 	{
-
-	if (ret + static_cast<ssize_t>(this->_clients[i].message.size())
-		> MAX_HDR_SIZE)
-	{
-		Logger::getInstance().log(ERROR, "header size"); //! 431 Request Header Fields Too Large	
-		this->exitClient(i);
-		return;	
+		if (ret + static_cast<ssize_t>(this->_clients[i].message.size())
+			> MAX_HDR_SIZE)
+		{
+			Logger::getInstance().log(ERROR, "header size"); //! 431 Request Header Fields Too Large	
+			this->exitClient(i);
+			return;	
+		}
 	}
 	this->_clients[i].message.insert(this->_clients[i].message.end(), 
 		this->_readBuffer.begin(), this->_readBuffer.begin() + ret);
@@ -125,38 +125,33 @@ void Server::handleClientRequest(size_t i, ssize_t ret)
 		std::cout << this->_clients[i].message[j];
 	std::cout << std::endl;	
 	
-	std::string delimiter = "\r\n\r\n";
-
-	std::vector<char>::iterator it = std::search(this->_clients[i].message.begin(),
-	this->_clients[i].message.end(), delimiter.begin(),
-	delimiter.end() - 1);
-	if (((std::vector<char>::iterator it = std::search(this->_clients[i].message.begin(),
-	this->_clients[i].message.end(), delimiter.begin(),
-	delimiter.end() - 1)) != this->_clients[i].message.end()))
-	{						
-		this->_parser.parse(this->_clients[i]);								
-		this->_parser.displayParsingResult();
-
-		this->_clients[i].message.clear();
+	if (!this->_clients[i].body)
+	{
+		std::string delimiter = "\r\n\r\n";
+		std::vector<char>::iterator it = std::search
+			(this->_clients[i].message.begin(),
+			this->_clients[i].message.end(),
+			delimiter.begin(),
+			delimiter.end() - 1);
+		if (it != this->_clients[i].message.end())
+		{						
+			this->_parser.parse(this->_clients[i]);								
+			this->_parser.displayParsingResult();
+			if (this->_parser.getMethod() == "POST")
+				this->_clients[i].body = true;
+			if (!this->_clients[i].body)
+				this->_clients[i].message.clear();
+			else
+			{
+				this->_clients[i].message.erase(this->_clients[i].message.begin(),
+					it + 4);
+				// flo this->parser, message
+			}
+		}
 	}
-
-	// std::vector<char>::iterator it = std::search(this->_clients[i].message.begin(),
-	// 	this->_clients[i].message.end(), delimiter.begin(),
-	// 	delimiter.end() - 1);
-	// if (it != this->_clients[i].message.end())
-	// {						
-	// 	this->_parser.parse(this->_clients[i]);								
-	// 	this->_parser.displayParsingResult();
-
-	// 	this->_clients[i].message.clear();
-	// }
 
 	this->_readBuffer.clear();
-	}
-	else
-	{
-
-	}
+	
 }
 
 void Server::displayClient(Client & client)
