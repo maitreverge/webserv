@@ -28,6 +28,7 @@ struct Client
 	socklen_t 			len;
 	bool				body;
 	size_t				bodySize;
+	RequestParser		header;
 
 	Client()
 	{
@@ -53,8 +54,6 @@ class Server
 	fd_set &			_actualSet;
 	fd_set &			_readSet;
 	fd_set &			_writeSet;
-	
-	RequestParser 		_parser;
 
 	void displayClient(Client & client);
 	void handleClientRequest(size_t i, ssize_t ret);
