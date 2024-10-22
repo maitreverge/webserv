@@ -10,26 +10,33 @@ fd_set & actualSet, fd_set & readSet, fd_set & writeSet)
 }
 
 bool Server::setup()
-{	
+{
+	// Create a socket and set it as the maximum file descriptor
 	this->_maxFd = this->_fd = socket(AF_INET, SOCK_STREAM, 0);
-	if (this->_fd < 0)	
+	if (this->_fd < 0)
 		return Logger::getInstance().log(ERROR, "socket"), false;
+
+	// Add the socket file descriptor to the actual set
 	FD_SET(this->_fd, &_actualSet);
-	if (bind(this->_fd, reinterpret_cast<const sockaddr *>
-		(&this->_sockAddr), sizeof(this->_sockAddr)) < 0)
+
+	// Bind the socket to the provided address
+	if (bind(this->_fd, reinterpret_cast<const sockaddr *>(&this->_sockAddr), sizeof(this->_sockAddr)) < 0)
 	{
 		std::stringstream ss;
 		ss << "bind from socket: " << ntohs(this->_sockAddr.sin_port);
 		Logger::getInstance().log(ERROR, ss.str());
-		this->exitServer();		
-		return false;		
-	}	
+		this->exitServer();
+		return false;
+	}
+
+	// Listen for incoming connections with a maximum queue length
 	if (listen(this->_fd, this->_conf.maxClient) < 0)
 	{
 		Logger::getInstance().log(ERROR, "listen");
 		this->exitServer();
 		return false;
-	}	
+	}
+
 	return true;
 }
 
@@ -64,42 +71,61 @@ Connection: keep-alive\r\n\
 	// return res;
 }
 
-// Function to append a new client to a <vector>client and then
 void Server::catchClients()
 {	
 	if (FD_ISSET(this->_fd, &this->_readSet))
 	{		
-		Client client;			
+		Client client;
+		
+		// Accept the incoming connection and assign the client's file descriptor
 		client.fd = accept(this->_fd, reinterpret_cast<sockaddr *>
 			(&client.address), &client.len);
+		
+		// If the accept call fails, log an error message and return
 		if (client.fd < 0)		
 			return Logger::getInstance().log(ERROR, "accept");		
 		displayClient(client);
+		
+		// Add the client's file descriptor to the set of active file descriptors
 		FD_SET(client.fd, &this->_actualSet);
+		
+		// Update the maximum file descriptor value if necessary
 		this->_maxFd = std::max(this->_maxFd, client.fd);
+		
+		// Add the new client to the list of clients
 		this->_clients.push_back(client);
-			
+		
+		// Build a hardcoded response and send it to the client
 		std::vector<char> hardResp = buildHardResponseTest();
 		replyClient(client, hardResp);		
 	}
 }
 
 void Server::listenClients()
-{	
+{
+	 // Iterate through the list of connected clients
 	for (size_t i = 0; i < this->_clients.size(); i++)
 	{	
+		// Check if the client's file descriptor is set in the read set
 		if (FD_ISSET(this->_clients[i].fd, &this->_readSet))
 		{
+			// Resize the read buffer to the predefined buffer size
 			this->_readBuffer.resize(BUFF_SIZE);
+			
+			// Receive data from the client and store it in the read buffer
 			ssize_t ret = recv(this->_clients[i].fd, this->_readBuffer.data(),
 				this->_readBuffer.size(), 0);
+			
+			// If the recv call fails, log an error message and disconnect the client
 			if (ret < 0)
 			{
 				Logger::getInstance().log(ERROR, "recv");
 				this->exitClient(i);				
 			}
+			// If the recv call returns 0, indicating the client has closed the connection, disconnect the client
 			else if (ret == 0)					
-				this->exitClient(i);		
+				this->exitClient(i);
+			// If data is successfully received, process the client's request		
 			else
 				this->handleClientRequest(i, ret);
 		}	
@@ -109,6 +135,8 @@ void Server::listenClients()
 void Server::handleClientRequest(size_t i, ssize_t ret)
 {
 	std::cout << "client say: " << ret << std::endl;	
+	
+	// Check if the total size of the client's message exceeds the maximum header size
 	if (ret + static_cast<ssize_t>(this->_clients[i].message.size())
 		> MAX_HDR_SIZE)
 	{
@@ -116,25 +144,30 @@ void Server::handleClientRequest(size_t i, ssize_t ret)
 		this->exitClient(i);
 		return;	
 	}
+
+	// Append the received data to the client's message buffer
 	this->_clients[i].message.insert(this->_clients[i].message.end(), 
 		this->_readBuffer.begin(), this->_readBuffer.begin() + ret);
 
+	// Log the client's message for debugging purposes
 	std::cout << "message client: " << std::endl;		
 	for (size_t j = 0; j < this->_clients[i].message.size(); j++)				
 		std::cout << this->_clients[i].message[j];
 	std::cout << std::endl;	
 	
+	// Check if the client's message contains the end-of-header delimiter (\r\n\r\n)
 	std::string delimiter = "\r\n\r\n";
 	if (std::search(this->_clients[i].message.begin(),
 		this->_clients[i].message.end(), delimiter.begin(),
 		delimiter.end() - 1) != this->_clients[i].message.end())
 	{	
-		// PARSING DAN ICI					
+		// Parse the client's message and display the parsed attributes
 		this->_parser.parse(this->_clients[i]);								
 		this->_parser.displayAttributes();	
 		this->_clients[i].message.clear();
-		// PARSING DAN ICI					
 	}
+
+	// Clear the read buffer for the next read operation
 	this->_readBuffer.clear();
 }
 
@@ -149,23 +182,36 @@ void Server::displayClient(Client & client)
 }
 
 void Server::replyClient(Client & client, std::vector<char> & response)
-{	
+{
+	// Assign the response data to the _writeBuffer
 	this->_writeBuffer.assign(response.begin(), response.end());			
+	
+	// Copy the current set of file descriptors to the read and write sets
 	this->_readSet = this->_writeSet = this->_actualSet;		
+	
+	// Monitor the file descriptors for readiness
 	if (select(this->_maxFd + 1, &this->_readSet, &this->_writeSet, 0, NULL)
 		< 0)	
 		return Logger::getInstance().log(ERROR, "select");	
-	if(!FD_ISSET(client.fd, &this->_writeSet))	
+	
+	// Check if the client's file descriptor is ready for writing
+	if (!FD_ISSET(client.fd, &this->_writeSet))	
 		return Logger::getInstance().
 			log(ERROR, "client not ready for response");	
 	ssize_t ret;
 	char * writeHead = this->_writeBuffer.data();
 	size_t writeSize = this->_writeBuffer.size();
+	
+	// Send the response data to the client in a loop until all data is sent
 	while (writeSize > 0)
 	{	
 		Logger::getInstance().log(INFO, "debug send data to client");
+		
+		// Attempt to send data to the client
 		if ((ret = send(client.fd, writeHead, writeSize, 0)) < 0)		
 			return Logger::getInstance().log(WARNING, "send");		
+		
+		// Update the write buffer pointer and size after each successful send
 		writeHead += ret;
 		writeSize -= static_cast<size_t>(ret);			
 	}
@@ -174,8 +220,14 @@ void Server::replyClient(Client & client, std::vector<char> & response)
 void Server::exitClient(size_t i)
 {
 	Logger::getInstance().log(INFO, "client exited");
+	
+	// Remove the client's file descriptor from the active set
 	FD_CLR(this->_clients[i].fd, &this->_actualSet);
-	close(this->_clients[i].fd);	
+	
+	// Close the client's socket
+	close(this->_clients[i].fd);
+	
+	// Erase the client from the clients vector
 	this->_clients.erase(this->_clients.begin() + static_cast<int>(i));
 }
 
@@ -187,7 +239,10 @@ void Server::exitClients()
 
 void Server::exitServer()
 {
+	// Disconnect all connected clients
 	this->exitClients();
+	// Remove the server's file descriptor from the active set
 	FD_CLR(this->_fd, &this->_actualSet);
+	// Close the server's socket
 	close(this->_fd);	
 }
