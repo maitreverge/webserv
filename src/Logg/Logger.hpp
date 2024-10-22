@@ -3,9 +3,9 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "Server.hpp"
 #include "RequestParser.hpp"
 #include "Kernel.hpp"
-#include "Server.hpp"
 
 class Kernel;
 class Server;

@@ -1,7 +1,6 @@
 #include "RequestParser.hpp"
 #include "../../includes/master.hpp"
 #include "Logger.hpp"
-#include "Server.hpp"
 
 /**========================================================================
  *                  CONSTRUCTORS / DESTRUCTOR / INIT
@@ -47,6 +46,7 @@ void	RequestParser::trim(std::string& str)
  *========================================================================**/
 void	RequestParser::parse(Client& client)
 {
+	_Client = &client ;
 	reset_values();
 	std::istringstream requestStream(charVectorToString(client.message));
 	print(charVectorToString(client.message));

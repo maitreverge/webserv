@@ -19,6 +19,8 @@ struct Headers
 	void	reset();
 };
 
+struct Client;
+
 /**========================================================================
  *                           REQUESTPARSER
  * ? gets the request as a std::vector<char>
@@ -34,7 +36,7 @@ class RequestParser
 		bool												_isValid;
 		std::map<std::string, std::vector<std::string> >	_tmpHeaders;
 		Headers												_Headers;
-		
+		Client*	_Client;
 		// utils
 		void		trim(std::string& str);
 		std::string	charVectorToString(const std::vector<char>& vector);
