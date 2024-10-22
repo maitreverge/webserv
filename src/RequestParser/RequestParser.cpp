@@ -8,7 +8,8 @@
 RequestParser::RequestParser() : 	_method(""),
 									_URI(""),
 									_HTTP_version(""),
-									_isValid(true) {}
+									_isValid(true),
+									_Client(NULL) {}
 
 RequestParser::~RequestParser() {}
 
@@ -55,6 +56,7 @@ void	RequestParser::parse(Client& client)
 	handleHeaderLines(requestStream);
 	extractHeaders();
 	Logger::getInstance().log(INFO, "Request parsed", *this);
+	_Client = NULL;
 }
 
 void Headers::reset()

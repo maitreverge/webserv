@@ -23,7 +23,6 @@ class Logger
 private:
 	std::ofstream	_accessFile;
 	std::ofstream	_errorFile;
-	std::string		getTimestamp();
 	bool			logToStdOut;
 	int				_logLevel;
 
