@@ -56,10 +56,9 @@ Connection: keep-alive\r\n\
 	printColor(BOLD_RED, strBody.size());
 	std::string strtest(ss.str()); 
 	std::vector<char> res (strtest.begin(), strtest.end());
-	 std::vector<char> flo (strBody.begin(), strBody.end());
+	std::vector<char> flo (strBody.begin(), strBody.end());
 	
-	string flo_file_extension = "index.html";
-	
+	string flo_file_extension = "index.html";	
 	return masterBuilder(flo, (e_errorCodes)(200), flo_file_extension);
 	// return res;
 }
@@ -111,7 +110,7 @@ void Server::handleClientRequest(size_t i, ssize_t ret)
 	if (ret + static_cast<ssize_t>(this->_clients[i].message.size())
 		> MAX_HDR_SIZE)
 	{
-		Logger::getInstance().log(ERROR, "header size"); //!	431 Request Header Fields Too Large	
+		Logger::getInstance().log(ERROR, "header size"); //! 431 Request Header Fields Too Large	
 		this->exitClient(i);
 		return;	
 	}
