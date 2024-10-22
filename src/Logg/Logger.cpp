@@ -20,19 +20,11 @@ Logger::~Logger()
 }
 
 /**========================================================================
- *                           UTILS
- *========================================================================**/
-std::string Logger::getTimestamp()
-{
-    return timeStamp::getTime();
-}
-
-/**========================================================================
  *                           ACTION
  *========================================================================**/
 void Logger::log(logLevel logLevel, const std::string& message)
 {
-	std::string logEntry = getTimestamp() + " - " + message + "\n";
+	std::string logEntry = timeStamp::getTime() + " - " + message + "\n";
 	if (logToStdOut)
 		std::cout << logEntry;
 	_accessFile << logEntry;
@@ -42,7 +34,7 @@ void Logger::log(logLevel logLevel, const std::string& message)
 
 void Logger::log(logLevel logLevel, const std::string& message, const RequestParser& obj)
 {
-	std::string logEntry = getTimestamp() + " - " + message + "\n";
+	std::string logEntry = timeStamp::getTime() + " - " + message + "\n";
 	if (logToStdOut)
 		std::cout << logEntry;
 	_accessFile << logEntry;
@@ -53,7 +45,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const RequestPar
 
 void Logger::log(logLevel logLevel, const std::string& message, const Kernel& obj)
 {
-	std::string logEntry = getTimestamp() + " - " + message + "\n";
+	std::string logEntry = timeStamp::getTime() + " - " + message + "\n";
 	_accessFile << logEntry;
 	if (logToStdOut)
 		std::cout << logEntry;
@@ -64,7 +56,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const Kernel& ob
 
 void Logger::log(logLevel logLevel, const std::string& message, const Server& obj)
 {
-	std::string logEntry = getTimestamp() + " - " + message + "\n";
+	std::string logEntry = timeStamp::getTime() + " - " + message + "\n";
 	if (logToStdOut)
 		std::cout << logEntry;
 	if (_accessFile.is_open())

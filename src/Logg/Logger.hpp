@@ -3,9 +3,9 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "Server.hpp"
 #include "RequestParser.hpp"
 #include "Kernel.hpp"
-#include "Server.hpp"
 
 class Kernel;
 class Server;
@@ -23,7 +23,6 @@ class Logger
 private:
 	std::ofstream	_accessFile;
 	std::ofstream	_errorFile;
-	std::string		getTimestamp();
 	bool			logToStdOut;
 	int				_logLevel;
 

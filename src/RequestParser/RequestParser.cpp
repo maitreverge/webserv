@@ -1,24 +1,15 @@
 #include "RequestParser.hpp"
 #include "../../includes/master.hpp"
 #include "Logger.hpp"
-#include "Server.hpp"
 
 /**========================================================================
  *                  CONSTRUCTORS / DESTRUCTOR / INIT
  *========================================================================**/
-Headers::							Headers() :
-									Connection(""),
-									ContentType(""),
-									Host(""),
-									Accept(),
-									ContentLength(0),
-									Cookie() {}
-
 RequestParser::RequestParser() : 	_method(""),
 									_URI(""),
 									_HTTP_version(""),
 									_isValid(true),
-									_Headers() {}
+									_Client(NULL) {}
 
 RequestParser::~RequestParser() {}
 
@@ -47,10 +38,16 @@ void	RequestParser::trim(std::string& str)
 	str.erase(str.find_last_not_of(" \t") + 1);
 }
 /**========================================================================
- *                           ACTION
+ *                           MAIN ACTION
+ * parse() is called from outside the class
+ * first, intern value are reset
+ * then values are extracted from the first line
+ * then headers are extracted form the headers (following lines)
+ * Everything after '\r\n\r\n' (end of header) is IGNORED
  *========================================================================**/
 void	RequestParser::parse(Client& client)
 {
+	_Client = &client ;
 	reset_values();
 	std::istringstream requestStream(charVectorToString(client.message));
 	print(charVectorToString(client.message));
@@ -59,6 +56,7 @@ void	RequestParser::parse(Client& client)
 	handleHeaderLines(requestStream);
 	extractHeaders();
 	Logger::getInstance().log(INFO, "Request parsed", *this);
+	_Client = NULL;
 }
 
 void Headers::reset()
@@ -78,8 +76,8 @@ void	RequestParser::reset_values()
 	_URI = "";
 	_HTTP_version = "";
 	_isValid = true;
-	std::memset(&_Headers, 0, sizeof(_Headers));
 	_tmpHeaders.clear();
+	_Headers.reset();
 }
 
 void	RequestParser::handleFirstLine(std::istringstream& requestStream)
@@ -102,9 +100,22 @@ void	RequestParser::handleFirstLine(std::istringstream& requestStream)
 		Logger::getInstance().log(ERROR, "Request first line wrong", *this);
 }
 
+
 /**========================================================================
- *                           HANDLEHEADERLINES
-*========================================================================**/
+ *                           EXTRACTHEADERS
+ * headers first put in map<string, vector<string> > _tmpHeaders
+ * then asigned accoriding to their type (see assignHeader overloads)
+ *========================================================================**/
+void	RequestParser::extractHeaders()
+{
+	assignHeader("Host", _Headers.Host);
+	assignHeader("Connection", _Headers.Connection);
+	assignHeader("Content-Type", _Headers.ContentType);
+	assignHeader("Accept", _Headers.Accept);
+	assignHeader("Content-Length", _Headers.ContentLength);
+	assignHeader("Cookie", _Headers.Cookie);
+}
+
 void	RequestParser::handleHeaderLines(std::istringstream& requestStream)
 {
 	std::string headerLine;
@@ -126,16 +137,6 @@ void	RequestParser::handleHeaderLines(std::istringstream& requestStream)
 		}
 	}
 
-}
-
-void	RequestParser::extractHeaders()
-{
-	assignHeader("Host", _Headers.Host);
-	assignHeader("Connection", _Headers.Connection);
-	assignHeader("Content-Type", _Headers.ContentType);
-	assignHeader("Accept", _Headers.Accept);
-	assignHeader("Content-Length", _Headers.ContentLength);
-	assignHeader("Cookie", _Headers.Cookie);
 }
 
 void	RequestParser::assignHeader(const std::string& key, std::string& headerField)
@@ -180,6 +181,9 @@ void	RequestParser::assignHeader(const std::string& key, std::map<std::string, s
 		headerField = extractCookies(it->second);
 }
 
+/**========================================================================
+ *                           EXTRACTCOOKIES
+ *========================================================================**/
 std::map<std::string, std::string> RequestParser::extractCookies(std::vector<std::string> vec)
 {
 	std::map<std::string, std::string> cookiesMap;
@@ -201,6 +205,8 @@ std::map<std::string, std::string> RequestParser::extractCookies(std::vector<std
 
 /**========================================================================
  *                           DISPLAY
+ * only for dev purposes. 
+ * May be commented once project is tested and functional
  *========================================================================**/
 void RequestParser::displayParsingResult() const
 {

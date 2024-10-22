@@ -16,9 +16,10 @@ struct Headers
 	size_t								ContentLength;
 	std::map<std::string, std::string>	Cookie;
 	
-	Headers();
 	void	reset();
 };
+
+struct Client;
 
 /**========================================================================
  *                           REQUESTPARSER
@@ -32,14 +33,10 @@ class RequestParser
 		std::string											_method;
 		std::string											_URI;
 		std::string											_HTTP_version;
-		bool												_isValid; //!TEST if it remains valid or not
+		bool												_isValid;
 		std::map<std::string, std::vector<std::string> >	_tmpHeaders;
 		Headers												_Headers;
-
-		// coplien
-		// RequestParser(const RequestParser& other);
-		// RequestParser& operator=(const RequestParser& rhs);
-		
+		Client*	_Client;
 		// utils
 		void		trim(std::string& str);
 		std::string	charVectorToString(const std::vector<char>& vector);
@@ -51,8 +48,10 @@ class RequestParser
 		void	assignHeader(const std::string& key, std::string& value);
 		void	assignHeader(const std::string& key, std::vector<std::string>& headerField);
 		void	assignHeader(const std::string& key, size_t& headerField);
-		void	assignHeader(const std::string& key, std::map<std::string, std::string>& cookieField);
-		std::map<std::string, std::string>	extractCookies(std::vector<std::string> vec);
+		void	assignHeader(const std::string& key, std::map<std::string,
+							std::string>& cookieField);
+		std::map<std::string, std::string>	extractCookies
+							(std::vector<std::string> vec);
 		void	displayHeaders() const;
 		void	reset_values();
 
@@ -68,10 +67,9 @@ class RequestParser
 		Headers		getHeaders() const;
 
 		// display methods
-		void 		displayParsingResult() const;
-		//! display methods must be changed in file server.cpp!
+		void	displayParsingResult() const;
 		void	displayAttributes() const;
 
-		// main method
+		// action method
 		void	parse(struct Client& client);
 };
