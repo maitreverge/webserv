@@ -48,3 +48,4 @@ intra_binaries/ubuntu_tester
 intra_binaries/ubuntu_cgi_tester
 test_webserv
 test_webserv
+test_webserv
