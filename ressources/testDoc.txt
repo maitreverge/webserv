@@ -6,5 +6,6 @@ http --verbose GET http://localhost:1511 "Authorization: Bearer your_token"
 infos regarding testing tool siege
 https://www.joedog.org/siege-manual/#top
 
-testing sieg docker
+testing siege docker
 https://hub.docker.com/r/jstarcher/siege
+
