@@ -134,8 +134,8 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 							+ YELLOW + intToString(portToInt(client.address)) + " "
 							+ GREEN + intToString(client.fd) + " "
 							+ BOLD_HIGH_INTENSITY_WHITE + "Server: "
-							+ MAGENTA + ipToString(server._sockAddr) + " "
-							+ YELLOW + intToString(portToInt(server._sockAddr)) + " "
+							+ MAGENTA + ipToString(server.getSockAdress()) + " "
+							+ YELLOW + intToString(portToInt(server.getSockAdress())) + " "
 							+ RESET + "\n";
 	if (logToStdOut)
 		std::cout << logEntry;
@@ -151,8 +151,8 @@ void Logger::log(logLevel logLevel, const std::string& message, const Server&ser
 							+ formatLogLevel(logLevel) 
 							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
 							+ BOLD_HIGH_INTENSITY_WHITE + "Server: "
-							+ MAGENTA + ipToString(server._sockAddr) + " "
-							+ YELLOW + intToString(portToInt(server._sockAddr)) + " "
+							+ MAGENTA + ipToString(server.getSockAdress()) + " "
+							+ YELLOW + intToString(portToInt(server.getSockAdress())) + " "
 							+ RESET + "\n";
 	if (logToStdOut)
 		std::cout << logEntry;

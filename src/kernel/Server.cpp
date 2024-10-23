@@ -9,6 +9,11 @@ fd_set & actualSet, fd_set & readSet, fd_set & writeSet)
 	this->_writeBuffer.reserve(BUFF_SIZE);
 }
 
+const sockaddr_in & Server::getSockAdress() const
+{
+	return (this->_sockAddr);
+}
+
 bool Server::setup()
 {	
 	this->_maxFd = this->_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -77,8 +82,8 @@ void Server::catchClients()
 		this->_maxFd = std::max(this->_maxFd, client.fd);
 		this->_clients.push_back(client);
 			
-		// std::vector<char> hardResp = buildHardResponseTest();
-		// replyClient(client, hardResp);		
+		std::vector<char> hardResp = buildHardResponseTest();
+		replyClient(client, hardResp);		
 	}
 }
 
