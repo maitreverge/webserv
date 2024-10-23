@@ -6,41 +6,51 @@
 #    By: dsylvain <dsylvain@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/28 13:41:27 by seblin            #+#    #+#              #
-#    Updated: 2024/10/23 11:41:45 by dsylvain         ###   ########.fr        #
+#    Updated: 2024/10/23 17:05:06 by dsylvain         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+# executables name
 NAME = webserv
 TEST_NAME = test_webserv
-CXX = c++ 
+
+# compiler + flags
+CXX = c++
 CFLAGS = $(HDRFLAGS) -g -Wall -Wextra -Werror -Wconversion -std=c++98
 TFLAGS = $(HDRFLAGS) -std=c++14 -I$(GTEST_INCLUDE) -pthread
 LDFLAGS = 
+
+# Google Test
 GTEST_LIBS = -L$(GTEST_DIR)/build/lib -lgtest -lgtest_main -lpthread
 GTEST_DIR = ./googletest
 GTEST_INCLUDE = $(GTEST_DIR)/$(GTEST_DIR)/include
 GTEST_LIB = $(GTEST_DIR)/build/lib
 
+# headers
 HDRDIRS := $(shell find . \( -name '*.h' -o -name '*.hpp' -o -name '*.tpp' \) \
 	-exec dirname {} \; | sort -u)
 HDRFLAGS := $(foreach dir, $(HDRDIRS), -I$(dir))
 HDR = $(shell find . \( -name "*.hpp" -o -name "*.h" -o -name "*.tpp" \))
 
+# directories
 SRC_DIR = src
 TEST_DIR = tests
 OBJ_DIR = objects
 TEST_OBJ_DIR = test_objects
 
+# SRC files
 SRC = $(shell find $(SRC_DIR) -name "*.cpp" | sed 's|^\./||')
-OBJ = $(SRC:%.cpp=$(OBJ_DIR)/%.o)
+TEST_SRC = 	$(shell find $(TEST_DIR) -name "*.cpp" | sed 's|^\./||') \
+			$(shell find $(SRC_DIR) -name "*.cpp" ! -name "main.cpp"  | sed 's|^\./||')	
 
-TEST_SRC = $(shell find $(TEST_DIR) -name "*.cpp" | sed 's|^\./||') src/RequestParser/RequestParser.cpp \
-																	src/Logg/Logger.cpp \
-																	src/timeStamp.cpp
+# OBJ files
+OBJ = $(SRC:%.cpp=$(OBJ_DIR)/%.o)
 TEST_OBJ = $(TEST_SRC:%.cpp=$(TEST_OBJ_DIR)/%.o)
 
+# neat temp file (design flag)
 TEMP_FILE = .compiled
 
+# phony mon ami
 .PHONY: all clean fclean re intro test l newline backline emoticon nof
 
 all: design emoticon $(NAME) 
