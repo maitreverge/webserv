@@ -43,6 +43,7 @@ struct Client
 
 class Server
 {
+	public:
 	Config 				_conf;
 	sockaddr_in 		_sockAddr;
 	std::vector<Client> _clients;
@@ -62,7 +63,6 @@ class Server
 	void exitClient(size_t index);
 	void exitClients();
 
-	public:
 
 		Server(sockaddr_in & sockaddr, int & maxFd, fd_set & actualSet,
 			fd_set & readSet, fd_set & writeSet);

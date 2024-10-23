@@ -36,7 +36,7 @@ class RequestParser
 		bool												_isValid;
 		std::map<std::string, std::vector<std::string> >	_tmpHeaders;
 		Headers												_Headers;
-		Client*	_Client;
+		Client*												_Client;
 		// utils
 		void		trim(std::string& str);
 		std::string	charVectorToString(const std::vector<char>& vector);
@@ -64,6 +64,7 @@ class RequestParser
 		std::string	getMethod() const;
 		std::string	getURI() const;
 		std::string	getHTTP_version() const;
+		Client*		getClient() const;
 		Headers		getHeaders() const;
 
 		// display methods
