@@ -1,25 +1,15 @@
 #include "RequestParser.hpp"
 #include "../../includes/master.hpp"
 #include "Logger.hpp"
-#include "Server.hpp"
 
 /**========================================================================
  *                  CONSTRUCTORS / DESTRUCTOR / INIT
  *========================================================================**/
-Headers::							Headers() :
-									Connection(""),
-									ContentType(""),
-									Host(""),
-									Accept(),
-									ContentLength(0),
-									Cookie() {}
-
-RequestParser::RequestParser() : 	_Client(NULL),
-									_method(""),
+RequestParser::RequestParser() : 	_method(""),
 									_URI(""),
 									_HTTP_version(""),
 									_isValid(true),
-									_Headers() {}
+									_Client(NULL) {}
 
 RequestParser::~RequestParser() {}
 
@@ -33,8 +23,6 @@ std::string	RequestParser::getURI() const 			{return (_URI);}
 std::string	RequestParser::getHTTP_version() const	{return (_HTTP_version);}
 
 Headers	RequestParser::getHeaders() const			{return (_Headers);}
-
-Client*	RequestParser::getClient() const			{return (_Client);}
 
 /**========================================================================
  *                           UTILS
@@ -50,13 +38,19 @@ void	RequestParser::trim(std::string& str)
 	str.erase(str.find_last_not_of(" \t") + 1);
 }
 /**========================================================================
- *                           ACTION
+ *                           MAIN ACTION
+ * parse() is called from outside the class
+ * first, intern value are reset
+ * then values are extracted from the first line
+ * then headers are extracted form the headers (following lines)
+ * Everything after '\r\n\r\n' (end of header) is IGNORED
  *========================================================================**/
 void	RequestParser::parse(Client& client)
 {
-	_Client = &client;
-	std::istringstream requestStream(charVectorToString(_Client->message));
-
+	_Client = &client ;
+	reset_values();
+	std::istringstream requestStream(charVectorToString(client.message));
+	print(charVectorToString(client.message));
 	Logger::getInstance().log(INFO, "Request parsing started");
 	handleFirstLine(requestStream);
 	handleHeaderLines(requestStream);
@@ -64,6 +58,27 @@ void	RequestParser::parse(Client& client)
 	Logger::getInstance().log(INFO, "Request parsed", *this);
 	// Brancher execution ici
 	_Client = NULL;
+}
+
+void Headers::reset()
+{
+	Connection = "";
+	ContentType = "";
+	Host = "";
+	Accept = std::vector<std::string>();
+	ContentLength = 0;
+	Cookie = std::map<std::string, std::string>();
+	
+}
+
+void	RequestParser::reset_values()
+{
+	_method = "";
+	_URI = "";
+	_HTTP_version = "";
+	_isValid = true;
+	_tmpHeaders.clear();
+	_Headers.reset();
 }
 
 void	RequestParser::handleFirstLine(std::istringstream& requestStream)
@@ -86,10 +101,22 @@ void	RequestParser::handleFirstLine(std::istringstream& requestStream)
 		Logger::getInstance().log(ERROR, "Request first line wrong", *this);
 }
 
+
 /**========================================================================
- *                           HANDLEHEADERLINES
- FIXME   header content NOT reset between calls... 
+ *                           EXTRACTHEADERS
+ * headers first put in map<string, vector<string> > _tmpHeaders
+ * then asigned accoriding to their type (see assignHeader overloads)
  *========================================================================**/
+void	RequestParser::extractHeaders()
+{
+	assignHeader("Host", _Headers.Host);
+	assignHeader("Connection", _Headers.Connection);
+	assignHeader("Content-Type", _Headers.ContentType);
+	assignHeader("Accept", _Headers.Accept);
+	assignHeader("Content-Length", _Headers.ContentLength);
+	assignHeader("Cookie", _Headers.Cookie);
+}
+
 void	RequestParser::handleHeaderLines(std::istringstream& requestStream)
 {
 	std::string headerLine;
@@ -113,16 +140,6 @@ void	RequestParser::handleHeaderLines(std::istringstream& requestStream)
 
 }
 
-void	RequestParser::extractHeaders()
-{
-	assignHeader("Host", _Headers.Host);
-	assignHeader("Connection", _Headers.Connection);
-	assignHeader("Content-Type", _Headers.ContentType);
-	assignHeader("Accept", _Headers.Accept);
-	assignHeader("Content-Length", _Headers.ContentLength);
-	assignHeader("Cookie", _Headers.Cookie);
-}
-
 void	RequestParser::assignHeader(const std::string& key, std::string& headerField)
 {
 	std::map<std::string, std::vector<std::string> >::const_iterator it = _tmpHeaders.find(key);
@@ -138,11 +155,11 @@ void	RequestParser::assignHeader(const std::string& key, std::vector<std::string
 	if (it != _tmpHeaders.end() && !it->second.empty())
 	{
 		for (std::vector<std::string>::const_iterator valueIt = it->second.begin();
-		     valueIt != it->second.end(); ++valueIt)
+			valueIt != it->second.end(); ++valueIt)
 		{
 			bool exists = false;
 			for (std::vector<std::string>::const_iterator it = headerField.begin();
-			     it != headerField.end(); it++)
+				it != headerField.end(); it++)
 				if (*it == *valueIt)
 					exists = true;
 			if (!exists)
@@ -165,6 +182,9 @@ void	RequestParser::assignHeader(const std::string& key, std::map<std::string, s
 		headerField = extractCookies(it->second);
 }
 
+/**========================================================================
+ *                           EXTRACTCOOKIES
+ *========================================================================**/
 std::map<std::string, std::string> RequestParser::extractCookies(std::vector<std::string> vec)
 {
 	std::map<std::string, std::string> cookiesMap;
@@ -186,11 +206,13 @@ std::map<std::string, std::string> RequestParser::extractCookies(std::vector<std
 
 /**========================================================================
  *                           DISPLAY
+ * only for dev purposes. 
+ * May be commented once project is tested and functional
  *========================================================================**/
 void RequestParser::displayParsingResult() const
 {
 	displayAttributes();
-	displayHeaders(); //! displayHeaders to be taken out of displayAttributes
+	displayHeaders();
 }
 
 void RequestParser::displayAttributes() const
@@ -200,7 +222,6 @@ void RequestParser::displayAttributes() const
 	print("URI: " + _URI);
 	print("HTTP_VERSION: " + _HTTP_version);
 	printNoEndl("_isValid: "); print(_isValid);
-	displayHeaders();
 }
 
 void		RequestParser::displayHeaders() const

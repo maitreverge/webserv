@@ -63,10 +63,9 @@ Connection: keep-alive\r\n\
 	printColor(BOLD_RED, strBody.size());
 	std::string strtest(ss.str()); 
 	std::vector<char> res (strtest.begin(), strtest.end());
-	 std::vector<char> flo (strBody.begin(), strBody.end());
+	std::vector<char> flo (strBody.begin(), strBody.end());
 	
-	string flo_file_extension = "index.html";
-	
+	string flo_file_extension = "index.html";	
 	return masterBuilder(flo, (e_errorCodes)(200), flo_file_extension);
 	// return res;
 }
@@ -127,20 +126,43 @@ void Server::listenClients()
 				this->exitClient(i);
 			// If data is successfully received, process the client's request		
 			else
-				this->handleClientRequest(i, ret);
+			{
+				if (!this->_clients[i].body)
+					this->handleClientRequest(i, ret);
+				else
+					this->handleClientBody(i, ret);
+			}
 		}	
 	}
 }
 
+// void floSimulator(std::vector<char> part)
+// {
+// 	static ofstream ofs("\\image_chat.jpeg", std::ios::binary);	
+// 	ofs.write(part.data(), part.size());
+// 	ofs.flush();
+// }
+
+void floSimulator(std::vector<char> part)
+{
+    static std::ofstream ofs("image_chat.jpeg", std::ios::binary);
+    
+    if (ofs.is_open()) {
+        ofs.write(part.data(), part.size());  
+        ofs.flush();
+    } else {
+        std::cout << "Erreur : impossible d'ouvrir le fichier." << std::endl;
+    }
+}
+
 void Server::handleClientRequest(size_t i, ssize_t ret)
 {
-	std::cout << "client say: " << ret << std::endl;	
+	std::cout << "client header: " << ret << std::endl;
 	
-	// Check if the total size of the client's message exceeds the maximum header size
 	if (ret + static_cast<ssize_t>(this->_clients[i].message.size())
 		> MAX_HDR_SIZE)
 	{
-		Logger::getInstance().log(ERROR, "header size"); //!	431 Request Header Fields Too Large	
+		Logger::getInstance().log(ERROR, "header size"); //! 431 Request Header Fields Too Large	
 		this->exitClient(i);
 		return;	
 	}
@@ -149,26 +171,108 @@ void Server::handleClientRequest(size_t i, ssize_t ret)
 	this->_clients[i].message.insert(this->_clients[i].message.end(), 
 		this->_readBuffer.begin(), this->_readBuffer.begin() + ret);
 
-	// Log the client's message for debugging purposes
-	std::cout << "message client: " << std::endl;		
-	for (size_t j = 0; j < this->_clients[i].message.size(); j++)				
-		std::cout << this->_clients[i].message[j];
-	std::cout << std::endl;	
+	// std::cout << "\e[34mmessage client: " << std::endl;		
+	// for (size_t j = 0; j < this->_clients[i].message.size(); j++)				
+	// 	std::cout << this->_clients[i].message[j];
+	// std::cout << "\e[0m" << std::endl;	
 	
 	// Check if the client's message contains the end-of-header delimiter (\r\n\r\n)
 	std::string delimiter = "\r\n\r\n";
-	if (std::search(this->_clients[i].message.begin(),
-		this->_clients[i].message.end(), delimiter.begin(),
-		delimiter.end() - 1) != this->_clients[i].message.end())
+	std::vector<char>::iterator it = std::search
+		(this->_clients[i].message.begin(),
+		this->_clients[i].message.end(),
+		delimiter.begin(),
+		delimiter.end() - 1);
+		
+	if (it != this->_clients[i].message.end())
 	{	
-		// Parse the client's message and display the parsed attributes
-		this->_parser.parse(this->_clients[i]);								
-		this->_parser.displayAttributes();	
-		this->_clients[i].message.clear();
+		std::string str(it, this->_clients[i].message.end());
+		// std::cout << "\e[36mFIND!!!!!!!!\n\n" << str << "\e[0m" <<std::endl;				
+		this->_clients[i].header.parse(this->_clients[i]);								
+		this->_clients[i].header.displayParsingResult();
+		if (this->_clients[i].header.getMethod() == "POST")
+		{
+			this->_clients[i].body = true;
+			printColor(RED, "yeah POST!!!");
+			std::cout << "CONTENT LENGHT: " <<  this->_clients[i].header.getHeaders().ContentLength << std::endl;
+
+			this->_clients[i].message.erase(this->_clients[i].message.begin(),
+				it + 4);
+
+			std::cout << "\e[34mstart body: " << std::endl;		
+			// for (size_t j = 0; j < this->_clients[i].message.size(); j++)				
+			// 	std::cout << this->_clients[i].message[j];
+			std::cout << "\e[0m" << std::endl;
+
+			if (this->_clients[i].header.getHeaders().ContentLength > MAX_CNT_SIZE)
+			{
+				std::cout << "error max content size" << " cl: " << this->_clients[i].header.getHeaders().ContentLength << std::endl; //!
+				this->_readBuffer.clear();
+				this->exitClient(i);
+				return ;
+			}
+
+			this->_clients[i].bodySize += this->_clients[i].message.size();
+			if (this->_clients[i].bodySize > this->_clients[i].header.getHeaders().ContentLength)
+			{
+				std::cout << "error content size" << " bs: " << this->_clients[i].bodySize << " cl: " << this->_clients[i].header.getHeaders().ContentLength << std::endl;
+				this->_readBuffer.clear();
+				this->exitClient(i);
+				return ;
+			}
+
+			if (this->_clients[i].bodySize == this->_clients[i].header.getHeaders().ContentLength)
+			{
+				std::cout << "body termined" << std::endl;
+				floSimulator(this->_clients[i].message);
+				this->_clients[i].body = false;
+				this->_clients[i].message.clear();
+				this->_clients[i].bodySize = 0;				
+			}
+			floSimulator(this->_clients[i].message);
+			// flo this->parser, message!
+		}		
+		this->_clients[i].message.clear();		
 	}
 
 	// Clear the read buffer for the next read operation
 	this->_readBuffer.clear();
+	
+}
+
+void Server::handleClientBody(size_t i, ssize_t ret)
+{
+	std::cout << "sequel client body: " << ret << std::endl;
+
+	this->_clients[i].message.insert(this->_clients[i].message.end(), 
+		this->_readBuffer.begin(), this->_readBuffer.begin() + ret);
+	
+	this->_clients[i].bodySize += ret;
+	if (this->_clients[i].bodySize > this->_clients[i].header.getHeaders().ContentLength)
+	{
+		std::cout << "sequel error content size" << " bs: " << this->_clients[i].bodySize << " cl: " << this->_clients[i].header.getHeaders().ContentLength << std::endl;
+		this->exitClient(i);
+		this->_readBuffer.clear();
+		return ;
+	}
+
+	std::cout << "\e[36msequel body client: " << std::endl;		
+	// for (size_t j = 0; j < this->_clients[i].message.size(); j++)				
+	// 	std::cout << this->_clients[i].message[j];
+	std::cout << "\e[0m" << std::endl;
+
+	if (this->_clients[i].bodySize == this->_clients[i].header.getHeaders().ContentLength)
+	{
+		std::cout << "sequel body termined" << " var size " << this->_clients[i].message.size() << " bodysize " << this->_clients[i].bodySize << " ctnt len " << this->_clients[i].header.getHeaders().ContentLength << std::endl;
+		floSimulator(this->_clients[i].message);
+		this->_clients[i].body = false;
+		this->_clients[i].message.clear();
+		this->_clients[i].bodySize = 0;
+		this->_readBuffer.clear();
+	}
+	floSimulator(this->_clients[i].message);
+	this->_clients[i].message.clear();
+	// flo this->parser, message!
 }
 
 void Server::displayClient(Client & client)
