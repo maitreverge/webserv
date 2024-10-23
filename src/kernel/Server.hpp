@@ -66,6 +66,7 @@ class Server
 
 		Server(sockaddr_in & sockaddr, int & maxFd, fd_set & actualSet,
 			fd_set & readSet, fd_set & writeSet);
+	
 		bool setup();
 		void catchClients();
 		void listenClients();
