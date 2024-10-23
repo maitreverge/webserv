@@ -29,6 +29,7 @@ struct Client;
 class RequestParser
 {
 	private:
+	public:
 		//attributes
 		std::string											_method;
 		std::string											_URI;
@@ -55,7 +56,6 @@ class RequestParser
 		void	displayHeaders() const;
 		void	reset_values();
 
-	public:
 		//coplien
 		RequestParser();
 		~RequestParser();

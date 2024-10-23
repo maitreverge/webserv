@@ -6,7 +6,7 @@
 #    By: dansylvain <dansylvain@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/28 13:41:27 by seblin            #+#    #+#              #
-#    Updated: 2024/10/23 02:09:06 by dansylvain       ###   ########.fr        #
+#    Updated: 2024/10/23 02:23:57 by dansylvain       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = webserv
 TEST_NAME = test_webserv
 CXX = c++
 CFLAGS = $(HDRFLAGS) -g -Wall -Wextra -Werror -Wconversion -std=c++98
-TFLAGS = $(HDRFLAGS) -g -Wall -Wextra -Werror -Wconversion -std=c++14
+TFLAGS = $(HDRFLAGS) -std=c++14
 LDFLAGS = 
 GTEST_LIBS = -lgtest -lgtest_main -lpthread
 
@@ -31,7 +31,9 @@ TEST_OBJ_DIR = test_objects
 SRC = $(shell find $(SRC_DIR) -name "*.cpp" | sed 's|^\./||')
 OBJ = $(SRC:%.cpp=$(OBJ_DIR)/%.o)
 
-TEST_SRC = $(shell find $(TEST_DIR) -name "*.cpp" | sed 's|^\./||')
+TEST_SRC = $(shell find $(TEST_DIR) -name "*.cpp" | sed 's|^\./||') src/RequestParser/RequestParser.cpp \
+																	src/Logg/Logger.cpp \
+																	src/timeStamp.cpp
 TEST_OBJ = $(TEST_SRC:%.cpp=$(TEST_OBJ_DIR)/%.o)
 
 TEMP_FILE = .compiled
