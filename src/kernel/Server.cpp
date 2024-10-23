@@ -52,15 +52,12 @@ Content-Length: "
 "\r\n\
 Connection: keep-alive\r\n\
 \r\n\
-" << strBody;
-	printColor(BOLD_RED, strBody.size());
+" << strBody;	
 	std::string strtest(ss.str()); 
 	std::vector<char> res (strtest.begin(), strtest.end());
-	std::vector<char> flo (strBody.begin(), strBody.end());
-	
+	std::vector<char> flo (strBody.begin(), strBody.end());	
 	string flo_file_extension = "index.html";	
-	return masterBuilder(flo, (e_errorCodes)(200), flo_file_extension);
-	// return res;
+	return masterBuilder(flo, (e_errorCodes)(200), flo_file_extension);	
 }
 
 void Server::catchClients()
@@ -77,8 +74,8 @@ void Server::catchClients()
 		this->_maxFd = std::max(this->_maxFd, client.fd);
 		this->_clients.push_back(client);
 			
-		std::vector<char> hardResp = buildHardResponseTest();
-		replyClient(client, hardResp);		
+		// std::vector<char> hardResp = buildHardResponseTest();
+		// replyClient(client, hardResp);		
 	}
 }
 
@@ -101,20 +98,13 @@ void Server::listenClients()
 			else
 			{
 				if (!this->_clients[i].body)
-					this->handleClientRequest(i, ret);
+					this->handleClientHeader(i, ret);
 				else
 					this->handleClientBody(i, ret);
 			}
 		}	
 	}
 }
-
-// void floSimulator(std::vector<char> part)
-// {
-// 	static ofstream ofs("\\image_chat.jpeg", std::ios::binary);	
-// 	ofs.write(part.data(), part.size());
-// 	ofs.flush();
-// }
 
 void floSimulator(std::vector<char> part)
 {
@@ -128,56 +118,54 @@ void floSimulator(std::vector<char> part)
     }
 }
 
-void Server::handleClientRequest(size_t i, ssize_t ret)
+void printMessageClientTest(Client & client)
+{
+	std::cout << std::endl << "\e[34mmessage client: " << std::endl;		
+	for (size_t i = 0; i < client.message.size(); i++)				
+		std::cout << client.message[i];
+	std::cout << "\e[0m" << std::endl << std::endl;
+}	
+
+void Server::handleClientHeader(size_t i, ssize_t ret)
 {
 	std::cout << "client header: " << ret << std::endl;
 	
 	if (ret + static_cast<ssize_t>(this->_clients[i].message.size())
 		> MAX_HDR_SIZE)
 	{
-		Logger::getInstance().log(ERROR, "header size"); //! 431 Request Header Fields Too Large	
+		Logger::getInstance().log(ERROR, "header size");
+			//! 431 Request Header Fields Too Large !! ou GET with Body	
 		this->exitClient(i);
 		return;	
-	}
-	
+	}	
 	this->_clients[i].message.insert(this->_clients[i].message.end(), 
-		this->_readBuffer.begin(), this->_readBuffer.begin() + ret);
-
-	// std::cout << "\e[34mmessage client: " << std::endl;		
-	// for (size_t j = 0; j < this->_clients[i].message.size(); j++)				
-	// 	std::cout << this->_clients[i].message[j];
-	// std::cout << "\e[0m" << std::endl;	
-	
+		this->_readBuffer.begin(), this->_readBuffer.begin() + ret);	
 	std::string delimiter = "\r\n\r\n";
 	std::vector<char>::iterator it = std::search
 		(this->_clients[i].message.begin(),
 		this->_clients[i].message.end(),
 		delimiter.begin(),
-		delimiter.end() - 1);
-		
+		delimiter.end() - 1);		
 	if (it != this->_clients[i].message.end())
 	{	
-		std::string str(it, this->_clients[i].message.end());
-		// std::cout << "\e[36mFIND!!!!!!!!\n\n" << str << "\e[0m" <<std::endl;				
+		std::string str(it, this->_clients[i].message.end());				
 		this->_clients[i].header.parse(this->_clients[i]);								
 		this->_clients[i].header.displayParsingResult();
 		if (this->_clients[i].header.getMethod() == "POST")
 		{
 			this->_clients[i].body = true;
-			printColor(RED, "yeah POST!!!");
-			std::cout << "CONTENT LENGHT: " <<  this->_clients[i].header.getHeaders().ContentLength << std::endl;
-
 			this->_clients[i].message.erase(this->_clients[i].message.begin(),
 				it + 4);
-
-			std::cout << "\e[34mstart body: " << std::endl;		
-			// for (size_t j = 0; j < this->_clients[i].message.size(); j++)				
-			// 	std::cout << this->_clients[i].message[j];
-			std::cout << "\e[0m" << std::endl;
-
 			if (this->_clients[i].header.getHeaders().ContentLength > MAX_CNT_SIZE)
 			{
-				std::cout << "error max content size" << " cl: " << this->_clients[i].header.getHeaders().ContentLength << std::endl; //!
+				stringstream ss;
+				ss << "max content size reached" << "- Content-Lenght: "
+					<< this->_clients[i].header.getHeaders().ContentLength
+					<< "- Max content size: " <<
+					this->_clients[i].header.getHeaders().ContentLength << std::endl;
+				Logger::getInstance().log(ERROR, "max content size");				std::cout << "error max content size" << " cl: " << this->_clients[i].header.getHeaders().ContentLength << std::endl; //!
+
+					//! 413 Payload Too Large
 				this->_readBuffer.clear();
 				this->exitClient(i);
 				return ;
@@ -186,7 +174,8 @@ void Server::handleClientRequest(size_t i, ssize_t ret)
 			this->_clients[i].bodySize += this->_clients[i].message.size();
 			if (this->_clients[i].bodySize > this->_clients[i].header.getHeaders().ContentLength)
 			{
-				std::cout << "error content size" << " bs: " << this->_clients[i].bodySize << " cl: " << this->_clients[i].header.getHeaders().ContentLength << std::endl;
+				Logger::getInstance().log(ERROR, "max content size");
+					//! 413 Payload Too Large
 				this->_readBuffer.clear();
 				this->exitClient(i);
 				return ;

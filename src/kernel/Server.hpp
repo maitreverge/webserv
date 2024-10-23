@@ -56,7 +56,7 @@ class Server
 	fd_set &			_writeSet;
 
 	void displayClient(Client & client);
-	void handleClientRequest(size_t i, ssize_t ret);
+	void handleClientHeader(size_t i, ssize_t ret);
 	void handleClientBody(size_t i, ssize_t ret);
 	void replyClient(Client & client, std::vector<char> & response);
 	void exitClient(size_t index);
