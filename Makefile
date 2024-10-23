@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: dsylvain <dsylvain@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/07/28 13:41:27 by seblin            #+#    #+#              #
-#    Updated: 2024/10/23 17:05:06 by dsylvain         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 # executables name
 NAME = webserv
 TEST_NAME = test_webserv
@@ -17,7 +5,7 @@ TEST_NAME = test_webserv
 # compiler + flags
 CXX = c++
 CFLAGS = $(HDRFLAGS) -g -Wall -Wextra -Werror -Wconversion -std=c++98
-TFLAGS = $(HDRFLAGS) -std=c++14 -I$(GTEST_INCLUDE) -pthread
+TFLAGS = $(HDRFLAGS) -std=c++14 -I$(GTEST_INCLUDE) -pthread -DUNIT_TEST
 LDFLAGS = 
 
 # Google Test
