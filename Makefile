@@ -6,28 +6,37 @@
 #    By: dansylvain <dansylvain@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/28 13:41:27 by seblin            #+#    #+#              #
-#    Updated: 2024/10/20 10:57:42 by dansylvain       ###   ########.fr        #
+#    Updated: 2024/10/23 02:09:06 by dansylvain       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = webserv
+TEST_NAME = test_webserv
 CXX = c++
+CFLAGS = $(HDRFLAGS) -g -Wall -Wextra -Werror -Wconversion -std=c++98
+TFLAGS = $(HDRFLAGS) -g -Wall -Wextra -Werror -Wconversion -std=c++14
+LDFLAGS = 
+GTEST_LIBS = -lgtest -lgtest_main -lpthread
 
 HDRDIRS := $(shell find . \( -name '*.h' -o -name '*.hpp' -o -name '*.tpp' \) \
 	-exec dirname {} \; | sort -u)
-SRC_DIR = .
-OBJ_DIR = objects
-CFLAGS = $(HDRFLAGS) -g -Wall -Wextra -Werror -Wconversion -std=c++98
-LDFLAGS = 
-
 HDRFLAGS := $(foreach dir, $(HDRDIRS), -I$(dir))
 HDR = $(shell find . \( -name "*.hpp" -o -name "*.h" -o -name "*.tpp" \))
-SRC = $(shell find . -name "*.cpp" | sed 's|^\./||')
+
+SRC_DIR = src
+TEST_DIR = tests
+OBJ_DIR = objects
+TEST_OBJ_DIR = test_objects
+
+SRC = $(shell find $(SRC_DIR) -name "*.cpp" | sed 's|^\./||')
 OBJ = $(SRC:%.cpp=$(OBJ_DIR)/%.o)
+
+TEST_SRC = $(shell find $(TEST_DIR) -name "*.cpp" | sed 's|^\./||')
+TEST_OBJ = $(TEST_SRC:%.cpp=$(TEST_OBJ_DIR)/%.o)
 
 TEMP_FILE = .compiled
 
-.PHONY: all clean fclean re intro l newline backline emoticon nof
+.PHONY: all clean fclean re intro test l newline backline emoticon nof
 
 all: design emoticon $(NAME) 
 
@@ -37,13 +46,17 @@ nof:
 	
 TOG = 0
 
-$(OBJ_DIR)/%.o : $(SRC_DIR)/%.cpp $(HDR)
+$(OBJ_DIR)/%.o : %.cpp $(HDR)
 	@if [ $(TOG) -eq 0 ]; then \
 		echo "\033[0;32m compiling...        🚀 "; \
 	fi;	
 	$(eval TOG=1)
 	@mkdir -p $(dir $@)
 	@$(CXX) $(CFLAGS) $< -c -o $@
+
+$(TEST_OBJ_DIR)/%.o : %.cpp $(HDR)
+	@mkdir -p $(dir $@)
+	@$(CXX) $(TFLAGS) $< -c -o $@
 
 $(NAME) : $(OBJ)
 	@echo -n "\033[?25l"
@@ -57,6 +70,14 @@ $(NAME) : $(OBJ)
 	@echo "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b linked              ☑️\n\033[0m"
 	@echo -n "\033[?25h"
 	@touch $(TEMP_FILE)  # Create a temporary file after a successful build
+
+$(TEST_NAME) : $(TEST_OBJ)
+	@echo "\033[0;36m linking tests...    🚀 "
+	@$(CXX) $(TEST_OBJ) $(GTEST_LIBS) -o $@
+	@echo "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b tests linked              ☑️\n\033[0m"
+
+test: $(TEST_NAME)
+	@./$(TEST_NAME)
 
 emoticon:
 	@echo "\n 💗 😀 😃 😍\n"
@@ -78,12 +99,12 @@ design:
 
 clean:
 	@echo "\n ▫️  cleanning $(NAME) objects 🧻"
-	@rm -rf $(OBJ_DIR) 
+	@rm -rf $(OBJ_DIR) $(TEST_OBJ_DIR)
 	@$(MAKE) -s newline	
 
 fclean:
 	@echo "\n ▫️  cleanning $(NAME) exec 🚽" 
-	@rm -f $(NAME)	
+	@rm -f $(NAME)	$(TEST_NAME)
 	@$(MAKE) -s clean	
 	@rm -f $(TEMP_FILE)  # Remove the temporary file during fclean
 
