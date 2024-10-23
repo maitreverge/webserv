@@ -23,7 +23,7 @@ struct Client
 {
 	int					id;
 	int					fd;
-	std::vector<char>	message;
+	std::vector<char>	message; // body in which we write
 	sockaddr_in 		address;
 	socklen_t 			len;
 	bool				body;
