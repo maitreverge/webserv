@@ -25,6 +25,8 @@ private:
 
 	e_errorCodes _errorType;
 
+	string _realURI;
+
 	string _curPath;
 
 	struct stat _fileInfo; // Struct used for `stat` function (equivalent to cpp)
@@ -34,9 +36,10 @@ private:
 	CGI	_cgi;
 
 	// ----------- PRIV METHODS -------------
+	void	sanatizeURI( string );
+	void	resolveURI( Client&, Config& );
 	void	initialChecks( Client&, Config& );
-
-	void launchCGI( void ); // TODO
+	void	launchCGI( void ); // TODO
 	
 
 protected:

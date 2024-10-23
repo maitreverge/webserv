@@ -30,7 +30,8 @@ struct Client
 	size_t				bodySize;
 
 	// -- Exec
-	ifstream execStream;
+	ifstream execStream; // main stream
+	bool killClient; // Does the client needs to be kicked out ?
 	// -- Exec
 
 	RequestParser		header;
@@ -43,6 +44,7 @@ struct Client
 		len = sizeof(address);
 		body = false;
 		bodySize = 0;
+		killClient = false;
 	}
 };
 

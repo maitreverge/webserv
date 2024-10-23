@@ -9,7 +9,8 @@ struct Config
 {
 	short int						maxClient;
 	std::vector<struct sockaddr_in> sockAddress;
-	vector<string>					indexFiles;
+	vector<string>					indexFiles; // default files names if the URI == "/"
+	bool							listingDirectories; // activer ou non le listing des repertoires
 
 	Config()
 	{
@@ -46,5 +47,7 @@ struct Config
 		indexFiles.push_back("index.html");
 		indexFiles.push_back("index.htm");
 		indexFiles.push_back("default.html");
+
+		listingDirectories = false;
 	}
 };
