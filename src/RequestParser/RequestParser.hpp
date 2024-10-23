@@ -29,7 +29,7 @@ struct Client;
 class RequestParser
 {
 	private:
-	public:
+		friend class RequestParserTest;
 		//attributes
 		std::string											_method;
 		std::string											_URI;
@@ -56,6 +56,7 @@ class RequestParser
 		void	displayHeaders() const;
 		void	reset_values();
 
+	public:
 		//coplien
 		RequestParser();
 		~RequestParser();
@@ -64,6 +65,7 @@ class RequestParser
 		std::string	getMethod() const;
 		std::string	getURI() const;
 		std::string	getHTTP_version() const;
+		bool		getIsValid() const;
 		Headers		getHeaders() const;
 
 		// display methods

@@ -6,7 +6,7 @@
 #    By: dansylvain <dansylvain@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/28 13:41:27 by seblin            #+#    #+#              #
-#    Updated: 2024/10/23 02:23:57 by dansylvain       ###   ########.fr        #
+#    Updated: 2024/10/23 03:16:03 by dansylvain       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,6 +57,7 @@ $(OBJ_DIR)/%.o : %.cpp $(HDR)
 	@$(CXX) $(CFLAGS) $< -c -o $@
 
 $(TEST_OBJ_DIR)/%.o : %.cpp $(HDR)
+	@mkdir -p $(TEST_OBJ_DIR)
 	@mkdir -p $(dir $@)
 	@$(CXX) $(TFLAGS) $< -c -o $@
 

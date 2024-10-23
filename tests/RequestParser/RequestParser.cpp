@@ -6,8 +6,11 @@
 #include <string>
 #include "../../src/RequestParser/RequestParser.hpp"  // Inclure le bon header de ta classe
 
+
 // Mock de Logger pour éviter d'écrire dans la sortie pendant les tests
 class MockLogger {
+	friend class RequestParser;
+	friend class RequestParserTest;
 public:
     static void log(int level, const std::string& message, const RequestParser& request) {
         // On peut simplement afficher dans la console ou ne rien faire pour les tests
@@ -16,7 +19,8 @@ public:
 };
 
 class RequestParserTest : public ::testing::Test {
-protected:
+		friend class RequestParser;
+	protected:
     RequestParser parser;  // Instance de RequestParser à tester
 
     void SetUp() override {
@@ -32,42 +36,42 @@ protected:
 TEST_F(RequestParserTest, ValidRequest) {
     std::istringstream requestStream("GET /index.html HTTP/1.1");
     parser.handleFirstLine(requestStream);
-    EXPECT_TRUE(parser._isValid);  // Assure que la requête est valide
+    EXPECT_TRUE(parser.getIsValid());  // Assure que la requête est valide
 }
 
 // Test pour une méthode non supportée
 TEST_F(RequestParserTest, UnsupportedMethod) {
     std::istringstream requestStream("PUT /index.html HTTP/1.1");
     parser.handleFirstLine(requestStream);
-    EXPECT_FALSE(parser._isValid);  // La méthode PUT n'est pas supportée
+    EXPECT_FALSE(parser.getIsValid());  // La méthode PUT n'est pas supportée
 }
 
 // Test pour une version HTTP incorrecte
 TEST_F(RequestParserTest, InvalidHttpVersion) {
     std::istringstream requestStream("GET /index.html HTTP/1.0");
     parser.handleFirstLine(requestStream);
-    EXPECT_FALSE(parser._isValid);  // La version HTTP doit être HTTP/1.1
+    EXPECT_FALSE(parser.getIsValid());  // La version HTTP doit être HTTP/1.1
 }
 
 // Test pour une ligne de requête incomplète
 TEST_F(RequestParserTest, IncompleteRequestLine) {
     std::istringstream requestStream("GET HTTP/1.1");
     parser.handleFirstLine(requestStream);
-    EXPECT_FALSE(parser._isValid);  // URI manquant
+    EXPECT_FALSE(parser.getIsValid());  // URI manquant
 }
 
 // Test pour une ligne de requête vide
 TEST_F(RequestParserTest, EmptyRequestLine) {
     std::istringstream requestStream("");
     parser.handleFirstLine(requestStream);
-    EXPECT_FALSE(parser._isValid);  // La ligne est vide
+    EXPECT_FALSE(parser.getIsValid());  // La ligne est vide
 }
 
 // Test pour des données restantes dans la ligne
 TEST_F(RequestParserTest, ExtraDataInRequestLine) {
     std::istringstream requestStream("GET /index.html HTTP/1.1 extraData");
     parser.handleFirstLine(requestStream);
-    EXPECT_FALSE(parser._isValid);  // Des données supplémentaires après la requête
+    EXPECT_FALSE(parser.getIsValid());  // Des données supplémentaires après la requête
 }
 
 // Suppose que ta fonction se trouve dans une classe Utils

@@ -22,6 +22,8 @@ std::string	RequestParser::getURI() const 			{return (_URI);}
 
 std::string	RequestParser::getHTTP_version() const	{return (_HTTP_version);}
 
+bool	RequestParser::getIsValid() const			{return (_isValid);}
+
 Headers	RequestParser::getHeaders() const			{return (_Headers);}
 
 /**========================================================================
