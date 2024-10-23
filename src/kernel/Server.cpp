@@ -77,8 +77,8 @@ void Server::catchClients()
 		this->_maxFd = std::max(this->_maxFd, client.fd);
 		this->_clients.push_back(client);
 			
-		// std::vector<char> hardResp = buildHardResponseTest();
-		// replyClient(client, hardResp);		
+		std::vector<char> hardResp = buildHardResponseTest();
+		replyClient(client, hardResp);		
 	}
 }
 
