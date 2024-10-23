@@ -43,7 +43,6 @@ class RequestParser
 		std::string	charVectorToString(const std::vector<char>& vector);
 
 		// action
-		void	handleFirstLine(std::istringstream& requestStream);
 		void	handleHeaderLines(std::istringstream& requestStream);
 		void	extractHeaders();
 		void	assignHeader(const std::string& key, std::string& value);
@@ -57,6 +56,7 @@ class RequestParser
 		void	reset_values();
 
 	public:
+		void	handleFirstLine(std::istringstream& requestStream);
 		//coplien
 		RequestParser();
 		~RequestParser();

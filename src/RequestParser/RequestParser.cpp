@@ -9,7 +9,10 @@ RequestParser::RequestParser() : 	_method(""),
 									_URI(""),
 									_HTTP_version(""),
 									_isValid(true),
-									_Client(NULL) {}
+									_Client(NULL)
+{
+	_Headers.reset();
+}
 
 RequestParser::~RequestParser() {}
 

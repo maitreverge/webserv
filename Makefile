@@ -3,20 +3,23 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dansylvain <dansylvain@student.42.fr>      +#+  +:+       +#+         #
+#    By: dsylvain <dsylvain@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/28 13:41:27 by seblin            #+#    #+#              #
-#    Updated: 2024/10/23 03:16:03 by dansylvain       ###   ########.fr        #
+#    Updated: 2024/10/23 11:41:45 by dsylvain         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = webserv
 TEST_NAME = test_webserv
-CXX = c++
+CXX = c++ 
 CFLAGS = $(HDRFLAGS) -g -Wall -Wextra -Werror -Wconversion -std=c++98
-TFLAGS = $(HDRFLAGS) -std=c++14
+TFLAGS = $(HDRFLAGS) -std=c++14 -I$(GTEST_INCLUDE) -pthread
 LDFLAGS = 
-GTEST_LIBS = -lgtest -lgtest_main -lpthread
+GTEST_LIBS = -L$(GTEST_DIR)/build/lib -lgtest -lgtest_main -lpthread
+GTEST_DIR = ./googletest
+GTEST_INCLUDE = $(GTEST_DIR)/$(GTEST_DIR)/include
+GTEST_LIB = $(GTEST_DIR)/build/lib
 
 HDRDIRS := $(shell find . \( -name '*.h' -o -name '*.hpp' -o -name '*.tpp' \) \
 	-exec dirname {} \; | sort -u)
