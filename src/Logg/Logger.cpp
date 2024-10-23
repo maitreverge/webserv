@@ -89,7 +89,6 @@ void Logger::log(logLevel logLevel, const std::string& message, const Kernel& ob
 		std::cout << logEntry;
 	(void)obj;
 	_accessFile.flush();
-	(void)logLevel;
 }
 
 void Logger::log(logLevel logLevel, const std::string& message, const RequestParser& obj)
@@ -183,7 +182,6 @@ void Logger::log(	logLevel logLevel, const std::string& message,
 		std::cout << logEntry;
 	(void)obj;
 	_accessFile.flush();
-	(void)logLevel;
 }
 
 /**========================================================================
