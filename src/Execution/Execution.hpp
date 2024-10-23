@@ -36,7 +36,7 @@ private:
 	CGI	_cgi;
 
 	// ----------- PRIV METHODS -------------
-	void	sanatizeURI( string );
+	void	sanatizeURI( string& );
 	void	resolveURI( Client&, Config& );
 	void	initialChecks( Client&, Config& );
 	void	launchCGI( void ); // TODO

@@ -23,20 +23,34 @@ Execution::~Execution( void ){}
 
 // -------------------- METHODS -------------------- 
 
+// TODO : test this function
+void Execution::sanatizeURI( string &oldURI ){
 
-void Execution::sanatizeURI( string oldURI ){
-
-
+	size_t pos;
+	while ((pos = oldURI.find("../")) != string::npos)
+	{
+		if (pos == 0)
+			oldURI.erase(0, 3);
+		else
+		{
+			size_t prevSlash = oldURI.rfind('/', pos - 1);
+			if (prevSlash == string::npos)
+				oldURI.erase(0, pos + 3);
+			else
+				oldURI.erase(prevSlash, pos - prevSlash + 3);
+		}
+	}
 }
+
 
 void Execution::resolveURI( Client& inputClient, Config& config )
 {
 	// /images/../config/../../logo.png
 
 	// ! STEP 1 : Trim all "../" from the path
-	string oldURI = _client->header.getURI();
+	string _realURI = _client->header.getURI();
 
-	oldURI = sanatizeURI(oldURI);
+	sanatizeURI(_realURI);
 }
 
 void	Execution::initialChecks( Client& inputClient, Config& config ){
