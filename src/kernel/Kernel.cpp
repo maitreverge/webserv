@@ -3,9 +3,7 @@
 bool Kernel::_exit = false;
 
 Kernel::Kernel(void)
-{
-	Logger::getInstance().log(INFO, "hello from kernel", *this);
-	
+{	
 	FD_ZERO(&this->_actualSet);
 	this->setup();
 	this->launch();
@@ -48,7 +46,7 @@ void Kernel::launch()
 			0, &timeout) < 0)
 		{	
 			if (!this->_exit)
-				Logger::getInstance().log(ERROR, "error select");
+				Logger::getInstance().log(ERROR, "select");
 			continue;
 		}
 		if (this->_exit)

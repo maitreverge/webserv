@@ -1,7 +1,8 @@
-#include "master.hpp"
-#include "Kernel.hpp"
 #include <csignal>
 #include <termios.h>
+#include "master.hpp"
+#include "Kernel.hpp"
+#include "Logger.hpp"
 
 void disableSignalEcho()
 {
@@ -12,18 +13,20 @@ void disableSignalEcho()
 }
 
 void signalHandle(int)
-{
-	std::cout << "Bye bye!" << std::endl;
+{		
 	Kernel::_exit = true;	
 }
 
-int main(int ac, char **av, char **envp)
+int main()
 {
-	(void)(ac);
-	(void)(av);
-	(void)(envp);
-	
 	signal(2, signalHandle);
 	disableSignalEcho();
-	Kernel kernel;	
+	
+	std::cout << std::endl;
+	Logger::getInstance().log(INFO, "\e[1;3;36mServer is Online!\e[0m\n");
+	Kernel kernel;
+	std::cout << std::endl;
+	Logger::getInstance().log(INFO, "\e[1;3;91mServer is Offline.\e[0m\n");	
+
+	return (0);
 }
