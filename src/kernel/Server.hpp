@@ -28,6 +28,11 @@ struct Client
 	socklen_t 			len;
 	bool				body;
 	size_t				bodySize;
+
+	// -- Exec
+	ifstream execStream;
+	// -- Exec
+
 	RequestParser		header;
 
 	Client()

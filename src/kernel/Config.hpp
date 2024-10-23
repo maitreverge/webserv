@@ -9,6 +9,7 @@ struct Config
 {
 	short int						maxClient;
 	std::vector<struct sockaddr_in> sockAddress;
+	vector<string>					indexFiles;
 
 	Config()
 	{
@@ -40,5 +41,10 @@ struct Config
 		server4.sin_addr.s_addr = htonl(INADDR_ANY);
 		server4.sin_port = htons(80);
 		sockAddress.push_back(server4);
+
+		// Default files to look for if the URI is "/"
+		indexFiles.push_back("index.html");
+		indexFiles.push_back("index.htm");
+		indexFiles.push_back("default.html");
 	}
 };

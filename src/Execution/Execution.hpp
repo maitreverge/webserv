@@ -4,6 +4,7 @@
 #include "utils_templates.hpp"
 #include "Logger.hpp"
 struct Client;
+struct Config;
 
 struct CGI
 {
@@ -20,12 +21,21 @@ private:
 	// ----------- VARIABLES -------------
 	bool _isCGI;
 	bool _isDirectory;
+	bool _isCheckingDone;
+
+	e_errorCodes _errorType;
+
+	string _curPath;
+
+	struct stat _fileInfo; // Struct used for `stat` function (equivalent to cpp)
 
 	Client* _client;
 
 	CGI	_cgi;
 
 	// ----------- PRIV METHODS -------------
+	void	initialChecks( Client&, Config& );
+
 	void launchCGI( void ); // TODO
 	
 
@@ -40,7 +50,7 @@ public:
 	Execution& operator=( const Execution& right_operator );
 	~Execution();
 
-	void callGet( Client& ); // TODO
+	void callGet( Client&, Config& ); // TODO
 	void callPost( Client& ); // TODO
 	void callDelete( Client& ); // TODO
 
