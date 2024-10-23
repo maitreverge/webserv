@@ -53,7 +53,8 @@ string timeStamp::getTime( void ){
 			<< SPACE
 			<< hours
 			<< SPACE
-			<< timeZone;
+			<< timeZone
+			;
 
 	// Convert the result in a string then return it.
 	return result.str();

@@ -29,6 +29,8 @@ bool	RequestParser::getIsValid() const			{return (_isValid);}
 
 Headers	RequestParser::getHeaders() const			{return (_Headers);}
 
+Client*		RequestParser::getClient() const		{return (_Client);}
+
 /**========================================================================
  *                           UTILS
  *========================================================================**/

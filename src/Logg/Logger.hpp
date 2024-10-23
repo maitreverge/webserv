@@ -32,7 +32,14 @@ public:
 	void log(logLevel logLevel, const std::string& message);
 	void log(logLevel logLevel, const std::string& message, const Kernel& context);
 	void log(logLevel logLevel, const std::string& message, const RequestParser& context);
-	void log(logLevel logLevel, const std::string& message, const Server& context);
+	void log(logLevel logLevel, const std::string& message, const Client& context);
+	void log(logLevel logLevel, const std::string& message, const class buildResponse& obj);
+	void log(logLevel logLevel, const std::string& message, const Client& client, const Server&obj);
+	void log(logLevel logLevel, const std::string& message, const Server&server);
+	std::string	formatLogLevel(logLevel loglevel) const;
 	static Logger& getInstance();
 
+	std::string ipToString(const struct sockaddr_in& addr);
+	int portToInt(const struct sockaddr_in& addr);
+	std::string intToString(int value);
 };
