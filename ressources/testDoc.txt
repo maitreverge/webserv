@@ -1,3 +1,10 @@
 Utiliser l'outil en ligne de commande HTTPie
 
 http --verbose GET http://localhost:1511 "Authorization: Bearer your_token"
+
+
+infos regarding testing tool siege
+https://www.joedog.org/siege-manual/#top
+
+testing sieg docker
+https://hub.docker.com/r/jstarcher/siege
