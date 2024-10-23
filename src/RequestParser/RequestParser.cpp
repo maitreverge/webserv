@@ -24,6 +24,8 @@ std::string	RequestParser::getHTTP_version() const	{return (_HTTP_version);}
 
 Headers	RequestParser::getHeaders() const			{return (_Headers);}
 
+Client*		RequestParser::getClient() const		{return (_Client);}
+
 /**========================================================================
  *                           UTILS
  *========================================================================**/
