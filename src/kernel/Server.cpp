@@ -139,15 +139,6 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 {
 	Logger::getInstance().log(INFO, "new client header");
 	
-	if (ret + static_cast<ssize_t>(this->_clients[i].message.size())
-		> MAX_HDR_SIZE)
-	{
-		Logger::getInstance().log(ERROR, "header size");
-			//! 431 Request Header Fields Too Large !! ou GET with Body	
-
-		this->exitClient(i);
-		return;	
-	}	
 	this->_clients[i].message.insert(this->_clients[i].message.end(), 
 		this->_readBuffer.begin(), this->_readBuffer.begin() + ret);	
 	this->_readBuffer.clear();
@@ -159,12 +150,20 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 		delimiter.begin(),
 		delimiter.end() - 1);		
 	if (it != this->_clients[i].message.end())
-	{	
-		std::string str(it, this->_clients[i].message.end());				
+	{							
 		this->_clients[i].header.parse(this->_clients[i]);								
 		this->_clients[i].header.displayParsingResult();
 		if (this->_clients[i].header.getMethod() == "POST")
-		{				
+		{	
+			std::string str(this->_clients[i].message.begin(), it + 4);
+			if (str.size() >= MAX_HDR_SIZE)
+			{
+				Logger::getInstance().log(ERROR, "1 header size");
+					//! 431 Request Header Fields Too Large !! ou GET with Body	
+
+				this->exitClient(i);
+				return;	
+			}
 			this->_clients[i].message.erase(this->_clients[i].message.begin(),
 				it + 4);
 			this->_clients[i].bodySize += this->_clients[i].message.size();
@@ -173,9 +172,22 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 				|| this->isBodyTerminated(i))
 				return ;
 			this->_clients[i].body = true;
-			floSimulator(this->_clients[i].message);			
-		}		
+			floSimulator(this->_clients[i].message); //? POST			
+		}
+		else if (this->_clients[i].header.getMethod() == "GET")
+			floSimulator(this->_clients[i].message); //? GET
+		else if (this->_clients[i].header.getMethod() == "DELETE")
+			floSimulator(this->_clients[i].message); //? DELETE
 		this->_clients[i].message.clear();		
+	}	
+	if (static_cast<ssize_t>(this->_clients[i].message.size())
+		>= MAX_HDR_SIZE)
+	{
+		Logger::getInstance().log(ERROR, "2 header size");
+			//! 431 Request Header Fields Too Large !! ou GET with Body	
+
+		this->exitClient(i);
+		return;	
 	}	
 }
 
@@ -191,7 +203,7 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 	this->_clients[i].bodySize += static_cast<size_t>(ret);
 	if (this->isBodyTooLarge(i) || this->isBodyTerminated(i))
 		return ;
-	floSimulator(this->_clients[i].message);
+	floSimulator(this->_clients[i].message); //? POST
 	this->_clients[i].message.clear();	
 }
 
