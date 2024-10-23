@@ -150,6 +150,7 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 	}	
 	this->_clients[i].message.insert(this->_clients[i].message.end(), 
 		this->_readBuffer.begin(), this->_readBuffer.begin() + ret);	
+	this->_readBuffer.clear();
 	std::string delimiter = "\r\n\r\n";
 	std::vector<char>::iterator it = std::search
 		(this->_clients[i].message.begin(),
@@ -177,8 +178,7 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 					<< std::endl;
 				Logger::getInstance().log(ERROR, ss.str());
 					//! 413 Payload Too Large
-
-				this->_readBuffer.clear();
+			
 				this->exitClient(i);
 				return ;
 			}
@@ -192,28 +192,16 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 				<< this->_clients[i].header.getHeaders().ContentLength << std::endl;
 				Logger::getInstance().log(ERROR, ss.str());
 					//! 413 Payload Too Large
-
-				this->_readBuffer.clear();
+				
 				this->exitClient(i);
 				return ;
 			}
-
-			if (this->_clients[i].bodySize ==
-				this->_clients[i].header.getHeaders().ContentLength)
-			{
-				Logger::getInstance().log(INFO, "client body terminated");
-
-				this->_clients[i].body = false;
-				floSimulator(this->_clients[i].message);
-				this->_clients[i].message.clear();
-				this->_clients[i].bodySize = 0;				
-			}
+			if (this->isBodyTerminated(i))
+				return ;
 			floSimulator(this->_clients[i].message);			
 		}		
 		this->_clients[i].message.clear();		
-	}
-	this->_readBuffer.clear();
-	
+	}	
 }
 
 void Server::handleClientBody(size_t i, ssize_t ret)
@@ -223,7 +211,8 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 	Logger::getInstance().log(INFO, ss.str());
 	
 	this->_clients[i].message.insert(this->_clients[i].message.end(), 
-		this->_readBuffer.begin(), this->_readBuffer.begin() + ret);	
+		this->_readBuffer.begin(), this->_readBuffer.begin() + ret);
+	this->_readBuffer.clear();	
 	this->_clients[i].bodySize += static_cast<size_t>(ret);
 	if (this->_clients[i].bodySize > this->_clients[i].header.getHeaders().ContentLength)
 	{
@@ -234,26 +223,35 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 		Logger::getInstance().log(ERROR, ss.str());
 			//! 413 Payload Too Large
 
-		this->_readBuffer.clear();
+		
 		this->exitClient(i);
 		return ;
 	}
-	if (this->_clients[i].bodySize == this->_clients[i].header.getHeaders().ContentLength)
+	if (this->isBodyTerminated(i))
+		return ;
+	floSimulator(this->_clients[i].message);
+	this->_clients[i].message.clear();	
+}
+
+bool Server::isBodyTerminated(size_t i)
+{
+	if (this->_clients[i].bodySize ==
+		this->_clients[i].header.getHeaders().ContentLength)
 	{
 		stringstream ss;
-		ss << "sequel body terminated" << " - Body-Size: "
+		ss << "body terminated" << " - Body-Size: "
 		<< this->_clients[i].bodySize << " Content-Lenght: "
 		<< this->_clients[i].header.getHeaders().ContentLength << std::endl;
 		Logger::getInstance().log(INFO, ss.str());
 
-		floSimulator(this->_clients[i].message);
 		this->_clients[i].body = false;
+		floSimulator(this->_clients[i].message);//? POST
 		this->_clients[i].message.clear();
 		this->_clients[i].bodySize = 0;
 		this->_readBuffer.clear();
+		return true;
 	}
-	floSimulator(this->_clients[i].message);
-	this->_clients[i].message.clear();	
+	return false;
 }
 
 void Server::displayClient(Client & client)

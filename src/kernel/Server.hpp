@@ -58,6 +58,7 @@ class Server
 	void displayClient(Client & client);
 	void handleClientHeader(size_t i, ssize_t ret);
 	void handleClientBody(size_t i, ssize_t ret);
+	bool isBodyTerminated(size_t i);
 	void replyClient(Client & client, std::vector<char> & response);
 	void exitClient(size_t index);
 	void exitClients();
