@@ -55,10 +55,12 @@ class Server
 	fd_set &			_readSet;
 	fd_set &			_writeSet;
 
-	void displayClient(Client & client);
+	void displayClient(Client & client) const;
 	void handleClientHeader(size_t i, ssize_t ret);
 	void handleClientBody(size_t i, ssize_t ret);
+	bool isContentLengthValid(size_t i);
 	bool isBodyTerminated(size_t i);
+	bool isBodyTooLarge(size_t i);
 	void replyClient(Client & client, std::vector<char> & response);
 	void exitClient(size_t index);
 	void exitClients();

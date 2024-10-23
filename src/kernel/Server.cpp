@@ -151,6 +151,7 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 	this->_clients[i].message.insert(this->_clients[i].message.end(), 
 		this->_readBuffer.begin(), this->_readBuffer.begin() + ret);	
 	this->_readBuffer.clear();
+	
 	std::string delimiter = "\r\n\r\n";
 	std::vector<char>::iterator it = std::search
 		(this->_clients[i].message.begin(),
@@ -163,41 +164,15 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 		this->_clients[i].header.parse(this->_clients[i]);								
 		this->_clients[i].header.displayParsingResult();
 		if (this->_clients[i].header.getMethod() == "POST")
-		{
-			this->_clients[i].body = true;
+		{				
 			this->_clients[i].message.erase(this->_clients[i].message.begin(),
 				it + 4);
-			if (this->_clients[i].header.getHeaders().ContentLength
-				> MAX_CNT_SIZE)
-			{
-				stringstream ss;
-				ss << "max content size reached" << " - Content-Lenght: "
-					<< this->_clients[i].header.getHeaders().ContentLength
-					<< " - Max content size: " <<
-					this->_clients[i].header.getHeaders().ContentLength
-					<< std::endl;
-				Logger::getInstance().log(ERROR, ss.str());
-					//! 413 Payload Too Large
-			
-				this->exitClient(i);
-				return ;
-			}
 			this->_clients[i].bodySize += this->_clients[i].message.size();
-			if (this->_clients[i].bodySize >
-				this->_clients[i].header.getHeaders().ContentLength)
-			{
-				stringstream ss;
-				ss << "sequel content size" << " - Body-Size: "
-				<< this->_clients[i].bodySize << " Content-Lenght: "
-				<< this->_clients[i].header.getHeaders().ContentLength << std::endl;
-				Logger::getInstance().log(ERROR, ss.str());
-					//! 413 Payload Too Large
-				
-				this->exitClient(i);
+			if (!this->isContentLengthValid(i)
+				|| this->isBodyTooLarge(i)
+				|| this->isBodyTerminated(i))
 				return ;
-			}
-			if (this->isBodyTerminated(i))
-				return ;
+			this->_clients[i].body = true;
 			floSimulator(this->_clients[i].message);			
 		}		
 		this->_clients[i].message.clear();		
@@ -214,7 +189,36 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 		this->_readBuffer.begin(), this->_readBuffer.begin() + ret);
 	this->_readBuffer.clear();	
 	this->_clients[i].bodySize += static_cast<size_t>(ret);
-	if (this->_clients[i].bodySize > this->_clients[i].header.getHeaders().ContentLength)
+	if (this->isBodyTooLarge(i) || this->isBodyTerminated(i))
+		return ;
+	floSimulator(this->_clients[i].message);
+	this->_clients[i].message.clear();	
+}
+
+bool Server::isContentLengthValid(size_t i)
+{
+	if (this->_clients[i].header.getHeaders().ContentLength
+			> MAX_CNT_SIZE)
+	{
+		stringstream ss;
+		ss << "max content size reached" << " - Content-Lenght: "
+			<< this->_clients[i].header.getHeaders().ContentLength
+			<< " - Max content size: " <<
+			this->_clients[i].header.getHeaders().ContentLength
+			<< std::endl;
+		Logger::getInstance().log(ERROR, ss.str());
+			//! 413 Payload Too Large
+	
+		this->exitClient(i);
+		return false;
+	}
+	return true;
+}
+
+bool Server::isBodyTooLarge(size_t i)
+{
+	if (this->_clients[i].bodySize >
+		this->_clients[i].header.getHeaders().ContentLength)
 	{
 		stringstream ss;
 		ss << "sequel content size" << " - Body-Size: "
@@ -222,18 +226,14 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 		<< this->_clients[i].header.getHeaders().ContentLength << std::endl;
 		Logger::getInstance().log(ERROR, ss.str());
 			//! 413 Payload Too Large
-
 		
 		this->exitClient(i);
-		return ;
+		return true;;
 	}
-	if (this->isBodyTerminated(i))
-		return ;
-	floSimulator(this->_clients[i].message);
-	this->_clients[i].message.clear();	
+	return false;
 }
 
-bool Server::isBodyTerminated(size_t i)
+bool Server::isBodyTerminated(size_t i) 
 {
 	if (this->_clients[i].bodySize ==
 		this->_clients[i].header.getHeaders().ContentLength)
@@ -245,16 +245,15 @@ bool Server::isBodyTerminated(size_t i)
 		Logger::getInstance().log(INFO, ss.str());
 
 		this->_clients[i].body = false;
-		floSimulator(this->_clients[i].message);//? POST
-		this->_clients[i].message.clear();
 		this->_clients[i].bodySize = 0;
-		this->_readBuffer.clear();
+		floSimulator(this->_clients[i].message);//? POST
+		this->_clients[i].message.clear();		
 		return true;
 	}
 	return false;
 }
 
-void Server::displayClient(Client & client)
+void Server::displayClient(Client & client) const
 {
 	std::stringstream ss;
 	ss << "new client" << " - Fd: " << client.fd << " Family: "
