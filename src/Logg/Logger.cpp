@@ -67,10 +67,24 @@ std::string Logger::intToString(int value)
     return ss.str();
 }
 
+/**========================================================================
+ *                           LOG KERNEL
+ * ? to be filled as soon as I know which vars to display
+ *========================================================================**/
 void Logger::log(logLevel logLevel, const std::string& message, const Kernel& obj)
 {
-	std::string logEntry = timeStamp::getTime() + " - " + message + "\n";
-	_accessFile << logEntry;
+	//[timestamp][loglevel][message][ip][port][fd]
+	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
+							+ formatLogLevel(logLevel) 
+							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
+							// + MAGENTA + ipToString(client.address) + " "
+							// + YELLOW + intToString(portToInt(client.address)) + " "
+							// + GREEN + intToString(client.fd) + " "
+							// + BOLD_HIGH_INTENSITY_WHITE + "Server: "
+							// + MAGENTA + ipToString(server._sockAddr) + " "
+							// + YELLOW + intToString(portToInt(server._sockAddr)) + " "
+							+ RESET + "\n"
+							;
 	if (logToStdOut)
 		std::cout << logEntry;
 	(void)obj;
@@ -92,35 +106,74 @@ void Logger::log(logLevel logLevel, const std::string& message, const RequestPar
 		std::cout << logEntry;
 	_accessFile << logEntry;
 	_accessFile.flush();
-	(void)logLevel;
-	(void)obj;
 }
 
-void Logger::log(logLevel logLevel, const std::string& message, const Server& obj)
+void Logger::log(logLevel logLevel, const std::string& message, const Client& client)
 {
 	//[timestamp][loglevel][message][ip][port][fd]
 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) 
 							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
-							// + MAGENTA + ipToString(obj.getClient()->address) + " "
-							// + YELLOW + intToString(portToInt(obj.getClient()->address)) + " "
-							// + GREEN + intToString(obj.getClient()->fd)
+							+ MAGENTA + ipToString(client.address) + " "
+							+ YELLOW + intToString(portToInt(client.address)) + " "
+							+ GREEN + intToString(client.fd)
 							+ RESET + "\n";
 	if (logToStdOut)
 		std::cout << logEntry;
 	if (_accessFile.is_open())
 		_accessFile << logEntry;
 	_accessFile.flush();
-	(void)obj;
-	(void)logLevel;
 }
 
-void Logger::log(	logLevel logLevel, const std::string& message,
-					const class buildResponse& obj)
+void Logger::log(logLevel logLevel, const std::string& message, const Client& client, const Server&server)
 {
+	//[timestamp][loglevel][message][ip][port][fd]
 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) 
 							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
+							+ MAGENTA + ipToString(client.address) + " "
+							+ YELLOW + intToString(portToInt(client.address)) + " "
+							+ GREEN + intToString(client.fd) + " "
+							+ BOLD_HIGH_INTENSITY_WHITE + "Server: "
+							+ MAGENTA + ipToString(server._sockAddr) + " "
+							+ YELLOW + intToString(portToInt(server._sockAddr)) + " "
+							+ RESET + "\n";
+	if (logToStdOut)
+		std::cout << logEntry;
+	if (_accessFile.is_open())
+		_accessFile << logEntry;
+	_accessFile.flush();
+}
+
+void Logger::log(logLevel logLevel, const std::string& message, const Server&server)
+{
+	//[timestamp][loglevel][message][ip][port]
+	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
+							+ formatLogLevel(logLevel) 
+							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
+							+ BOLD_HIGH_INTENSITY_WHITE + "Server: "
+							+ MAGENTA + ipToString(server._sockAddr) + " "
+							+ YELLOW + intToString(portToInt(server._sockAddr)) + " "
+							+ RESET + "\n";
+	if (logToStdOut)
+		std::cout << logEntry;
+	if (_accessFile.is_open())
+		_accessFile << logEntry;
+	_accessFile.flush();
+}
+
+/**========================================================================
+ *                           LOG BUILDRESPONSE
+ * ? changes to be made as soon as Client struct is accessible
+ *========================================================================**/
+void Logger::log(	logLevel logLevel, const std::string& message,
+					const class buildResponse& obj)
+{
+	//[timestamp][loglevel][message][status code][ip][port][fd]
+	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
+							+ formatLogLevel(logLevel) 
+							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
+							+ RED + obj.getStatusLine()
 							// + MAGENTA + ipToString(obj.getClient()->address) + " "
 							// + YELLOW + intToString(portToInt(obj.getClient()->address)) + " "
 							// + GREEN + intToString(obj.getClient()->fd)

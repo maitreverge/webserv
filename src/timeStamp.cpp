@@ -43,17 +43,17 @@ string timeStamp::getTime( void ){
 
 	// Rearrange time to match HTTP standarts.
 	// ? ex : Wed, 11 Oct 2024 10:24:12 GMT
-	result	//<< weekDay
-			// << ", "
-			// << day
-			// << SPACE
-			// << month
-			// << SPACE 
-			// << year
-			// << SPACE
+	result	<< weekDay
+			<< ", "
+			<< day
+			<< SPACE
+			<< month
+			<< SPACE 
+			<< year
+			<< SPACE
 			<< hours
-			// << SPACE
-			// << timeZone
+			<< SPACE
+			<< timeZone
 			;
 
 	// Convert the result in a string then return it.
