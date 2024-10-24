@@ -1,23 +1,11 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: dsylvain <dsylvain@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/07/28 13:41:27 by seblin            #+#    #+#              #
-#    Updated: 2024/10/23 17:05:06 by dsylvain         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 # executables name
 NAME = webserv
-TEST_NAME = test_webserv
+TEST_NAME = tests/webtest
 
 # compiler + flags
 CXX = c++
 CFLAGS = $(HDRFLAGS) -g -Wall -Wextra -Werror -Wconversion -std=c++98
-TFLAGS = $(HDRFLAGS) -std=c++14 -I$(GTEST_INCLUDE) -pthread
+TFLAGS = $(HDRFLAGS) -std=c++14 -I$(GTEST_INCLUDE) -pthread -DUNIT_TEST
 LDFLAGS = 
 
 # Google Test
@@ -93,10 +81,9 @@ $(TEST_NAME) : $(TEST_OBJ)
 	@echo "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b tests linked              ☑️\n\033[0m"
 
 test: $(TEST_NAME)
-	@./$(TEST_NAME)
-
+	@echo "\033[0;36m 🎉✨ Compilation successfull ! 🥳🚀\033[0m\n"
+	
 emoticon:
-	@echo "\n 💗 😀 😃 😍\n"
 	@mkdir -p $(OBJ_DIR)
 
 newline: 
