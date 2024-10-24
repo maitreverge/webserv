@@ -39,12 +39,20 @@ class ResponseBuilder
 
 private:
 
+	// Enum
+	typedef enum
+	{
+		GET,
+		POST,
+		DELETE
+	} e_method;
+
 	// ------------- Coplian Useless Methods
 	ResponseBuilder( const ResponseBuilder& copy );
 	ResponseBuilder& operator=( const ResponseBuilder& right_operator );
 
 	// ------------- Priv Variables
-	bool _isHeaderDone; // master bool
+	bool _headerSent; // master bool
 	
 	map<string, string> _mimeTypes;
 	bool _isDirectory;
@@ -53,18 +61,22 @@ private:
 
 	string _realURI;
 	e_errorCodes _errorType;
+	e_method _method;
 
 	Client* _client;
 
 	ResponseHeaders Headers;
 
+
 	// ------------- Priv Methods
 	void	resolveURI( Client&, Config& );
 	void	sanatizeURI( string & );
-	void	initialChecks( Client&, Config& );
+	void	initialChecks( Config& );
 	void	launchCGI( void );
 	void	buildHeaders( void );
 	void	setContentLenght(); // not a regular setter
+	void	extractMethod( void );
+
 
 
 

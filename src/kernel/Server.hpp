@@ -10,7 +10,7 @@
 #include <arpa/inet.h>
 #include <algorithm>
 #include "Logger.hpp"
-// #include "buildResponse.hpp"
+#include "../errorCode/errorCode.hpp"
 
 #define BUFF_SIZE 4096
 #define MAX_HDR_SIZE 8192
@@ -28,7 +28,7 @@ struct Client
 	socklen_t 			len;
 	bool				body;
 	size_t				bodySize; // Set up a zero
-	// StatusCode (enum set up by Dan at 200 by default)
+	e_errorCodes statusCodes;
 
 	// -- ResponseBuilder
 	std::vector<char>	bodyBuffer; // Buffer in which ResponseBuilder write body
@@ -44,6 +44,7 @@ struct Client
 		len = sizeof(address);
 		body = false;
 		bodySize = 0;
+		statusCodes = CODE_200_OK;
 	}
 };
 

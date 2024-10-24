@@ -2,7 +2,7 @@
 
 // ------------------------- COPLIAN FORM -----------------------------
 ResponseBuilder::ResponseBuilder( void ) :
-	_isHeaderDone(false),
+	_headerSent(false),
 	_isDirectory(false),
 	_isCGI(false),
 	_errorType(CODE_200_OK){
@@ -78,11 +78,12 @@ void ResponseBuilder::resolveURI( Client& inputClient, Config& config )
 	// TODO STEP 2 : Resolve URI with rooted path from config file
 }
 
-void	ResponseBuilder::initialChecks( Client& inputClient, Config& config ){
+void	ResponseBuilder::initialChecks( Config& config ){
 
 	// ! STEP 1 = RESSOURCE EXISTS AND READEABLE ?
 	if (_realURI.empty())
-		_errorType = CODE_404_NOT_FOUND;
+		_realURI = config.errorPaths.at(CODE_404_NOT_FOUND);
+		// _errorType = CODE_404_NOT_FOUND;
 	else if (_realURI == "/") // What if the resolved URI is a directory and not just "/"
 	{
 		vector<string>::iterator it;
@@ -139,9 +140,6 @@ void	ResponseBuilder::initialChecks( Client& inputClient, Config& config ){
 	{
 
 	}
-
-
-	// _isCheckingDone = true;
 }
 
 void ResponseBuilder::launchCGI( void ){
@@ -225,20 +223,50 @@ void	ResponseBuilder::setContentLenght(){
 		Headers.bodyLenght = _fileInfo.st_size;
 }
 
-	
+void	ResponseBuilder::extractMethod( void ){
+
+	string tempMethod = _client->header.getMethod();
+
+	// verif already made by Dan
+	if (tempMethod == "GET")
+		_method = GET;
+	else if (tempMethod == "POST")
+		_method = POST;
+	else
+		_method = DELETE;
+}
+
 
 vector<char>	ResponseBuilder::getHeader( Client &inputClient, Config &config ){
 
+	if (_headerSent)
+		return vector<char>(); // return empty vector
+	
 	_client = &inputClient; // init client
 
+
+	// switch (_method)
+	// {
+	// 	case GET:
+	// 		callGet();
+	// 		break;
+	// 	case POST:
+	// 		callPost();
+	// 		break;
+	// 	case DELETE:
+	// 		callDelete();
+	// 		break;
+	// }
+
+	// error happends during kernel, the request is then a basic GET request
+	if (_client->statusCodes >= CODE_400_BAD_REQUEST)
 	{
-		// TODO How do I know if the call is a errorCall or a regular call ?
+		// !	REALLY USEFULL ?
 	}
 
-	// StatusCode set up by Dan in errorProcress
-
+	extractMethod();
 	resolveURI(inputClient, config);
-	initialChecks(inputClient, config);
+	initialChecks(config);
 
 	if (_errorType >= 400)
 	{
@@ -257,7 +285,7 @@ vector<char>	ResponseBuilder::getHeader( Client &inputClient, Config &config ){
 			// man idk ?
 		}
 	}
-	else if (_isCGI)
+	else if (_isCGI )
 	{
 		launchCGI(); // CGI must write within a file
 		// _realURI = outputCGI.html
@@ -270,8 +298,8 @@ vector<char>	ResponseBuilder::getHeader( Client &inputClient, Config &config ){
 	setContentLenght();
 	buildHeaders();
 
-
-	return Headers._masterHeader;
+	_headerSent = true;
+	return Headers.masterHeader;
 }
 
 

@@ -11,6 +11,7 @@ struct Config
 	std::vector<struct sockaddr_in> sockAddress;
 	vector<string>					indexFiles; // default files names if the URI == "/"
 	bool							listingDirectories; // activer ou non le listing des repertoires
+	map<e_errorCodes, string>		errorPaths;
 
 	Config()
 	{
@@ -49,5 +50,9 @@ struct Config
 		indexFiles.push_back("default.html");
 
 		listingDirectories = false;
+
+		errorPaths.insert(std::make_pair(CODE_404_NOT_FOUND, "path/to/404.html"));
+		errorPaths.insert(std::make_pair(CODE_403_FORBIDDEN, "path/to/403.html"));
+		errorPaths.insert(std::make_pair(CODE_500_INTERNAL_SERVER_ERROR, "path/to/404.html"));
 	}
 };
