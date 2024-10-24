@@ -10,30 +10,28 @@
 #include <arpa/inet.h>
 #include <algorithm>
 #include "Logger.hpp"
-#include "buildResponse.hpp"
+// #include "buildResponse.hpp"
 
 #define BUFF_SIZE 4096
 #define MAX_HDR_SIZE 8192
 #define MAX_CNT_SIZE 81920000
 
-vector<char> masterBuilder(vector<char> &bodyInput, e_errorCodes errorCode,
-	string& fileName);
+// vector<char> masterBuilder(vector<char> &bodyInput, e_errorCodes errorCode,
+	// string& fileName);
 	
 struct Client
 {
 	int					id;
 	int					fd;
-	std::vector<char>	message; // body in which we write
+	std::vector<char>	message; // buffer used for parsing request
 	sockaddr_in 		address;
 	socklen_t 			len;
 	bool				body;
-	size_t				bodySize;
+	size_t				bodySize; // Set up a zero
 
-	// -- Exec
-	std::ifstream bodyStream; // main stream for raw data
-	std::streampos filePosition;
-	bool killClient; // Does the client needs to be kicked out ?
-	// -- Exec
+	// -- ResponseBuilder
+	std::vector<char>	bodyBuffer; // Buffer in which ResponseBuilder write body
+	// -- ResponseBuilder
 
 	RequestParser		header;
 
@@ -45,7 +43,6 @@ struct Client
 		len = sizeof(address);
 		body = false;
 		bodySize = 0;
-		killClient = false;
 	}
 };
 
