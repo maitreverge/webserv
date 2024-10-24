@@ -100,7 +100,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const RequestPar
 		logEntry = 	BLUE + timeStamp::getTime() + ": " 
 								+ formatLogLevel(logLevel) 
 								+ BOLD_HIGH_INTENSITY_WHITE + message + " "
-								+ MAGENTA + ipToString(obj.getClient()->address) + " "
+								+ MAGENTA + "Client: " + ipToString(obj.getClient()->address) + " "
 								+ YELLOW + intToString(portToInt(obj.getClient()->address)) + " "
 								+ GREEN + intToString(obj.getClient()->fd)
 								+ RESET + "\n";
@@ -125,7 +125,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 	logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) 
 							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
-							+ MAGENTA + ipToString(client.address) + " "
+							+ MAGENTA + "Client: " + ipToString(client.address) + " "
 							+ YELLOW + intToString(portToInt(client.address)) + " "
 							+ GREEN + intToString(client.fd)
 							+ RESET + "\n";
@@ -140,13 +140,13 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 {
 	//[timestamp][loglevel][message][ip][port][fd]
 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
-							+ formatLogLevel(logLevel) 
-							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
-							+ MAGENTA + ipToString(client.address) + " "
+							+ formatLogLevel(logLevel) + " "
+							+ BOLD_HIGH_INTENSITY_WHITE + message
+							+ MAGENTA + "Client: " + ipToString(client.address) + " "
 							+ YELLOW + intToString(portToInt(client.address)) + " "
 							+ GREEN + intToString(client.fd) + " "
-							+ BOLD_HIGH_INTENSITY_WHITE + "Server: "
-							+ MAGENTA + ipToString(server._sockAddr) + " "
+							+ BOLD_HIGH_INTENSITY_WHITE
+							+ MAGENTA + "Server: " + ipToString(server._sockAddr) + " "
 							+ YELLOW + intToString(portToInt(server._sockAddr)) + " "
 							+ RESET + "\n";
 	if (logToStdOut)
@@ -162,8 +162,8 @@ void Logger::log(logLevel logLevel, const std::string& message, const Server&ser
 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) 
 							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
-							+ BOLD_HIGH_INTENSITY_WHITE + "Server: "
-							+ MAGENTA + ipToString(server._sockAddr) + " "
+							+ BOLD_HIGH_INTENSITY_WHITE
+							+ MAGENTA + "Server: " + ipToString(server._sockAddr) + " "
 							+ YELLOW + intToString(portToInt(server._sockAddr)) + " "
 							+ RESET + "\n";
 	if (logToStdOut)
@@ -171,6 +171,27 @@ void Logger::log(logLevel logLevel, const std::string& message, const Server&ser
 	if (_accessFile.is_open())
 		_accessFile << logEntry;
 	_accessFile.flush();
+}
+
+void Logger::log(logLevel logLevel, std::string& message, struct Client& client, const Error& error)
+{
+	// [timestamp][loglevel][message][ip][port]
+	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
+							+ formatLogLevel(logLevel) 
+							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
+							+ BOLD_HIGH_INTENSITY_WHITE
+							+ MAGENTA + "Client: " + ipToString(client.address) + " "
+							+ YELLOW + intToString(portToInt(client.address)) + " "
+							+ GREEN + intToString(client.fd) + " "							
+							+ RESET + "\n";
+	if (logToStdOut)
+		std::cout << logEntry;
+	if (_accessFile.is_open())
+		_accessFile << logEntry;
+	_accessFile.flush();
+	(void)logLevel;
+	(void)client;
+	(void)error;
 }
 
 /**========================================================================
@@ -185,7 +206,7 @@ void Logger::log(	logLevel logLevel, const std::string& message,
 							+ formatLogLevel(logLevel) 
 							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
 							+ RED + obj.getStatusLine()
-							// + MAGENTA + ipToString(obj.getClient()->address) + " "
+							// + MAGENTA + "Client: " + ipToString(obj.getClient()->address) + " "
 							// + YELLOW + intToString(portToInt(obj.getClient()->address)) + " "
 							// + GREEN + intToString(obj.getClient()->fd)
 							+ RESET + "\n";

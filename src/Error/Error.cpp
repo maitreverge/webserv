@@ -1,5 +1,6 @@
 #include "Error.hpp"
 #include "Logger.hpp"
+#include "master.hpp"
 
 Error::Error() {}
 Error::~Error() {}
@@ -10,19 +11,11 @@ Error& Error::getInstance()
 	return instance;
 }
 
-void	Error::handleError(int errorCode, Client *client) const
+void	Error::handleError(int errorCode, Client &client) const
 {
-	if (client == NULL)
-		Logger::getInstance().log(ERROR, "Error");
-	else
-	{
-		std::string str;
-		std::ostringstream oss;
-
-		oss << errorCode	;
-		str = oss.str();
-		Logger::getInstance().log(ERROR, str);
-	}
+	std::string str = string("DEINE MUTTER LUTSCHT SCHAENZE IN DER HOELLE!!!");
+	Logger::getInstance().log(ERROR, str, client, *this);
+	client.statusCode = static_cast<e_errorCodes>(errorCode);
 }
 
 void	Error::handleError(std::string message) const

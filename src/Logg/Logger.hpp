@@ -6,6 +6,7 @@
 #include "Server.hpp"
 #include "RequestParser.hpp"
 #include "Kernel.hpp"
+#include "Error.hpp"
 
 class Kernel;
 class Server;
@@ -35,6 +36,7 @@ public:
 	void log(logLevel logLevel, const std::string& message, const Client& context);
 	void log(logLevel logLevel, const std::string& message, const class buildResponse& obj);
 	void log(logLevel logLevel, const std::string& message, const Client& client, const Server&obj);
+	void log(logLevel logLevel, std::string& message, struct Client& client, const Error& error);
 	void log(logLevel logLevel, const std::string& message, const Server&server);
 	std::string	formatLogLevel(logLevel loglevel) const;
 	static Logger& getInstance();
