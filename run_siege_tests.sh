@@ -8,4 +8,4 @@ echo "
 python3 tests/scripts/update_ip.py
 
 #run tests
-docker run --rm -t -v $(pwd)/tests/siege/siege_urls.txt:/siege_urls.txt jstarcher/siege -f /siege_urls.txt -c1 -r5
+docker run --rm -t -v $(pwd)/tests/siege/siege_urls.txt:/siege_urls.txt jstarcher/siege -f /siege_urls.txt -c2 -r5
