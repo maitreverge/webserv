@@ -163,13 +163,13 @@ void floSimulatorGet(Client & client)
 		
 
 		Logger::getInstance().log(DEBUG, "Stream output 2");  
-		if (client.messageSend.size() > 0)
-		{
+		// if (client.messageSend.size() > 0)
+		// {
 
-			std::string str(client.messageSend.data());
+		std::string str(client.messageSend.data(), ofs.gcount());
 		Logger::getInstance().log(DEBUG, "Stream output 3"); 
 		Logger::getInstance().log(INFO, str);  
-		}
+		// }
 	
 		Logger::getInstance().log(DEBUG, "Stream output 4");       
     } else {
