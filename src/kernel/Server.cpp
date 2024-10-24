@@ -119,15 +119,21 @@ void Server::listenClients()
 }
 
 void floSimulator(std::vector<char> part)
-{
+{	
+    Logger::getInstance().log(DEBUG, "FLO POST");
     static std::ofstream ofs("image_chat.jpeg", std::ios::binary);
-    
+
     if (ofs.is_open()) {
         ofs.write(part.data(), static_cast<std::streamsize>(part.size()));  
         ofs.flush();
     } else {
         std::cout << "Erreur : impossible d'ouvrir le fichier." << std::endl;
     }
+}
+
+void floSimulatorGet()
+{	
+    Logger::getInstance().log(DEBUG, "FLO GET");    
 }
 
 void printMessageClientTest(Client & client)
@@ -155,7 +161,9 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 		if (isMaxHeaderSize(it + 4, i))
 			return ;				
 		this->_clients[i].header.parse(this->_clients[i]);								
-		this->_clients[i].header.displayParsingResult();			
+		this->_clients[i].header.displayParsingResult();
+		if (this->_clients[i].header.getMethod() == "GET")
+			floSimulatorGet();			
 		this->_clients[i].message.erase(this->_clients[i].message.begin(),
 			it + 4);
 		this->_clients[i].bodySize += this->_clients[i].message.size();
@@ -248,7 +256,7 @@ bool Server::isBodyTerminated(size_t i, bool flag)
 		Logger::getInstance().log(INFO, ss.str());
 
 		this->_clients[i].bodySize = 0;
-		if (flag && this->_clients[i].header.getMethod() == "POST" || !flag)
+		if ((flag && this->_clients[i].header.getMethod() == "POST") || !flag)
 			floSimulator(this->_clients[i].message);//? POST
 		this->_clients[i].message.clear();		
 		return true;

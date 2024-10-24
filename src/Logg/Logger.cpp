@@ -39,6 +39,8 @@ std::string Logger::formatLogLevel(logLevel level) const
 {
 	switch (level)
 	{
+		case DEBUG:
+			return std::string(BLUE) + "[DEBUG] " + RESET;
 		case INFO:
 			return std::string(GREEN) + "[INFO] " + RESET;
 		case WARNING:
