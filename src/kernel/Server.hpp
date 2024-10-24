@@ -58,7 +58,7 @@ class Server
 	void handleClientBody(size_t i, ssize_t ret);
 	bool isMaxHeaderSize(std::vector<char>::iterator it, size_t i);
 	bool isContentLengthValid(size_t i);
-	bool isBodyTerminated(size_t i, bool flag);
+	bool isBodyTerminated(size_t i);
 	bool isBodyTooLarge(size_t i);
 	void replyClient(Client & client, std::vector<char> & response);
 	void exitClient(size_t index);

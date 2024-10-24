@@ -169,7 +169,7 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 		this->_clients[i].bodySize += this->_clients[i].message.size();
 		if (!this->isContentLengthValid(i)
 			|| this->isBodyTooLarge(i)
-			|| this->isBodyTerminated(i, false))
+			|| this->isBodyTerminated(i))
 			return ;						
 	}
 	else
@@ -183,7 +183,7 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 	Logger::getInstance().log(INFO, ss.str());
 
 	this->_clients[i].bodySize += static_cast<size_t>(ret);
-	if (this->isBodyTooLarge(i) || this->isBodyTerminated(i, true))
+	if (this->isBodyTooLarge(i) || this->isBodyTerminated(i))
 		return ;
 	if (this->_clients[i].header.getMethod() == "POST")
 		floSimulator(this->_clients[i].message); //? POST
@@ -244,7 +244,7 @@ bool Server::isBodyTooLarge(size_t i)
 	return false;
 }
 
-bool Server::isBodyTerminated(size_t i, bool flag) 
+bool Server::isBodyTerminated(size_t i) 
 {
 	if (this->_clients[i].bodySize ==
 		this->_clients[i].header.getHeaders().ContentLength)
@@ -256,7 +256,7 @@ bool Server::isBodyTerminated(size_t i, bool flag)
 		Logger::getInstance().log(INFO, ss.str());
 
 		this->_clients[i].bodySize = 0;
-		if ((flag && this->_clients[i].header.getMethod() == "POST") || !flag)
+		if ( this->_clients[i].header.getMethod() == "POST")
 			floSimulator(this->_clients[i].message);//? POST
 		this->_clients[i].message.clear();		
 		return true;
