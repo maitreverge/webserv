@@ -25,3 +25,5 @@ Logger::getInstance().log(INFO, "Request parsed", *this);
 ```bash
 Thu, 24 Oct 2024 14:44:09 GMT: [INFO] Request parsed 10.12.7.8 56514 8
 ```
+
+**N'hesitez pas a me dire si vous voulez une autre surcharge de methode!**
