@@ -139,6 +139,8 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 {
 	Logger::getInstance().log(INFO, "new client header");
 	
+
+
 	this->_clients[i].message.insert(this->_clients[i].message.end(), 
 		this->_readBuffer.begin(), this->_readBuffer.begin() + ret);	
 	this->_readBuffer.clear();
@@ -153,10 +155,8 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 	{							
 		this->_clients[i].header.parse(this->_clients[i]);								
 		this->_clients[i].header.displayParsingResult();
-		if (this->_clients[i].header.getMethod() == "POST")
-		{	
-			std::string str(this->_clients[i].message.begin(), it + 4);
-			if (str.size() >= MAX_HDR_SIZE)
+		
+			if (it - this->_clients[i].message.begin() > MAX_HDR_SIZE)
 			{
 				Logger::getInstance().log(ERROR, "1 header size");
 					//! 431 Request Header Fields Too Large !! ou GET with Body	
@@ -172,23 +172,24 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 				|| this->isBodyTerminated(i))
 				return ;
 			this->_clients[i].body = true;
-			floSimulator(this->_clients[i].message); //? POST			
-		}
-		else if (this->_clients[i].header.getMethod() == "GET")
-			floSimulator(this->_clients[i].message); //? GET
-		else if (this->_clients[i].header.getMethod() == "DELETE")
-			floSimulator(this->_clients[i].message); //? DELETE
-		this->_clients[i].message.clear();		
-	}	
-	if (static_cast<ssize_t>(this->_clients[i].message.size())
+			// floSimulator(this->_clients[i].message); //? POST			
+		// }
+		// else if (this->_clients[i].header.getMethod() == "GET")
+		// 	floSimulator(this->_clients[i].message); //? GET
+		// else if (this->_clients[i].header.getMethod() == "DELETE")
+		// 	floSimulator(this->_clients[i].message); //? DELETE
+		// this->_clients[i].message.clear();		
+	}
+	else if (ret + static_cast<ssize_t>(this->_clients[i].message.size())
 		>= MAX_HDR_SIZE)
 	{
-		Logger::getInstance().log(ERROR, "2 header size");
+		Logger::getInstance().log(ERROR, "header size");
 			//! 431 Request Header Fields Too Large !! ou GET with Body	
 
 		this->exitClient(i);
 		return;	
-	}	
+	}
+	
 }
 
 void Server::handleClientBody(size_t i, ssize_t ret)
@@ -210,14 +211,12 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 bool Server::isContentLengthValid(size_t i)
 {
 	if (this->_clients[i].header.getHeaders().ContentLength
-			> MAX_CNT_SIZE)
+		> MAX_CNT_SIZE)
 	{
 		stringstream ss;
 		ss << "max content size reached" << " - Content-Lenght: "
 			<< this->_clients[i].header.getHeaders().ContentLength
-			<< " - Max content size: " <<
-			this->_clients[i].header.getHeaders().ContentLength
-			<< std::endl;
+			<< " - Max content size: " << MAX_CNT_SIZE << std::endl;
 		Logger::getInstance().log(ERROR, ss.str());
 			//! 413 Payload Too Large
 	
