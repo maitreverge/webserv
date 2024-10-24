@@ -93,6 +93,7 @@ void Server::listenClients()
 	{	
 		if (FD_ISSET(this->_clients[i].fd, &this->_readSet))
 		{
+			this->_readBuffer.clear();
 			this->_readBuffer.resize(BUFF_SIZE);
 			ssize_t ret = recv(this->_clients[i].fd, this->_readBuffer.data(),
 				this->_readBuffer.size(), 0);
@@ -106,7 +107,9 @@ void Server::listenClients()
 				this->exitClient(i);		
 			else
 			{
-				if (!this->_clients[i].body)
+				this->_clients[i].message.insert(this->_clients[i].message.end(), 
+					this->_readBuffer.begin(), this->_readBuffer.begin() + ret);				
+				if (!this->_clients[i].bodySize)
 					this->handleClientHeader(i, ret);
 				else
 					this->handleClientBody(i, ret);
@@ -137,70 +140,58 @@ void printMessageClientTest(Client & client)
 
 void Server::handleClientHeader(size_t i, ssize_t ret)
 {
-	Logger::getInstance().log(INFO, "new client header");
-	
+	stringstream ss;
+	ss << "receiv client request" << " " << ret << " bytes";
+	Logger::getInstance().log(INFO, ss.str());
 
-
-	this->_clients[i].message.insert(this->_clients[i].message.end(), 
-		this->_readBuffer.begin(), this->_readBuffer.begin() + ret);	
-	this->_readBuffer.clear();
-	
 	std::string delimiter = "\r\n\r\n";
 	std::vector<char>::iterator it = std::search
 		(this->_clients[i].message.begin(),
 		this->_clients[i].message.end(),
 		delimiter.begin(),
 		delimiter.end() - 1);		
-	if (it != this->_clients[i].message.end())
-	{							
+	if (it != this->_clients[i].message.end())		
+	{	
+		if (isMaxHeaderSize(it + 4, i))
+			return ;				
 		this->_clients[i].header.parse(this->_clients[i]);								
-		this->_clients[i].header.displayParsingResult();
-		
-			if (it - this->_clients[i].message.begin() > MAX_HDR_SIZE)
-			{
-				Logger::getInstance().log(ERROR, "1 header size");
-					//! 431 Request Header Fields Too Large !! ou GET with Body	
-
-				this->exitClient(i);
-				return;	
-			}
-			this->_clients[i].message.erase(this->_clients[i].message.begin(),
-				it + 4);
-			this->_clients[i].bodySize += this->_clients[i].message.size();
-			if (!this->isContentLengthValid(i)
-				|| this->isBodyTooLarge(i)
-				|| this->isBodyTerminated(i))
-				return ;
-			this->_clients[i].body = true;
-			// floSimulator(this->_clients[i].message); //? POST			
-		// }
-		// else if (this->_clients[i].header.getMethod() == "GET")
-		// 	floSimulator(this->_clients[i].message); //? GET
-		// else if (this->_clients[i].header.getMethod() == "DELETE")
-		// 	floSimulator(this->_clients[i].message); //? DELETE
-		// this->_clients[i].message.clear();		
+		this->_clients[i].header.displayParsingResult();			
+		this->_clients[i].message.erase(this->_clients[i].message.begin(),
+			it + 4);
+		this->_clients[i].bodySize += this->_clients[i].message.size();
+		if (!this->isContentLengthValid(i)
+			|| this->isBodyTooLarge(i)
+			|| this->isBodyTerminated(i))
+			return ;						
 	}
-	else if (ret + static_cast<ssize_t>(this->_clients[i].message.size())
-		>= MAX_HDR_SIZE)
+	else
+		isMaxHeaderSize(it + 1, i);
+}
+
+bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
+{
+	if (it - this->_clients[i].message.begin() > MAX_HDR_SIZE)
 	{
-		Logger::getInstance().log(ERROR, "header size");
-			//! 431 Request Header Fields Too Large !! ou GET with Body	
+		stringstream ss;
+		ss << "header size" << " Actual-Size: " <<
+			it - this->_clients[i].message.begin() << " - Max-Header-Size : "
+			<< MAX_HDR_SIZE;
+
+		Logger::getInstance().log(ERROR, ss.str());
+			//! 431 Request Header Fields Too Large !!
 
 		this->exitClient(i);
-		return;	
+		return true;	
 	}
-	
+	return false;
 }
 
 void Server::handleClientBody(size_t i, ssize_t ret)
 {
 	stringstream ss;
-	ss << "sequel client body: " << ret << " bytes";
+	ss << "receive client body" << " " << ret << " bytes";
 	Logger::getInstance().log(INFO, ss.str());
-	
-	this->_clients[i].message.insert(this->_clients[i].message.end(), 
-		this->_readBuffer.begin(), this->_readBuffer.begin() + ret);
-	this->_readBuffer.clear();	
+
 	this->_clients[i].bodySize += static_cast<size_t>(ret);
 	if (this->isBodyTooLarge(i) || this->isBodyTerminated(i))
 		return ;
@@ -232,7 +223,7 @@ bool Server::isBodyTooLarge(size_t i)
 		this->_clients[i].header.getHeaders().ContentLength)
 	{
 		stringstream ss;
-		ss << "sequel content size" << " - Body-Size: "
+		ss << "content size" << " - Body-Size: "
 		<< this->_clients[i].bodySize << " Content-Lenght: "
 		<< this->_clients[i].header.getHeaders().ContentLength << std::endl;
 		Logger::getInstance().log(ERROR, ss.str());
@@ -250,12 +241,11 @@ bool Server::isBodyTerminated(size_t i)
 		this->_clients[i].header.getHeaders().ContentLength)
 	{
 		stringstream ss;
-		ss << "body terminated" << " - Body-Size: "
+		ss << "client body terminated" << " - Body-Size: "
 		<< this->_clients[i].bodySize << " Content-Lenght: "
 		<< this->_clients[i].header.getHeaders().ContentLength << std::endl;
 		Logger::getInstance().log(INFO, ss.str());
 
-		this->_clients[i].body = false;
 		this->_clients[i].bodySize = 0;
 		floSimulator(this->_clients[i].message);//? POST
 		this->_clients[i].message.clear();		

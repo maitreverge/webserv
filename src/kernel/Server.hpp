@@ -26,7 +26,6 @@ struct Client
 	std::vector<char>	message;
 	sockaddr_in 		address;
 	socklen_t 			len;
-	bool				body;
 	size_t				bodySize;
 	RequestParser		header;
 
@@ -35,8 +34,7 @@ struct Client
 		id = 0;
 		fd = 0;		
 		memset(&address, 0, sizeof(address));
-		len = sizeof(address);
-		body = false;
+		len = sizeof(address);	
 		bodySize = 0;
 	}
 };
@@ -58,6 +56,7 @@ class Server
 	void displayClient(Client & client) const;
 	void handleClientHeader(size_t i, ssize_t ret);
 	void handleClientBody(size_t i, ssize_t ret);
+	bool isMaxHeaderSize(std::vector<char>::iterator it, size_t i);
 	bool isContentLengthValid(size_t i);
 	bool isBodyTerminated(size_t i);
 	bool isBodyTooLarge(size_t i);
