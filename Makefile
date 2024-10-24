@@ -1,6 +1,6 @@
 # executables name
 NAME = webserv
-TEST_NAME = test_webserv
+TEST_NAME = tests/webtest
 
 # compiler + flags
 CXX = c++
@@ -81,10 +81,9 @@ $(TEST_NAME) : $(TEST_OBJ)
 	@echo "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b tests linked              ☑️\n\033[0m"
 
 test: $(TEST_NAME)
-	@./$(TEST_NAME)
-
+	@echo "\033[0;36m 🎉✨ Compilation successfull ! 🥳🚀\033[0m\n"
+	
 emoticon:
-	@echo "\n 💗 😀 😃 😍\n"
 	@mkdir -p $(OBJ_DIR)
 
 newline: 

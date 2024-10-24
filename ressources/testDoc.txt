@@ -7,5 +7,12 @@ infos regarding testing tool siege
 https://www.joedog.org/siege-manual/#top
 
 testing siege docker
-https://hub.docker.com/r/jstarcher/siege
 
+.CONFIGURATION SIEGE
+- ip address: ip a => recuperer l'adresse IP du systeme
+
+
+docker run --rm -t jstarcher/siege -c1 -r5 10.12.6.8:1512
+
+
+docker run --rm -t -v $(pwd)/siege_urls.txt:/siege_urls.txt jstarcher/siege -f /siege_urls.txt -c1 -r5

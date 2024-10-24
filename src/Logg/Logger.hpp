@@ -43,3 +43,4 @@ public:
 	int portToInt(const struct sockaddr_in& addr);
 	std::string intToString(int value);
 };
+
