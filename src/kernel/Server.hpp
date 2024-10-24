@@ -11,6 +11,7 @@
 #include <algorithm>
 #include "Logger.hpp"
 #include "buildResponse.hpp"
+#include "errorCode.hpp"
 
 #define BUFF_SIZE 4096
 #define MAX_HDR_SIZE 8192
@@ -29,6 +30,7 @@ struct Client
 	bool				body;
 	size_t				bodySize;
 	RequestParser		header;
+	e_errorCodes		statusCode;
 
 	Client()
 	{
@@ -37,6 +39,7 @@ struct Client
 		memset(&address, 0, sizeof(address));
 		len = sizeof(address);
 		body = false;
+		statusCode = CODE_200_OK;
 		bodySize = 0;
 	}
 };
