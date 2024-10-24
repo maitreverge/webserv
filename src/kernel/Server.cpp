@@ -161,11 +161,25 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 		this->_clients[i].bodySize += this->_clients[i].message.size();
 		if (!this->isContentLengthValid(i)
 			|| this->isBodyTooLarge(i)
-			|| this->isBodyTerminated(i))
+			|| this->isBodyTerminated(i, false))
 			return ;						
 	}
 	else
 		isMaxHeaderSize(it + 1, i);
+}
+
+void Server::handleClientBody(size_t i, ssize_t ret)
+{
+	stringstream ss;
+	ss << "receive client body" << " " << ret << " bytes";
+	Logger::getInstance().log(INFO, ss.str());
+
+	this->_clients[i].bodySize += static_cast<size_t>(ret);
+	if (this->isBodyTooLarge(i) || this->isBodyTerminated(i, true))
+		return ;
+	if (this->_clients[i].header.getMethod() == "POST")
+		floSimulator(this->_clients[i].message); //? POST
+	this->_clients[i].message.clear();	
 }
 
 bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
@@ -184,19 +198,6 @@ bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
 		return true;	
 	}
 	return false;
-}
-
-void Server::handleClientBody(size_t i, ssize_t ret)
-{
-	stringstream ss;
-	ss << "receive client body" << " " << ret << " bytes";
-	Logger::getInstance().log(INFO, ss.str());
-
-	this->_clients[i].bodySize += static_cast<size_t>(ret);
-	if (this->isBodyTooLarge(i) || this->isBodyTerminated(i))
-		return ;
-	floSimulator(this->_clients[i].message); //? POST
-	this->_clients[i].message.clear();	
 }
 
 bool Server::isContentLengthValid(size_t i)
@@ -235,7 +236,7 @@ bool Server::isBodyTooLarge(size_t i)
 	return false;
 }
 
-bool Server::isBodyTerminated(size_t i) 
+bool Server::isBodyTerminated(size_t i, bool flag) 
 {
 	if (this->_clients[i].bodySize ==
 		this->_clients[i].header.getHeaders().ContentLength)
@@ -247,7 +248,8 @@ bool Server::isBodyTerminated(size_t i)
 		Logger::getInstance().log(INFO, ss.str());
 
 		this->_clients[i].bodySize = 0;
-		floSimulator(this->_clients[i].message);//? POST
+		if (flag && this->_clients[i].header.getMethod() == "POST" || !flag)
+			floSimulator(this->_clients[i].message);//? POST
 		this->_clients[i].message.clear();		
 		return true;
 	}
