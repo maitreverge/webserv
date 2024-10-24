@@ -13,7 +13,7 @@ Error& Error::getInstance()
 void	Error::handleError(int errorCode, Client *client) const
 {
 	if (client == NULL)
-		Logger::getInstance().log(ERROR, "***********************************just a test***********************************");
+		Logger::getInstance().log(ERROR, "Error");
 	else
 	{
 		std::string str;
@@ -23,4 +23,9 @@ void	Error::handleError(int errorCode, Client *client) const
 		str = oss.str();
 		Logger::getInstance().log(ERROR, str);
 	}
+}
+
+void	Error::handleError(std::string message) const
+{
+	Logger::getInstance().log(ERROR, message);
 }
