@@ -125,7 +125,22 @@ void Execution::launchCGI( void ){
 
 void Execution::writeStream() {
 
+	if (not _client->isBodyStreamOpen) // reading body for the first time 
+	{
+		// Openning stream for the new incomming body
+		_client->bodyStream.open(_realURI, std::ios::binary); // openning stream in binary mode
+		if (not _client->bodyStream.is_open())
+		{
+			// Handle error with a code 500 error
+		}
+		else
+			_client->isBodyStreamOpen = true;
+		_client->bodyStream.seekg(_client->filePosition); // Put the reading head at the start of the strea
+	}
+	else // no
+	{
 	
+	}
 }
 
 void Execution::callGet( Client& inputClient, Config& config ){
@@ -136,11 +151,11 @@ void Execution::callGet( Client& inputClient, Config& config ){
 		resolveURI(inputClient, config);
 		initialChecks( inputClient, config );
 	
-		if (_errorType >= 400) // possibly add bools
+		if (_errorType >= 400)
 		{
-			// generate error code HTML with `ERROR PROCESS`
+			// Remplace URI with the 404.html path from config files
 		}
-		else if (_isDirectory) // possibly add bools
+		else if (_isDirectory)
 		{
 			if (config.listingDirectories)
 			{
@@ -151,7 +166,7 @@ void Execution::callGet( Client& inputClient, Config& config ){
 				// man idk ?
 			}
 		}
-		else if (_isCGI) // possibly add bools
+		else if (_isCGI)
 		{
 			launchCGI(); // CGI must write within a file
 		}
