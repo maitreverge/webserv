@@ -28,6 +28,7 @@ struct Client
 	socklen_t 			len;
 	bool				body;
 	size_t				bodySize; // Set up a zero
+	// StatusCode (enum set up by Dan at 200 by default)
 
 	// -- ResponseBuilder
 	std::vector<char>	bodyBuffer; // Buffer in which ResponseBuilder write body
