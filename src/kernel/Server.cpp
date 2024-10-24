@@ -141,61 +141,71 @@ Connection: keep-alive\r\n\
 void floSimulatorPut(std::vector<char> part)
 {	
     Logger::getInstance().log(DEBUG, "FLO POST");
+
     static std::ofstream ofs("image_chat.jpeg", std::ios::binary);
 
+	ofs.clear();
     if (ofs.is_open()) {
         ofs.write(part.data(), static_cast<std::streamsize>(part.size()));  
         ofs.flush();
+		if (!ofs)
+		{
+			std::cout << "Erreur decriture dans le fichier." << std::endl;
+		}
     } else {
         std::cout << "Erreur : impossible d'ouvrir le fichier." << std::endl;
     }
 }
 
-void floSimulatorGet(Client & client)
+bool floSimulatorGet(Client & client)
 {	
-    // Logger::getInstance().log(DEBUG, "FLO GET"); 
+    //Logger::getInstance().log(DEBUG, "FLO GET"); 
 
     static std::ifstream ofs("test.html", std::ios::binary);
 
     if (ofs.is_open()) {
-		Logger::getInstance().log(DEBUG, "Stream output"); 
-        ofs.read(client.messageSend.data(), static_cast<std::streamsize>(client.messageSend.size()));
-		
-
-		Logger::getInstance().log(DEBUG, "Stream output 2");  
-		// if (client.messageSend.size() > 0)
-		// {
-
-		std::string str(client.messageSend.data(), ofs.gcount());
-		Logger::getInstance().log(DEBUG, "Stream output 3"); 
-		Logger::getInstance().log(INFO, str);  
-		// }
 	
-		Logger::getInstance().log(DEBUG, "Stream output 4");       
+        ofs.read(client.messageSend.data(), static_cast<std::streamsize>(client.messageSend.size()));		
+		std::string str(client.messageSend.data(), ofs.gcount());	
+		Logger::getInstance().log(INFO, str);  
+	 
+		if (ofs.eof()) 
+		{
+			Logger::getInstance().log(DEBUG, "Fin de fichier atteinte");
+			ofs.clear(); // Réinitialiser les flags pour continuer la lecture si besoin
+			ofs.close();
+			return true;
+			// ofs.seekg(0); // Remettre le pointeur au début du fichier si tu veux recommencer
+   		 }    
     } else {
         std::cout << "Erreur : impossible d'ouvrir le fichier." << std::endl;
     }
-	ghead = buildHeaderTest();
+	// ghead = buildHeaderTest();
+	return false;
 }
 
-bool tog = false;
+
 void Server::replyClients()
 {
 	for (size_t i = 0; i < this->_clients.size(); i++)
 	{	
 		if (FD_ISSET(this->_clients[i].fd, &this->_writeSet))
 		{
-			if (!tog)
+			if (!this->_clients[i].HeaderSend.empty())
 			{
-				tog = true;	
-				replyClient(this->_clients[i], ghead);
-			}
-			ghead.clear();
+				this->_clients[i].tog = true;	
+				replyClient(this->_clients[i], this->_clients[i].HeaderSend);
+				this->_clients[i].HeaderSend.clear();
+			}	
 			
+			if (!floSimulatorGet(this->_clients[i]))
+			{
+
 			replyClient(this->_clients[i], this->_clients[i].messageSend);
 			this->_clients[i].messageSend.clear();
 			this->_clients[i].messageSend.resize(5);
-			floSimulatorGet(this->_clients[i]);
+			}
+
 		}	
 	}
 }
