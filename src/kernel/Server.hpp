@@ -14,7 +14,7 @@
 
 #define BUFF_SIZE 4096
 #define MAX_HDR_SIZE 8192
-#define MAX_CNT_SIZE 81920000
+#define MAX_CNT_SIZE 30000000
 
 vector<char> masterBuilder(vector<char> &bodyInput, e_errorCodes errorCode,
 	string& fileName);
