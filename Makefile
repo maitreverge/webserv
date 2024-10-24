@@ -24,7 +24,7 @@ HDR = $(shell find . \( -name "*.hpp" -o -name "*.h" -o -name "*.tpp" \))
 SRC_DIR = src
 TEST_DIR = tests
 OBJ_DIR = objects
-TEST_OBJ_DIR = test_objects
+TEST_OBJ_DIR = objects_test
 
 # SRC files
 SRC = $(shell find $(SRC_DIR) -name "*.cpp" | sed 's|^\./||')
