@@ -46,4 +46,4 @@ docs_dan
 access.log
 intra_binaries/ubuntu_tester
 intra_binaries/ubuntu_cgi_tester
-test_webserv
+tests/webtest
