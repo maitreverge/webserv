@@ -85,6 +85,7 @@ test: $(TEST_NAME)
 	
 emoticon:
 	@mkdir -p $(OBJ_DIR)
+	@echo "\n 💗 😀 😃 😍\n"
 
 newline: 
 	@echo ""
