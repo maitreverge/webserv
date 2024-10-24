@@ -1,9 +1,7 @@
 import re
 
-# Chemin vers le fichier contenant la nouvelle adresse IP
 ip_fichier = "tests/config/my_ip.txt"
 
-# Chemin vers le fichier siege_urls.txt
 fichier = "tests/siege/siege_urls.txt"
 
 try:
