@@ -23,22 +23,16 @@ Execution::~Execution( void ){}
 
 // -------------------- METHODS -------------------- 
 
-// TODO : test this function
 void Execution::sanatizeURI( string &oldURI ){
 
-	size_t pos;
-	while ((pos = oldURI.find("../")) != string::npos)
+	string needle = "../";
+
+	std::string::size_type found = oldURI.find(needle);
+
+	while (found != -1)
 	{
-		if (pos == 0)
-			oldURI.erase(0, 3);
-		else
-		{
-			size_t prevSlash = oldURI.rfind('/', pos - 1);
-			if (prevSlash == string::npos)
-				oldURI.erase(0, pos + 3);
-			else
-				oldURI.erase(prevSlash, pos - prevSlash + 3);
-		}
+		oldURI.erase(found, 3);
+		found = oldURI.find(needle);
 	}
 }
 
@@ -47,31 +41,31 @@ void Execution::resolveURI( Client& inputClient, Config& config )
 {
 	// /images/../config/../../logo.png
 
-	// ! STEP 1 : Trim all "../" from the path
-	string _realURI = _client->header.getURI();
+	_realURI = _client->header.getURI();
 
+	// ! STEP 1 : Trim all "../" from the URI for transversal path attacks
 	sanatizeURI(_realURI);
+
+	// TODO STEP 2 : Resolve URI with rooted path from config file
 }
 
 void	Execution::initialChecks( Client& inputClient, Config& config ){
 
 	// ! STEP 1 = RESSOURCE EXISTS AND READEABLE ?
-	string curPath;
-	bool readRights;
+	// string curPath;
+
 	// CASE 1 : The URI == "/"
-	if (_client->header.getURI().empty())
-	{
+	if (_realURI.empty())
 		_errorType = CODE_404_NOT_FOUND;
-	}
-	else if (_client->header.getURI() == "/")
+	else if (_realURI == "/") // What if the resolved URI is a directory and not just "/"
 	{
 		vector<string>::iterator it;
 		for (it = config.indexFiles.begin(); it < config.indexFiles.end(); ++it)
 		{
-			curPath = "/" + *it;
+			_realURI += *it;
 			
 			// Check permissions with stat
-			if (stat(curPath.c_str(), &_fileInfo) == 0)
+			if (stat(_realURI.c_str(), &_fileInfo) == 0)
 				break ;
 		}
 
@@ -84,15 +78,14 @@ void	Execution::initialChecks( Client& inputClient, Config& config ){
 		}
 		else // ressource found
 		{
-			readRights = (_fileInfo.st_mode & S_IRUSR) || (_fileInfo.st_mode & S_IRGRP);
+			bool readRights = (_fileInfo.st_mode & S_IRUSR) || (_fileInfo.st_mode & S_IRGRP);
 			if (not readRights)
 				_errorType = CODE_401_UNAUTHORIZED;
 		}
 	}
 	else // check classic path
 	{
-		curPath = _client->header.getURI();
-		if (stat(curPath.c_str(), &_fileInfo) == -1) // if given path fails
+		if (stat(_realURI.c_str(), &_fileInfo) == -1) // if given path fails
 		{
 			if (errno == EACCES)
 				_errorType = CODE_401_UNAUTHORIZED;
@@ -104,82 +97,68 @@ void	Execution::initialChecks( Client& inputClient, Config& config ){
 			/*
 				! STAT FLAGS : https://www.man7.org/linux/man-pages/man7/inode.7.html
 			*/
-			if (_fileInfo.st_mode & S_IFMT == S_IFDIR)
+			if (_fileInfo.st_mode & S_IFMT == S_IFDIR) // checks is the given path is a directory
 				_isDirectory = true;
-			
-
 		}
 	}
 
-
 	// Implementer un booleen qui signifie que une erreur donnee 
 
-	// ! STEP 1 = RESSOURCE EXISTS AND READEABLE ?
 	// TODO = Does the route accepts the METHOD ?
 	{
 		// Set un fichier par défaut comme réponse si la requête est un répertoire.
 	}
 
 	// TODO = Is URI a CGI ??
+	{
+
+	}
 
 
 	_isCheckingDone = true;
 }
 
+void Execution::launchCGI( void ){
+
+	// TODO
+}
+
+void Execution::writeStream() {
+
+	
+}
 
 void Execution::callGet( Client& inputClient, Config& config ){
 
-	// Init client
-	_client = &inputClient;
-
-	try
-	{
-		_realURI = resolveURI(inputClient, config);
-	}
-	catch(const std::exception& e)
-	{
-		_isCheckingDone = true;
-		_errorType = CODE
-	}
-	
-
 	if (not _isCheckingDone)
+	{
+		_client = &inputClient; // init client
+		resolveURI(inputClient, config);
 		initialChecks( inputClient, config );
 	
-	if (_errorType >= 400)
-	{
-		// generate error code HTML with `ERROR PROCESS`
-	}
-	else if (_isDirectory)
-	{
-		if (config.listingDirectories)
+		if (_errorType >= 400) // possibly add bools
 		{
-			// TODO :  generate an HTML page for listing directories
+			// generate error code HTML with `ERROR PROCESS`
 		}
-		else
+		else if (_isDirectory) // possibly add bools
 		{
-			// man idk ?
+			if (config.listingDirectories)
+			{
+				// TODO :  generate an HTML page for listing directories
+			}
+			else
+			{
+				// man idk ?
+			}
+		}
+		else if (_isCGI) // possibly add bools
+		{
+			launchCGI(); // CGI must write within a file
 		}
 	}
 
-	
 
-	
-
-
-	if (_isCGI)
-		launchCGI();
-	else
-	{
-		// Write the body in a buffer
-	} 
-	
-
-
-	
-	// ! STEP 2 = write in a client.stream the body
-	// Dereference client
-	_client = NULL;
+	writeStream();
 }
 
 void Execution::callPost( Client& inputClient ){

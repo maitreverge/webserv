@@ -6,10 +6,18 @@
 struct Client;
 struct Config;
 
+#define CHUNK_SIZE 4096
+
 struct CGI
 {
 	// timeout max for CGI execution
 	string cgiType; // Either ".py" or ".php"
+
+	CGI()
+	{
+		cgiType.clear();
+
+	}
 
 };
 
@@ -40,6 +48,7 @@ private:
 	void	resolveURI( Client&, Config& );
 	void	initialChecks( Client&, Config& );
 	void	launchCGI( void ); // TODO
+	void	writeStream( void );
 	
 
 protected:

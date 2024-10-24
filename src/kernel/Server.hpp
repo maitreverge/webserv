@@ -30,7 +30,8 @@ struct Client
 	size_t				bodySize;
 
 	// -- Exec
-	ifstream execStream; // main stream
+	std::ifstream bodyStream; // main stream for raw data
+	std::streampos filePosition;
 	bool killClient; // Does the client needs to be kicked out ?
 	// -- Exec
 
