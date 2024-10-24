@@ -24,6 +24,7 @@ struct Client
 	int					id;
 	int					fd;
 	std::vector<char>	message;
+	std::vector<char>	messageSend;
 	sockaddr_in 		address;
 	socklen_t 			len;
 	size_t				bodySize;
@@ -36,6 +37,7 @@ struct Client
 		memset(&address, 0, sizeof(address));
 		len = sizeof(address);	
 		bodySize = 0;
+		messageSend.reserve(5);		
 	}
 };
 
@@ -74,5 +76,6 @@ class Server
 		bool setup();
 		void catchClients();
 		void listenClients();
+		void replyClients();
 		void exitServer();
 };

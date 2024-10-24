@@ -22,6 +22,7 @@ class Kernel
 
 	static void callCatch(Server & server);
 	static void callListen(Server & server);
+	static void callReply(Server & server);
 	static void callExit(Server & server);
 
 	public:

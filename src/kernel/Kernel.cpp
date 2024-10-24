@@ -19,6 +19,11 @@ void Kernel::callListen(Server & server)
 	server.listenClients();
 }
 
+void Kernel::callReply(Server & server)
+{
+	server.replyClients();
+}
+
 void Kernel::callExit(Server & server)
 {
 	server.exitServer();
@@ -55,6 +60,8 @@ void Kernel::launch()
 			this->callCatch);
 		std::for_each(this->_servers.begin(), this->_servers.end(),
 			this->callListen);
+		std::for_each(this->_servers.begin(), this->_servers.end(),
+			this->callReply);
 		usleep(100);	
 	}
 
