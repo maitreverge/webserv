@@ -8,6 +8,6 @@ class Error
 		Error();
 		~Error();
 		static Error& getInstance();
-		void	handleError() const;
+		void	handleError(int errorCode, struct Client *client) const;
 
 };

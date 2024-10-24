@@ -1,6 +1,7 @@
 #include "RequestParser.hpp"
 #include "../../includes/master.hpp"
 #include "Logger.hpp"
+#include "Error.hpp"
 
 /**========================================================================
  *                  CONSTRUCTORS / DESTRUCTOR / INIT
@@ -63,6 +64,7 @@ void	RequestParser::parse(Client& client)
 	handleHeaderLines(requestStream);
 	extractHeaders();
 	Logger::getInstance().log(INFO, "Request parsed", *this);
+	Error::getInstance().handleError(404, _Client);	
 	_Client = NULL;
 }
 

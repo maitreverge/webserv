@@ -10,7 +10,17 @@ Error& Error::getInstance()
 	return instance;
 }
 
-void	Error::handleError() const
+void	Error::handleError(int errorCode, Client *client) const
 {
-	Logger::getInstance().log(ERROR, "***********************************just a test***********************************");
+	if (client == NULL)
+		Logger::getInstance().log(ERROR, "***********************************just a test***********************************");
+	else
+	{
+		std::string str;
+		std::ostringstream oss;
+
+		oss << errorCode	;
+		str = oss.str();
+		Logger::getInstance().log(ERROR, str);
+	}
 }
