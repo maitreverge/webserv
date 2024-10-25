@@ -217,10 +217,13 @@ void	ResponseBuilder::buildHeaders(){
 
 	// ContentLenght
 	// ! Potential condition for returning or not a body-lenght
-	streamContentLenght	<< "Content-Length:"
-						<< SPACE
-						<< Headers.bodyLenght
-						<< HTTP_REPONSE_SEPARATOR;
+	if (Headers.bodyLenght > 0)
+	{
+		streamContentLenght	<< "Content-Length:"
+							<< SPACE
+							<< Headers.bodyLenght
+							<< HTTP_REPONSE_SEPARATOR;
+	}
 	
 	Headers.contentLenght = streamContentLenght.str();
 
@@ -268,10 +271,21 @@ void	ResponseBuilder::extractMethod( void ){
 }
 
 
-vector<char>	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
+void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
 	if (_headerSent)
-		return vector<char>(); // return empty vector
+	{
+		/*
+			Ask Seb if he prefers a cleared vector 
+		!					OR
+			a empty vector
+		-----------------------------------------------------
+		_client.HeaderSend.clear();
+		_client.HeaderSend = vector<char>();
+		*/
+		_client.HeaderSend = vector<char>();
+		return;
+	}
 	
 	_client = &inputClient; // init client
 	_config = &inputConfig; // init config
@@ -280,34 +294,14 @@ vector<char>	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfi
 	
 	_realURI = _client->header.getURI();
 
-	// switch (_method)
-	// {
-	// 	case GET:
-	// 		callGet();
-	// 		break;
-	// 	case POST:
-	// 		callPost();
-	// 		break;
-	// 	case DELETE:
-	// 		callDelete();
-	// 		break;
-	// }
-
-	if (_client->statusCodes >= CODE_400_BAD_REQUEST)
-	{
-		// !	REALLY USEFULL ?
-	}
-
 	resolveURI();
 	validateURI();
-
 	
 	if (_isCGI )
 	{
 		launchCGI(); // CGI must write within a file
 		// _realURI = outputCGI.html
 	}
-
 	/*
 		! At this point of the function, the _readURI has ben correctly set up
 		We can safely extract the ContentLenght with `stat`
@@ -315,12 +309,16 @@ vector<char>	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfi
 	setContentLenght();
 	buildHeaders();
 
+	// Copying the build Headers in HeaderSend
+	_client.HeaderSend = Headers.masterHeader;
+
 	_headerSent = true;
-	return Headers.masterHeader;
 }
 
 
-void			ResponseBuilder::getBody( Client &, Config& ){
+void			ResponseBuilder::getBody( void ){
+
+	
 
 
 }

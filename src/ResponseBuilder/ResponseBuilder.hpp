@@ -84,18 +84,12 @@ private:
 	string	extractType( const string& extension ) const;
 
 
-
-
-
-
-
-
 public:
 
 	ResponseBuilder( void );
 	~ResponseBuilder();
 
-	vector<char>	getHeader( Client &, Config& );
-	void			getBody( Client &, Config& );
+	void	getHeader( Client &, Config& );
+	void	getBody( void );
 
 };
