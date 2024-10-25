@@ -132,16 +132,48 @@ void	ResponseBuilder::validateURI( void ){
 			_fileExtension = _fileName.substr(_fileName.find_last_of(".") + 1); // extract file extension
 		}
 		
-		// TODO Checks permissions depending on the METHOD (see TOUDOU.md)
-		// switch (_method)
-		// {
-		// 	case GET:
-		// 		break;
-		// 	case POST:
-		// 		break;
-		// 	case DELETE:
-		// 		break;
-		// }
+	}
+
+	// TODO = Is URI a CGI ??
+	{
+
+	}
+	// ! STEP 3 : Checks URI authorization depending on the method
+	// TODO : Simplify or refactor this function
+	switch (_method)
+	{
+		stat(_realURI.c_str(), &_fileInfo);
+		case GET:
+			if (_isCGI)
+			{
+				if (not( (_fileInfo.st_mode & S_IXUSR) or (_fileInfo.st_mode & S_IXGRP) or (_fileInfo.st_mode & S_IXOTH) )) // exec rights
+					setError(CODE_403_FORBIDDEN);
+			}
+			else
+			{
+				if (not( (_fileInfo.st_mode & S_IRUSR) or (_fileInfo.st_mode & S_IRGRP) or (_fileInfo.st_mode & S_IROTH) )) // read rights
+					setError(CODE_403_FORBIDDEN);
+			}
+			break;
+		case POST:
+			if (_isCGI)
+			{
+				if (not( (_fileInfo.st_mode & S_IXUSR) or (_fileInfo.st_mode & S_IXGRP) or (_fileInfo.st_mode & S_IXOTH) )) // exec rights
+					setError(CODE_403_FORBIDDEN);
+			}
+			else
+			{
+				if (not( (_fileInfo.st_mode & S_IWUSR) or (_fileInfo.st_mode & S_IWGRP) or (_fileInfo.st_mode & S_IWOTH) )) // Write rights
+					setError(CODE_403_FORBIDDEN);
+			}
+			break;
+		case DELETE:
+			if (not( (_fileInfo.st_mode & S_IWUSR) or (_fileInfo.st_mode & S_IWGRP) or (_fileInfo.st_mode & S_IWOTH) )) // Write rights
+				setError(CODE_403_FORBIDDEN);
+			break;
+		default:
+			setError(CODE_405_METHOD_NOT_ALLOWED);
+			break;
 	}
 
 	// TODO = Does the route accepts the METHOD ?
@@ -149,10 +181,6 @@ void	ResponseBuilder::validateURI( void ){
 		// Set un fichier par défaut comme réponse si la requête est un répertoire.
 	}
 
-	// TODO = Is URI a CGI ??
-	{
-
-	}
 
 	if (_isDirectory and (_method == GET) and _config->listingDirectories)
 	{
