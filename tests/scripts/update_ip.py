@@ -1,8 +1,23 @@
+import os
 import re
 
 ip_fichier = "tests/config/my_ip.txt"
 
 fichier = "tests/siege/siege_urls.txt"
+
+# Vérification et création des fichiers s'ils n'existent pas
+os.makedirs(os.path.dirname(ip_fichier), exist_ok=True)
+os.makedirs(os.path.dirname(fichier), exist_ok=True)
+
+# Création de ip_fichier s'il n'existe pas
+if not os.path.isfile(ip_fichier):
+    with open(ip_fichier, 'w') as f:
+        f.write('')  # Fichier vide ou avec une IP par défaut
+
+# Création de fichier s'il n'existe pas
+if not os.path.isfile(fichier):
+    with open(fichier, 'w') as f:
+        f.write('http://0.0.0.0:1510\n')  # Ajouter une URL par défaut
 
 try:
 	# Lecture de la nouvelle adresse IP depuis le fichier
