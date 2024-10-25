@@ -1,9 +1,12 @@
+#pragma once
+
 #include "gtest/gtest.h"
 #include <vector>
 #include <string>
 #include <sstream>
 #include <string>
 #include "../../src/RequestParser/RequestParser.hpp"  // Inclure le bon header de ta classe
+#include "../../src/kernel/Server.hpp"  // Inclure le bon header de ta classe
 
 
 // Mock de Logger pour éviter d'écrire dans la sortie pendant les tests

@@ -17,6 +17,15 @@ struct Headers
 	std::map<std::string, std::string>	Cookie;
 	
 	void	reset();
+
+	bool operator==(const Headers& other) const {
+	return Connection == other.Connection &&
+			ContentType == other.ContentType &&
+			Host == other.Host &&
+			ContentLength == other.ContentLength &&
+			Cookie == other.Cookie &&
+			std::equal(Accept.begin(), Accept.end(), other.Accept.begin());
+	}
 };
 
 struct Client;
