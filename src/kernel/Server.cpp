@@ -82,8 +82,8 @@ void Server::catchClients()
 		this->_maxFd = std::max(this->_maxFd, client.fd);
 		this->_clients.push_back(client);
 			
-		std::vector<char> hardResp = buildHardResponseTest();
-		replyClient(client, hardResp);		
+		// std::vector<char> hardResp = buildHardResponseTest();
+		// replyClient(client, hardResp);		
 	}
 }
 
@@ -204,6 +204,7 @@ void Server::replyClients()
 				replyClient(this->_clients[i], this->_clients[i].messageSend);
 				this->_clients[i].messageSend.clear();
 				this->_clients[i].messageSend.resize(1);
+				usleep(50000);
 				}
 
 			}	
