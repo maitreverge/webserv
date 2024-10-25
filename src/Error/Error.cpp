@@ -12,6 +12,7 @@ Error::Error() {
 					_errorPages[503] = "errorPages/503.html";
 					_errorPages[504] = "errorPages/504.html";
 }
+
 Error::~Error() {}
 
 Error& Error::getInstance()
@@ -23,7 +24,8 @@ Error& Error::getInstance()
 /**========================================================================
  *                           HANDLEERROR
  *! CLASS NOT FINISHED
- *? => buildErrorRequest produces right vector, to be sent back to the parsing
+ *? => buildErrorRequest produces right vector, to be sent back to RequstParser
+ *? => _errorPages to be initialized during config file parsing
  *========================================================================**/
 void	Error::handleError(int errCode, Client &client)
 {
