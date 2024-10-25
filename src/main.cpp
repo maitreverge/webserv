@@ -20,6 +20,7 @@ void signalHandle(int)
 int main()
 {
 	signal(2, signalHandle);
+	signal(3, signalHandle);
 	disableSignalEcho();
 	
 	std::cout << std::endl;

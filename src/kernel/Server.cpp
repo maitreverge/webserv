@@ -115,8 +115,7 @@ void Server::listenClients()
 					this->handleClientBody(i, ret);
 			}
 		}	
-	}
-	// replyClients();//!
+	}	
 }
 
 std::vector<char> buildHeaderTest()
@@ -189,23 +188,44 @@ void Server::replyClients()
 	{	
 		if (this->_clients[i].ready == true)
 		{
-			if (FD_ISSET(this->_clients[i].fd, &this->_writeSet))
+			if(!FD_ISSET(this->_clients[i].fd, &this->_writeSet))
 			{
-				if (!this->_clients[i].HeaderSend.empty())
-				{
-					this->_clients[i].tog = true;	
-					replyClient(this->_clients[i], this->_clients[i].HeaderSend);
-					this->_clients[i].HeaderSend.clear();
-				}	
-				
+				Logger::getInstance().
+					log(ERROR, "client not ready for response");
+				continue ; 
+			}		
+			if (!this->_clients[i].headerSend.empty())
+			{
+				// this->_clients[i].tog = true;
 				if (floSimulatorGet(this->_clients[i]))
 				{
-					std::cout << "je suis coince ds la boucle" << std::endl;
+					if (this->_clients[i].headerSend.size()
+						+ this->_clients[i].messageSend.size() <= MAX_HDR_SIZE)
+					{
+						this->_clients[i].headerSend.insert
+							(this->_clients[i].headerSend.end(),
+							this->_clients[i].messageSend.begin(),
+							this->_clients[i].messageSend.end());
+						replyClient(this->_clients[i], this->_clients[i].headerSend);
+						this->_clients[i].headerSend.clear();						
+					}
+				}
+				if (floSimulatorGet(this->_clients[i]))
+				{				
+					replyClient(this->_clients[i], this->_clients[i].messageSend);
+					this->_clients[i].messageSend.clear();
+					this->_clients[i].messageSend.resize(5);
+					usleep(5000);
+				}
+				replyClient(this->_clients[i], this->_clients[i].headerSend);
+				this->_clients[i].headerSend.clear();
+			}
+			else if (floSimulatorGet(this->_clients[i]))
+			{				
 				replyClient(this->_clients[i], this->_clients[i].messageSend);
 				this->_clients[i].messageSend.clear();
-				this->_clients[i].messageSend.resize(1);
-				}
-
+				this->_clients[i].messageSend.resize(5);
+				usleep(5000);
 			}	
 		}
 	}

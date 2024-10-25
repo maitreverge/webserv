@@ -29,8 +29,7 @@ struct Client
 	socklen_t 			len;
 	size_t				bodySize;
 	RequestParser		header;
-	bool tog;
-	std::vector<char>	HeaderSend;
+	std::vector<char>	headerSend;
 	bool				ready;
 
 	Client()
@@ -40,9 +39,9 @@ struct Client
 		memset(&address, 0, sizeof(address));
 		len = sizeof(address);	
 		bodySize = 0;
-		messageSend.reserve(5000);
-		tog = false;
-
+		messageSend.reserve(MAX_HDR_SIZE);
+	
+		messageSend.reserve(MAX_HDR_SIZE);
 		std::stringstream ss;		
 		ss << 
 		"HTTP/1.1 200 OK\r\n\
@@ -53,7 +52,7 @@ Connection: close\r\n\
 "; 
 		std::string str = ss.str();
 		std::vector<char> res(str.begin(), str.end());	
-		HeaderSend = res;
+		headerSend = res;
 		ready = false;
 	}
 };
