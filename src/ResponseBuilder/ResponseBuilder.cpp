@@ -5,6 +5,7 @@ ResponseBuilder::ResponseBuilder( void ) :
 	_headerSent(false),
 	_isDirectory(false),
 	_isCGI(false),
+	_isFile(false),
 	_errorType(CODE_200_OK){
 
 	_mimeTypes.insert(std::make_pair("html", "text/html"));
@@ -66,11 +67,9 @@ void ResponseBuilder::sanatizeURI( string &oldURI ){
 }
 
 
-void ResponseBuilder::resolveURI( Client& inputClient, Config& config )
+void ResponseBuilder::resolveURI( void )
 {
 	// /images/../config/../../logo.png
-
-	_realURI = _client->header.getURI();
 
 	// ! STEP 1 : Trim all "../" from the URI for transversal path attacks
 	sanatizeURI(_realURI);
@@ -78,16 +77,22 @@ void ResponseBuilder::resolveURI( Client& inputClient, Config& config )
 	// TODO STEP 2 : Resolve URI with rooted path from config file
 }
 
-void	ResponseBuilder::initialChecks( Config& config ){
+void ResponseBuilder::setError(e_errorCodes code){
 
-	// ! STEP 1 = RESSOURCE EXISTS AND READEABLE ?
+	_realURI = _config->errorPaths.at(CODE_404_NOT_FOUND);
+	_errorType = code;
+}
+
+void	ResponseBuilder::validateURI( void ){
+
+	// ! STEP 1 = EDGE CASES FOR EMPTY PATH or PATH == "/"
 	if (_realURI.empty())
-		_realURI = config.errorPaths.at(CODE_404_NOT_FOUND);
+		setError(CODE_404_NOT_FOUND);
 		// _errorType = CODE_404_NOT_FOUND;
 	else if (_realURI == "/") // What if the resolved URI is a directory and not just "/"
 	{
 		vector<string>::iterator it;
-		for (it = config.indexFiles.begin(); it < config.indexFiles.end(); ++it)
+		for (it = _config->indexFiles.begin(); it < _config->indexFiles.end(); ++it)
 		{
 			_realURI += *it;
 			
@@ -96,40 +101,44 @@ void	ResponseBuilder::initialChecks( Config& config ){
 				break ;
 		}
 
-		if (it == config.indexFiles.end())
+		if (it == _config->indexFiles.end())
 		{
 			if (errno == EACCES) // The process does not have execute permissions on one or more directories in the path.
-				_errorType = CODE_401_UNAUTHORIZED;
+				setError(CODE_401_UNAUTHORIZED);
 			else if (errno == ENOENT) // The file or directory does not exist.
-				_errorType = CODE_404_NOT_FOUND;
-		}
-		else // ressource found
-		{
-			bool readRights = (_fileInfo.st_mode & S_IRUSR) || (_fileInfo.st_mode & S_IRGRP);
-			if (not readRights)
-				_errorType = CODE_401_UNAUTHORIZED;
-		}
-	}
-	else // check classic path
-	{
-		if (stat(_realURI.c_str(), &_fileInfo) == -1) // if given path fails
-		{
-			if (errno == EACCES)
-				_errorType = CODE_401_UNAUTHORIZED;
-			else if (errno == ENOENT or errno == EFAULT) // EFAULT The provided path is invalid or points to a restricted memory space.
-				_errorType = CODE_404_NOT_FOUND;
-		}
-		else // Supposed valid path
-		{
-			/*
-				! STAT FLAGS : https://www.man7.org/linux/man-pages/man7/inode.7.html
-			*/
-			if (_fileInfo.st_mode & S_IFMT == S_IFDIR) // checks is the given path is a directory
-				_isDirectory = true;
+				setError(CODE_404_NOT_FOUND);
 		}
 	}
 
-	// Implementer un booleen qui signifie que une erreur donnee 
+	// ! STEP 2 : Identify URI nature
+	if (stat(_realURI.c_str(), &_fileInfo) == -1) // if given path fails
+	{
+		if (errno == EACCES)
+			setError(CODE_401_UNAUTHORIZED);
+		else if (errno == ENOENT or errno == EFAULT) // EFAULT The provided path is invalid or points to a restricted memory space.
+			setError(CODE_404_NOT_FOUND);
+	}
+	else // Supposed valid path
+	{
+		/*
+			! STAT FLAGS : https://www.man7.org/linux/man-pages/man7/inode.7.html
+		*/
+		if (_fileInfo.st_mode & S_IFMT == S_IFDIR) // checks is the given path is a DIRECTORY
+			_isDirectory = true;
+		else if (_fileInfo.st_mode & S_IFMT == S_IFREG) // checks is the given path is a FILE
+			_isFile = true;
+		
+		// TODO Checks permissions depending on the METHOD (see TOUDOU.md)
+		switch (_method)
+		{
+			case GET:
+				break;
+			case POST:
+				break;
+			case DELETE:
+				break;
+		}
+	}
 
 	// TODO = Does the route accepts the METHOD ?
 	{
@@ -139,6 +148,12 @@ void	ResponseBuilder::initialChecks( Config& config ){
 	// TODO = Is URI a CGI ??
 	{
 
+	}
+
+	if (_isDirectory and (_method == GET) and _config->listingDirectories)
+	{
+		// TODO :  generate an HTML page for listing directories
+		// _realURI = getListing.html
 	}
 }
 
@@ -212,6 +227,10 @@ void	ResponseBuilder::buildHeaders(){
 
 void	ResponseBuilder::setContentLenght(){
 
+	/*
+		! NOTE ON INVALID 404.html FILES
+		Need to handle those cases HERE
+	*/
 	if (stat(_realURI.c_str(), &_fileInfo) == -1)
 	{
 		if (errno == EACCES)
@@ -219,7 +238,7 @@ void	ResponseBuilder::setContentLenght(){
 		else if (errno == ENOENT or errno == EFAULT)
 			_errorType = CODE_404_NOT_FOUND;
 	}
-	else // correct path 
+	else if (_isFile) // valid path and PATH is a file
 		Headers.bodyLenght = _fileInfo.st_size;
 }
 
@@ -237,13 +256,17 @@ void	ResponseBuilder::extractMethod( void ){
 }
 
 
-vector<char>	ResponseBuilder::getHeader( Client &inputClient, Config &config ){
+vector<char>	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
 	if (_headerSent)
 		return vector<char>(); // return empty vector
 	
 	_client = &inputClient; // init client
-
+	_config = &inputConfig; // init config
+	
+	extractMethod();
+	
+	_realURI = _client->header.getURI();
 
 	// switch (_method)
 	// {
@@ -258,34 +281,16 @@ vector<char>	ResponseBuilder::getHeader( Client &inputClient, Config &config ){
 	// 		break;
 	// }
 
-	// error happends during kernel, the request is then a basic GET request
 	if (_client->statusCodes >= CODE_400_BAD_REQUEST)
 	{
 		// !	REALLY USEFULL ?
 	}
 
-	extractMethod();
-	resolveURI(inputClient, config);
-	initialChecks(config);
+	resolveURI();
+	validateURI();
 
-	if (_errorType >= 400)
-	{
-		// TODO Remplace URI with the 404.html path from config files
-		// _realURI = config.getError404
-	}
-	else if (_isDirectory)
-	{
-		if (config.listingDirectories)
-		{
-			// TODO :  generate an HTML page for listing directories
-			// _realURI = getListing.html
-		}
-		else
-		{
-			// man idk ?
-		}
-	}
-	else if (_isCGI )
+	
+	if (_isCGI )
 	{
 		launchCGI(); // CGI must write within a file
 		// _realURI = outputCGI.html

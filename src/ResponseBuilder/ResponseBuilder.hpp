@@ -56,6 +56,7 @@ private:
 	
 	map<string, string> _mimeTypes;
 	bool _isDirectory;
+	bool _isFile;
 	bool _isCGI;
 	struct stat _fileInfo;
 
@@ -64,18 +65,21 @@ private:
 	e_method _method;
 
 	Client* _client;
+	Config* _config;
 
 	ResponseHeaders Headers;
 
 
 	// ------------- Priv Methods
-	void	resolveURI( Client&, Config& );
+	void	resolveURI( void );
 	void	sanatizeURI( string & );
-	void	initialChecks( Config& );
+	void	validateURI( void );
 	void	launchCGI( void );
 	void	buildHeaders( void );
 	void	setContentLenght(); // not a regular setter
 	void	extractMethod( void );
+	void	setError( e_errorCodes );
+
 
 
 
