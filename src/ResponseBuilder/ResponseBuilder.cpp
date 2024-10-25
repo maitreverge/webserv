@@ -293,8 +293,11 @@ void	ResponseBuilder::extractMethod( void ){
 
 void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
+	Logger::getInstance().log(DEBUG, "Response Builder Get Header");
+
 	if (_headerSent)
 	{
+
 		/*
 			Ask Seb if he prefers a cleared vector 
 		!					OR
@@ -312,7 +315,8 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	
 	extractMethod();
 	
-	_realURI = _client->header.getURI();
+	// _realURI = _client->header.getURI();
+	_realURI = "test.html";
 
 	resolveURI();
 	validateURI();
@@ -332,13 +336,19 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	// Copying the build Headers in headerSend
 	_client->headerSend = Headers.masterHeader;
 
+	string temp(Headers.masterHeader.begin(), Headers.masterHeader.end() );
+	cout << temp << endl;
+
+
 	_headerSent = true;
 }
 
 
 bool	ResponseBuilder::getBody( void ){
 
-	static std::ifstream BodyStream(_realURI.c_str(), std::ios::binary);
+	Logger::getInstance().log(DEBUG, "Response Builder Get Body");
+
+	static std::ifstream BodyStream("test.html", std::ios::binary);
 	// this->_bodyStream.open(_realURI.c_str(), std::ios::binary);
 
 	if (BodyStream.is_open())

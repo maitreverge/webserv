@@ -192,18 +192,20 @@ void Server::replyClients()
 		{
 			if (FD_ISSET(this->_clients[i].fd, &this->_writeSet))
 			{
-				if (!this->_clients[i].response._headerSent)
-				{
-					// this->_clients[i].tog = true;	
+				// if (!this->_clients[i].response._headerSent)
+				// {
+					// this->_clients[i].tog = true;
+						string temp(this->_clients[i].headerSend.begin(), this->_clients[i].headerSend.end());
+					cout << "HOULA " << temp << endl;	
 					replyClient(this->_clients[i], this->_clients[i].headerSend);
 					this->_clients[i].headerSend.clear();
-				}	
+				// }		
 				
 				if (this->_clients[i].response.getBody())//(this->_clients[i]))
 				{					
 					replyClient(this->_clients[i], this->_clients[i].messageSend);
 					this->_clients[i].messageSend.clear();
-					this->_clients[i].messageSend.resize(1);
+					this->_clients[i].messageSend.resize(3000);
 				}
 				else
 					this->_clients[i].ready = false;
@@ -240,7 +242,11 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 		this->_clients[i].header.parse(this->_clients[i]);								
 		this->_clients[i].header.displayParsingResult();
 		if (this->_clients[i].header.getMethod() == "GET")
-			this->_clients[i].response.getHeader(this->_clients[i], this->_conf);// floSimulatorGet(this->_clients[i], this->_conf);			
+			{
+				this->_clients[i].response.getHeader(this->_clients[i], this->_conf);// floSimulatorGet(this->_clients[i], this->_conf);	
+				// this->_clients[i].response.getBody();
+				this->_clients[i].ready = true;
+			}
 		this->_clients[i].message.erase(this->_clients[i].message.begin(),
 			it + 4);
 		this->_clients[i].bodySize += this->_clients[i].message.size();
@@ -333,7 +339,7 @@ bool Server::isBodyTerminated(size_t i)
 		Logger::getInstance().log(INFO, ss.str());
 
 		this->_clients[i].bodySize = 0;
-		if ( this->_clients[i].header.getMethod() == "POST")
+		if (this->_clients[i].header.getMethod() == "POST")
 			floSimulatorPut(this->_clients[i].message);//? POST
 		this->_clients[i].message.clear();
 		//! WARNING 
