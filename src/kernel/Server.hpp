@@ -10,15 +10,15 @@
 #include <arpa/inet.h>
 #include <algorithm>
 #include "Logger.hpp"
-#include "buildResponse.hpp"
 #include "errorCode.hpp"
+
 
 #define BUFF_SIZE 4096
 #define MAX_HDR_SIZE 8192
 #define MAX_CNT_SIZE 30000000
 
-vector<char> masterBuilder(vector<char> &bodyInput, e_errorCodes errorCode,
-	string& fileName);
+// vector<char> masterBuilder(vector<char> &bodyInput, e_errorCodes errorCode,
+	// string& fileName);
 	
 struct Client
 {
@@ -29,6 +29,9 @@ struct Client
 	sockaddr_in 		address;
 	socklen_t 			len;
 	size_t				bodySize;
+	
+	e_errorCodes statusCodes;
+
 	RequestParser		header;
 	e_errorCodes		statusCode;
 	bool tog;
@@ -59,6 +62,7 @@ Connection: close\r\n\
 		std::vector<char> res(str.begin(), str.end());	
 		HeaderSend = res;
 		ready = false;
+		statusCodes = CODE_200_OK;
 	}
 };
 

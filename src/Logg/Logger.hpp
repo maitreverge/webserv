@@ -7,7 +7,7 @@
 #include "RequestParser.hpp"
 #include "Kernel.hpp"
 #include "Error.hpp"
-
+#include "timeStamp.hpp"
 class Kernel;
 class Server;
 

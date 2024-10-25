@@ -198,24 +198,24 @@ void Logger::log(logLevel logLevel, std::string& message, struct Client& client,
  *                           LOG BUILDRESPONSE
  * ? changes to be made as soon as Client struct is accessible
  *========================================================================**/
-void Logger::log(	logLevel logLevel, const std::string& message,
-					const class buildResponse& obj)
-{
-	//[timestamp][loglevel][message][status code][ip][port][fd]
-	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
-							+ formatLogLevel(logLevel) 
-							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
-							+ RED + obj.getStatusLine()
-							// + MAGENTA + "Client: " + ipToString(obj.getClient()->address) + " "
-							// + YELLOW + intToString(portToInt(obj.getClient()->address)) + " "
-							// + GREEN + intToString(obj.getClient()->fd)
-							+ RESET + "\n";
-	_accessFile << logEntry;
-	if (logToStdOut)
-		std::cout << logEntry;
-	(void)obj;
-	_accessFile.flush();
-}
+// void Logger::log(	logLevel logLevel, const std::string& message,
+// 					const class buildResponse& obj)
+// {
+// 	//[timestamp][loglevel][message][status code][ip][port][fd]
+// 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
+// 							+ formatLogLevel(logLevel) 
+// 							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
+// 							+ RED + obj.getStatusLine()
+// 							// + MAGENTA + "Client: " + ipToString(obj.getClient()->address) + " "
+// 							// + YELLOW + intToString(portToInt(obj.getClient()->address)) + " "
+// 							// + GREEN + intToString(obj.getClient()->fd)
+// 							+ RESET + "\n";
+// 	_accessFile << logEntry;
+// 	if (logToStdOut)
+// 		std::cout << logEntry;
+// 	(void)obj;
+// 	_accessFile.flush();
+// }
 
 /**========================================================================
  *                       SINGLETON ACCESS
