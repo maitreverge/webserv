@@ -12,7 +12,7 @@ os.makedirs(os.path.dirname(fichier), exist_ok=True)
 # Création de ip_fichier s'il n'existe pas
 if not os.path.isfile(ip_fichier):
     with open(ip_fichier, 'w') as f:
-        f.write('')  # Fichier vide ou avec une IP par défaut
+        f.write('0.0.0.0')  # Fichier vide ou avec une IP par défaut
 
 # Création de fichier s'il n'existe pas
 if not os.path.isfile(fichier):
