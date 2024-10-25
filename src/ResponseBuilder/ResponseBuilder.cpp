@@ -316,9 +316,39 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 }
 
 
-void			ResponseBuilder::getBody( void ){
+bool	ResponseBuilder::getBody( void ){
 
-	
+	this->_bodyStream.open(_realURI, std::ios::binary);
 
-
+	if (_bodyStream.is_open())
+	{
+		_bodyStream.read(_client->messageSend.data(), static_cast<std::streamsize>(_client->messageSend.size()));		
+		// std::string str(client.messageSend.data(), _bodyStream.gcount());	
+		// Logger::getInstance().log(INFO, str);  
+		
+		if (_bodyStream.eof()) 
+		{
+			Logger::getInstance().log(DEBUG, "Fin de fichier atteinte");
+			_bodyStream.clear(); // Réinitialiser les flags pour continuer la lecture si besoin
+			_bodyStream.close();
+			// return false;
+			// _bodyStream.seekg(0); // Remettre le pointeur au début du fichier si tu veux recommencer
+		}    
+		return true;
+    }
+	else
+	{
+		/*
+			! IF THE STREAM CAN'T HAPPEN
+			Find a way to regenerate a Code 500 error, or at least tell the client
+			Possibly just do
+			----------------
+			string error = "Internal error Message";
+			_client->messageSend.insert(_client->messageSend.end(), error.begin(), error.end());
+			----------------
+			despite already sent a Content-Lenght in the headers (or possibly not)
+		*/
+		Logger::getInstance().log(ERROR, "Failed Stream happend");
+    }
+	return false;
 }

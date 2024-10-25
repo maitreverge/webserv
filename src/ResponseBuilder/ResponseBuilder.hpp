@@ -66,6 +66,8 @@ private:
 	e_errorCodes _errorType;
 	e_method _method;
 
+	std::ifstream _bodyStream;
+
 	Client* _client;
 	Config* _config;
 
@@ -90,6 +92,6 @@ public:
 	~ResponseBuilder();
 
 	void	getHeader( Client &, Config& );
-	void	getBody( void );
+	bool	getBody( void );
 
 };
