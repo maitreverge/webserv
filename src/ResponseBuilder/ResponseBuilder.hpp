@@ -2,7 +2,7 @@
 
 #include "utils_templates.hpp"
 #include "Logger.hpp"
-#include "../errorCode/errorCode.hpp"
+#include "errorCode.hpp"
 #include "timeStamp.hpp"
 
 #define HTTP_PROTOCOL "HTTP/1.1"
@@ -30,7 +30,6 @@ struct ResponseHeaders
 	{
 		masterHeader.clear();
 		bodyLenght = 0; // ? doublon par rapport a la struct client 
-
 	}
 };
 
@@ -48,11 +47,8 @@ private:
 	} e_method;
 
 	// ------------- Coplian Useless Methods
-	ResponseBuilder( const ResponseBuilder& copy );
-	ResponseBuilder& operator=( const ResponseBuilder& right_operator );
 
 	// ------------- Priv Variables
-	bool _headerSent; // master bool
 	
 	map<string, string> _mimeTypes;
 	bool _isDirectory;
@@ -66,7 +62,6 @@ private:
 	e_errorCodes _errorType;
 	e_method _method;
 
-	std::ifstream _bodyStream;
 
 	Client* _client;
 	Config* _config;
@@ -90,8 +85,10 @@ public:
 
 	ResponseBuilder( void );
 	~ResponseBuilder();
+	
+	// std::ifstream _bodyStream;
+	bool _headerSent; // master bool
 
 	void	getHeader( Client &, Config& );
 	bool	getBody( void );
-
 };

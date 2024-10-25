@@ -2,11 +2,12 @@
 
 // ------------------------- COPLIAN FORM -----------------------------
 ResponseBuilder::ResponseBuilder( void ) :
-	_headerSent(false),
 	_isDirectory(false),
 	_isFile(false),
 	_isCGI(false),
-	_errorType(CODE_200_OK){
+	_errorType(CODE_200_OK),
+	_headerSent(false)
+	{
 
 	_mimeTypes.insert(std::make_pair("html", "text/html"));
 	_mimeTypes.insert(std::make_pair("htm", "text/htm"));
@@ -34,16 +35,6 @@ ResponseBuilder::ResponseBuilder( void ) :
 	_mimeTypes.insert(std::make_pair("mp4", "video/mp4"));
 	_mimeTypes.insert(std::make_pair("webm", "video/webm"));
 	_mimeTypes.insert(std::make_pair("ogv", "video/ogv"));
-}
-
-
-ResponseBuilder::ResponseBuilder( const ResponseBuilder& copy ){ static_cast<void>(copy); }
-
-
-ResponseBuilder& ResponseBuilder::operator=( const ResponseBuilder& right_operator ){
-
-	static_cast<void>(right_operator);
-	return *this;
 }
 
 
@@ -140,9 +131,9 @@ void	ResponseBuilder::validateURI( void ){
 	}
 	// ! STEP 3 : Checks URI authorization depending on the method
 	// TODO : Simplify or refactor this function
+	stat(_realURI.c_str(), &_fileInfo); // hot fix from g++
 	switch (_method)
 	{
-		stat(_realURI.c_str(), &_fileInfo);
 		case GET:
 			if (_isCGI)
 			{
@@ -308,10 +299,10 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 		!					OR
 			a empty vector
 		-----------------------------------------------------
-		_client.HeaderSend.clear();
-		_client.HeaderSend = vector<char>();
+		_client.headerSend.clear();
+		_client.headerSend = vector<char>();
 		*/
-		_client->HeaderSend = vector<char>();
+		_client->headerSend = vector<char>();
 		return;
 	}
 	
@@ -337,8 +328,8 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	setContentLenght();
 	buildHeaders();
 
-	// Copying the build Headers in HeaderSend
-	_client->HeaderSend = Headers.masterHeader;
+	// Copying the build Headers in headerSend
+	_client->headerSend = Headers.masterHeader;
 
 	_headerSent = true;
 }
@@ -346,21 +337,23 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
 bool	ResponseBuilder::getBody( void ){
 
-	this->_bodyStream.open(_realURI.c_str(), std::ios::binary);
+	static std::ifstream BodyStream(_realURI.c_str(), std::ios::binary);
+	// this->_bodyStream.open(_realURI.c_str(), std::ios::binary);
 
-	if (_bodyStream.is_open())
+	if (BodyStream.is_open())
 	{
-		_bodyStream.read(_client->messageSend.data(), static_cast<std::streamsize>(_client->messageSend.size()));		
-		// std::string str(client.messageSend.data(), _bodyStream.gcount());	
+		BodyStream.read(_client->messageSend.data(), static_cast<std::streamsize>(_client->messageSend.size()));		
+		// std::string str(client.messageSend.data(), BodyStream.gcount());	
 		// Logger::getInstance().log(INFO, str);  
 		
-		if (_bodyStream.eof()) 
+		if (BodyStream.eof()) 
 		{
 			Logger::getInstance().log(DEBUG, "Fin de fichier atteinte");
-			_bodyStream.clear(); // Réinitialiser les flags pour continuer la lecture si besoin
-			_bodyStream.close();
+			BodyStream.clear(); // Réinitialiser les flags pour continuer la lecture si besoin
+			BodyStream.close();
+
 			// return false;
-			// _bodyStream.seekg(0); // Remettre le pointeur au début du fichier si tu veux recommencer
+			// ofs.seekg(0); // Remettre le pointeur au début du fichier si tu veux recommencer
 		}    
 		return true;
     }

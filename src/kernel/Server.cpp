@@ -82,8 +82,8 @@ void Server::catchClients()
 		this->_maxFd = std::max(this->_maxFd, client.fd);
 		this->_clients.push_back(client);
 			
-		std::vector<char> hardResp = buildHardResponseTest();
-		replyClient(client, hardResp);		
+		// std::vector<char> hardResp = buildHardResponseTest();
+		// replyClient(client, hardResp);		
 	}
 }
 
@@ -116,7 +116,6 @@ void Server::listenClients()
 			}
 		}	
 	}
-	// replyClients();//!
 }
 
 std::vector<char> buildHeaderTest()
@@ -191,20 +190,21 @@ void Server::replyClients()
 		{
 			if (FD_ISSET(this->_clients[i].fd, &this->_writeSet))
 			{
-				if (!this->_clients[i].HeaderSend.empty())
+				if (!this->_clients[i].response._headerSent)
 				{
-					this->_clients[i].tog = true;	
-					replyClient(this->_clients[i], this->_clients[i].HeaderSend);
-					this->_clients[i].HeaderSend.clear();
+					// this->_clients[i].tog = true;	
+					replyClient(this->_clients[i], this->_clients[i].headerSend);
+					this->_clients[i].headerSend.clear();
 				}	
 				
-				if (floSimulatorGet(this->_clients[i]))
-				{
-					std::cout << "je suis coince ds la boucle" << std::endl;
-				replyClient(this->_clients[i], this->_clients[i].messageSend);
-				this->_clients[i].messageSend.clear();
-				this->_clients[i].messageSend.resize(1);
+				if (this->_clients[i].response.getBody())//(this->_clients[i]))
+				{					
+					replyClient(this->_clients[i], this->_clients[i].messageSend);
+					this->_clients[i].messageSend.clear();
+					this->_clients[i].messageSend.resize(1);
 				}
+				else
+					this->_clients[i].ready = false;
 
 			}	
 		}
@@ -238,7 +238,7 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 		this->_clients[i].header.parse(this->_clients[i]);								
 		this->_clients[i].header.displayParsingResult();
 		if (this->_clients[i].header.getMethod() == "GET")
-			floSimulatorGet(this->_clients[i]);			
+			this->_clients[i].response.getHeader(this->_clients[i], this->_conf);// floSimulatorGet(this->_clients[i], this->_conf);			
 		this->_clients[i].message.erase(this->_clients[i].message.begin(),
 			it + 4);
 		this->_clients[i].bodySize += this->_clients[i].message.size();
@@ -335,7 +335,7 @@ bool Server::isBodyTerminated(size_t i)
 			floSimulatorPut(this->_clients[i].message);//? POST
 		this->_clients[i].message.clear();
 		//! WARNING 
-		this->_clients[i].ready = true;
+		// this->_clients[i].ready = true;
 		return true;
 	}
 	return false;

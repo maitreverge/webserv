@@ -11,7 +11,7 @@
 #include <algorithm>
 #include "Logger.hpp"
 #include "errorCode.hpp"
-
+#include "ResponseBuilder.hpp"
 
 #define BUFF_SIZE 4096
 #define MAX_HDR_SIZE 8192
@@ -19,7 +19,9 @@
 
 // vector<char> masterBuilder(vector<char> &bodyInput, e_errorCodes errorCode,
 	// string& fileName);
-	
+
+class ResponseBuilder;
+
 struct Client
 {
 	int					id;
@@ -33,9 +35,11 @@ struct Client
 	e_errorCodes statusCodes;
 
 	RequestParser		header;
+	ResponseBuilder		response;
+
 	e_errorCodes		statusCode;
 	bool tog;
-	std::vector<char>	HeaderSend;
+	std::vector<char>	headerSend;
 	bool				ready;
 
 	Client()
@@ -60,7 +64,7 @@ Connection: close\r\n\
 "; 
 		std::string str = ss.str();
 		std::vector<char> res(str.begin(), str.end());	
-		HeaderSend = res;
+		headerSend = res;
 		ready = false;
 		statusCodes = CODE_200_OK;
 	}
