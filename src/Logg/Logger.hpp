@@ -5,10 +5,9 @@
 #include <string>
 #include "Server.hpp"
 #include "RequestParser.hpp"
-#include "Kernel.hpp"
 #include "Error.hpp"
 #include "timeStamp.hpp"
-// #include "ResponseBuilder.hpp"
+#include "Kernel.hpp"
 
 class Kernel;
 class Server;

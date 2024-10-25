@@ -1,9 +1,9 @@
 #pragma once
 
 #include "utils_templates.hpp"
-#include "Logger.hpp"
 #include "errorCode.hpp"
 #include "timeStamp.hpp"
+#include "Config.hpp"
 
 #define HTTP_PROTOCOL "HTTP/1.1"
 #define SPACE " "

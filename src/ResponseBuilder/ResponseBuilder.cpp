@@ -1,4 +1,5 @@
 #include "ResponseBuilder.hpp"
+#include "Logger.hpp" 
 
 // ------------------------- COPLIAN FORM -----------------------------
 ResponseBuilder::ResponseBuilder( void ) :

@@ -4,12 +4,11 @@
 #include <sys/select.h>
 #include <netinet/in.h>
 #include <vector>
-#include "Config.hpp"
 #include <iostream>
-#include "RequestParser.hpp"
 #include <arpa/inet.h>
 #include <algorithm>
-#include "Logger.hpp"
+#include "Config.hpp"
+#include "RequestParser.hpp"
 #include "errorCode.hpp"
 #include "ResponseBuilder.hpp"
 
@@ -19,8 +18,6 @@
 
 // vector<char> masterBuilder(vector<char> &bodyInput, e_errorCodes errorCode,
 	// string& fileName);
-
-class ResponseBuilder;
 
 struct Client
 {
