@@ -4,8 +4,8 @@
 ResponseBuilder::ResponseBuilder( void ) :
 	_headerSent(false),
 	_isDirectory(false),
-	_isCGI(false),
 	_isFile(false),
+	_isCGI(false),
 	_errorType(CODE_200_OK){
 
 	_mimeTypes.insert(std::make_pair("html", "text/html"));
@@ -59,7 +59,7 @@ void ResponseBuilder::sanatizeURI( string &oldURI ){
 
 	std::string::size_type found = oldURI.find(needle);
 
-	while (found != -1)
+	while (found != std::string::npos)
 	{
 		oldURI.erase(found, 3);
 		found = oldURI.find(needle);
@@ -123,9 +123,9 @@ void	ResponseBuilder::validateURI( void ){
 		/*
 			! STAT FLAGS : https://www.man7.org/linux/man-pages/man7/inode.7.html
 		*/
-		if (_fileInfo.st_mode & S_IFMT == S_IFDIR) // checks is the given path is a DIRECTORY
+		if ((_fileInfo.st_mode & S_IFMT) == S_IFDIR) // checks is the given path is a DIRECTORY
 			_isDirectory = true;
-		else if (_fileInfo.st_mode & S_IFMT == S_IFREG) // checks is the given path is a FILE
+		else if ((_fileInfo.st_mode & S_IFMT) == S_IFREG) // checks is the given path is a FILE
 		{
 			_isFile = true;
 			_fileName = _realURI.substr(_realURI.find_last_of("/") + 1); // extract file name
@@ -282,7 +282,7 @@ void	ResponseBuilder::setContentLenght(){
 			_errorType = CODE_404_NOT_FOUND;
 	}
 	else if (_isFile) // valid path and PATH is a file
-		Headers.bodyLenght = _fileInfo.st_size;
+		Headers.bodyLenght = static_cast<u_int64_t>(_fileInfo.st_size);
 }
 
 void	ResponseBuilder::extractMethod( void ){
@@ -311,7 +311,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 		_client.HeaderSend.clear();
 		_client.HeaderSend = vector<char>();
 		*/
-		_client.HeaderSend = vector<char>();
+		_client->HeaderSend = vector<char>();
 		return;
 	}
 	
@@ -338,7 +338,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	buildHeaders();
 
 	// Copying the build Headers in HeaderSend
-	_client.HeaderSend = Headers.masterHeader;
+	_client->HeaderSend = Headers.masterHeader;
 
 	_headerSent = true;
 }
@@ -346,7 +346,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
 bool	ResponseBuilder::getBody( void ){
 
-	this->_bodyStream.open(_realURI, std::ios::binary);
+	this->_bodyStream.open(_realURI.c_str(), std::ios::binary);
 
 	if (_bodyStream.is_open())
 	{
