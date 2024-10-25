@@ -116,11 +116,8 @@ void Server::listenClients()
 			}
 		}	
 	}
+	// replyClients();//!
 }
-
-std::vector<char> ghead;
-
-
 
 std::vector<char> buildHeaderTest()
 {
@@ -166,19 +163,20 @@ bool floSimulatorGet(Client & client)
     if (ofs.is_open()) {
 	
         ofs.read(client.messageSend.data(), static_cast<std::streamsize>(client.messageSend.size()));		
-		std::string str(client.messageSend.data(), ofs.gcount());	
-		Logger::getInstance().log(INFO, str);  
+		// std::string str(client.messageSend.data(), ofs.gcount());	
+		// Logger::getInstance().log(INFO, str);  
 	 
 		if (ofs.eof()) 
 		{
 			Logger::getInstance().log(DEBUG, "Fin de fichier atteinte");
 			ofs.clear(); // Réinitialiser les flags pour continuer la lecture si besoin
 			ofs.close();
-			return true;
+			// return false;
 			// ofs.seekg(0); // Remettre le pointeur au début du fichier si tu veux recommencer
    		 }    
+			return true;
     } else {
-        std::cout << "Erreur : impossible d'ouvrir le fichier." << std::endl;
+        // std::cout << "Erreur : impossible d'ouvrir le fichier." << std::endl;
     }
 	// ghead = buildHeaderTest();
 	return false;
@@ -189,24 +187,27 @@ void Server::replyClients()
 {
 	for (size_t i = 0; i < this->_clients.size(); i++)
 	{	
-		if (FD_ISSET(this->_clients[i].fd, &this->_writeSet))
+		if (this->_clients[i].ready == true)
 		{
-			if (!this->_clients[i].HeaderSend.empty())
+			if (FD_ISSET(this->_clients[i].fd, &this->_writeSet))
 			{
-				this->_clients[i].tog = true;	
-				replyClient(this->_clients[i], this->_clients[i].HeaderSend);
-				this->_clients[i].HeaderSend.clear();
+				if (!this->_clients[i].HeaderSend.empty())
+				{
+					this->_clients[i].tog = true;	
+					replyClient(this->_clients[i], this->_clients[i].HeaderSend);
+					this->_clients[i].HeaderSend.clear();
+				}	
+				
+				if (floSimulatorGet(this->_clients[i]))
+				{
+					std::cout << "je suis coince ds la boucle" << std::endl;
+				replyClient(this->_clients[i], this->_clients[i].messageSend);
+				this->_clients[i].messageSend.clear();
+				this->_clients[i].messageSend.resize(1);
+				}
+
 			}	
-			
-			if (!floSimulatorGet(this->_clients[i]))
-			{
-
-			replyClient(this->_clients[i], this->_clients[i].messageSend);
-			this->_clients[i].messageSend.clear();
-			this->_clients[i].messageSend.resize(5);
-			}
-
-		}	
+		}
 	}
 }
 
@@ -332,7 +333,9 @@ bool Server::isBodyTerminated(size_t i)
 		this->_clients[i].bodySize = 0;
 		if ( this->_clients[i].header.getMethod() == "POST")
 			floSimulatorPut(this->_clients[i].message);//? POST
-		this->_clients[i].message.clear();		
+		this->_clients[i].message.clear();
+		//! WARNING 
+		this->_clients[i].ready = true;
 		return true;
 	}
 	return false;
@@ -350,6 +353,7 @@ void Server::displayClient(Client & client) const
 
 void Server::replyClient(Client & client, std::vector<char> & response)
 {	
+	Logger::getInstance().log(DEBUG, "reply client");
 	this->_writeBuffer.assign(response.begin(), response.end());			
 	this->_readSet = this->_writeSet = this->_actualSet;		
 	if (select(this->_maxFd + 1, &this->_readSet, &this->_writeSet, 0, NULL)
@@ -366,7 +370,9 @@ void Server::replyClient(Client & client, std::vector<char> & response)
 		Logger::getInstance().log(INFO, "send data to client");
 
 		if ((ret = send(client.fd, writeHead, writeSize, 0)) < 0)		
-			return Logger::getInstance().log(ERROR, "send");					
+			return Logger::getInstance().log(ERROR, "send");
+		std::string str(writeHead, ret);	
+		Logger::getInstance().log(ERROR, str); 					
 		writeHead += ret;
 		writeSize -= static_cast<size_t>(ret);			
 	}
