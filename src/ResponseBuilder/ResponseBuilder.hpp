@@ -60,6 +60,8 @@ private:
 	bool _isCGI;
 	struct stat _fileInfo;
 
+	string _fileName;
+	string _fileExtension;
 	string _realURI;
 	e_errorCodes _errorType;
 	e_method _method;
@@ -79,6 +81,8 @@ private:
 	void	setContentLenght(); // not a regular setter
 	void	extractMethod( void );
 	void	setError( e_errorCodes );
+	string	extractType( const string& extension ) const;
+
 
 
 

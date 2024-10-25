@@ -126,18 +126,22 @@ void	ResponseBuilder::validateURI( void ){
 		if (_fileInfo.st_mode & S_IFMT == S_IFDIR) // checks is the given path is a DIRECTORY
 			_isDirectory = true;
 		else if (_fileInfo.st_mode & S_IFMT == S_IFREG) // checks is the given path is a FILE
+		{
 			_isFile = true;
+			_fileName = _realURI.substr(_realURI.find_last_of("/") + 1); // extract file name
+			_fileExtension = _fileName.substr(_fileName.find_last_of(".") + 1); // extract file extension
+		}
 		
 		// TODO Checks permissions depending on the METHOD (see TOUDOU.md)
-		switch (_method)
-		{
-			case GET:
-				break;
-			case POST:
-				break;
-			case DELETE:
-				break;
-		}
+		// switch (_method)
+		// {
+		// 	case GET:
+		// 		break;
+		// 	case POST:
+		// 		break;
+		// 	case DELETE:
+		// 		break;
+		// }
 	}
 
 	// TODO = Does the route accepts the METHOD ?
@@ -162,6 +166,15 @@ void ResponseBuilder::launchCGI( void ){
 	// TODO
 }
 
+string ResponseBuilder::extractType( const string& extension ) const {
+    
+    map<string, string>::const_iterator it = _mimeTypes.find(extension);
+    if (it != _mimeTypes.end())
+        return it->second;
+    else
+        return "application/octet-stream"; // Default MIME type
+}
+
 void	ResponseBuilder::buildHeaders(){
 
 	errorCode codes;
@@ -175,7 +188,7 @@ void	ResponseBuilder::buildHeaders(){
 
 	streamStatusLine	<< HTTP_PROTOCOL
 						<< SPACE
-						<< _errorType // DETERMINE AN ERROR BY DEFAULT
+						<< _errorType
 						<< SPACE 
 						<< codes.getCode(_errorType)
 						<< HTTP_REPONSE_SEPARATOR;
@@ -184,45 +197,44 @@ void	ResponseBuilder::buildHeaders(){
 
 	streamTimeStamp	<< "Date:"
 					<< SPACE 
-					<< timeStamp::getTime() // ! TimeStamp here
+					<< timeStamp::getTime() // ! TIMESTAMP
 					<< HTTP_REPONSE_SEPARATOR;
 
 	Headers.timeStamp = streamTimeStamp.str();
 
 	
 	// * Content-Type (if body)
-	if (this->_bodyLenght > 0)
+	if (Headers.bodyLenght > 0)
 	{
-		string contentType = buildContentType(fileName);
+		string contentType = extractType(_fileExtension);
 		streamContentType	<< "Content-Type:"
 							<< SPACE 
 							<< contentType 
 							<< HTTP_REPONSE_SEPARATOR;
 		
-		_contentType = streamContentType.str();
+		Headers.contentType = streamContentType.str();
 	}
 
 	// ContentLenght
+	// ! Potential condition for returning or not a body-lenght
 	streamContentLenght	<< "Content-Length:"
 						<< SPACE
-						<< _bodyLenght
+						<< Headers.bodyLenght
 						<< HTTP_REPONSE_SEPARATOR;
 	
-	_contentLenght = streamContentLenght.str();
+	Headers.contentLenght = streamContentLenght.str();
 
 	// Building Final Headers
-	streamMasterHeader	<< _statusLine
-						<< _timeStamp
-						<< _contentType
-						<< (_bodyLenght ? _contentLenght : _transfertEncoding)
+	streamMasterHeader	<< Headers.statusLine
+						<< Headers.timeStamp
+						<< Headers.contentType
+						<< (Headers.bodyLenght ? Headers.contentLenght : Headers.transfertEncoding)
 						<< HTTP_REPONSE_SEPARATOR;
 	
-	_masterHeader = streamMasterHeader.str();
+	string tempAllHeaders = streamMasterHeader.str();
 
-	
-	
-	// FIXME
-	// ! Potential hangling HTTP_SEPARATOR if there is extra headers or not !!!!
+	// Insert all headers in a vector char
+	Headers.masterHeader.insert(Headers.masterHeader.end(), tempAllHeaders.begin(), tempAllHeaders.end());
 }
 
 void	ResponseBuilder::setContentLenght(){
