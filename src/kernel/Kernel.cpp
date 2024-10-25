@@ -26,7 +26,6 @@ void Kernel::callExit(Server & server)
 	server.exitServer();
 }
 
-// Init a vector of Servers
 void Kernel::setup()
 {	
 	for (size_t i = 0; i < this->_conf.sockAddress.size(); i++)
@@ -40,13 +39,11 @@ void Kernel::setup()
 
 void Kernel::launch()
 {
-	// Main execution loop
 	while (true)
 	{
 		struct timeval timeout = {1, 0};
 		this->_readSet = this->_writeSet = this->_actualSet;
 
-		// Monitor multiple file descriptors for readiness
 		if (select(this->_maxFd + 1, &this->_readSet, &this->_writeSet,
 			0, &timeout) < 0)
 		{	
@@ -65,7 +62,6 @@ void Kernel::launch()
 		usleep(100);	
 	}
 
-	// Clean exiting each server if the main loop happens to exit
 	std::for_each(this->_servers.begin(), this->_servers.end(),
 		this->callExit);
 }
