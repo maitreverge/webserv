@@ -182,15 +182,13 @@ void Logger::log(logLevel logLevel, std::string& message, struct Client& client,
 							+ BOLD_HIGH_INTENSITY_WHITE
 							+ MAGENTA + "Client: " + ipToString(client.address) + " "
 							+ YELLOW + intToString(portToInt(client.address)) + " "
-							+ GREEN + intToString(client.fd) + " "							
+							+ GREEN + intToString(client.fd) + " "
 							+ RESET + "\n";
 	if (logToStdOut)
 		std::cout << logEntry;
 	if (_accessFile.is_open())
 		_accessFile << logEntry;
 	_accessFile.flush();
-	(void)logLevel;
-	(void)client;
 	(void)error;
 }
 
