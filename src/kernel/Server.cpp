@@ -9,6 +9,11 @@ fd_set & actualSet, fd_set & readSet, fd_set & writeSet)
 	this->_writeBuffer.reserve(BUFF_SIZE);
 }
 
+const sockaddr_in & Server::getSockAdress() const
+{
+	return (this->_sockAddr);
+}
+
 bool Server::setup()
 {	
 	this->_maxFd = this->_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -88,6 +93,7 @@ void Server::listenClients()
 	{	
 		if (FD_ISSET(this->_clients[i].fd, &this->_readSet))
 		{
+			this->_readBuffer.clear();
 			this->_readBuffer.resize(BUFF_SIZE);
 			ssize_t ret = recv(this->_clients[i].fd, this->_readBuffer.data(),
 				this->_readBuffer.size(), 0);
@@ -101,25 +107,108 @@ void Server::listenClients()
 				this->exitClient(i);		
 			else
 			{
-				if (!this->_clients[i].body)
+				this->_clients[i].message.insert(this->_clients[i].message.end(), 
+					this->_readBuffer.begin(), this->_readBuffer.begin() + ret);				
+				if (!this->_clients[i].bodySize)
 					this->handleClientHeader(i, ret);
 				else
 					this->handleClientBody(i, ret);
 			}
 		}	
 	}
+	// replyClients();//!
 }
 
-void floSimulator(std::vector<char> part)
+std::vector<char> buildHeaderTest()
 {
+	std::stringstream ss;	
+		
+	ss << 
+"HTTP/1.1 200 OK\r\n\
+Content-Type: text/html\r\n\
+Content-Length: 317\r\n\
+Connection: keep-alive\r\n\
+\r\n\
+"; 
+	std::string str = ss.str();
+	std::vector<char> res(str.begin(), str.end());
+	return res;	
+}
+
+void floSimulatorPut(std::vector<char> part)
+{	
+    Logger::getInstance().log(DEBUG, "FLO POST");
+
     static std::ofstream ofs("image_chat.jpeg", std::ios::binary);
-    
+
+	ofs.clear();
     if (ofs.is_open()) {
         ofs.write(part.data(), static_cast<std::streamsize>(part.size()));  
         ofs.flush();
+		if (!ofs)
+		{
+			std::cout << "Erreur decriture dans le fichier." << std::endl;
+		}
     } else {
         std::cout << "Erreur : impossible d'ouvrir le fichier." << std::endl;
     }
+}
+
+bool floSimulatorGet(Client & client)
+{	
+    //Logger::getInstance().log(DEBUG, "FLO GET"); 
+
+    static std::ifstream ofs("test.html", std::ios::binary);
+
+    if (ofs.is_open()) {
+	
+        ofs.read(client.messageSend.data(), static_cast<std::streamsize>(client.messageSend.size()));		
+		// std::string str(client.messageSend.data(), ofs.gcount());	
+		// Logger::getInstance().log(INFO, str);  
+	 
+		if (ofs.eof()) 
+		{
+			Logger::getInstance().log(DEBUG, "Fin de fichier atteinte");
+			ofs.clear(); // Réinitialiser les flags pour continuer la lecture si besoin
+			ofs.close();
+			// return false;
+			// ofs.seekg(0); // Remettre le pointeur au début du fichier si tu veux recommencer
+   		 }    
+			return true;
+    } else {
+        // std::cout << "Erreur : impossible d'ouvrir le fichier." << std::endl;
+    }
+	// ghead = buildHeaderTest();
+	return false;
+}
+
+
+void Server::replyClients()
+{
+	for (size_t i = 0; i < this->_clients.size(); i++)
+	{	
+		if (this->_clients[i].ready == true)
+		{
+			if (FD_ISSET(this->_clients[i].fd, &this->_writeSet))
+			{
+				if (!this->_clients[i].HeaderSend.empty())
+				{
+					this->_clients[i].tog = true;	
+					replyClient(this->_clients[i], this->_clients[i].HeaderSend);
+					this->_clients[i].HeaderSend.clear();
+				}	
+				
+				if (floSimulatorGet(this->_clients[i]))
+				{
+					std::cout << "je suis coince ds la boucle" << std::endl;
+				replyClient(this->_clients[i], this->_clients[i].messageSend);
+				this->_clients[i].messageSend.clear();
+				this->_clients[i].messageSend.resize(1);
+				}
+
+			}	
+		}
+	}
 }
 
 void printMessageClientTest(Client & client)
@@ -132,126 +221,127 @@ void printMessageClientTest(Client & client)
 
 void Server::handleClientHeader(size_t i, ssize_t ret)
 {
-	Logger::getInstance().log(INFO, "new client header");
-	
-	if (ret + static_cast<ssize_t>(this->_clients[i].message.size())
-		> MAX_HDR_SIZE)
-	{
-		Logger::getInstance().log(ERROR, "header size");
-			//! 431 Request Header Fields Too Large !! ou GET with Body	
+	stringstream ss;
+	ss << "receiv client request" << " " << ret << " bytes";
+	Logger::getInstance().log(INFO, ss.str());
 
-		this->exitClient(i);
-		return;	
-	}	
-	this->_clients[i].message.insert(this->_clients[i].message.end(), 
-		this->_readBuffer.begin(), this->_readBuffer.begin() + ret);	
 	std::string delimiter = "\r\n\r\n";
 	std::vector<char>::iterator it = std::search
 		(this->_clients[i].message.begin(),
 		this->_clients[i].message.end(),
 		delimiter.begin(),
 		delimiter.end() - 1);		
-	if (it != this->_clients[i].message.end())
+	if (it != this->_clients[i].message.end())		
 	{	
-		std::string str(it, this->_clients[i].message.end());				
+		if (isMaxHeaderSize(it + 4, i))
+			return ;				
 		this->_clients[i].header.parse(this->_clients[i]);								
 		this->_clients[i].header.displayParsingResult();
-		if (this->_clients[i].header.getMethod() == "POST")
-		{
-			this->_clients[i].body = true;
-			this->_clients[i].message.erase(this->_clients[i].message.begin(),
-				it + 4);
-			if (this->_clients[i].header.getHeaders().ContentLength
-				> MAX_CNT_SIZE)
-			{
-				stringstream ss;
-				ss << "max content size reached" << " - Content-Lenght: "
-					<< this->_clients[i].header.getHeaders().ContentLength
-					<< " - Max content size: " <<
-					this->_clients[i].header.getHeaders().ContentLength
-					<< std::endl;
-				Logger::getInstance().log(ERROR, ss.str());
-					//! 413 Payload Too Large
-
-				this->_readBuffer.clear();
-				this->exitClient(i);
-				return ;
-			}
-			this->_clients[i].bodySize += this->_clients[i].message.size();
-			if (this->_clients[i].bodySize >
-				this->_clients[i].header.getHeaders().ContentLength)
-			{
-				stringstream ss;
-				ss << "sequel content size" << " - Body-Size: "
-				<< this->_clients[i].bodySize << " Content-Lenght: "
-				<< this->_clients[i].header.getHeaders().ContentLength << std::endl;
-				Logger::getInstance().log(ERROR, ss.str());
-					//! 413 Payload Too Large
-
-				this->_readBuffer.clear();
-				this->exitClient(i);
-				return ;
-			}
-
-			if (this->_clients[i].bodySize ==
-				this->_clients[i].header.getHeaders().ContentLength)
-			{
-				Logger::getInstance().log(INFO, "client body terminated");
-
-				this->_clients[i].body = false;
-				floSimulator(this->_clients[i].message);
-				this->_clients[i].message.clear();
-				this->_clients[i].bodySize = 0;				
-			}
-			floSimulator(this->_clients[i].message);			
-		}		
-		this->_clients[i].message.clear();		
+		if (this->_clients[i].header.getMethod() == "GET")
+			floSimulatorGet(this->_clients[i]);			
+		this->_clients[i].message.erase(this->_clients[i].message.begin(),
+			it + 4);
+		this->_clients[i].bodySize += this->_clients[i].message.size();
+		if (!this->isContentLengthValid(i)
+			|| this->isBodyTooLarge(i)
+			|| this->isBodyTerminated(i))
+			return ;						
 	}
-	this->_readBuffer.clear();
-	
+	else
+		isMaxHeaderSize(it + 1, i);
 }
 
 void Server::handleClientBody(size_t i, ssize_t ret)
 {
 	stringstream ss;
-	ss << "sequel client body: " << ret << " bytes";
+	ss << "receive client body" << " " << ret << " bytes";
 	Logger::getInstance().log(INFO, ss.str());
-	
-	this->_clients[i].message.insert(this->_clients[i].message.end(), 
-		this->_readBuffer.begin(), this->_readBuffer.begin() + ret);	
+
 	this->_clients[i].bodySize += static_cast<size_t>(ret);
-	if (this->_clients[i].bodySize > this->_clients[i].header.getHeaders().ContentLength)
+	if (this->isBodyTooLarge(i) || this->isBodyTerminated(i))
+		return ;
+	if (this->_clients[i].header.getMethod() == "POST")
+		floSimulatorPut(this->_clients[i].message); //? POST
+	this->_clients[i].message.clear();	
+}
+
+bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
+{
+	if (it - this->_clients[i].message.begin() > MAX_HDR_SIZE)
 	{
 		stringstream ss;
-		ss << "sequel content size" << " - Body-Size: "
+		ss << "header size" << " Actual-Size: " <<
+			it - this->_clients[i].message.begin() << " - Max-Header-Size : "
+			<< MAX_HDR_SIZE;
+
+		Logger::getInstance().log(ERROR, ss.str());
+			//! 431 Request Header Fields Too Large !!
+
+		this->exitClient(i);
+		return true;	
+	}
+	return false;
+}
+
+bool Server::isContentLengthValid(size_t i)
+{
+	if (this->_clients[i].header.getHeaders().ContentLength
+		> MAX_CNT_SIZE)
+	{
+		stringstream ss;
+		ss << "max content size reached" << " - Content-Lenght: "
+			<< this->_clients[i].header.getHeaders().ContentLength
+			<< " - Max content size: " << MAX_CNT_SIZE << std::endl;
+		Logger::getInstance().log(ERROR, ss.str());
+			//! 413 Payload Too Large
+	
+		this->exitClient(i);
+		return false;
+	}
+	return true;
+}
+
+bool Server::isBodyTooLarge(size_t i)
+{
+	if (this->_clients[i].bodySize >
+		this->_clients[i].header.getHeaders().ContentLength)
+	{
+		stringstream ss;
+		ss << "content size" << " - Body-Size: "
 		<< this->_clients[i].bodySize << " Content-Lenght: "
 		<< this->_clients[i].header.getHeaders().ContentLength << std::endl;
 		Logger::getInstance().log(ERROR, ss.str());
 			//! 413 Payload Too Large
-
-		this->_readBuffer.clear();
+		
 		this->exitClient(i);
-		return ;
+		return true;;
 	}
-	if (this->_clients[i].bodySize == this->_clients[i].header.getHeaders().ContentLength)
+	return false;
+}
+
+bool Server::isBodyTerminated(size_t i) 
+{
+	if (this->_clients[i].bodySize ==
+		this->_clients[i].header.getHeaders().ContentLength)
 	{
 		stringstream ss;
-		ss << "sequel body terminated" << " - Body-Size: "
+		ss << "client body terminated" << " - Body-Size: "
 		<< this->_clients[i].bodySize << " Content-Lenght: "
 		<< this->_clients[i].header.getHeaders().ContentLength << std::endl;
 		Logger::getInstance().log(INFO, ss.str());
 
-		floSimulator(this->_clients[i].message);
-		this->_clients[i].body = false;
-		this->_clients[i].message.clear();
 		this->_clients[i].bodySize = 0;
-		this->_readBuffer.clear();
+		if ( this->_clients[i].header.getMethod() == "POST")
+			floSimulatorPut(this->_clients[i].message);//? POST
+		this->_clients[i].message.clear();
+		//! WARNING 
+		this->_clients[i].ready = true;
+		return true;
 	}
-	floSimulator(this->_clients[i].message);
-	this->_clients[i].message.clear();	
+	return false;
 }
 
-void Server::displayClient(Client & client)
+void Server::displayClient(Client & client) const
 {
 	std::stringstream ss;
 	ss << "new client" << " - Fd: " << client.fd << " Family: "
@@ -263,6 +353,7 @@ void Server::displayClient(Client & client)
 
 void Server::replyClient(Client & client, std::vector<char> & response)
 {	
+	Logger::getInstance().log(DEBUG, "reply client");
 	this->_writeBuffer.assign(response.begin(), response.end());			
 	this->_readSet = this->_writeSet = this->_actualSet;		
 	if (select(this->_maxFd + 1, &this->_readSet, &this->_writeSet, 0, NULL)
@@ -279,7 +370,9 @@ void Server::replyClient(Client & client, std::vector<char> & response)
 		Logger::getInstance().log(INFO, "send data to client");
 
 		if ((ret = send(client.fd, writeHead, writeSize, 0)) < 0)		
-			return Logger::getInstance().log(ERROR, "send");					
+			return Logger::getInstance().log(ERROR, "send");
+		std::string str(writeHead, static_cast<size_t>(ret));	
+		Logger::getInstance().log(ERROR, str); 					
 		writeHead += ret;
 		writeSize -= static_cast<size_t>(ret);			
 	}

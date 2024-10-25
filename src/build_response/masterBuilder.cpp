@@ -33,7 +33,7 @@ vector<char> masterBuilder( vector<char> &bodyInput, e_errorCodes errorCode, str
 	// printColor(BOLD_GREEN, builder.getBodyLenght());
 	// printColor(BOLD_CYAN, builder.getContentLenght());
 
-	print(builder);
+	// print(builder);
 
 	return builder.getHttpResponse();
 }
