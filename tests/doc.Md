@@ -14,6 +14,7 @@ mkdir build
 cd build
 cmake ..
 make
+cd ../..
 ```
 **Utilisation**
 Sans argument : Tous les tests unitaires seront exécutés.

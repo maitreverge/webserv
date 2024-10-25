@@ -20,14 +20,22 @@ Error& Error::getInstance()
 	return instance;
 }
 
+/**========================================================================
+ *                           HANDLEERROR
+ *! CLASS NOT FINISHED
+ *? => buildErrorRequest produces right vector, to be sent back to the parsing
+ *========================================================================**/
 void	Error::handleError(int errCode, Client &client)
 {
 	errorCode err;
+	std::string str;
+	e_errorCodes e_errCode;
 
-	std::string str = err.getCode(static_cast<const e_errorCodes>(errCode));
-	buildErrorRequest(errCode);
+	e_errCode = static_cast<e_errorCodes>(errCode);
+	str = err.getCode(e_errCode);
 	Logger::getInstance().log(ERROR, str, client, *this);
-	client.statusCode = static_cast<e_errorCodes>(errCode);
+	buildErrorRequest(errCode); //!!! DO SOMETHING WITH THIS !!!
+	client.statusCode = e_errCode;
 }
 
 void	Error::handleError(std::string message) const
@@ -42,7 +50,7 @@ std::string Error::getErrorPagePath(int errorCode) const
 	if (it != _errorPages.end())
 		return it->second;
 	else
-		return "Default Error Page"; // add a default error page?
+		return "/Default_error_page.html"; // add a default error page?
 }
 
 std::vector<char> Error::stringToVector(std::string& str)
