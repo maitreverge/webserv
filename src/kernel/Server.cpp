@@ -40,32 +40,32 @@ bool Server::setup()
 	return true;
 }
 
-// std::vector<char> buildHardResponseTest()
-// {
-// 	std::stringstream ss;	
-// 	std::string strBody =
-// "<html>\
-// <head><title>My Styled Page</title></head>\
-// <body style=\"background-color: #f0f0f0; text-align: center; padding: 50px;\">\
-// <h1 style=\"color: #ff5733; font-family: Arial, sans-serif;\">Hello, World!</h1>\
-// <p style=\"color: #555; font-size: 18px;\">This is a simple page with inline CSS.</p>\
-// </body>\
-// </html>";	
-// 	ss << 
-// "HTTP/1.1 200 OK\r\n\
-// Content-Type: text/html\r\n\
-// Content-Length: "
-// 	<< strBody.size() <<
-// "\r\n\
-// Connection: keep-alive\r\n\
-// \r\n\
-// " << strBody;	
-// 	std::string strtest(ss.str()); 
-// 	std::vector<char> res (strtest.begin(), strtest.end());
-// 	std::vector<char> flo (strBody.begin(), strBody.end());	
-// 	string flo_file_extension = "index.html";	
-// 	return masterBuilder(flo, (e_errorCodes)(200), flo_file_extension);	
-// }
+std::vector<char> buildHardResponseTest()
+{
+	std::stringstream ss;	
+	std::string strBody =
+"<html>\
+<head><title>My Styled Page</title></head>\
+<body style=\"background-color: #f0f0f0; text-align: center; padding: 50px;\">\
+<h1 style=\"color: #ff5733; font-family: Arial, sans-serif;\">Hello, World!</h1>\
+<p style=\"color: #555; font-size: 18px;\">This is a simple page with inline CSS.</p>\
+</body>\
+</html>";	
+	ss << 
+"HTTP/1.1 200 OK\r\n\
+Content-Type: text/html\r\n\
+Content-Length: "
+	<< strBody.size() <<
+"\r\n\
+Connection: keep-alive\r\n\
+\r\n\
+" << strBody;	
+	std::string strtest(ss.str()); 
+	std::vector<char> res (strtest.begin(), strtest.end());
+	std::vector<char> flo (strBody.begin(), strBody.end());	
+	string flo_file_extension = "index.html";	
+	return res;	
+}
 
 void Server::catchClients()
 {	
@@ -82,8 +82,8 @@ void Server::catchClients()
 		this->_maxFd = std::max(this->_maxFd, client.fd);
 		this->_clients.push_back(client);
 			
-		// std::vector<char> hardResp = buildHardResponseTest();
-		// replyClient(client, hardResp);		
+		std::vector<char> hardResp = buildHardResponseTest();
+		replyClient(client, hardResp);		
 	}
 }
 
