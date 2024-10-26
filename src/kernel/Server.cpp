@@ -183,7 +183,6 @@ bool floSimulatorGet(Client & client)
 	return false;
 }
 
-
 void Server::replyClients()
 {
 	for (size_t i = 0; i < this->_clients.size(); i++)
@@ -192,36 +191,46 @@ void Server::replyClients()
 		{
 			if (FD_ISSET(this->_clients[i].fd, &this->_writeSet))
 			{
-				// if (!this->_clients[i].response._headerSent)
-				// {
-					// this->_clients[i].tog = true;
-						string temp(this->_clients[i].headerSend.begin(), this->_clients[i].headerSend.end());
-					cout << "HOULA " << temp << endl;	
-					replyClient(this->_clients[i], this->_clients[i].headerSend);
+				if (!this->_clients[i].tog)
+				{
+					this->_clients[i].tog = true;				
+					replyClient(this->_clients[i],
+						this->_clients[i].headerSend,
+						this->_clients[i].headerSend.size());
 					this->_clients[i].headerSend.clear();
-				// }		
+				}		
 				
-				if (this->_clients[i].response.getBody())//(this->_clients[i]))
-				{					
-					replyClient(this->_clients[i], this->_clients[i].messageSend);
-					this->_clients[i].messageSend.clear();
-					this->_clients[i].messageSend.resize(3000);
+				if (std::streamsize ret = this->_clients[i].response.getBody(this->_clients[i]))
+				{	
+					std::cout << "AFTER get body, ret: " << ret <<  std::endl;				
+					replyClient(this->_clients[i],
+						this->_clients[i].messageSend, ret);
+					this->_clients[i].messageSend.clear();	
+					this->_clients[i].messageSend.resize(SEND_BUFF_SIZE);				
+					usleep(200000);
 				}
 				else
 					this->_clients[i].ready = false;
-
 			}	
 		}
 	}
 }
 
-void printMessageClientTest(Client & client)
+void printMessageClientTest(const Client & client)
 {
 	std::cout << std::endl << "\e[34mmessage client: " << std::endl;		
 	for (size_t i = 0; i < client.message.size(); i++)				
 		std::cout << client.message[i];
 	std::cout << "\e[0m" << std::endl << std::endl;
 }	
+
+void printVectorCharTest(const std::vector<char> & vect)
+{
+	std::cout << std::endl << "\e[34mPrint Vector: " << std::endl;		
+	for (size_t i = 0; i < vect.size(); i++)				
+		std::cout << vect[i];
+	std::cout << "\e[0m" << std::endl << std::endl;
+}
 
 void Server::handleClientHeader(size_t i, ssize_t ret)
 {
@@ -242,11 +251,11 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 		this->_clients[i].header.parse(this->_clients[i]);								
 		this->_clients[i].header.displayParsingResult();
 		if (this->_clients[i].header.getMethod() == "GET")
-			{
-				this->_clients[i].response.getHeader(this->_clients[i], this->_conf);// floSimulatorGet(this->_clients[i], this->_conf);	
-				// this->_clients[i].response.getBody();
-				this->_clients[i].ready = true;
-			}
+		{
+			this->_clients[i].response.getHeader(this->_clients[i], this->_conf);// floSimulatorGet(this->_clients[i], this->_conf);	
+			// this->_clients[i].response.getBody();
+			// this->_clients[i].ready = true;
+		}
 		this->_clients[i].message.erase(this->_clients[i].message.begin(),
 			it + 4);
 		this->_clients[i].bodySize += this->_clients[i].message.size();
@@ -343,7 +352,7 @@ bool Server::isBodyTerminated(size_t i)
 			floSimulatorPut(this->_clients[i].message);//? POST
 		this->_clients[i].message.clear();
 		//! WARNING 
-		// this->_clients[i].ready = true;
+		this->_clients[i].ready = true;
 		return true;
 	}
 	return false;
@@ -359,10 +368,16 @@ void Server::displayClient(Client & client) const
 	Logger::getInstance().log(INFO, ss.str());
 }
 
-void Server::replyClient(Client & client, std::vector<char> & response)
+void Server::replyClient(Client & client, std::vector<char> & response,
+	std::streamsize repSize)
 {	
+	// this->_writeBuffer.resize(SEND_BUFF_SIZE);
 	Logger::getInstance().log(DEBUG, "reply client");
-	this->_writeBuffer.assign(response.begin(), response.end());			
+	printVectorCharTest(response);
+
+	this->_writeBuffer.assign(response.begin(), response.begin() + repSize);	
+	std::cout << "size: " << this->_writeBuffer.size() << std::endl;
+		Logger::getInstance().log(DEBUG, "reply client2");		
 	this->_readSet = this->_writeSet = this->_actualSet;		
 	if (select(this->_maxFd + 1, &this->_readSet, &this->_writeSet, 0, NULL)
 		< 0)	

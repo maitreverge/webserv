@@ -13,7 +13,9 @@
 #include "ResponseBuilder.hpp"
 
 #define BUFF_SIZE 4096
+
 #define MAX_HDR_SIZE 8192
+#define SEND_BUFF_SIZE 6
 #define MAX_CNT_SIZE 30000000
 
 // vector<char> masterBuilder(vector<char> &bodyInput, e_errorCodes errorCode,
@@ -48,7 +50,8 @@ struct Client
 		statusCode = CODE_200_OK;
 		len = sizeof(address);	
 		bodySize = 0;
-		messageSend.reserve(5000);
+		messageSend.reserve(MAX_HDR_SIZE);
+		messageSend.resize(SEND_BUFF_SIZE);
 		tog = false;
 
 		std::stringstream ss;		
@@ -88,7 +91,8 @@ class Server
 	bool isContentLengthValid(size_t i);
 	bool isBodyTerminated(size_t i);
 	bool isBodyTooLarge(size_t i);
-	void replyClient(Client & client, std::vector<char> & response);
+	void replyClient(Client & client, std::vector<char> & response,
+		std::streamsize repSize);
 	void exitClient(size_t index);
 	void exitClients();
 

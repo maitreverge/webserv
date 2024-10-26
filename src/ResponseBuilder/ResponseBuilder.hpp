@@ -8,6 +8,7 @@
 #define HTTP_PROTOCOL "HTTP/1.1"
 #define SPACE " "
 #define HTTP_REPONSE_SEPARATOR "\r\n\r\n"
+#define HTTP_HEADER_SEPARATOR "\r\n"
 
 struct Client;
 struct Config;
@@ -85,10 +86,15 @@ public:
 
 	ResponseBuilder( void );
 	~ResponseBuilder();
-	
-	// std::ifstream _bodyStream;
-	bool _headerSent; // master bool
+	ResponseBuilder(const ResponseBuilder &);
+	ResponseBuilder & operator=(const ResponseBuilder &)
+	{
+		return *this;
+	};
 
-	void	getHeader( Client &, Config& );
-	bool	getBody( void );
+	bool _headerSent;
+	std::ifstream _ifs;
+
+	void			getHeader( Client &, Config& );
+	std::streamsize	getBody( Client &inputClient );
 };
