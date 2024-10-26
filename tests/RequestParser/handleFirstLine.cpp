@@ -40,3 +40,4 @@ TEST_F(RequestParserTest, ExtraDataInRequestLine) {
     parser.handleFirstLine(requestStream);
     EXPECT_FALSE(parser.getIsValid());  // Des données supplémentaires après la requête
 }
+

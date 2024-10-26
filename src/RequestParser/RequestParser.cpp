@@ -42,8 +42,8 @@ std::string	RequestParser::charVectorToString(const std::vector<char>& vector)
 
 void	RequestParser::trim(std::string& str)
 {
-	str.erase(0, str.find_first_not_of(" \t"));
-	str.erase(str.find_last_not_of(" \t") + 1);
+	str.erase(0, str.find_first_not_of(" \t\r"));
+	str.erase(str.find_last_not_of(" \t\r") + 1);
 }
 /**========================================================================
  *                           MAIN ACTION
@@ -94,6 +94,8 @@ void	RequestParser::handleFirstLine(std::istringstream& requestStream)
 	std::string firstLine;
 	std::string remainingData;
 
+	if (requestStream.str().empty())
+		_isValid = false;
 	if (std::getline(requestStream, firstLine))
 	{
 		std::istringstream iss(firstLine);
@@ -148,12 +150,17 @@ void	RequestParser::handleHeaderLines(std::istringstream& requestStream)
 
 }
 
-void	RequestParser::assignHeader(const std::string& key, std::string& headerField)
+void RequestParser::assignHeader(const std::string& key, std::string& headerField)
 {
 	std::map<std::string, std::vector<std::string> >::const_iterator it = _tmpHeaders.find(key);
 
-	if (it != _tmpHeaders.end() && !it->second.empty())
-		headerField = it->second[0];
+	if (it != _tmpHeaders.end())
+	{
+		if (!it->second.empty())
+			headerField = it->second[0];
+		else
+			Logger::getInstance().log(WARNING, "Header found but has no values for key: " + key, *this);
+	}
 }
 
 void	RequestParser::assignHeader(const std::string& key, std::vector<std::string>& headerField)
