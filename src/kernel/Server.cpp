@@ -6,10 +6,10 @@ Server::Server(sockaddr_in & sockAddr, int & maxFd,
 fd_set & actualSet, fd_set & readSet, fd_set & writeSet)
 	: _sockAddr(sockAddr), _maxFd(maxFd),
 	_actualSet(actualSet), _readSet(readSet), _writeSet(writeSet) 
-{	
-	this->_clients.reserve(300);//!
+{		
 	this->_readBuffer.reserve(BUFF_SIZE);	
 	this->_writeBuffer.reserve(BUFF_SIZE);
+	this->_writeBuffer.resize(BUFF_SIZE);//!
 }
 
 const sockaddr_in & Server::getSockAdress() const
@@ -213,7 +213,7 @@ void Server::replyClients()
 						this->_clients[i].messageSend, ret);
 					this->_clients[i].messageSend.clear();	
 					this->_clients[i].messageSend.resize(SEND_BUFF_SIZE);				
-					usleep(800000);
+					usleep(80000);
 				}
 				else
 				{
@@ -223,6 +223,7 @@ void Server::replyClients()
 					this->_clients[i].readySend = false;
 					this->_clients[i].readyRecev = true;
 					this->_clients[i].tog = false;
+					// break; //! ?
 				}
 			}	
 		}
@@ -239,10 +240,11 @@ void printMessageClientTest(const Client & client)
 
 void printVectorCharTest(const std::vector<char> & vect)
 {
-	std::cout << std::endl << "\e[34mPrint Vector: \e[31m" << std::endl;		
+	std::cout << std::endl << "\e[34mPrint Vector: \e[31m" << std::endl;
+	std::cout << "-";		
 	for (size_t i = 0; i < vect.size(); i++)				
 		std::cout << vect[i];
-	std::cout << "\e[0m" << std::endl << std::endl;
+	std::cout << "-\e[0m" << std::endl << std::endl;
 }
 
 void Server::handleClientHeader(size_t i, ssize_t ret)
@@ -366,6 +368,7 @@ bool Server::isBodyTerminated(size_t i)
 			floSimulatorPut(this->_clients[i].message);//? POST
 		this->_clients[i].message.clear();
 			//!
+		this->_clients[i].readyRecev = false;
 		this->_clients[i].readySend = true;
 		Logger::getInstance().log(DEBUG, "ready false", this->_clients[i]);
 		return true;
@@ -402,15 +405,16 @@ void Server::replyClient(Client & client, std::vector<char> & response,
 	char * writeHead = this->_writeBuffer.data();
 	size_t writeSize = this->_writeBuffer.size();
 	while (writeSize > 0)
-	{	
-		std::string str(writeHead, writeHead + static_cast<size_t>(repSize));
-		std::stringstream ss; ss << "send data to client: -" << str << "-";	
-		Logger::getInstance().log(DEBUG, ss.str(), client); 					
-		
+	{			
 		if ((ret = send(client.fd, writeHead, writeSize, 0)) < 0)		
 			return Logger::getInstance().log(ERROR, "send", client);
+
+		std::string str(writeHead, writeHead + static_cast<size_t>(ret));
+		std::stringstream ss; ss << "data sent to client: -" << str << "-";	
+		Logger::getInstance().log(DEBUG, ss.str(), client); 	
+
 		writeHead += ret;
-		writeSize -= static_cast<size_t>(ret);			
+		writeSize -= static_cast<size_t>(ret);
 	}
 }
 

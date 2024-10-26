@@ -88,7 +88,10 @@ ResponseBuilder::ResponseBuilder( const ResponseBuilder & ) :
 	_mimeTypes.insert(std::make_pair("ogv", "video/ogv"));
 }
 
-ResponseBuilder::~ResponseBuilder( void ){}
+ResponseBuilder::~ResponseBuilder( void )
+{
+	this->_ifs.close();
+}
 
 
 // ------------------------- METHODS ---------------------------------
@@ -300,7 +303,7 @@ void	ResponseBuilder::buildHeaders(){
 						<< Headers.timeStamp
 						<< Headers.contentType
 						<< (Headers.bodyLenght ? Headers.contentLenght : Headers.transfertEncoding)
-						<< HTTP_REPONSE_SEPARATOR;
+						<< HTTP_HEADER_SEPARATOR;
 	
 	string tempAllHeaders = streamMasterHeader.str();
 
@@ -406,26 +409,30 @@ ssize_t	ResponseBuilder::getBody( Client &inputClient ){
 
 	if (this->_ifs.is_open())
 	{
-			
+		inputClient.messageSend.clear(); inputClient.messageSend.resize(SEND_BUFF_SIZE);//!
 		this->_ifs.read(inputClient.messageSend.data(), static_cast<std::streamsize>(inputClient.messageSend.size()));	
 	
-		// std::string str(inputClient.messageSend.data(), this->_ifs.gcount());	
-		// Logger::getInstance().log(INFO, str);  
-		// 	Logger::getInstance().log(DEBUG, "apres ");	
+		std::string str(inputClient.messageSend.data(), this->_ifs.gcount());	
+		Logger::getInstance().log(INFO, str);  
+		Logger::getInstance().log(DEBUG, "apres ");	
 		// std::string str2(inputClient.messageSend.data(), inputClient.messageSend.size());	
 		// Logger::getInstance().log(INFO, str2);  
+std::streamsize test = this->_ifs.gcount();
 		if (this->_ifs.eof()) 
 		{
-			Logger::getInstance().log(INFO, "Fin de fichier atteinte", inputClient);
+			Logger::getInstance().log(INFO, "file end", inputClient);
 			this->_ifs.clear(); // Réinitialiser les flags pour continuer la lecture si besoin
+			
 			// this->_ifs.close();
+			
 		}
 
 		std::stringstream ss;
 		ss << "gcount: " << this->_ifs.gcount();
 		Logger::getInstance().log(DEBUG, ss.str(), inputClient);
 
-		return static_cast<ssize_t>(this->_ifs.gcount());
+		// return static_cast<ssize_t>(this->_ifs.gcount());
+		return static_cast<ssize_t>(test);
     }
 	else
 	{
