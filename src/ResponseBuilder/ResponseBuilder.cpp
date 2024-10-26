@@ -316,12 +316,8 @@ void	ResponseBuilder::extractMethod( void ){
 
 void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
-	Logger::getInstance().log(DEBUG, "Response Builder Get Header");
-	std::cout << "CLIENT " << inputClient.fd << std::endl;
-
-	printColor(UNDERLINE_RED, "STARTING URI = ");
-	printColor(UNDERLINE_RED, inputClient.header.getURI());
-	
+	Logger::getInstance().log(DEBUG, "Response Builder Get Header", inputClient);
+		
 	if (_headerSent)
 	{
 
@@ -338,7 +334,6 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	}
 	
 	_client = &inputClient; // init client
-	std::cout << "CLIENT " << _client->fd << std::endl;
 	_config = &inputConfig; // init config
 	
 	extractMethod();
@@ -372,23 +367,22 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
 ssize_t	ResponseBuilder::getBody( Client &inputClient ){
 
-	Logger::getInstance().log(DEBUG, "Response Builder Get Body");
-	std::cout << "CLIENT " << inputClient.fd << std::endl;
-	std::cout << "CLIENT " << inputClient.fd << std::endl;
+	Logger::getInstance().log(INFO, "Response Builder Get Body", inputClient);
+	// std::cout << "CLIENT " << inputClient.fd << std::endl;
+	// std::cout << "CLIENT " << inputClient.fd << std::endl;
 
 	if (!this->_ifs.is_open())
-		this->_ifs.open(_realURI.c_str(), std::ios::binary);
-	Logger::getInstance().log(DEBUG, "Response Builder Get Body2");
+		this->_ifs.open("test.html", std::ios::binary);
+
 	// this->_bodyStream.open(_realURI.c_str(), std::ios::binary);
 // this->inputClient.->messageSend.resize(3000);
 		// this->inputClient.->messageSend.resize(SEND_BUFF_SIZE);
-		Logger::getInstance().log(DEBUG, "Response Builder Get Body3");
+
 	if (this->_ifs.is_open())
 	{
-				std::cout << "sssize" << inputClient.messageSend.size() << std::endl;
-				Logger::getInstance().log(DEBUG, "Response Builder Get Body4");
+			
 		this->_ifs.read(inputClient.messageSend.data(), static_cast<std::streamsize>(inputClient.messageSend.size()));	
-			Logger::getInstance().log(DEBUG, "avant ");	
+	
 		// std::string str(inputClient.messageSend.data(), this->_ifs.gcount());	
 		// Logger::getInstance().log(INFO, str);  
 		// 	Logger::getInstance().log(DEBUG, "apres ");	
@@ -396,15 +390,15 @@ ssize_t	ResponseBuilder::getBody( Client &inputClient ){
 		// Logger::getInstance().log(INFO, str2);  
 		if (this->_ifs.eof()) 
 		{
-			Logger::getInstance().log(DEBUG, "Fin de fichier atteinte");
+			Logger::getInstance().log(INFO, "Fin de fichier atteinte", inputClient);
 			this->_ifs.clear(); // Réinitialiser les flags pour continuer la lecture si besoin
 			// this->_ifs.close();
+		}
 
-			// return false;
-			// ofs.seekg(0); // Remettre le pointeur au début du fichier si tu veux recommencer
-		} 
-		std::cout << "gcount" << this->_ifs.gcount() << " " << this->_ifs.gcount() << std::endl;
-	
+		std::stringstream ss;
+		ss << "gcount: " << this->_ifs.gcount();
+		Logger::getInstance().log(DEBUG, ss.str(), inputClient);
+
 		return static_cast<ssize_t>(this->_ifs.gcount());
     }
 	else
@@ -419,9 +413,8 @@ ssize_t	ResponseBuilder::getBody( Client &inputClient ){
 			----------------
 			despite already sent a Content-Lenght in the headers (or possibly not)
 		*/
-		Logger::getInstance().log(ERROR, "Failed Stream happend");
-    }
-	Logger::getInstance().log(DEBUG, "Response Builder Get Body8");
+		Logger::getInstance().log(ERROR, "Failed Stream happend", inputClient);
+    }	
 	return 0;
 }
 

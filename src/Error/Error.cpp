@@ -3,6 +3,7 @@
 #include "master.hpp"
 #include "errorCode.hpp"
 Error::Error() {
+					_errorPages.resize(505); // segfault without this!!!
 					_errorPages[400] = "errorPages/400.html";
 					_errorPages[401] = "errorPages/401.html";
 					_errorPages[403] = "errorPages/403.html";
@@ -11,6 +12,7 @@ Error::Error() {
 					_errorPages[502] = "errorPages/502.html";
 					_errorPages[503] = "errorPages/503.html";
 					_errorPages[504] = "errorPages/504.html";
+					_errorPages[0]	 = "errorPages/default.html";
 }
 
 Error::~Error() {}
@@ -21,14 +23,17 @@ Error& Error::getInstance()
 	return instance;
 }
 
+int	Error::getErrorCode() const { return (_erorCode); }
+
 /**========================================================================
  *                           HANDLEERROR
  *! CLASS NOT FINISHED
  *? => buildErrorRequest produces right vector, to be sent back to RequstParser
  *? => _errorPages to be initialized during config file parsing
  *========================================================================**/
-void	Error::handleError(int errCode, Client &client)
+void	Error::handleError(unsigned long errCode, Client &client)
 {
+	_erorCode = static_cast<int>(errCode);
 	errorCode err;
 	std::string str;
 	e_errorCodes e_errCode;
@@ -45,14 +50,15 @@ void	Error::handleError(std::string message) const
 	Logger::getInstance().log(ERROR, message);
 }
 
-std::string Error::getErrorPagePath(int errorCode) const
+
+std::string Error::getErrorPagePath(unsigned long errorCode) const
 {
-	std::map<int, std::string>::const_iterator it = _errorPages.find(errorCode);
-	
-	if (it != _errorPages.end())
-		return it->second;
+	if (errorCode > 504)
+		return (_errorPages[0]);
+	else if (!_errorPages[errorCode].empty())
+		return (_errorPages[errorCode]);
 	else
-		return "/Default_error_page.html"; // add a default error page?
+		return (_errorPages[0]);
 }
 
 std::vector<char> Error::stringToVector(std::string& str)
@@ -60,7 +66,7 @@ std::vector<char> Error::stringToVector(std::string& str)
 	return std::vector<char>(str.begin(), str.end());
 }
 
-std::vector<char>	Error::buildErrorRequest(int errorCode)
+std::vector<char>	Error::buildErrorRequest(unsigned long errorCode)
 {
 	std::string	errorRequestString;
 	std::vector<char>	ErrorRequestVector;

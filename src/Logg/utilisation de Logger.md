@@ -27,3 +27,16 @@ Thu, 24 Oct 2024 14:44:09 GMT: [INFO] Request parsed 10.12.7.8 56514 8
 ```
 
 **N'hesitez pas a me dire si vous voulez une autre surcharge de methode!**
+
+**FILTERING**
+/**========================================================================
+ *                             LOGGER
+ *  LOG CONFIG: values to be changed in .cpp file:
+ *?  Logger::Logger() : logToStdOut(1) 	=> 	0 to silence console log
+ *?{
+ *?	_logLevel[INFO] = 		1;			=>	0 to filter
+ *?	_logLevel[DEBUG] = 		1;			=>	0 to filter
+ *?	_logLevel[WARNING] = 	1;			=>	0 to filter
+ *?	_logLevel[ERROR] = 		1;			=>	0 to filter
+ *?	... 
+ *========================================================================**/
