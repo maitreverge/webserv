@@ -131,10 +131,11 @@ void	ResponseBuilder::validateURI( void ){
 		// _errorType = CODE_404_NOT_FOUND;
 	else if (_realURI == "/") // What if the resolved URI is a directory and not just "/"
 	{
+		// string originalURI = "/";
 		vector<string>::iterator it;
 		for (it = _config->indexFiles.begin(); it < _config->indexFiles.end(); ++it)
 		{
-			_realURI += *it;
+			_realURI = *it;
 			
 			// Check permissions with stat
 			if (stat(_realURI.c_str(), &_fileInfo) == 0)
@@ -300,7 +301,7 @@ void	ResponseBuilder::buildHeaders(){
 						<< Headers.timeStamp
 						<< Headers.contentType
 						<< (Headers.bodyLenght ? Headers.contentLenght : Headers.transfertEncoding)
-						<< HTTP_REPONSE_SEPARATOR; // ! potential issue here
+						<< HTTP_HEADER_SEPARATOR; // ! potential issue here
 	
 	string tempAllHeaders = streamMasterHeader.str();
 
@@ -343,6 +344,9 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
 	Logger::getInstance().log(DEBUG, "Response Builder Get Header");
 	std::cout << "CLIENT " << inputClient.fd << std::endl;
+
+	printColor(UNDERLINE_RED, "STARTING URI = ");
+	printColor(UNDERLINE_RED, inputClient.header.getURI());
 	
 	if (_headerSent)
 	{
@@ -365,8 +369,8 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	
 	extractMethod();
 	
-	// _realURI = _client->header.getURI();
-	_realURI = "test.html";
+	_realURI = _client->header.getURI();
+	// _realURI = "test.html";
 
 	resolveURI();
 	validateURI();
@@ -386,8 +390,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	// Copying the build Headers in headerSend
 	_client->headerSend = Headers.masterHeader;
 
-	string temp(Headers.masterHeader.begin(), Headers.masterHeader.end() );
-	cout << "HOULA IN FLO" <<  temp << endl;
+	printAllHeaders();
 
 
 	_headerSent = true;
@@ -400,7 +403,7 @@ ssize_t	ResponseBuilder::getBody( Client &inputClient ){
 	std::cout << "CLIENT " << inputClient.fd << std::endl;
 
 	if (!this->_ifs.is_open())
-		this->_ifs.open("test.html", std::ios::binary);
+		this->_ifs.open(_realURI.c_str(), std::ios::binary);
 	Logger::getInstance().log(DEBUG, "Response Builder Get Body2");
 	// this->_bodyStream.open(_realURI.c_str(), std::ios::binary);
 // this->inputClient.->messageSend.resize(3000);
@@ -454,24 +457,24 @@ void	ResponseBuilder::printAllHeaders( void ){
 
 	print("=========== printAllHeaders ========");
 
-	printColorNoEndl(BOLD_RED, "REAL URI : ")
-	printColor(BLACK, _realURI);
+	printColorNoEndl(BOLD_RED, "REAL URI : ");
+	print(_realURI);
 
 
 	printColorNoEndl(BOLD_GREEN, "Status Line :");
-	printColor(BLACK, Headers.statusLine);
+	print(Headers.statusLine);
 
 	printColorNoEndl(BOLD_CYAN, "TimeStamp :");
-	printColor(BLACK, Headers.timeStamp);
+	print(Headers.timeStamp);
 
 	printColorNoEndl(BOLD_CYAN, "Content Type :");
-	printColor(BLACK, Headers.contentType);
+	print(Headers.contentType);
 
 	printColorNoEndl(BOLD_CYAN, "Content Lenght : (header)");
-	printColor(BLACK, Headers.contentLenght);
+	print(Headers.contentLenght);
 
 	printColorNoEndl(BOLD_CYAN, "Body Lenght (uint64_t)");
-	printColor(BLACK, Headers.bodyLenght);
+	print(Headers.bodyLenght);
 
 	print("=========== printAllHeaders ========");
 }

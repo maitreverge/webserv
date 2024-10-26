@@ -7,7 +7,6 @@
 
 #define HTTP_PROTOCOL "HTTP/1.1"
 #define SPACE " "
-#define HTTP_REPONSE_SEPARATOR "\r\n\r\n"
 #define HTTP_HEADER_SEPARATOR "\r\n"
 
 struct Client;
