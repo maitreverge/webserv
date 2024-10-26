@@ -28,7 +28,7 @@ void Logger::log(logLevel logLevel, const std::string& message)
 	
 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) 
-							+ BLACK + message 
+							+ BACKGROUND_HIGH_INTENSITY_WHITE + message 
 							+ RESET + "\n";	if (logToStdOut)
 	std::cout << logEntry;
 	_accessFile << logEntry;

@@ -49,3 +49,5 @@ intra_binaries/ubuntu_cgi_tester
 tests/webtest
 tests/config/my_ip.txt
 tests/siege/siege_urls.txt
+src/kernel/error.log
+src/ResponseBuilder/error.log
