@@ -47,3 +47,19 @@ Le script se base sur siege_urls.txt pour tester différentes requêtes.
 ```bash
 ./run_all_tests.sh
 ```
+
+----
+
+# Prompts ChatGPT
+
+Je developpe une application en C++98.
+
+Je teste cette application a l'aide du framework de test Google Test, compile en C++14.
+
+voici la definition d'une classe que je veux tester:
+
+INSERER_DECLARATION_DE_CLASSE_ICI
+
+Donne moi la definition de la classe de test correspondante, en y ajoutant la redirection de l'output de sortie standard (std::freopen("/dev/null", "w", stdout); et std::freopen("/dev/tty", "w", stdout);).
+
+JE NE VEUX QUE LA DEFINITION POUR L'INSTANT. Ensuite, je te donnerai des methodes a tester une a une pour que tu me produise le code de test. Confirme que tu as compris ce que j'attends de toi.

@@ -32,6 +32,11 @@ Headers	RequestParser::getHeaders() const			{return (_Headers);}
 
 Client*		RequestParser::getClient() const		{return (_Client);}
 
+std::map<std::string, std::vector<std::string> >		RequestParser::getTmpHeaders() const
+{
+	return (_tmpHeaders);
+}
+
 /**========================================================================
  *                           UTILS
  *========================================================================**/
