@@ -211,11 +211,28 @@ std::map<std::string, std::string> RequestParser::extractCookies(std::vector<std
 
 	for (std::vector<std::string>::iterator it = vec.begin(); it != vec.end(); ++it)
 	{
-		size_t equalPos = it->find('=');
-		if (equalPos != std::string::npos)
+		std::string cookieLine = *it;
+		size_t start = 0;
+		size_t end;
+		while ((end = cookieLine.find(';', start)) != std::string::npos)
 		{
-			std::string key = it->substr(0, equalPos);
-			std::string value = it->substr(equalPos + 1);
+			std::string cookiePair = cookieLine.substr(start, end - start);
+			size_t equalPos = cookiePair.find('=');
+			if (equalPos != std::string::npos)
+			{
+				std::string key = cookiePair.substr(0, equalPos);
+				std::string value = cookiePair.substr(equalPos + 1);
+				trim(key);
+				trim(value);
+				cookiesMap[key] = value;
+			}
+			start = end + 1;
+		}
+		std::string cookiePair = cookieLine.substr(start);
+		size_t equalPos = cookiePair.find('=');
+		if (equalPos != std::string::npos) {
+			std::string key = cookiePair.substr(0, equalPos);
+			std::string value = cookiePair.substr(equalPos + 1);
 			trim(key);
 			trim(value);
 			cookiesMap[key] = value;
