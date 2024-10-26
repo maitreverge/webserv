@@ -50,3 +50,4 @@ tests/webtest
 tests/config/my_ip.txt
 tests/siege/siege_urls.txt
 error.log
+error.log

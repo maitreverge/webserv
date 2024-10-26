@@ -6,12 +6,14 @@
 class Error
 {
 	private:
-		std::vector<std::string> _errorPages;
+		std::vector<std::string> 	_errorPages;
+		int							_erorCode;
 
 	public:
 		Error();
 		~Error();
 		static Error& getInstance();
+		int					getErrorCode() const;
 		void				handleError(unsigned long errorCode, struct Client &client);
 		void				handleError(std::string message) const;
 		std::vector<char>	buildErrorRequest(unsigned long errorCode);

@@ -23,6 +23,8 @@ Error& Error::getInstance()
 	return instance;
 }
 
+int	Error::getErrorCode() const { return (_erorCode); }
+
 /**========================================================================
  *                           HANDLEERROR
  *! CLASS NOT FINISHED
@@ -31,6 +33,7 @@ Error& Error::getInstance()
  *========================================================================**/
 void	Error::handleError(unsigned long errCode, Client &client)
 {
+	_erorCode = static_cast<int>(errCode);
 	errorCode err;
 	std::string str;
 	e_errorCodes e_errCode;

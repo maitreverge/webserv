@@ -114,15 +114,14 @@ std::string Logger::removeAnsiCodes(const std::string& message)
 	bool inAnsi = false;
 
 	for (size_t i = 0; i < message.length(); ++i) {
-		if (message[i] == '\033') { // Début d'un code ANSI
+		if (message[i] == '\033') {
 			inAnsi = true;
 		} else if (inAnsi && (message[i] == 'm' || message[i] == 'K')) {
-			inAnsi = false; // Fin d'un code ANSI
+			inAnsi = false;
 		} else if (!inAnsi) {
-			cleanMessage += message[i]; // Ajouter le caractère à la chaîne propre
+			cleanMessage += message[i];
 		}
 	}
-
 	return cleanMessage;
 }
 
@@ -147,10 +146,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const Kernel& ob
 							+ RESET + "\n"
 							;
 		log(logLevel, logEntry);
-	// if (logToStdOut)
-	// 	std::cout << logEntry;
 	(void)obj;
-	// _accessFile.flush();
 }
 
 void Logger::log(logLevel logLevel, const std::string& message, const RequestParser& obj)
@@ -177,11 +173,6 @@ void Logger::log(logLevel logLevel, const std::string& message, const RequestPar
 					+ RESET + "\n";
 	}
 	logOut(logLevel, logEntry);
-
-	// if (logToStdOut)
-	// 	std::cout << logEntry;
-	// _accessFile << logEntry;
-	// _accessFile.flush();
 }
 
 void Logger::log(logLevel logLevel, const std::string& message, const Client& client)
@@ -198,11 +189,6 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 							+ GREEN + intToString(client.fd)
 							+ RESET + "\n";
 	logOut(logLevel, logEntry);
-	// if (logToStdOut)
-	// 	std::cout << logEntry;
-	// if (_accessFile.is_open())
-	// 	_accessFile << logEntry;
-	// _accessFile.flush();
 }
 
 void Logger::log(logLevel logLevel, const std::string& message, const Client& client, const Server&server)
@@ -221,11 +207,6 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 							+ YELLOW + intToString(portToInt(server.getSockAdress())) + " "
 							+ RESET + "\n";
 	logOut(logLevel, logEntry);
-	// if (logToStdOut)
-	// 	std::cout << logEntry;
-	// if (_accessFile.is_open())
-	// 	_accessFile << logEntry;
-	// _accessFile.flush();
 }
 
 void Logger::log(logLevel logLevel, const std::string& message, const Server&server)
@@ -241,33 +222,23 @@ void Logger::log(logLevel logLevel, const std::string& message, const Server&ser
 							+ YELLOW + intToString(portToInt(server.getSockAdress())) + " "
 							+ RESET + "\n";
 	logOut(logLevel, logEntry);
-	// if (logToStdOut)
-	// 	std::cout << logEntry;
-	// if (_accessFile.is_open())
-	// 	_accessFile << logEntry;
-	// _accessFile.flush();
 }
 
 void Logger::log(logLevel logLevel, std::string& message, struct Client& client, const Error& error)
 {
 	if (_logLevel[logLevel] == 0)
 		return ;
-	// [timestamp][loglevel][message][ip][port]
+	// [timestamp][loglevel][errorCode][message][ip][port]
 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) 
 							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
+							+ RED + intToString(error.getErrorCode()) + " "
 							+ BOLD_HIGH_INTENSITY_WHITE
 							+ MAGENTA + "Client: " + ipToString(client.address) + " "
 							+ YELLOW + intToString(portToInt(client.address)) + " "
 							+ GREEN + intToString(client.fd) + " "
 							+ RESET + "\n";
 	logOut(logLevel, logEntry);
-	// if (logToStdOut)
-	// 	std::cout << logEntry;
-	// if (_accessFile.is_open())
-	// 	_accessFile << logEntry;
-	// _accessFile.flush();
-	(void)error;
 }
 
 /**========================================================================
