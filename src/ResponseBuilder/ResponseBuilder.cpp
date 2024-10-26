@@ -2,90 +2,62 @@
 #include "Logger.hpp" 
 
 // ------------------------- COPLIAN FORM -----------------------------
-ResponseBuilder::ResponseBuilder( void ) :
-	_isDirectory(false),
-	_isFile(false),
-	_isCGI(false),
-	_errorType(CODE_200_OK),
-	_headerSent(false)
-	{
+void ResponseBuilder::initMimes( void ){
 
-	_mimeTypes.insert(std::make_pair("html", "text/html"));
-	_mimeTypes.insert(std::make_pair("htm", "text/htm"));
-	_mimeTypes.insert(std::make_pair("txt", "text/txt"));
-	_mimeTypes.insert(std::make_pair("css", "text/css"));
-	_mimeTypes.insert(std::make_pair("xml", "text/xml"));
-	// Application Content Types
-	_mimeTypes.insert(std::make_pair("js", "application/javascript")); // FIXME doubt on this one
-	_mimeTypes.insert(std::make_pair("json", "application/json"));
-	_mimeTypes.insert(std::make_pair("pdf", "application/pdf"));
-	_mimeTypes.insert(std::make_pair("zip", "application/zip"));
-	// Image Content Types
-	_mimeTypes.insert(std::make_pair("jpeg", "image/jpeg"));
-	_mimeTypes.insert(std::make_pair("jpg", "image/jpg"));
-	_mimeTypes.insert(std::make_pair("png", "image/png"));
-	_mimeTypes.insert(std::make_pair("gif", "image/gif"));
-	_mimeTypes.insert(std::make_pair("webp", "image/webp"));
-	_mimeTypes.insert(std::make_pair("bmp", "image/bmp"));
-	// Audio Content Types
-	_mimeTypes.insert(std::make_pair("mp3", "audio/mp3"));
-	_mimeTypes.insert(std::make_pair("mpeg", "audio/mpeg"));
-	_mimeTypes.insert(std::make_pair("ogg", "audio/ogg"));
-	_mimeTypes.insert(std::make_pair("wav", "audio/wav"));
-	// Video Content Types
-	_mimeTypes.insert(std::make_pair("mp4", "video/mp4"));
-	_mimeTypes.insert(std::make_pair("webm", "video/webm"));
-	_mimeTypes.insert(std::make_pair("ogv", "video/ogv"));
+	// Init Mimes Types
+	{
+		_mimeTypes.insert(std::make_pair("html", "text/html"));
+		_mimeTypes.insert(std::make_pair("htm", "text/htm"));
+		_mimeTypes.insert(std::make_pair("txt", "text/txt"));
+		_mimeTypes.insert(std::make_pair("css", "text/css"));
+		_mimeTypes.insert(std::make_pair("xml", "text/xml"));
+		// Application Content Types
+		_mimeTypes.insert(std::make_pair("js", "application/javascript")); // FIXME doubt on this one
+		_mimeTypes.insert(std::make_pair("json", "application/json"));
+		_mimeTypes.insert(std::make_pair("pdf", "application/pdf"));
+		_mimeTypes.insert(std::make_pair("zip", "application/zip"));
+		// Image Content Types
+		_mimeTypes.insert(std::make_pair("jpeg", "image/jpeg"));
+		_mimeTypes.insert(std::make_pair("jpg", "image/jpg"));
+		_mimeTypes.insert(std::make_pair("png", "image/png"));
+		_mimeTypes.insert(std::make_pair("gif", "image/gif"));
+		_mimeTypes.insert(std::make_pair("webp", "image/webp"));
+		_mimeTypes.insert(std::make_pair("bmp", "image/bmp"));
+		// Audio Content Types
+		_mimeTypes.insert(std::make_pair("mp3", "audio/mp3"));
+		_mimeTypes.insert(std::make_pair("mpeg", "audio/mpeg"));
+		_mimeTypes.insert(std::make_pair("ogg", "audio/ogg"));
+		_mimeTypes.insert(std::make_pair("wav", "audio/wav"));
+		// Video Content Types
+		_mimeTypes.insert(std::make_pair("mp4", "video/mp4"));
+		_mimeTypes.insert(std::make_pair("webm", "video/webm"));
+		_mimeTypes.insert(std::make_pair("ogv", "video/ogv"));
+	}
 }
 
-ResponseBuilder::ResponseBuilder( const ResponseBuilder & src) :
-	_isDirectory(false),
-	_isFile(false),
-	_isCGI(false),
-	_errorType(CODE_200_OK),
-	_headerSent(false)
-	{
-	this->_client = src._client;
-	this->_config = src._config;
-	this->_mimeTypes = src._mimeTypes;
-	this->_headerSent = src._headerSent;
+ResponseBuilder::ResponseBuilder( void ){
+	
+	initMimes();
 
-	this->Headers = src.Headers;
-	this->_method = src._method;
-	this->_errorType = src._errorType;
-	this->_realURI = src._realURI;
-	this->_fileExtension = src._fileExtension;
-	this->_fileInfo = src._fileInfo;			
-	this->_isDirectory = src._isDirectory;	
+	// Init priv variables
+	_isDirectory = false;
+	_isFile = false;
+	_isCGI = false;
+	_errorType = CODE_200_OK;
+	_headerSent = false;
+
+}
+
+ResponseBuilder::ResponseBuilder( const ResponseBuilder & src)
+{
+	initMimes();
+
+	this->_isDirectory = src._isDirectory;
 	this->_isFile = src._isFile;
 	this->_isCGI = src._isCGI;
-	this->_fileName = src._fileName;
-	_mimeTypes.insert(std::make_pair("html", "text/html"));
-	_mimeTypes.insert(std::make_pair("htm", "text/htm"));
-	_mimeTypes.insert(std::make_pair("txt", "text/txt"));
-	_mimeTypes.insert(std::make_pair("css", "text/css"));
-	_mimeTypes.insert(std::make_pair("xml", "text/xml"));
-	// Application Content Types
-	_mimeTypes.insert(std::make_pair("js", "application/javascript")); // FIXME doubt on this one
-	_mimeTypes.insert(std::make_pair("json", "application/json"));
-	_mimeTypes.insert(std::make_pair("pdf", "application/pdf"));
-	_mimeTypes.insert(std::make_pair("zip", "application/zip"));
-	// Image Content Types
-	_mimeTypes.insert(std::make_pair("jpeg", "image/jpeg"));
-	_mimeTypes.insert(std::make_pair("jpg", "image/jpg"));
-	_mimeTypes.insert(std::make_pair("png", "image/png"));
-	_mimeTypes.insert(std::make_pair("gif", "image/gif"));
-	_mimeTypes.insert(std::make_pair("webp", "image/webp"));
-	_mimeTypes.insert(std::make_pair("bmp", "image/bmp"));
-	// Audio Content Types
-	_mimeTypes.insert(std::make_pair("mp3", "audio/mp3"));
-	_mimeTypes.insert(std::make_pair("mpeg", "audio/mpeg"));
-	_mimeTypes.insert(std::make_pair("ogg", "audio/ogg"));
-	_mimeTypes.insert(std::make_pair("wav", "audio/wav"));
-	// Video Content Types
-	_mimeTypes.insert(std::make_pair("mp4", "video/mp4"));
-	_mimeTypes.insert(std::make_pair("webm", "video/webm"));
-	_mimeTypes.insert(std::make_pair("ogv", "video/ogv"));
+	this->_errorType = src._errorType;
+	this->_headerSent = src._headerSent;
+	this->Headers = src.Headers;
 }
 
 ResponseBuilder::~ResponseBuilder( void ){}
@@ -150,6 +122,8 @@ void	ResponseBuilder::validateURI( void ){
 				setError(CODE_404_NOT_FOUND);
 		}
 	}
+	else
+		_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
 
 	// ! STEP 2 : Identify URI nature
 	if (stat(_realURI.c_str(), &_fileInfo) == -1) // if given path fails
@@ -181,40 +155,42 @@ void	ResponseBuilder::validateURI( void ){
 	}
 	// ! STEP 3 : Checks URI authorization depending on the method
 	// TODO : Simplify or refactor this function
-	stat(_realURI.c_str(), &_fileInfo); // hot fix from g++
-	switch (_method)
+	if (stat(_realURI.c_str(), &_fileInfo) == 0)
 	{
-		case GET:
-			if (_isCGI)
-			{
-				if (not( (_fileInfo.st_mode & S_IXUSR) or (_fileInfo.st_mode & S_IXGRP) or (_fileInfo.st_mode & S_IXOTH) )) // exec rights
-					setError(CODE_403_FORBIDDEN);
-			}
-			else
-			{
-				if (not( (_fileInfo.st_mode & S_IRUSR) or (_fileInfo.st_mode & S_IRGRP) or (_fileInfo.st_mode & S_IROTH) )) // read rights
-					setError(CODE_403_FORBIDDEN);
-			}
-			break;
-		case POST:
-			if (_isCGI)
-			{
-				if (not( (_fileInfo.st_mode & S_IXUSR) or (_fileInfo.st_mode & S_IXGRP) or (_fileInfo.st_mode & S_IXOTH) )) // exec rights
-					setError(CODE_403_FORBIDDEN);
-			}
-			else
-			{
+		switch (_method)
+		{
+			case GET:
+				if (_isCGI)
+				{
+					if (not( (_fileInfo.st_mode & S_IXUSR) or (_fileInfo.st_mode & S_IXGRP) or (_fileInfo.st_mode & S_IXOTH) )) // exec rights
+						setError(CODE_403_FORBIDDEN);
+				}
+				else
+				{
+					if (not( (_fileInfo.st_mode & S_IRUSR) or (_fileInfo.st_mode & S_IRGRP) or (_fileInfo.st_mode & S_IROTH) )) // read rights
+						setError(CODE_403_FORBIDDEN);
+				}
+				break;
+			case POST:
+				if (_isCGI)
+				{
+					if (not( (_fileInfo.st_mode & S_IXUSR) or (_fileInfo.st_mode & S_IXGRP) or (_fileInfo.st_mode & S_IXOTH) )) // exec rights
+						setError(CODE_403_FORBIDDEN);
+				}
+				else
+				{
+					if (not( (_fileInfo.st_mode & S_IWUSR) or (_fileInfo.st_mode & S_IWGRP) or (_fileInfo.st_mode & S_IWOTH) )) // Write rights
+						setError(CODE_403_FORBIDDEN);
+				}
+				break;
+			case DELETE:
 				if (not( (_fileInfo.st_mode & S_IWUSR) or (_fileInfo.st_mode & S_IWGRP) or (_fileInfo.st_mode & S_IWOTH) )) // Write rights
 					setError(CODE_403_FORBIDDEN);
-			}
-			break;
-		case DELETE:
-			if (not( (_fileInfo.st_mode & S_IWUSR) or (_fileInfo.st_mode & S_IWGRP) or (_fileInfo.st_mode & S_IWOTH) )) // Write rights
-				setError(CODE_403_FORBIDDEN);
-			break;
-		default:
-			setError(CODE_405_METHOD_NOT_ALLOWED);
-			break;
+				break;
+			default:
+				setError(CODE_405_METHOD_NOT_ALLOWED);
+				break;
+		}
 	}
 
 	// TODO = Does the route accepts the METHOD ?

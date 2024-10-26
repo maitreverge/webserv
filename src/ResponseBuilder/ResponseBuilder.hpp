@@ -79,6 +79,8 @@ private:
 	void	extractMethod( void );
 	void	setError( e_errorCodes );
 	string	extractType( const string& extension ) const;
+	void	initMimes( void );
+
 
 
 public:
