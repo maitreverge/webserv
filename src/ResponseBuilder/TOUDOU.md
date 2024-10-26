@@ -3,7 +3,7 @@
 ## BUILDING HEADER
 - Extract Method (GET, POST or DELETE) ✅
 - Get URI ✅
-- Resolve URI
+- Resolve URI  
 	==> Rooted path from config file ⛔
 	==> transversal attacks "../" (can go further with analyzing if "../" does exit root or not) ✅
 
