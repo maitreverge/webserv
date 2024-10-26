@@ -192,7 +192,7 @@ void Server::replyClients()
 		{
 			if (FD_ISSET(this->_clients[i].fd, &this->_writeSet))
 			{
-				if (!this->_clients[i].tog)
+				if (!this->_clients[i].headerSend.empty())
 				{
 					this->_clients[i].tog = true;				
 					replyClient(this->_clients[i],
@@ -212,7 +212,13 @@ void Server::replyClients()
 					usleep(200000);
 				}
 				else
+				{
+					Logger::getInstance().log(DEBUG, "reinit response Builder");
+					this->_clients[i].response._ifs.close();
+					this->_clients[i].response = ResponseBuilder();
 					this->_clients[i].ready = false;
+					// this->_clients[i].tog = false;
+				}
 			}	
 		}
 	}

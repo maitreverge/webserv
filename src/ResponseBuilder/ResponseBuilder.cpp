@@ -38,28 +38,28 @@ ResponseBuilder::ResponseBuilder( void ) :
 	_mimeTypes.insert(std::make_pair("ogv", "video/ogv"));
 }
 
-ResponseBuilder::ResponseBuilder( const ResponseBuilder & src) :
+ResponseBuilder::ResponseBuilder( const ResponseBuilder & ) :
 	_isDirectory(false),
 	_isFile(false),
 	_isCGI(false),
 	_errorType(CODE_200_OK),
 	_headerSent(false)
 	{
-	this->_client = src._client;
-	this->_config = src._config;
-	this->_mimeTypes = src._mimeTypes;
-	this->_headerSent = src._headerSent;
+	// this->_client = src._client;
+	// this->_config = src._config;
+	// this->_mimeTypes = src._mimeTypes;
+	// this->_headerSent = src._headerSent;
 
-	this->Headers = src.Headers;
-	this->_method = src._method;
-	this->_errorType = src._errorType;
-	this->_realURI = src._realURI;
-	this->_fileExtension = src._fileExtension;
-	this->_fileInfo = src._fileInfo;			
-	this->_isDirectory = src._isDirectory;	
-	this->_isFile = src._isFile;
-	this->_isCGI = src._isCGI;
-	this->_fileName = src._fileName;
+	// this->Headers = src.Headers;
+	// this->_method = src._method;
+	// this->_errorType = src._errorType;
+	// this->_realURI = src._realURI;
+	// this->_fileExtension = src._fileExtension;
+	// this->_fileInfo = src._fileInfo;			
+	// this->_isDirectory = src._isDirectory;	
+	// this->_isFile = src._isFile;
+	// this->_isCGI = src._isCGI;
+	// this->_fileName = src._fileName;
 	_mimeTypes.insert(std::make_pair("html", "text/html"));
 	_mimeTypes.insert(std::make_pair("htm", "text/htm"));
 	_mimeTypes.insert(std::make_pair("txt", "text/txt"));

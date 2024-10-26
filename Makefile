@@ -98,7 +98,7 @@ design:
 		echo "\e[8;50;120t"; \
 		echo "\033[0;32m"; \
 		./makescript.sh; \
-		echo "					the HardTeam Compagny Copyright\033[0m"; \
+		echo "					the TryHardTeam Compagny Copyright\033[0m"; \
 	fi
 
 clean:
