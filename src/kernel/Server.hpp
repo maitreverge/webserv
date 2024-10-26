@@ -53,7 +53,8 @@ struct Client
 		messageSend.reserve(MAX_HDR_SIZE);
 		messageSend.resize(SEND_BUFF_SIZE);
 		tog = false;
-
+	headerSend.reserve(300); //!
+	message.reserve(300); //!
 		std::stringstream ss;		
 		ss << 
 		"HTTP/1.1 200 OK\r\n\

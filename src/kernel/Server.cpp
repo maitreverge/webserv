@@ -7,6 +7,7 @@ fd_set & actualSet, fd_set & readSet, fd_set & writeSet)
 	: _sockAddr(sockAddr), _maxFd(maxFd),
 	_actualSet(actualSet), _readSet(readSet), _writeSet(writeSet) 
 {	
+	this->_clients.reserve(300);//!
 	this->_readBuffer.reserve(BUFF_SIZE);	
 	this->_writeBuffer.reserve(BUFF_SIZE);
 }
