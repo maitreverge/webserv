@@ -3,7 +3,7 @@ NAME = webserv
 TEST_NAME = tests/webtest
 
 # compiler + flags
-CXX = c++
+CXX = g++
 CFLAGS = $(HDRFLAGS) -g -Wall -Wextra -Werror -Wconversion -std=c++98
 TFLAGS = $(HDRFLAGS) -std=c++14 -I$(GTEST_INCLUDE) -pthread -DUNIT_TEST
 LDFLAGS = 
@@ -98,7 +98,7 @@ design:
 		echo "\e[8;50;120t"; \
 		echo "\033[0;32m"; \
 		./makescript.sh; \
-		echo "					the HardTeam Compagny Copyright\033[0m"; \
+		echo "					the TryHardTeam Compagny Copyright\033[0m"; \
 	fi
 
 clean:
