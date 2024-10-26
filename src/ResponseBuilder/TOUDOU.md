@@ -40,3 +40,7 @@
 ✅
 
 ⛔
+
+## HOTFIX :
+
+Retour de page IMAGES foireux

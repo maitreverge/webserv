@@ -81,10 +81,11 @@ private:
 	void	initMimes( void );
 
 	// generateListingHTML.cpp
-	map<string, string /* timestamp of last modified */> _lastModified;
+	map<string, timespec> _lastDir_M_Time;
+	map<string, timespec> _lastDir_C_Time;
 	void	generateListingHTML( void );
 	bool	foundDefaultPath( void );
-	bool	isTargetModified( void ){
+	bool	isDirectoryUnchanged( void );
 
 
 
