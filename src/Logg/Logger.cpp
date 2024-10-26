@@ -41,8 +41,16 @@ void Logger::log(logLevel logLevel, const std::string& message)
 	if (logToStdOut)
 		std::cout << logEntry;
 	logEntry = removeAnsiCodes(logEntry);
-	_accessFile << logEntry;
-	_accessFile.flush();
+	if (logLevel == INFO || logLevel == DEBUG)
+	{
+		_accessFile << logEntry;
+		_accessFile.flush();
+	}
+	else if (logLevel == WARNING || logLevel == ERROR)
+	{
+		_errorFile << logEntry;
+		_errorFile.flush();
+	}
 }
 
 std::string Logger::formatLogLevel(logLevel level) const
