@@ -12,8 +12,8 @@
 	==> Is the path a directory  ✅
 	==> Is the path a CGI  ⛔
 	==> Does the route accepts the current method  ⛔
-	==> Definir une redirection HTTP ⛔ (possibly send a CODE_300 and let the client sent back another request)
-	==> DEFINE AUTHORIZATION DEPENDING ON THE METHOD  ⛔
+	==> Definir une redirection HTTP ⛔ (possibly send a CODE_300 and let the client sent back another GET request)
+	==> DEFINE AUTHORIZATION DEPENDING ON THE METHOD  ✅
 		# GET Request:
 			* Read Permission: The server needs to read the file or directory contents.
 			* POSIX Permission: R_OK (Read permission)
@@ -28,12 +28,23 @@
 			* Execute Permission: If the target is a directory, the server needs execute permission to access the directory.
 			* POSIX Permission: X_OK (Execute permission)
 
+	==> HTML Generator for Listing Directories 🔥
+		#   TimeStamp checker for avoiding making twice the same work (also) 🔥
 
 - Executing the CGI ⛔
 	==> Possibly extract timestamp from Last-Modified CGI code source for avoiding generating twice the same CGI.html ( depends if the CGI.py does outputs the same thing or not, will depend mosty on PATH_INFO and body, if one or another are exploited)
 
 
 ## BUILDING BODY
+- Done by Seb, needs explanations on the stream ⛔
+
+
+
+## HOTFIX :
+
+Retour de page IMAGES foireux
+
+Refactorer le timestamp path access to a higher scope, accessible to all clients (needs a generic function for CGI as well)
 
 
 
@@ -41,6 +52,4 @@
 
 ⛔
 
-## HOTFIX :
-
-Retour de page IMAGES foireux
+🔥

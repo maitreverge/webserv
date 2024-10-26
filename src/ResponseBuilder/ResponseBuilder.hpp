@@ -56,6 +56,11 @@ private:
 	bool _isCGI;
 	struct stat _fileInfo;
 
+	// File Authorizations
+	bool _isROK;
+	bool _isWOK;
+	bool _isXOK;
+
 	string _fileName;
 	string _fileExtension;
 	string _realURI;
@@ -79,6 +84,8 @@ private:
 	void	setError( e_errorCodes );
 	string	extractType( const string& extension ) const;
 	void	initMimes( void );
+	void	extractAuthorizations( void );
+
 
 	// generateListingHTML.cpp
 	map<string, timespec> _lastDir_M_Time;

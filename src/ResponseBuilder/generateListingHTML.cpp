@@ -1,6 +1,13 @@
 #include "ResponseBuilder.hpp"
 #include "Logger.hpp" 
 
+/**
+ * @brief This function extracts two timestamps from `stat`
+ * `st_ctim` and `st_mtim` and store them in a map.
+ * 
+ * @return true 
+ * @return false 
+ */
 bool ResponseBuilder::isDirectoryUnchanged( void ){
 
 	// Current TimeStamps
@@ -71,13 +78,29 @@ bool ResponseBuilder::foundDefaultPath( void ){
 
 void ResponseBuilder::generateListingHTML( void ){
 
+	// ! STEP 0 : check if we can write and 
+	if ( not _isROK )
+	{
+		setError(CODE_403_FORBIDDEN);
+		return;
+	}
 	// ! STEP 1 : Checks if the Directory has been touched since, and if there is a default path
-	if ( isDirectoryUnchanged() and foundDefaultPath())
+	else if ( isDirectoryUnchanged() and foundDefaultPath())
 		return;
 
 	// ! STEP 2 : Generate an index.html for the current page	
 	// Build the HTLM generator
 
-	// ! STEP 3 : Sauvegarder un index.html dans le dossier cible (verifier si les droits autho sont OK dans le dossier)
 
+	// ! STEP 3 : Sauvegarder un index.html dans le dossier cible (verifier si les droits autho sont OK dans le dossier)
+	if (not _isWOK)
+	{
+		// If we can't write a default file in the directory, we need to index it in another place
+		// or eventually make it a stream straight to the body
+	}
+
+	// ! Refresh timestamps
+	isDirectoryUnchanged(); 
+
+	// TODO : Update URI depending on the default file location
 }

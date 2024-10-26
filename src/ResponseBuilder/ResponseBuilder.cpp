@@ -45,6 +45,9 @@ ResponseBuilder::ResponseBuilder( void ){
 	_isCGI = false;
 	_errorType = CODE_200_OK;
 	_headerSent = false;
+	_isROK = false;
+	_isWOK = false;
+	_isXOK = false;
 
 }
 
@@ -58,6 +61,9 @@ ResponseBuilder::ResponseBuilder( const ResponseBuilder & src)
 	this->_errorType = src._errorType;
 	this->_headerSent = src._headerSent;
 	this->Headers = src.Headers;
+	this->_isROK = src._isROK;
+	this->_isWOK = src._isWOK;
+	this->_isXOK = src._isXOK;
 }
 
 ResponseBuilder::~ResponseBuilder( void ){}
@@ -95,12 +101,47 @@ void ResponseBuilder::setError(e_errorCodes code){
 	_errorType = code;
 }
 
+void	ResponseBuilder::extractAuthorizations( void ){
+
+	if (stat(_realURI.c_str(), &_fileInfo) == 0)
+	{
+		_isROK = _fileInfo.st_mode & S_IRUSR;
+		_isWOK = _fileInfo.st_mode & S_IWUSR;
+		_isXOK = _fileInfo.st_mode & S_IXUSR;
+
+		switch (_method)
+		{
+			case GET:
+				if (_isCGI and not _isXOK)
+					setError(CODE_403_FORBIDDEN);
+				else if (not _isROK)
+					setError(CODE_403_FORBIDDEN);
+				break;
+			case POST:
+				if (_isCGI and not _isXOK)
+					setError(CODE_403_FORBIDDEN);
+				else if (not _isWOK)
+					setError(CODE_403_FORBIDDEN);
+				break;
+			case DELETE:
+				if (not _isWOK)
+					setError(CODE_403_FORBIDDEN);
+				break;
+			default:
+				setError(CODE_405_METHOD_NOT_ALLOWED);
+				break;
+		}
+	}
+	else
+		setError(CODE_404_NOT_FOUND);
+}
+
+
 void	ResponseBuilder::validateURI( void ){
 
 	// ! STEP 1 = EDGE CASES FOR EMPTY PATH or PATH == "/"
 	if (_realURI.empty())
 		setError(CODE_404_NOT_FOUND);
-		// _errorType = CODE_404_NOT_FOUND;
 	else if (_realURI == "/") // What if the resolved URI is a directory and not just "/"
 	{
 		// string originalURI = "/";
@@ -126,18 +167,8 @@ void	ResponseBuilder::validateURI( void ){
 		_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
 
 	// ! STEP 2 : Identify URI nature
-	if (stat(_realURI.c_str(), &_fileInfo) == -1) // if given path fails
+	if (stat(_realURI.c_str(), &_fileInfo) == 0)
 	{
-		if (errno == EACCES)
-			setError(CODE_401_UNAUTHORIZED);
-		else if (errno == ENOENT or errno == EFAULT) // EFAULT The provided path is invalid or points to a restricted memory space.
-			setError(CODE_404_NOT_FOUND);
-	}
-	else // Supposed valid path
-	{
-		/*
-			! STAT FLAGS : https://www.man7.org/linux/man-pages/man7/inode.7.html
-		*/
 		if ((_fileInfo.st_mode & S_IFMT) == S_IFDIR) // checks is the given path is a DIRECTORY
 			_isDirectory = true;
 		else if ((_fileInfo.st_mode & S_IFMT) == S_IFREG) // checks is the given path is a FILE
@@ -146,52 +177,25 @@ void	ResponseBuilder::validateURI( void ){
 			_fileName = _realURI.substr(_realURI.find_last_of("/") + 1); // extract file name
 			_fileExtension = _fileName.substr(_fileName.find_last_of(".") + 1); // extract file extension
 		}
-		
+		else
+		{
+			// TODO : Do I need to set up an error code if the ressource is neither a file or a directory
+		}
+	}
+	else // Supposed invalid path
+	{
+		if (errno == EACCES)
+			setError(CODE_401_UNAUTHORIZED);
+		else if (errno == ENOENT or errno == EFAULT) // EFAULT The provided path is invalid or points to a restricted memory space.
+			setError(CODE_404_NOT_FOUND);
 	}
 
 	// TODO = Is URI a CGI ??
 	{
 
 	}
-	// ! STEP 3 : Checks URI authorization depending on the method
-	// TODO : Simplify or refactor this function
-	if (stat(_realURI.c_str(), &_fileInfo) == 0)
-	{
-		switch (_method)
-		{
-			case GET:
-				if (_isCGI)
-				{
-					if (not( (_fileInfo.st_mode & S_IXUSR) or (_fileInfo.st_mode & S_IXGRP) or (_fileInfo.st_mode & S_IXOTH) )) // exec rights
-						setError(CODE_403_FORBIDDEN);
-				}
-				else
-				{
-					if (not( (_fileInfo.st_mode & S_IRUSR) or (_fileInfo.st_mode & S_IRGRP) or (_fileInfo.st_mode & S_IROTH) )) // read rights
-						setError(CODE_403_FORBIDDEN);
-				}
-				break;
-			case POST:
-				if (_isCGI)
-				{
-					if (not( (_fileInfo.st_mode & S_IXUSR) or (_fileInfo.st_mode & S_IXGRP) or (_fileInfo.st_mode & S_IXOTH) )) // exec rights
-						setError(CODE_403_FORBIDDEN);
-				}
-				else
-				{
-					if (not( (_fileInfo.st_mode & S_IWUSR) or (_fileInfo.st_mode & S_IWGRP) or (_fileInfo.st_mode & S_IWOTH) )) // Write rights
-						setError(CODE_403_FORBIDDEN);
-				}
-				break;
-			case DELETE:
-				if (not( (_fileInfo.st_mode & S_IWUSR) or (_fileInfo.st_mode & S_IWGRP) or (_fileInfo.st_mode & S_IWOTH) )) // Write rights
-					setError(CODE_403_FORBIDDEN);
-				break;
-			default:
-				setError(CODE_405_METHOD_NOT_ALLOWED);
-				break;
-		}
-	}
+	
+	extractAuthorizations();
 
 	// TODO = Does the route accepts the METHOD ?
 	{
@@ -201,9 +205,7 @@ void	ResponseBuilder::validateURI( void ){
 
 	if (_isDirectory and (_method == GET) and _config->listingDirectories)
 	{
-		// TODO :  generate an HTML page for listing directories
 		generateListingHTML();
-		// _realURI = getListing.html
 	}
 }
 
