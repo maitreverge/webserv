@@ -196,12 +196,13 @@ void Server::replyClients()
 				{
 					this->_clients[i].tog = true;				
 					replyClient(this->_clients[i],
-						this->_clients[i].headerSend,
-						this->_clients[i].headerSend.size());
+						this->_clients[i].headerSend, static_cast<ssize_t>
+						(this->_clients[i].headerSend.size()));
 					this->_clients[i].headerSend.clear();
 				}		
 				
-				if (std::streamsize ret = this->_clients[i].response.getBody(this->_clients[i]))
+				if (ssize_t ret = this->_clients[i].response.
+					getBody(this->_clients[i]))
 				{	
 					std::cout << "AFTER get body, ret: " << ret <<  std::endl;				
 					replyClient(this->_clients[i],
@@ -370,7 +371,7 @@ void Server::displayClient(Client & client) const
 }
 
 void Server::replyClient(Client & client, std::vector<char> & response,
-	std::streamsize repSize)
+	ssize_t repSize)
 {	
 	// this->_writeBuffer.resize(SEND_BUFF_SIZE);
 	Logger::getInstance().log(DEBUG, "reply client");

@@ -93,7 +93,7 @@ class Server
 	bool isBodyTerminated(size_t i);
 	bool isBodyTooLarge(size_t i);
 	void replyClient(Client & client, std::vector<char> & response,
-		std::streamsize repSize);
+		ssize_t repSize);
 	void exitClient(size_t index);
 	void exitClients();
 

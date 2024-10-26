@@ -393,29 +393,29 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	_headerSent = true;
 }
 
-std::streamsize	ResponseBuilder::getBody( Client &inputClient ){
+ssize_t	ResponseBuilder::getBody( Client &inputClient ){
 
 	Logger::getInstance().log(DEBUG, "Response Builder Get Body");
 	std::cout << "CLIENT " << inputClient.fd << std::endl;
-	std::cout << "CLIENT " << _client->fd << std::endl;
+	std::cout << "CLIENT " << inputClient.fd << std::endl;
 
 	if (!this->_ifs.is_open())
 		this->_ifs.open("test.html", std::ios::binary);
 	Logger::getInstance().log(DEBUG, "Response Builder Get Body2");
 	// this->_bodyStream.open(_realURI.c_str(), std::ios::binary);
-// this->_client->->messageSend.resize(3000);
-		// this->_client->->messageSend.resize(SEND_BUFF_SIZE);
+// this->inputClient.->messageSend.resize(3000);
+		// this->inputClient.->messageSend.resize(SEND_BUFF_SIZE);
 		Logger::getInstance().log(DEBUG, "Response Builder Get Body3");
 	if (this->_ifs.is_open())
 	{
-				std::cout << "sssize" << this->_client->messageSend.size() << std::endl;
+				std::cout << "sssize" << inputClient.messageSend.size() << std::endl;
 				Logger::getInstance().log(DEBUG, "Response Builder Get Body4");
-		this->_ifs.read(this->_client->messageSend.data(), static_cast<std::streamsize>(this->_client->messageSend.size()));	
+		this->_ifs.read(inputClient.messageSend.data(), static_cast<std::streamsize>(inputClient.messageSend.size()));	
 			Logger::getInstance().log(DEBUG, "avant ");	
-		std::string str(this->_client->messageSend.data(), this->_ifs.gcount());	
-		Logger::getInstance().log(INFO, str);  
-			Logger::getInstance().log(DEBUG, "apres ");	
-		// std::string str2(this->_client->messageSend.data(), this->_client->messageSend.size());	
+		// std::string str(inputClient.messageSend.data(), this->_ifs.gcount());	
+		// Logger::getInstance().log(INFO, str);  
+		// 	Logger::getInstance().log(DEBUG, "apres ");	
+		// std::string str2(inputClient.messageSend.data(), inputClient.messageSend.size());	
 		// Logger::getInstance().log(INFO, str2);  
 		if (this->_ifs.eof()) 
 		{
@@ -428,7 +428,7 @@ std::streamsize	ResponseBuilder::getBody( Client &inputClient ){
 		} 
 		std::cout << "gcount" << this->_ifs.gcount() << " " << this->_ifs.gcount() << std::endl;
 	
-		return this->_ifs.gcount();
+		return static_cast<ssize_t>(this->_ifs.gcount());
     }
 	else
 	{

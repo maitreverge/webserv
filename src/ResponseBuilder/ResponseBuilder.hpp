@@ -111,6 +111,6 @@ public:
 	bool _headerSent;
 	std::ifstream _ifs;
 
-	void			getHeader( Client &, Config& );
-	std::streamsize	getBody( Client &inputClient );
+	void	getHeader( Client &, Config& );
+	ssize_t	getBody( Client &inputClient );
 };
