@@ -80,7 +80,7 @@ void Server::catchClients()
 		if (client.fd < 0)		
 			return Logger::getInstance().log(ERROR, "accept");	
 
-		displayClient(client);
+		Logger::getInstance().log(INFO, "new client", client);
 		FD_SET(client.fd, &this->_actualSet);
 		this->_maxFd = std::max(this->_maxFd, client.fd);
 		this->_clients.push_back(client);
@@ -94,7 +94,7 @@ void Server::listenClients()
 {	
 	for (size_t i = 0; i < this->_clients.size(); i++)
 	{	
-		if (FD_ISSET(this->_clients[i].fd, &this->_readSet))
+		if (FD_ISSET(this->_clients[i].fd, &this->_readSet) && this->_clients[i].ready)
 		{
 			this->_readBuffer.clear();
 			this->_readBuffer.resize(BUFF_SIZE);
@@ -192,7 +192,7 @@ void Server::replyClients()
 		{
 			if (FD_ISSET(this->_clients[i].fd, &this->_writeSet))
 			{
-				if (!this->_clients[i].headerSend.empty())
+				if (!this->_clients[i].tog)
 				{
 					this->_clients[i].tog = true;				
 					replyClient(this->_clients[i],
@@ -209,14 +209,14 @@ void Server::replyClients()
 						this->_clients[i].messageSend, ret);
 					this->_clients[i].messageSend.clear();	
 					this->_clients[i].messageSend.resize(SEND_BUFF_SIZE);				
-					usleep(200000);
+					usleep(800000);
 				}
 				else
 				{
 					Logger::getInstance().log(DEBUG, "reinit response Builder");
 					this->_clients[i].response._ifs.close();
 					this->_clients[i].response = ResponseBuilder();
-					this->_clients[i].ready = false;
+					this->_clients[i].ready = true;
 					// this->_clients[i].tog = false;
 				}
 			}	
@@ -244,7 +244,7 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 {
 	stringstream ss;
 	ss << "receiv client request" << " " << ret << " bytes";
-	Logger::getInstance().log(INFO, ss.str());
+	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
 
 	std::string delimiter = "\r\n\r\n";
 	std::vector<char>::iterator it = std::search
@@ -254,6 +254,7 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 		delimiter.end() - 1);		
 	if (it != this->_clients[i].message.end())		
 	{	
+		this->_clients[i].ready = false;
 		if (isMaxHeaderSize(it + 4, i))
 			return ;				
 		this->_clients[i].header.parse(this->_clients[i]);								
@@ -373,7 +374,7 @@ void Server::displayClient(Client & client) const
 		<< client.address.sin_family << " Addres: "
 		<< inet_ntoa(client.address.sin_addr) << " Port: "
 		<< ntohs(client.address.sin_port);
-	Logger::getInstance().log(INFO, ss.str());
+	Logger::getInstance().log(INFO, ss.str(), client);
 }
 
 void Server::replyClient(Client & client, std::vector<char> & response,
@@ -389,7 +390,7 @@ void Server::replyClient(Client & client, std::vector<char> & response,
 	this->_readSet = this->_writeSet = this->_actualSet;		
 	if (select(this->_maxFd + 1, &this->_readSet, &this->_writeSet, 0, NULL)
 		< 0)	
-		return Logger::getInstance().log(ERROR, "select");	
+		return Logger::getInstance().log(ERROR, "select", client);	
 	if(!FD_ISSET(client.fd, &this->_writeSet))	
 		return Logger::getInstance().
 			log(ERROR, "client not ready for response");	
@@ -398,7 +399,7 @@ void Server::replyClient(Client & client, std::vector<char> & response,
 	size_t writeSize = this->_writeBuffer.size();
 	while (writeSize > 0)
 	{	
-		Logger::getInstance().log(INFO, "send data to client");
+		Logger::getInstance().log(INFO, "send data to client", client);
 
 		if ((ret = send(client.fd, writeHead, writeSize, 0)) < 0)		
 			return Logger::getInstance().log(ERROR, "send");
@@ -411,7 +412,7 @@ void Server::replyClient(Client & client, std::vector<char> & response,
 
 void Server::exitClient(size_t i)
 {
-	Logger::getInstance().log(INFO, "client exited");
+	Logger::getInstance().log(INFO, "client exited", this->_clients[i]);
 
 	FD_CLR(this->_clients[i].fd, &this->_actualSet);
 	close(this->_clients[i].fd);	

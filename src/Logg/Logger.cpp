@@ -78,11 +78,11 @@ void Logger::log(logLevel logLevel, const std::string& message, const Kernel& ob
 	//[timestamp][loglevel][message][ip][port][fd]
 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) 
-							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
+							+ BLACK + message + " "
 							// + MAGENTA + ipToString(client.address) + " "
 							// + YELLOW + intToString(portToInt(client.address)) + " "
 							// + GREEN + intToString(client.fd) + " "
-							// + BOLD_HIGH_INTENSITY_WHITE + "Server: "
+							// + BLACK + "Server: "
 							// + MAGENTA + ipToString(server._sockAddr) + " "
 							// + YELLOW + intToString(portToInt(server._sockAddr)) + " "
 							+ RESET + "\n"
@@ -101,7 +101,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const RequestPar
 	{
 		logEntry = 	BLUE + timeStamp::getTime() + ": " 
 								+ formatLogLevel(logLevel) 
-								+ BOLD_HIGH_INTENSITY_WHITE + message + " "
+								+ BLACK + message + " "
 								+ MAGENTA + "Client: " + ipToString(obj.getClient()->address) + " "
 								+ YELLOW + intToString(portToInt(obj.getClient()->address)) + " "
 								+ GREEN + intToString(obj.getClient()->fd)
@@ -111,7 +111,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const RequestPar
 	{
 		logEntry = 	BLUE + timeStamp::getTime() + ": " 
 					+ formatLogLevel(logLevel) 
-					+ BOLD_HIGH_INTENSITY_WHITE + message + " "
+					+ BLACK + message + " "
 					+ RESET + "\n";
 	}
 	if (logToStdOut)
@@ -126,7 +126,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 	std::string logEntry;
 	logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) 
-							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
+							+ BLACK + message + " "
 							+ MAGENTA + "Client: " + ipToString(client.address) + " "
 							+ YELLOW + intToString(portToInt(client.address)) + " "
 							+ GREEN + intToString(client.fd)
@@ -143,11 +143,11 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 	//[timestamp][loglevel][message][ip][port][fd]
 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) + " "
-							+ BOLD_HIGH_INTENSITY_WHITE + message
+							+ BLACK + message
 							+ MAGENTA + "Client: " + ipToString(client.address) + " "
 							+ YELLOW + intToString(portToInt(client.address)) + " "
 							+ GREEN + intToString(client.fd) + " "
-							+ BOLD_HIGH_INTENSITY_WHITE + "Server: "
+							+ BLACK + "Server: "
 							+ MAGENTA + ipToString(server.getSockAdress()) + " "
 							+ YELLOW + intToString(portToInt(server.getSockAdress())) + " "
 							+ RESET + "\n";
@@ -163,8 +163,8 @@ void Logger::log(logLevel logLevel, const std::string& message, const Server&ser
 	//[timestamp][loglevel][message][ip][port]
 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) 
-							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
-							+ BOLD_HIGH_INTENSITY_WHITE + "Server: "
+							+ BLACK + message + " "
+							+ BLACK + "Server: "
 							+ MAGENTA + ipToString(server.getSockAdress()) + " "
 							+ YELLOW + intToString(portToInt(server.getSockAdress())) + " "
 							+ RESET + "\n";
@@ -180,8 +180,8 @@ void Logger::log(logLevel logLevel, std::string& message, struct Client& client,
 	// [timestamp][loglevel][message][ip][port]
 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) 
-							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
-							+ BOLD_HIGH_INTENSITY_WHITE
+							+ BLACK + message + " "
+							+ BLACK
 							+ MAGENTA + "Client: " + ipToString(client.address) + " "
 							+ YELLOW + intToString(portToInt(client.address)) + " "
 							+ GREEN + intToString(client.fd) + " "
@@ -204,7 +204,7 @@ void Logger::log(logLevel logLevel, std::string& message, struct Client& client,
 // 	//[timestamp][loglevel][message][status code][ip][port][fd]
 // 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
 // 							+ formatLogLevel(logLevel) 
-// 							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
+// 							+ BLACK + message + " "
 // 							+ RED + obj.getStatusLine()
 // 							// + MAGENTA + "Client: " + ipToString(obj.getClient()->address) + " "
 // 							// + YELLOW + intToString(portToInt(obj.getClient()->address)) + " "

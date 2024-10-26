@@ -66,7 +66,7 @@ Connection: close\r\n\
 		std::string str = ss.str();
 		std::vector<char> res(str.begin(), str.end());	
 		headerSend = res;
-		ready = false;
+		ready = true;
 		statusCodes = CODE_200_OK;
 	}
 };
