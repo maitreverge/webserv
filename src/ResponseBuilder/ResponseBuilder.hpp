@@ -25,7 +25,9 @@ struct ResponseHeaders
 	string contentLenght; // ! OPTION TWO
 
 	// Utils
-	u_int64_t bodyLenght;
+	uint64_t bodyLenght;
+
+	// ! ADD COCKIES HERE
 	
 	ResponseHeaders()
 	{
@@ -46,8 +48,6 @@ private:
 		POST,
 		DELETE
 	} e_method;
-
-	// ------------- Coplian Useless Methods
 
 	// ------------- Priv Variables
 	
@@ -76,7 +76,7 @@ private:
 	void	validateURI( void );
 	void	launchCGI( void );
 	void	buildHeaders( void );
-	void	setContentLenght(); // not a regular setter
+	void	setContentLenght( void ); // not a regular setter
 	void	extractMethod( void );
 	void	setError( e_errorCodes );
 	string	extractType( const string& extension ) const;
@@ -113,4 +113,7 @@ public:
 
 	void	getHeader( Client &, Config& );
 	ssize_t	getBody( Client &inputClient );
+
+	void	printAllHeaders( void );
+
 };
