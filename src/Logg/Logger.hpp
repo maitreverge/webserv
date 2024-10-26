@@ -51,6 +51,7 @@ public:
 	void log(logLevel logLevel, const std::string& message, const Client& client, const Server&obj);
 	void log(logLevel logLevel, std::string& message, struct Client& client, const Error& error);
 	void log(logLevel logLevel, const std::string& message, const Server&server);
+	void logOut(logLevel logLevel, const std::string& message);
 	std::string	coutFormatLogLevel(logLevel loglevel) const;
 	std::string	formatLogLevel(logLevel loglevel) const;
 	static Logger& getInstance();

@@ -15,7 +15,7 @@ Logger::Logger() : logToStdOut(1)
 	_errorFile.open("error.log", std::ios::app);
 	if (!_accessFile.is_open() || !_errorFile.is_open())
 		Logger::getInstance().log(ERROR, "Erreur : Impossible d'ouvrir le fichier de log.");
-	}
+}	
 
 Logger::~Logger()
 {
@@ -28,6 +28,27 @@ Logger::~Logger()
 /**========================================================================
  *                           ACTION
  *========================================================================**/
+void Logger::logOut(logLevel logLevel, const std::string& message)
+{
+	std::string logEntry;
+
+	if (logToStdOut)
+		std::cout << message;
+	logEntry = removeAnsiCodes(message);
+	if (logLevel == INFO || logLevel == DEBUG)
+	{
+		_accessFile << logEntry;
+		_accessFile.flush();
+	}
+	else if (logLevel == WARNING || logLevel == ERROR)
+	{
+		_errorFile << logEntry;
+		_errorFile.flush();
+	}
+}
+
+
+
 void Logger::log(logLevel logLevel, const std::string& message)
 {
 	std::string logEntry;
@@ -172,7 +193,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const RequestPar
 					+ BOLD_HIGH_INTENSITY_WHITE + message + " "
 					+ RESET + "\n";
 	}
-	log(logLevel, logEntry);
+	logOut(logLevel, logEntry);
 
 	// if (logToStdOut)
 	// 	std::cout << logEntry;
@@ -193,7 +214,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 							+ YELLOW + intToString(portToInt(client.address)) + " "
 							+ GREEN + intToString(client.fd)
 							+ RESET + "\n";
-	log(logLevel, logEntry);
+	logOut(logLevel, logEntry);
 	// if (logToStdOut)
 	// 	std::cout << logEntry;
 	// if (_accessFile.is_open())
@@ -216,7 +237,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 							+ MAGENTA + ipToString(server.getSockAdress()) + " "
 							+ YELLOW + intToString(portToInt(server.getSockAdress())) + " "
 							+ RESET + "\n";
-	log(logLevel, logEntry);
+	logOut(logLevel, logEntry);
 	// if (logToStdOut)
 	// 	std::cout << logEntry;
 	// if (_accessFile.is_open())
@@ -236,7 +257,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const Server&ser
 							+ MAGENTA + ipToString(server.getSockAdress()) + " "
 							+ YELLOW + intToString(portToInt(server.getSockAdress())) + " "
 							+ RESET + "\n";
-	log(logLevel, logEntry);
+	logOut(logLevel, logEntry);
 	// if (logToStdOut)
 	// 	std::cout << logEntry;
 	// if (_accessFile.is_open())
@@ -257,7 +278,7 @@ void Logger::log(logLevel logLevel, std::string& message, struct Client& client,
 							+ YELLOW + intToString(portToInt(client.address)) + " "
 							+ GREEN + intToString(client.fd) + " "
 							+ RESET + "\n";
-	log(logLevel, logEntry);
+	logOut(logLevel, logEntry);
 	// if (logToStdOut)
 	// 	std::cout << logEntry;
 	// if (_accessFile.is_open())
