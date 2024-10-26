@@ -227,7 +227,7 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 {
 	stringstream ss;
 	ss << "receiv client request" << " " << ret << " bytes";
-	Logger::getInstance().log(INFO, ss.str());
+	Logger::getInstance().log(INFO, ss.str(), this->_clients[i], true);
 
 	std::string delimiter = "\r\n\r\n";
 	std::vector<char>::iterator it = std::search
