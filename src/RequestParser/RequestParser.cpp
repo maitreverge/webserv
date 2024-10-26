@@ -32,6 +32,11 @@ Headers	RequestParser::getHeaders() const			{return (_Headers);}
 
 Client*		RequestParser::getClient() const		{return (_Client);}
 
+std::map<std::string, std::vector<std::string> >		RequestParser::getTmpHeaders() const
+{
+	return (_tmpHeaders);
+}
+
 /**========================================================================
  *                           UTILS
  *========================================================================**/
@@ -42,8 +47,8 @@ std::string	RequestParser::charVectorToString(const std::vector<char>& vector)
 
 void	RequestParser::trim(std::string& str)
 {
-	str.erase(0, str.find_first_not_of(" \t"));
-	str.erase(str.find_last_not_of(" \t") + 1);
+	str.erase(0, str.find_first_not_of(" \t\r\n"));
+	str.erase(str.find_last_not_of(" \t\r\n") + 1);
 }
 /**========================================================================
  *                           MAIN ACTION
@@ -64,7 +69,8 @@ void	RequestParser::parse(Client& client)
 	handleHeaderLines(requestStream);
 	extractHeaders();
 	Logger::getInstance().log(INFO, "Request parsed", *this);
-	Error::getInstance().handleError(502, *_Client);	
+	//!!! not working yet!!!
+	Error::getInstance().handleError(502, *_Client);
 	_Client = NULL;
 }
 
@@ -94,6 +100,8 @@ void	RequestParser::handleFirstLine(std::istringstream& requestStream)
 	std::string firstLine;
 	std::string remainingData;
 
+	if (requestStream.str().empty())
+		_isValid = false;
 	if (std::getline(requestStream, firstLine))
 	{
 		std::istringstream iss(firstLine);
@@ -148,12 +156,17 @@ void	RequestParser::handleHeaderLines(std::istringstream& requestStream)
 
 }
 
-void	RequestParser::assignHeader(const std::string& key, std::string& headerField)
+void RequestParser::assignHeader(const std::string& key, std::string& headerField)
 {
 	std::map<std::string, std::vector<std::string> >::const_iterator it = _tmpHeaders.find(key);
 
-	if (it != _tmpHeaders.end() && !it->second.empty())
-		headerField = it->second[0];
+	if (it != _tmpHeaders.end())
+	{
+		if (!it->second.empty())
+			headerField = it->second[0];
+		else
+			Logger::getInstance().log(WARNING, "Header found but has no values for key: " + key, *this);
+	}
 }
 
 void	RequestParser::assignHeader(const std::string& key, std::vector<std::string>& headerField)
@@ -199,11 +212,28 @@ std::map<std::string, std::string> RequestParser::extractCookies(std::vector<std
 
 	for (std::vector<std::string>::iterator it = vec.begin(); it != vec.end(); ++it)
 	{
-		size_t equalPos = it->find('=');
-		if (equalPos != std::string::npos)
+		std::string cookieLine = *it;
+		size_t start = 0;
+		size_t end;
+		while ((end = cookieLine.find(';', start)) != std::string::npos)
 		{
-			std::string key = it->substr(0, equalPos);
-			std::string value = it->substr(equalPos + 1);
+			std::string cookiePair = cookieLine.substr(start, end - start);
+			size_t equalPos = cookiePair.find('=');
+			if (equalPos != std::string::npos)
+			{
+				std::string key = cookiePair.substr(0, equalPos);
+				std::string value = cookiePair.substr(equalPos + 1);
+				trim(key);
+				trim(value);
+				cookiesMap[key] = value;
+			}
+			start = end + 1;
+		}
+		std::string cookiePair = cookieLine.substr(start);
+		size_t equalPos = cookiePair.find('=');
+		if (equalPos != std::string::npos) {
+			std::string key = cookiePair.substr(0, equalPos);
+			std::string value = cookiePair.substr(equalPos + 1);
 			trim(key);
 			trim(value);
 			cookiesMap[key] = value;

@@ -1,19 +1,6 @@
-#include <gtest/gtest.h>
-#include "Logger.hpp" // Assurez-vous que le chemin est correct
 
-class LoggerTest : public ::testing::Test {
-protected:
-    Logger logger;
+#include "LoggerTest.hpp" // Assurez-vous que le chemin est correct
 
-    // Vous pouvez ajouter des initialisations communes ici si nécessaire
-    void SetUp() override {
-        // Initialisation avant chaque test
-    }
-
-    void TearDown() override {
-        // Nettoyage après chaque test
-    }
-};
 
 TEST_F(LoggerTest, InstanceIsUnique) {
     Logger& instance1 = Logger::getInstance();
@@ -22,10 +9,10 @@ TEST_F(LoggerTest, InstanceIsUnique) {
 }
 
 TEST_F(LoggerTest, FormatLogLevel) {
-    EXPECT_EQ(logger.formatLogLevel(INFO), "INFO");
-    EXPECT_EQ(logger.formatLogLevel(DEBUG), "DEBUG");
-    EXPECT_EQ(logger.formatLogLevel(WARNING), "WARNING");
-    EXPECT_EQ(logger.formatLogLevel(ERROR), "ERROR");
+    EXPECT_EQ(logger.formatLogLevel(INFO), "\033[32m[INFO] \033[0m");
+    EXPECT_EQ(logger.formatLogLevel(DEBUG), "\033[34m[DEBUG] \033[0m");
+    EXPECT_EQ(logger.formatLogLevel(WARNING), "\033[33m[WARNING] \033[0m");
+    EXPECT_EQ(logger.formatLogLevel(ERROR), "\033[31m[ERROR] \033[0m");
 }
 
 TEST_F(LoggerTest, LogMessages) {
