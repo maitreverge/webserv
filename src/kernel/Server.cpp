@@ -94,7 +94,7 @@ void Server::listenClients()
 {	
 	for (size_t i = 0; i < this->_clients.size(); i++)
 	{	
-		if (FD_ISSET(this->_clients[i].fd, &this->_readSet) && this->_clients[i].ready)
+		if (FD_ISSET(this->_clients[i].fd, &this->_readSet) && this->_clients[i].readyRecev)
 		{
 			this->_readBuffer.clear();
 			this->_readBuffer.resize(BUFF_SIZE);
@@ -188,7 +188,7 @@ void Server::replyClients()
 {
 	for (size_t i = 0; i < this->_clients.size(); i++)
 	{	
-		if (this->_clients[i].ready == true)
+		if (this->_clients[i].readySend == true)
 		{
 			if (FD_ISSET(this->_clients[i].fd, &this->_writeSet))
 			{
@@ -220,7 +220,8 @@ void Server::replyClients()
 					Logger::getInstance().log(DEBUG, "reinit response Builder, ready true, tog false", this->_clients[i]);
 					this->_clients[i].response._ifs.close();
 					this->_clients[i].response = ResponseBuilder();
-					this->_clients[i].ready = true;
+					this->_clients[i].readySend = false;
+					this->_clients[i].readyRecev = true;
 					this->_clients[i].tog = false;
 				}
 			}	
@@ -249,7 +250,7 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 	stringstream ss;
 	ss << "receiv client request" << " " << ret << " bytes";
 	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
-
+	this->_clients[i].readySend = false;
 	std::string delimiter = "\r\n\r\n";
 	std::vector<char>::iterator it = std::search
 		(this->_clients[i].message.begin(),
@@ -365,7 +366,7 @@ bool Server::isBodyTerminated(size_t i)
 			floSimulatorPut(this->_clients[i].message);//? POST
 		this->_clients[i].message.clear();
 			//!
-		this->_clients[i].ready = false;
+		this->_clients[i].readySend = true;
 		Logger::getInstance().log(DEBUG, "ready false", this->_clients[i]);
 		return true;
 	}

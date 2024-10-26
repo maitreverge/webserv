@@ -39,7 +39,8 @@ struct Client
 	e_errorCodes		statusCode;
 	bool tog;
 	std::vector<char>	headerSend;
-	bool				ready;
+	bool				readySend;
+	bool				readyRecev;
 
 	Client()
 	{
@@ -66,7 +67,8 @@ Connection: close\r\n\
 		std::string str = ss.str();
 		std::vector<char> res(str.begin(), str.end());	
 		headerSend = res;
-		ready = true;
+		readySend = false;
+		readyRecev = true;
 		statusCodes = CODE_200_OK;
 	}
 };
