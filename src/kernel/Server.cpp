@@ -238,7 +238,7 @@ void printMessageClientTest(const Client & client)
 
 void printVectorCharTest(const std::vector<char> & vect)
 {
-	std::cout << std::endl << "\e[34mPrint Vector: " << std::endl;		
+	std::cout << std::endl << "\e[34mPrint Vector: \e[31m" << std::endl;		
 	for (size_t i = 0; i < vect.size(); i++)				
 		std::cout << vect[i];
 	std::cout << "\e[0m" << std::endl << std::endl;
@@ -402,8 +402,9 @@ void Server::replyClient(Client & client, std::vector<char> & response,
 	size_t writeSize = this->_writeBuffer.size();
 	while (writeSize > 0)
 	{	
-		std::string str(writeHead, static_cast<size_t>(ret));	
-		Logger::getInstance().log(DEBUG, "send data to client: -" + str + "-", client); 					
+		std::string str(writeHead, writeHead + static_cast<size_t>(repSize));
+		std::stringstream ss; ss << "send data to client: -" << str << "-";	
+		Logger::getInstance().log(DEBUG, ss.str(), client); 					
 		
 		if ((ret = send(client.fd, writeHead, writeSize, 0)) < 0)		
 			return Logger::getInstance().log(ERROR, "send", client);
