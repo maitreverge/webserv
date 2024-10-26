@@ -3,7 +3,7 @@ NAME = webserv
 TEST_NAME = tests/webtest
 
 # compiler + flags
-CXX = c++
+CXX = g++
 CFLAGS = $(HDRFLAGS) -g -Wall -Wextra -Werror -Wconversion -std=c++98
 TFLAGS = $(HDRFLAGS) -std=c++14 -I$(GTEST_INCLUDE) -pthread -DUNIT_TEST
 LDFLAGS = 

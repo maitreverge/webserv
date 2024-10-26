@@ -156,33 +156,33 @@ void floSimulatorPut(std::vector<char> part)
     }
 }
 
-bool floSimulatorGet(Client & client)
-{	
-    //Logger::getInstance().log(DEBUG, "FLO GET"); 
+// bool floSimulatorGet(Client & client)
+// {	
+//     //Logger::getInstance().log(DEBUG, "FLO GET"); 
 
-    static std::ifstream ofs("test.html", std::ios::binary);
+//     static std::ifstream ofs("test.html", std::ios::binary);
 
-    if (ofs.is_open()) {
+//     if (ofs.is_open()) {
 	
-        ofs.read(client.messageSend.data(), static_cast<std::streamsize>(client.messageSend.size()));		
-		// std::string str(client.messageSend.data(), ofs.gcount());	
-		// Logger::getInstance().log(INFO, str);  
+//         ofs.read(client.messageSend.data(), static_cast<std::streamsize>(client.messageSend.size()));		
+// 		// std::string str(client.messageSend.data(), ofs.gcount());	
+// 		// Logger::getInstance().log(INFO, str);  
 	 
-		if (ofs.eof()) 
-		{
-			Logger::getInstance().log(DEBUG, "Fin de fichier atteinte");
-			ofs.clear(); // Réinitialiser les flags pour continuer la lecture si besoin
-			ofs.close();
-			// return false;
-			// ofs.seekg(0); // Remettre le pointeur au début du fichier si tu veux recommencer
-   		 }    
-			return true;
-    } else {
-        // std::cout << "Erreur : impossible d'ouvrir le fichier." << std::endl;
-    }
-	// ghead = buildHeaderTest();
-	return false;
-}
+// 		if (ofs.eof()) 
+// 		{
+// 			Logger::getInstance().log(DEBUG, "Fin de fichier atteinte");
+// 			ofs.clear(); // Réinitialiser les flags pour continuer la lecture si besoin
+// 			ofs.close();
+// 			// return false;
+// 			// ofs.seekg(0); // Remettre le pointeur au début du fichier si tu veux recommencer
+//    		 }    
+// 			return true;
+//     } else {
+//         // std::cout << "Erreur : impossible d'ouvrir le fichier." << std::endl;
+//     }
+// 	// ghead = buildHeaderTest();
+// 	return false;
+// }
 
 void Server::replyClients()
 {
@@ -194,6 +194,7 @@ void Server::replyClients()
 			{
 				if (!this->_clients[i].tog)
 				{
+					Logger::getInstance().log(DEBUG, "first header: tog true", this->_clients[i]);
 					this->_clients[i].tog = true;				
 					replyClient(this->_clients[i],
 						this->_clients[i].headerSend, static_cast<ssize_t>
@@ -204,7 +205,10 @@ void Server::replyClients()
 				if (ssize_t ret = this->_clients[i].response.
 					getBody(this->_clients[i]))
 				{	
-					std::cout << "AFTER get body, ret: " << ret <<  std::endl;				
+					std::stringstream ss;
+					ss << "stream body continue: " << ret;
+					Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
+							
 					replyClient(this->_clients[i],
 						this->_clients[i].messageSend, ret);
 					this->_clients[i].messageSend.clear();	
@@ -213,11 +217,11 @@ void Server::replyClients()
 				}
 				else
 				{
-					Logger::getInstance().log(DEBUG, "reinit response Builder");
+					Logger::getInstance().log(DEBUG, "reinit response Builder, ready true, tog false", this->_clients[i]);
 					this->_clients[i].response._ifs.close();
 					this->_clients[i].response = ResponseBuilder();
 					this->_clients[i].ready = true;
-					// this->_clients[i].tog = false;
+					this->_clients[i].tog = false;
 				}
 			}	
 		}
@@ -254,17 +258,17 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 		delimiter.end() - 1);		
 	if (it != this->_clients[i].message.end())		
 	{	
-		this->_clients[i].ready = false;
+		Logger::getInstance().log(DEBUG, "header terminated",
+			this->_clients[i]);
+		
 		if (isMaxHeaderSize(it + 4, i))
 			return ;				
 		this->_clients[i].header.parse(this->_clients[i]);								
 		this->_clients[i].header.displayParsingResult();
-		if (this->_clients[i].header.getMethod() == "GET")
-		{
-			this->_clients[i].response.getHeader(this->_clients[i], this->_conf);// floSimulatorGet(this->_clients[i], this->_conf);	
-			// this->_clients[i].response.getBody();
-			// this->_clients[i].ready = true;
-		}
+		if (this->_clients[i].header.getMethod() == "GET")		
+			this->_clients[i].response.getHeader(this->_clients[i],
+			this->_conf);
+
 		this->_clients[i].message.erase(this->_clients[i].message.begin(),
 			it + 4);
 		this->_clients[i].bodySize += this->_clients[i].message.size();
@@ -281,7 +285,7 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 {
 	stringstream ss;
 	ss << "receive client body" << " " << ret << " bytes";
-	Logger::getInstance().log(INFO, ss.str());
+	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
 
 	this->_clients[i].bodySize += static_cast<size_t>(ret);
 	if (this->isBodyTooLarge(i) || this->isBodyTerminated(i))
@@ -300,7 +304,7 @@ bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
 			it - this->_clients[i].message.begin() << " - Max-Header-Size : "
 			<< MAX_HDR_SIZE;
 
-		Logger::getInstance().log(ERROR, ss.str());
+		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
 			//! 431 Request Header Fields Too Large !!
 
 		this->exitClient(i);
@@ -318,7 +322,7 @@ bool Server::isContentLengthValid(size_t i)
 		ss << "max content size reached" << " - Content-Lenght: "
 			<< this->_clients[i].header.getHeaders().ContentLength
 			<< " - Max content size: " << MAX_CNT_SIZE << std::endl;
-		Logger::getInstance().log(ERROR, ss.str());
+		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
 			//! 413 Payload Too Large
 	
 		this->exitClient(i);
@@ -336,7 +340,7 @@ bool Server::isBodyTooLarge(size_t i)
 		ss << "content size" << " - Body-Size: "
 		<< this->_clients[i].bodySize << " Content-Lenght: "
 		<< this->_clients[i].header.getHeaders().ContentLength << std::endl;
-		Logger::getInstance().log(ERROR, ss.str());
+		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
 			//! 413 Payload Too Large
 		
 		this->exitClient(i);
@@ -353,15 +357,16 @@ bool Server::isBodyTerminated(size_t i)
 		stringstream ss;
 		ss << "client body terminated" << " - Body-Size: "
 		<< this->_clients[i].bodySize << " Content-Lenght: "
-		<< this->_clients[i].header.getHeaders().ContentLength << std::endl;
-		Logger::getInstance().log(INFO, ss.str());
+		<< this->_clients[i].header.getHeaders().ContentLength;
+		Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
 
 		this->_clients[i].bodySize = 0;
 		if (this->_clients[i].header.getMethod() == "POST")
 			floSimulatorPut(this->_clients[i].message);//? POST
 		this->_clients[i].message.clear();
-		//! WARNING 
-		this->_clients[i].ready = true;
+			//!
+		this->_clients[i].ready = false;
+		Logger::getInstance().log(DEBUG, "ready false", this->_clients[i]);
 		return true;
 	}
 	return false;
@@ -380,31 +385,28 @@ void Server::displayClient(Client & client) const
 void Server::replyClient(Client & client, std::vector<char> & response,
 	ssize_t repSize)
 {	
-	// this->_writeBuffer.resize(SEND_BUFF_SIZE);
-	Logger::getInstance().log(DEBUG, "reply client");
+	Logger::getInstance().log(INFO, "reply client", client);
 	printVectorCharTest(response);
 
 	this->_writeBuffer.assign(response.begin(), response.begin() + repSize);	
-	std::cout << "size: " << this->_writeBuffer.size() << std::endl;
-		Logger::getInstance().log(DEBUG, "reply client2");		
+				
 	this->_readSet = this->_writeSet = this->_actualSet;		
 	if (select(this->_maxFd + 1, &this->_readSet, &this->_writeSet, 0, NULL)
 		< 0)	
 		return Logger::getInstance().log(ERROR, "select", client);	
 	if(!FD_ISSET(client.fd, &this->_writeSet))	
 		return Logger::getInstance().
-			log(ERROR, "client not ready for response");	
+			log(ERROR, "client not ready for response", client);	
 	ssize_t ret;
 	char * writeHead = this->_writeBuffer.data();
 	size_t writeSize = this->_writeBuffer.size();
 	while (writeSize > 0)
 	{	
-		Logger::getInstance().log(INFO, "send data to client", client);
-
-		if ((ret = send(client.fd, writeHead, writeSize, 0)) < 0)		
-			return Logger::getInstance().log(ERROR, "send");
 		std::string str(writeHead, static_cast<size_t>(ret));	
-		Logger::getInstance().log(ERROR, str); 					
+		Logger::getInstance().log(DEBUG, "send data to client: -" + str + "-", client); 					
+		
+		if ((ret = send(client.fd, writeHead, writeSize, 0)) < 0)		
+			return Logger::getInstance().log(ERROR, "send", client);
 		writeHead += ret;
 		writeSize -= static_cast<size_t>(ret);			
 	}
