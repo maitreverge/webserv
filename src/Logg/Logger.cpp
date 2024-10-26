@@ -5,8 +5,12 @@
 /**========================================================================
  *                           CONSTRUCTOR && DESTRUCTOR
  *========================================================================**/
-Logger::Logger() : logToStdOut(1), _logLevel(0)
+Logger::Logger() : logToStdOut(1)
 {
+	_logLevel[INFO] = 		1;
+	_logLevel[DEBUG] = 		1;
+	_logLevel[WARNING] = 	1;
+	_logLevel[ERROR] = 		1;
 	_accessFile.open("access.log", std::ios::app);
 	_errorFile.open("error.log", std::ios::app);
 	if (!_accessFile.is_open() || !_errorFile.is_open())
@@ -25,7 +29,8 @@ Logger::~Logger()
  *========================================================================**/
 void Logger::log(logLevel logLevel, const std::string& message)
 {
-	
+	if (_logLevel[logLevel] == 0)
+		return ;
 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) 
 							+ BLACK + message 
@@ -75,6 +80,8 @@ std::string Logger::intToString(int value)
  *========================================================================**/
 void Logger::log(logLevel logLevel, const std::string& message, const Kernel& obj)
 {
+	if (_logLevel[logLevel] == 0)
+		return ;
 	//[timestamp][loglevel][message][ip][port][fd]
 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) 
@@ -95,6 +102,8 @@ void Logger::log(logLevel logLevel, const std::string& message, const Kernel& ob
 
 void Logger::log(logLevel logLevel, const std::string& message, const RequestParser& obj)
 {
+	if (_logLevel[logLevel] == 0)
+		return ;
 	std::string logEntry;
 	//[timestamp][loglevel][message][method][ip][port][fd]
 	if (obj.getClient())
@@ -122,6 +131,8 @@ void Logger::log(logLevel logLevel, const std::string& message, const RequestPar
 
 void Logger::log(logLevel logLevel, const std::string& message, const Client& client)
 {
+	if (_logLevel[logLevel] == 0)
+		return ;
 	//[timestamp][loglevel][message][ip][port][fd]
 	std::string logEntry;
 	logEntry = 	BLUE + timeStamp::getTime() + ": " 
@@ -140,6 +151,8 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 
 void Logger::log(logLevel logLevel, const std::string& message, const Client& client, const Server&server)
 {
+	if (_logLevel[logLevel] == 0)
+		return ;
 	//[timestamp][loglevel][message][ip][port][fd]
 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) + " "
@@ -160,6 +173,8 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 
 void Logger::log(logLevel logLevel, const std::string& message, const Server&server)
 {
+	if (_logLevel[logLevel] == 0)
+		return ;
 	//[timestamp][loglevel][message][ip][port]
 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) 
@@ -177,6 +192,8 @@ void Logger::log(logLevel logLevel, const std::string& message, const Server&ser
 
 void Logger::log(logLevel logLevel, std::string& message, struct Client& client, const Error& error)
 {
+	if (_logLevel[logLevel] == 0)
+		return ;
 	// [timestamp][loglevel][message][ip][port]
 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) 
@@ -193,29 +210,6 @@ void Logger::log(logLevel logLevel, std::string& message, struct Client& client,
 	_accessFile.flush();
 	(void)error;
 }
-
-/**========================================================================
- *                           LOG BUILDRESPONSE
- * ? changes to be made as soon as Client struct is accessible
- *========================================================================**/
-// void Logger::log(	logLevel logLevel, const std::string& message,
-// 					const class buildResponse& obj)
-// {
-// 	//[timestamp][loglevel][message][status code][ip][port][fd]
-// 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
-// 							+ formatLogLevel(logLevel) 
-// 							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
-// 							+ RED + obj.getStatusLine()
-// 							// + MAGENTA + "Client: " + ipToString(obj.getClient()->address) + " "
-// 							// + YELLOW + intToString(portToInt(obj.getClient()->address)) + " "
-// 							// + GREEN + intToString(obj.getClient()->fd)
-// 							+ RESET + "\n";
-// 	_accessFile << logEntry;
-// 	if (logToStdOut)
-// 		std::cout << logEntry;
-// 	(void)obj;
-// 	_accessFile.flush();
-// }
 
 /**========================================================================
  *                       SINGLETON ACCESS

@@ -14,10 +14,11 @@ class Server;
 
 typedef enum
 {
-	INFO,
+	INFO = 0,
 	DEBUG,
 	WARNING,
-	ERROR
+	ERROR,
+	LOG_LEVEL_COUNT
 }	logLevel;
 
 class Logger
@@ -26,7 +27,7 @@ private:
 	std::ofstream	_accessFile;
 	std::ofstream	_errorFile;
 	bool			logToStdOut;
-	int				_logLevel;
+	int				_logLevel[LOG_LEVEL_COUNT];
 
 public:
 	Logger();
