@@ -52,6 +52,8 @@ Le script se base sur siege_urls.txt pour tester différentes requêtes.
 
 # Prompts ChatGPT
 
+## premier prompt pour le test d'une classe
+
 Je developpe une application en C++98.
 
 Je teste cette application a l'aide du framework de test Google Test, compile en C++14.
@@ -63,3 +65,18 @@ INSERER_DECLARATION_DE_CLASSE_ICI
 Donne moi la definition de la classe de test correspondante.
 
 JE NE VEUX QUE LA DEFINITION POUR L'INSTANT. Ensuite, je te donnerai des methodes a tester une a une pour que tu me produise le code de test. Confirme que tu as compris ce que j'attends de toi.
+
+
+---
+
+donne moi des tests pour cette methode (inutile de me redonner la definition de la classe de test):
+
+INSERER_DECLARATION_DE_METHODE_ICI
+
+## notes
+
+- compiler les tests avec make test
+
+- executer les tests avec ./run_unit_tests.sh
+
+- filtrer les tests avec ./run_unit_tests.sh <NOM_DE_CLASSE_A_TESTER>
