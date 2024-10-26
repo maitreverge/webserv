@@ -22,10 +22,10 @@ TEST_F(LoggerTest, InstanceIsUnique) {
 }
 
 TEST_F(LoggerTest, FormatLogLevel) {
-    EXPECT_EQ(logger.formatLogLevel(INFO), "INFO");
-    EXPECT_EQ(logger.formatLogLevel(DEBUG), "DEBUG");
-    EXPECT_EQ(logger.formatLogLevel(WARNING), "WARNING");
-    EXPECT_EQ(logger.formatLogLevel(ERROR), "ERROR");
+    EXPECT_EQ(logger.formatLogLevel(INFO), "\033[32m[INFO] \033[0m");
+    EXPECT_EQ(logger.formatLogLevel(DEBUG), "\033[34m[DEBUG] \033[0m");
+    EXPECT_EQ(logger.formatLogLevel(WARNING), "\033[33m[WARNING] \033[0m");
+    EXPECT_EQ(logger.formatLogLevel(ERROR), "\033[31m[ERROR] \033[0m");
 }
 
 TEST_F(LoggerTest, LogMessages) {
