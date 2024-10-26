@@ -21,6 +21,17 @@ typedef enum
 	LOG_LEVEL_COUNT
 }	logLevel;
 
+/**========================================================================
+ *                             LOGGER
+ *  LOG CONFIG: values to be changed in .cpp file:
+ *?  Logger::Logger() : logToStdOut(1) 	=> 	0 to silence console log
+ *?{
+ *?	_logLevel[INFO] = 		1;			=>	0 to filter
+ *?	_logLevel[DEBUG] = 		1;			=>	0 to filter
+ *?	_logLevel[WARNING] = 	1;			=>	0 to filter
+ *?	_logLevel[ERROR] = 		1;			=>	0 to filter
+ *?	... 
+ *========================================================================**/
 class Logger
 {
 private:
