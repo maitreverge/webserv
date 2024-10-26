@@ -42,8 +42,8 @@ std::string	RequestParser::charVectorToString(const std::vector<char>& vector)
 
 void	RequestParser::trim(std::string& str)
 {
-	str.erase(0, str.find_first_not_of(" \t\r"));
-	str.erase(str.find_last_not_of(" \t\r") + 1);
+	str.erase(0, str.find_first_not_of(" \t\r\n"));
+	str.erase(str.find_last_not_of(" \t\r\n") + 1);
 }
 /**========================================================================
  *                           MAIN ACTION
