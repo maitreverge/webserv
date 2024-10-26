@@ -202,13 +202,9 @@ void	ResponseBuilder::validateURI( void ){
 	if (_isDirectory and (_method == GET) and _config->listingDirectories)
 	{
 		// TODO :  generate an HTML page for listing directories
+		generateListingHTML();
 		// _realURI = getListing.html
 	}
-}
-
-void ResponseBuilder::launchCGI( void ){
-
-	// TODO
 }
 
 string ResponseBuilder::extractType( const string& extension ) const {

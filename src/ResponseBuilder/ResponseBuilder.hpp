@@ -73,13 +73,23 @@ private:
 	void	resolveURI( void );
 	void	sanatizeURI( string & );
 	void	validateURI( void );
-	void	launchCGI( void );
 	void	buildHeaders( void );
 	void	setContentLenght( void ); // not a regular setter
 	void	extractMethod( void );
 	void	setError( e_errorCodes );
 	string	extractType( const string& extension ) const;
 	void	initMimes( void );
+
+	// generateListingHTML.cpp
+	map<string, string /* timestamp of last modified */> _lastModified;
+	void	generateListingHTML( void );
+	bool	foundDefaultPath( void );
+	bool	isTargetModified( void ){
+
+
+
+	// CGI.cpp
+	void	launchCGI( void );
 
 
 
