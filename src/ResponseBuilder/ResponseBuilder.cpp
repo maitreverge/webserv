@@ -287,7 +287,7 @@ void	ResponseBuilder::buildHeaders(){
 						<< Headers.timeStamp
 						<< Headers.contentType
 						<< (Headers.bodyLenght ? Headers.contentLenght : Headers.transfertEncoding)
-						<< HTTP_REPONSE_SEPARATOR;
+						<< HTTP_REPONSE_SEPARATOR; // ! potential issue here
 	
 	string tempAllHeaders = streamMasterHeader.str();
 
@@ -309,7 +309,7 @@ void	ResponseBuilder::setContentLenght(){
 			_errorType = CODE_404_NOT_FOUND;
 	}
 	else if (_isFile) // valid path and PATH is a file
-		Headers.bodyLenght = static_cast<u_int64_t>(_fileInfo.st_size);
+		Headers.bodyLenght = static_cast<uint64_t>(_fileInfo.st_size);
 }
 
 void	ResponseBuilder::extractMethod( void ){
@@ -430,4 +430,32 @@ std::streamsize	ResponseBuilder::getBody( Client &inputClient ){
     }
 	Logger::getInstance().log(DEBUG, "Response Builder Get Body8");
 	return 0;
+}
+
+// ----------- GETTERS ------------
+
+void	ResponseBuilder::printAllHeaders( void ){
+
+	print("=========== printAllHeaders ========");
+
+	printColorNoEndl(BOLD_RED, "REAL URI : ")
+	printColor(BLACK, _realURI);
+
+
+	printColorNoEndl(BOLD_GREEN, "Status Line :");
+	printColor(BLACK, Headers.statusLine);
+
+	printColorNoEndl(BOLD_CYAN, "TimeStamp :");
+	printColor(BLACK, Headers.timeStamp);
+
+	printColorNoEndl(BOLD_CYAN, "Content Type :");
+	printColor(BLACK, Headers.contentType);
+
+	printColorNoEndl(BOLD_CYAN, "Content Lenght : (header)");
+	printColor(BLACK, Headers.contentLenght);
+
+	printColorNoEndl(BOLD_CYAN, "Body Lenght (uint64_t)");
+	printColor(BLACK, Headers.bodyLenght);
+
+	print("=========== printAllHeaders ========");
 }
