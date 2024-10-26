@@ -228,11 +228,11 @@ void Logger::log(logLevel logLevel, std::string& message, struct Client& client,
 {
 	if (_logLevel[logLevel] == 0)
 		return ;
-	// [timestamp][loglevel][errorCode][message][ip][port]
+	// [timestamp][errorCode][loglevel][message][ip][port]
 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) 
-							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
 							+ RED + intToString(error.getErrorCode()) + " "
+							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
 							+ BOLD_HIGH_INTENSITY_WHITE
 							+ MAGENTA + "Client: " + ipToString(client.address) + " "
 							+ YELLOW + intToString(portToInt(client.address)) + " "
