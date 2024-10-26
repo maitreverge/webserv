@@ -1,19 +1,6 @@
-#include <gtest/gtest.h>
-#include "Logger.hpp" // Assurez-vous que le chemin est correct
 
-class LoggerTest : public ::testing::Test {
-protected:
-    Logger logger;
+#include "LoggerTest.hpp" // Assurez-vous que le chemin est correct
 
-    // Vous pouvez ajouter des initialisations communes ici si nécessaire
-    void SetUp() override {
-        // Initialisation avant chaque test
-    }
-
-    void TearDown() override {
-        // Nettoyage après chaque test
-    }
-};
 
 TEST_F(LoggerTest, InstanceIsUnique) {
     Logger& instance1 = Logger::getInstance();

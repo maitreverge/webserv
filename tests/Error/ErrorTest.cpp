@@ -50,7 +50,7 @@ TEST_F(ErrorTest, HandleError_CallsGetCodeWithCorrectErrorCode) {
 // Test pour vérifier qu'on retourne la page d'erreur spécifique
 TEST_F(ErrorTest, GetErrorPagePath_ReturnsSpecificErrorPage) {
     unsigned long errorCode = 404;
-    std::string expectedPath = "/404.html";
+    std::string expectedPath = "errorPages/404.html";
 
     std::string result = error.getErrorPagePath(errorCode);
 
@@ -60,7 +60,7 @@ TEST_F(ErrorTest, GetErrorPagePath_ReturnsSpecificErrorPage) {
 // Test pour vérifier qu'on retourne la page d'erreur par défaut si le code d'erreur n'existe pas
 TEST_F(ErrorTest, GetErrorPagePath_ReturnsDefaultErrorPageIfNotFound) {
     unsigned long errorCode = 999; // Code inexistant dans _errorPages
-    std::string expectedPath = "/defaultError.html";
+    std::string expectedPath = "errorPages/default.html";
 
     std::string result = error.getErrorPagePath(errorCode);
 
@@ -70,7 +70,7 @@ TEST_F(ErrorTest, GetErrorPagePath_ReturnsDefaultErrorPageIfNotFound) {
 // Test pour vérifier qu'un index hors limites retourne la page par défaut
 TEST_F(ErrorTest, GetErrorPagePath_OutOfBoundsReturnsDefaultErrorPage) {
     unsigned long errorCode = 10; // Hors des limites de _errorPages
-    std::string expectedPath = "/defaultError.html";
+    std::string expectedPath = "errorPages/default.html";
 
     std::string result = error.getErrorPagePath(errorCode);
 
@@ -110,7 +110,7 @@ TEST_F(ErrorTest, StringToVector_StringWithSpecialCharacters) {
 // Test pour vérifier la requête HTTP construite pour un code d'erreur spécifique
 TEST_F(ErrorTest, BuildErrorRequest_SpecificErrorCode) {
     unsigned long errorCode = 404;
-    std::string expectedRequest = "GET /404.html HTTP/1.1";
+    std::string expectedRequest = "GET errorPages/404.html HTTP/1.1";
     std::vector<char> expectedVector(expectedRequest.begin(), expectedRequest.end());
 
     std::vector<char> result = error.buildErrorRequest(errorCode);
@@ -121,7 +121,7 @@ TEST_F(ErrorTest, BuildErrorRequest_SpecificErrorCode) {
 // Test pour vérifier la requête HTTP construite pour un code d'erreur non défini (retour à la page par défaut)
 TEST_F(ErrorTest, BuildErrorRequest_DefaultErrorCode) {
     unsigned long errorCode = 999;  // Code inexistant dans _errorPages
-    std::string expectedRequest = "GET /defaultError.html HTTP/1.1";
+    std::string expectedRequest = "GET errorPages/default.html HTTP/1.1";
     std::vector<char> expectedVector(expectedRequest.begin(), expectedRequest.end());
 
     std::vector<char> result = error.buildErrorRequest(errorCode);
@@ -132,7 +132,7 @@ TEST_F(ErrorTest, BuildErrorRequest_DefaultErrorCode) {
 // Test pour vérifier la requête HTTP construite avec un code d'erreur hors limites dans _errorPages (retour à la page par défaut)
 TEST_F(ErrorTest, BuildErrorRequest_OutOfBoundsErrorCode) {
     unsigned long errorCode = 10;  // Hors des limites de _errorPages
-    std::string expectedRequest = "GET /defaultError.html HTTP/1.1";
+    std::string expectedRequest = "GET errorPages/default.html HTTP/1.1";
     std::vector<char> expectedVector(expectedRequest.begin(), expectedRequest.end());
 
     std::vector<char> result = error.buildErrorRequest(errorCode);

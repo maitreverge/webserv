@@ -9,9 +9,11 @@ protected:
     // Optionnel : tu peux ajouter des méthodes de configuration ou de nettoyage ici
     void SetUp() override {
         // Code à exécuter avant chaque test
+		std::freopen("/dev/null", "w", stdout);
     }
 
     void TearDown() override {
+        std::freopen("/dev/tty", "w", stdout);
         // Code à exécuter après chaque test
     }
 };
