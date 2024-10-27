@@ -392,7 +392,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	// cout << "HOULA IN FLO" <<  temp << endl;
 
 
-	_headerSent = true;
+	// _headerSent = true;
 }
 
 ssize_t	ResponseBuilder::getBody( Client &inputClient ){
