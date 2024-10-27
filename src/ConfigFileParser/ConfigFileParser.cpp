@@ -2,30 +2,22 @@
 #include "tmpConfig.hpp"
 #include <cstdlib>
 
-// using namespace std;
-std::map<std::string, std::map<std::string, std::vector<std::string> > > data;
-
-
-
-bool isServerData(const std::string& category) {
-    const std::string prefix = "server";
-    // Vérifie que la longueur de la catégorie est au moins aussi longue que le préfixe, 
-    // et que la chaîne commence bien par "server".
-    return category.size() >= prefix.size() && category.find(prefix) == 0;
+bool isServerData(const std::string& category)
+{
+	const std::string prefix = "server";
+	return category.size() >= prefix.size() && category.find(prefix) == 0;
 }
 
 void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 {
 	int	i = 0;
-	int	j = 0;
-	struct server serverStruct[4];
-	for (std::map<std::string, std::map<std::string, std::vector<std::string> > >::const_iterator catIt = data.begin(); catIt != data.end(); ++catIt)
+	for (catIt catIt = _data.begin(); catIt != _data.end(); ++catIt)
 	{
-		if (!serverStruct[j].host.empty() && !serverStruct[j].port.empty())
-			j++;
-		for (std::map<std::string, std::vector<std::string> >::const_iterator itemIt = catIt->second.begin(); itemIt != catIt->second.end(); ++itemIt)
+		if (!_serverStruct[i].host.empty() && !_serverStruct[i].port.empty())
+			i++;
+		for (itemIt itemIt = catIt->second.begin(); itemIt != catIt->second.end(); ++itemIt)
 		{
-			for (std::vector<std::string>::const_iterator valueIt = itemIt->second.begin(); valueIt != itemIt->second.end(); ++valueIt)
+			for (valIt valIt = itemIt->second.begin(); valIt != itemIt->second.end(); ++valIt)
 			{
 				// Category "global"
 				if (catIt->first == "global" && itemIt->first == "maxClient")
@@ -35,57 +27,57 @@ void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 					if (!itemIt->second[0].empty())
 						configStruct.listingDirectories = std::atoi(itemIt->second[0].c_str());
 				if (catIt->first == "global" && itemIt->first == "indexFiles")
-					if (!(*valueIt).empty())
-						configStruct.indexFiles.push_back(*valueIt);
+					if (!(*valIt).empty())
+						configStruct.indexFiles.push_back(*valIt);
 				// category "errorPages"
 				if (catIt->first == "errorPages" && itemIt->first == "errorPage_400")
-					if (!(*valueIt).empty())
+					if (!(*valIt).empty())
 						configStruct.errorPaths.insert(std::make_pair(CODE_400_BAD_REQUEST, itemIt->second[0]));
 				if (catIt->first == "errorPages" && itemIt->first == "errorPage_401")
-					if (!(*valueIt).empty())
+					if (!(*valIt).empty())
 						configStruct.errorPaths.insert(std::make_pair(CODE_401_UNAUTHORIZED, itemIt->second[0]));
 				if (catIt->first == "errorPages" && itemIt->first == "errorPage_403")
-					if (!(*valueIt).empty())
+					if (!(*valIt).empty())
 						configStruct.errorPaths.insert(std::make_pair(CODE_403_FORBIDDEN, itemIt->second[0]));
 				if (catIt->first == "errorPages" && itemIt->first == "errorPage_404")
-					if (!(*valueIt).empty())
+					if (!(*valIt).empty())
 						configStruct.errorPaths.insert(std::make_pair(CODE_404_NOT_FOUND, itemIt->second[0]));
 				if (catIt->first == "errorPages" && itemIt->first == "errorPage_500")
-					if (!(*valueIt).empty())
+					if (!(*valIt).empty())
 						configStruct.errorPaths.insert(std::make_pair(CODE_500_INTERNAL_SERVER_ERROR, itemIt->second[0]));
 				if (catIt->first == "errorPages" && itemIt->first == "errorPage_502")
-					if (!(*valueIt).empty())
+					if (!(*valIt).empty())
 						configStruct.errorPaths.insert(std::make_pair(CODE_502_BAD_GATEWAY, itemIt->second[0]));
 				if (catIt->first == "errorPages" && itemIt->first == "errorPage_503")
-					if (!(*valueIt).empty())
+					if (!(*valIt).empty())
 						configStruct.errorPaths.insert(std::make_pair(CODE_503_SERVICE_UNAVAILABLE, itemIt->second[0]));
 				if (catIt->first == "errorPages" && itemIt->first == "errorPage_504")
-					if (!(*valueIt).empty())
+					if (!(*valIt).empty())
 						configStruct.errorPaths.insert(std::make_pair(CODE_504_GATEWAY_TIMEOUT, itemIt->second[0]));
 				// category server
 				if (isServerData(catIt->first) && itemIt->first == "host")
 				{
-					if (!(*valueIt).empty())
-						serverStruct[j].host = itemIt->second[0];
+					if (!(*valIt).empty())
+						_serverStruct[i].host = itemIt->second[0];
 				}
 				if (isServerData(catIt->first) && itemIt->first == "port")
 				{
-					if (!(*valueIt).empty())
-						serverStruct[j].port = itemIt->second[0];
+					if (!(*valIt).empty())
+						_serverStruct[i].port = itemIt->second[0];
 				}
 				if (isServerData(catIt->first) && itemIt->first == "serverName")
 				{
-					if (!(*valueIt).empty())
-						serverStruct[j].serverName = itemIt->second[0];
+					if (!(*valIt).empty())
+						_serverStruct[i].serverName = itemIt->second[0];
 				}
 
 /**================================================================================================
  *?                                          WHAT NEXT?
- *? problemes potentiels pour l'initialisation des serveurs:
- *? - les serveurs eux-memes ne sont pas encore initialises avec ces donnees
- *? - une fois initialises, les serveurs doivent etre ajoutes au std::vector
- *? - grand besoin de refactorisation une fois que la logique fonctionnera.
- *================================================================================================**/
+*? problemes potentiels pour l'initialisation des serveurs:
+*? - les serveurs eux-memes ne sont pas encore initialises avec ces donnees
+*? - une fois initialises, les serveurs doivent etre ajoutes au std::vector
+*? - grand besoin de refactorisation une fois que la logique fonctionnera.
+*================================================================================================**/
 
 
 
@@ -102,8 +94,8 @@ void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 			}
 		}
 	}
-	printData(data);
-	printServerData(serverStruct, j + 1);
+	printData(_data);
+	printServerData(_serverStruct, i + 1);
 }
 int main(void)
 {
@@ -127,29 +119,29 @@ void	ConfigFileParser::trim(std::string& str)
 	str.erase(str.find_last_not_of(" \t\r\n") + 1);
 }
 
-void ConfigFileParser::printData(const std::map<std::string, std::map<std::string, std::vector<std::string> > >& data) {
-	for (std::map<std::string, std::map<std::string, std::vector<std::string> > >::const_iterator catIt = data.begin(); catIt != data.end(); ++catIt)
+void ConfigFileParser::printData(const std::map<std::string, std::map<std::string, std::vector<std::string> > >& _data) {
+	for (std::map<std::string, std::map<std::string, std::vector<std::string> > >::const_iterator catIt = _data.begin(); catIt != _data.end(); ++catIt)
 	{
 		std::cout << "Category: " << catIt->first << std::endl;
 		for (std::map<std::string, std::vector<std::string> >::const_iterator itemIt = catIt->second.begin(); itemIt != catIt->second.end(); ++itemIt)
 		{
 			std::cout << "  Key: >" << itemIt->first +"<" << std::endl;
 			std::cout << "  Values: >";
-			for (std::vector<std::string>::const_iterator valueIt = itemIt->second.begin(); valueIt != itemIt->second.end(); ++valueIt)
+			for (std::vector<std::string>::const_iterator valIt = itemIt->second.begin(); valIt != itemIt->second.end(); ++valIt)
 			{
-				std::cout << *valueIt << "< >"; 
+				std::cout << *valIt << "< >"; 
 			}
 			std::cout << std::endl;
 		}
 	}
 }
 
-void ConfigFileParser::printServerData(const server serverStruct[], size_t size) {
+void ConfigFileParser::printServerData(const server _serverStruct[], size_t size) {
 	for (size_t i = 0; i < size; ++i) {
 		std::cout << "Server " << i + 1 << ":" << std::endl;
-		std::cout << "  Host: " << serverStruct[i].host << std::endl;
-		std::cout << "  Port: " << serverStruct[i].port << std::endl;
-		std::cout << "  Server Name: " << serverStruct[i].serverName << std::endl;
+		std::cout << "  Host: " << _serverStruct[i].host << std::endl;
+		std::cout << "  Port: " << _serverStruct[i].port << std::endl;
+		std::cout << "  Server Name: " << _serverStruct[i].serverName << std::endl;
 		std::cout << "------------------------" << std::endl;
 	}
 }
@@ -179,8 +171,8 @@ int	ConfigFileParser::getCurrentCategory(std::string& line, std::string& current
 		{
 			currentCategory = line.substr(1, lastChar - 1);
 			// print("\nCurrent category: " + currentCategory);
-			if (data.find(currentCategory) == data.end()) {
-				data[currentCategory] = std::map<std::string, std::vector<std::string> >();
+			if (_data.find(currentCategory) == _data.end()) {
+				_data[currentCategory] = std::map<std::string, std::vector<std::string> >();
 				// print("Added new category: " + currentCategory);
 			}
 			return (0);
@@ -203,7 +195,7 @@ void	ConfigFileParser::extractKeyValuePairs(std::string& line, std::string& curr
 		while (std::getline(valueStream, singleValue, ','))
 		{
 			trim(singleValue);
-			data[currentCategory][key].push_back(singleValue);
+			_data[currentCategory][key].push_back(singleValue);
 		}
 	}
 }

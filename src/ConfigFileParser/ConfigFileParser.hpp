@@ -14,6 +14,9 @@ struct server
 	std::string	serverName;
 };
 
+typedef std::map<std::string, std::map<std::string, std::vector<std::string> > >::const_iterator catIt;
+typedef std::map<std::string, std::vector<std::string> >::const_iterator itemIt;
+typedef std::vector<std::string>::const_iterator valIt;
 class ConfigFileParser
 {
 	#ifdef UNIT_TEST
@@ -21,6 +24,8 @@ class ConfigFileParser
 	#else
 	private:
 	#endif
+		struct server _serverStruct[4];
+		std::map<std::string, std::map<std::string, std::vector<std::string> > > _data;
 		std::map<std::string, std::map<std::string, std::vector<std::string> > > data;
 	public:
 
