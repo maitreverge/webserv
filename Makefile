@@ -143,7 +143,7 @@ design:
 		echo "$(RESIZE_WINDOW)"; \
 		echo "$(GREEN)"; \
 		./makescript.sh; \
-		echo "by The TryHardTeam Compagny© $(RESET)"; \
+		echo "				by The TryHardTeam Compagny © $(RESET)"; \
 	fi
 
 design_debug:

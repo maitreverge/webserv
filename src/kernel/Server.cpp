@@ -213,7 +213,7 @@ void Server::replyClients()
 						this->_clients[i].messageSend, ret);
 					this->_clients[i].messageSend.clear();	
 					this->_clients[i].messageSend.resize(SEND_BUFF_SIZE);				
-					usleep(800000);
+					// usleep(800000);
 				}
 				else
 				{

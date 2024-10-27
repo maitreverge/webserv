@@ -39,6 +39,69 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 		OR
 		I just check the authorizations within the 
 	*/
+	// ! STEP 1 : Opens the directory
+	DIR *dir = opendir(_realURI.c_str());
+	if (dir == NULL)
+	{
+		Logger::getInstance().log(ERROR, "Failing Openning Directory");
+		setError(CODE_500_INTERNAL_SERVER_ERROR);
+		return;
+	}
+
+	struct dirent *listing;
+
+	stringstream result;
+
+	stringstream documentTitle;
+	
+	documentTitle	<< "<h1 style=\"color: #ff5733; font-family: Arial, sans-serif;\">"
+					<< "Listing Directory of URL "
+					<< _realURI
+					<< " </h1>";
+
+	// Build Head							
+	result	<< "<!DOCTYPE html>\n"
+			<< "<html lang=\"en\">\n"
+			<< "<head>\n"
+			<< "<meta charset=\"UTF-8\">\n"
+			<< "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
+			<< "<title>"
+			<< documentTitle.str()
+			<< "</title>\n"
+			<< "</head>";
+
+	result	<< "<body>";
+
+	// Build Body for each entry
+    while ((listing = readdir(dir)) != NULL)
+	{
+		// TODO : Turn each file in a link
+		string curFile = listing->d_name;
+		if (curFile != "." or curFile != "..") // do not list either "." or ".."
+		{
+			result << "<h1>";
+			result << listing->d_name;
+			result << "</h1>";
+		}
+	}
+	
+	// End on the body and the file
+	result	<< "</body>\n"
+			<< "</html>\n";
+	
+	closedir(dir);
+
+	// TODO : Get from config the default file name for listing directories
+
+	string defautFile = _realURI + "/index.html";
+	ofstream listingFile(defautFile.c_str());
+
+	listingFile << result.str();
+
+	_realURI += "/index.html";
+
+	// test
+	// localhost:1510/testResponseBuilder/listingDirectory
 }
 
 void ResponseBuilder::generateListingHTML( void ){
@@ -53,19 +116,14 @@ void ResponseBuilder::generateListingHTML( void ){
 	else if (foundDefaultPath())
 		return;
 
-	// ! STEP 2 : Generate an index.html for the current page	
-	listingHTMLBuilder();
-
-
 	// ! STEP 3 : Sauvegarder un index.html dans le dossier cible (verifier si les droits autho sont OK dans le dossier)
 	if (not _isWOK)
 	{
 		// If we can't write a default file in the directory, we need to index it in another place
 		// or eventually make it a stream straight to the body
 	}
-
-	// ! Refresh timestamps
-	isDirectoryUnchanged(); 
+	// ! STEP 2 : Generate an index.html for the current page	
+	listingHTMLBuilder();
 
 	// TODO : Update URI depending on the default file location
 }

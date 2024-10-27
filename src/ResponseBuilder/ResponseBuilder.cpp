@@ -164,7 +164,13 @@ void	ResponseBuilder::validateURI( void ){
 		}
 	}
 	else
+	{
 		_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
+		if ( (*(_realURI.rbegin()) == '/') ) // Removing all ending '/' URIs
+		{
+			_realURI.erase(_realURI.size() -1);
+		}
+	}
 
 	// ! STEP 2 : Identify URI nature
 	if (stat(_realURI.c_str(), &_fileInfo) == 0)
@@ -377,7 +383,7 @@ ssize_t	ResponseBuilder::getBody( Client &inputClient ){
 	// std::cout << "CLIENT " << inputClient.fd << std::endl;
 
 	if (!this->_ifs.is_open())
-		this->_ifs.open("test.html", std::ios::binary);
+		this->_ifs.open(_realURI.c_str(), std::ios::binary);
 
 	// this->_bodyStream.open(_realURI.c_str(), std::ios::binary);
 // this->inputClient.->messageSend.resize(3000);

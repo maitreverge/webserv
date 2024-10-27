@@ -50,7 +50,7 @@ struct Config
 		indexFiles.push_back("index.htm");
 		indexFiles.push_back("default.html");
 
-		listingDirectories = false;
+		listingDirectories = true;
 
 		// Error paths files
 		errorPaths.insert(std::make_pair(CODE_400_BAD_REQUEST, "errorPages/400.html"));
