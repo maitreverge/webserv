@@ -358,7 +358,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 		_client.headerSend.clear();
 		_client.headerSend = vector<char>();
 		*/
-		_client->headerSend = vector<char>();
+		inputClient.headerSend = vector<char>();
 		return;
 	}
 	
@@ -387,7 +387,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
 	// Copying the build Headers in headerSend
 	inputClient.headerSend = Headers.masterHeader;
-
+	Headers.masterHeader.clear();//!
 	// string temp(Headers.masterHeader.begin(), Headers.masterHeader.end() );
 	// cout << "HOULA IN FLO" <<  temp << endl;
 
