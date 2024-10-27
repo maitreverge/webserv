@@ -95,7 +95,7 @@ class Server
 	bool isContentLengthValid(size_t i);
 	bool isBodyTerminated(size_t i);
 	bool isBodyTooLarge(size_t i);
-	void replyClient(Client & client, std::vector<char> & response,
+	bool replyClient(size_t i, std::vector<char> & response,
 		ssize_t repSize);
 	void exitClient(size_t index);
 	void exitClients();

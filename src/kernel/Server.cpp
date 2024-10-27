@@ -201,9 +201,10 @@ void Server::replyClients()
 				{
 					Logger::getInstance().log(DEBUG, "first header: tog true", this->_clients[i]);
 					this->_clients[i].tog = true;				
-					replyClient(this->_clients[i],
-						this->_clients[i].headerSend, static_cast<ssize_t>
-						(this->_clients[i].headerSend.size()));
+					if(replyClient(i, this->_clients[i].headerSend,
+						static_cast<ssize_t>
+						(this->_clients[i].headerSend.size())))
+						continue ;
 					this->_clients[i].headerSend.clear();
 				}		
 				
@@ -214,8 +215,8 @@ void Server::replyClients()
 					ss << "stream body continue: " << ret;
 					Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
 							
-					replyClient(this->_clients[i],
-						this->_clients[i].messageSend, ret);
+					if(replyClient(i, this->_clients[i].messageSend, ret))
+						continue ;
 					this->_clients[i].messageSend.clear();	
 					this->_clients[i].messageSend.resize(SEND_BUFF_SIZE);				
 					usleep(100000);
@@ -392,10 +393,10 @@ void Server::displayClient(Client & client) const
 	Logger::getInstance().log(INFO, ss.str(), client);
 }
 
-void Server::replyClient(Client & client, std::vector<char> & response,
+bool Server::replyClient(size_t i, std::vector<char> & response,
 	ssize_t repSize)
 {	
-	Logger::getInstance().log(INFO, "reply client", client);
+	Logger::getInstance().log(INFO, "reply client", this->_clients[i]);
 	printVectorCharTest(response);
 
 	this->_writeBuffer.assign(response.begin(), response.begin() + repSize);	
@@ -403,25 +404,32 @@ void Server::replyClient(Client & client, std::vector<char> & response,
 	this->_readSet = this->_writeSet = this->_actualSet;		
 	if (select(this->_maxFd + 1, &this->_readSet, &this->_writeSet, 0, NULL)
 		< 0)	
-		return Logger::getInstance().log(ERROR, "select", client);	
-	if(!FD_ISSET(client.fd, &this->_writeSet))	
+		return Logger::getInstance().log(ERROR, "select", this->_clients[i]),
+			true;	
+	if(!FD_ISSET(this->_clients[i].fd, &this->_writeSet))	
 		return Logger::getInstance().
-			log(ERROR, "client not ready for response", client);	
+			log(ERROR, "client not ready for response", this->_clients[i]),
+			true;	
 	ssize_t ret;
 	char * writeHead = this->_writeBuffer.data();
 	size_t writeSize = this->_writeBuffer.size();
 	while (writeSize > 0)
 	{			
-		if ((ret = send(client.fd, writeHead, writeSize, 0)) < 0)		
-			return Logger::getInstance().log(ERROR, "send", client);
+		if ((ret = send(this->_clients[i].fd, writeHead, writeSize, MSG_NOSIGNAL)) < 0)
+		{
+			Logger::getInstance().log(ERROR, "send", this->_clients[i]);
+			this->exitClient(i);//§
+			return true;
+		}		
 
 		std::string str(writeHead, writeHead + static_cast<size_t>(ret));
 		std::stringstream ss; ss << "data sent to client: -" << str << "-";	
-		Logger::getInstance().log(DEBUG, ss.str(), client); 	
+		Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]); 	
 
 		writeHead += ret;
 		writeSize -= static_cast<size_t>(ret);
 	}
+	return false;
 }
 
 void Server::exitClient(size_t i)
