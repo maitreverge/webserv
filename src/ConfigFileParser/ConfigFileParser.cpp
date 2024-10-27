@@ -17,6 +17,7 @@ void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 			cout << "  Values: >";
 			for (vector<string>::const_iterator valueIt = itemIt->second.begin(); valueIt != itemIt->second.end(); ++valueIt)
 			{
+				// Category "global"
 				if (catIt->first == "global" && itemIt->first == "maxClient")
 					if (!itemIt->second[0].empty())
 					{
@@ -35,7 +36,57 @@ void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 						configStruct.indexFiles.push_back(*valueIt);
 						print("*******" + *valueIt + " added to struct *******");
 					}
-				
+				// category "errorPages"
+				if (catIt->first == "errorPages" && itemIt->first == "errorPage_400")
+					if (!(*valueIt).empty())
+					{
+						configStruct.errorPaths.insert(std::make_pair(CODE_400_BAD_REQUEST, itemIt->second[0]));
+						print("*******" + itemIt->second[0] + " added to struct *******");
+					}
+				if (catIt->first == "errorPages" && itemIt->first == "errorPage_401")
+					if (!(*valueIt).empty())
+					{
+						configStruct.errorPaths.insert(std::make_pair(CODE_401_UNAUTHORIZED, itemIt->second[0]));
+						print("*******" + itemIt->second[0] + " added to struct *******");
+					}
+				if (catIt->first == "errorPages" && itemIt->first == "errorPage_403")
+					if (!(*valueIt).empty())
+					{
+						configStruct.errorPaths.insert(std::make_pair(CODE_403_FORBIDDEN, itemIt->second[0]));
+						print("*******" + itemIt->second[0] + " added to struct *******");
+					}
+				if (catIt->first == "errorPages" && itemIt->first == "errorPage_404")
+					if (!(*valueIt).empty())
+					{
+						configStruct.errorPaths.insert(std::make_pair(CODE_404_NOT_FOUND, itemIt->second[0]));
+						print("*******" + itemIt->second[0] + " added to struct *******");
+					}
+				if (catIt->first == "errorPages" && itemIt->first == "errorPage_500")
+					if (!(*valueIt).empty())
+					{
+						configStruct.errorPaths.insert(std::make_pair(CODE_500_INTERNAL_SERVER_ERROR, itemIt->second[0]));
+						print("*******" + itemIt->second[0] + " added to struct *******");
+					}
+				if (catIt->first == "errorPages" && itemIt->first == "errorPage_502")
+					if (!(*valueIt).empty())
+					{
+						configStruct.errorPaths.insert(std::make_pair(CODE_502_BAD_GATEWAY, itemIt->second[0]));
+						print("*******" + itemIt->second[0] + " added to struct *******");
+					}
+				if (catIt->first == "errorPages" && itemIt->first == "errorPage_503")
+					if (!(*valueIt).empty())
+					{
+						configStruct.errorPaths.insert(std::make_pair(CODE_503_SERVICE_UNAVAILABLE, itemIt->second[0]));
+						print("*******" + itemIt->second[0] + " added to struct *******");
+					}
+				if (catIt->first == "errorPages" && itemIt->first == "errorPage_504")
+					if (!(*valueIt).empty())
+					{
+						configStruct.errorPaths.insert(std::make_pair(CODE_504_GATEWAY_TIMEOUT, itemIt->second[0]));
+						print("*******" + itemIt->second[0] + " added to struct *******");
+					}
+				// category "serverX"
+				// category "routeX"
 				cout << *valueIt << "< >"; 
 			}
 			cout << endl;

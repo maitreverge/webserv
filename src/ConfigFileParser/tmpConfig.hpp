@@ -55,6 +55,6 @@ struct Config
 
 		errorPaths.insert(std::make_pair(CODE_404_NOT_FOUND, "path/to/404.html"));
 		errorPaths.insert(std::make_pair(CODE_403_FORBIDDEN, "path/to/403.html"));
-		errorPaths.insert(std::make_pair(CODE_500_INTERNAL_SERVER_ERROR, "path/to/404.html"));
+		errorPaths.insert(std::make_pair(CODE_500_INTERNAL_SERVER_ERROR, "path/to/500.html"));
 	}
 };
