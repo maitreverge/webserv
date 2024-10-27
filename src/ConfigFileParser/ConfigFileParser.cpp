@@ -2,8 +2,8 @@
 #include "tmpConfig.hpp"
 #include <cstdlib>
 
-using namespace std;
-map<string, map<string, vector<string> > > data;
+// using namespace std;
+std::map<std::string, std::map<std::string, std::vector<std::string> > > data;
 
 
 
@@ -19,134 +19,90 @@ void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 	int	i = 0;
 	int	j = 0;
 	struct server serverStruct[4];
-	// printData(data);
-	for (map<string, map<string, vector<string> > >::const_iterator catIt = data.begin(); catIt != data.end(); ++catIt)
+	for (std::map<std::string, std::map<std::string, std::vector<std::string> > >::const_iterator catIt = data.begin(); catIt != data.end(); ++catIt)
 	{
 		if (!serverStruct[j].host.empty() && !serverStruct[j].port.empty())
 			j++;
-		cout << "Category: " << catIt->first << endl;
-		for (map<string, vector<string> >::const_iterator itemIt = catIt->second.begin(); itemIt != catIt->second.end(); ++itemIt)
+		for (std::map<std::string, std::vector<std::string> >::const_iterator itemIt = catIt->second.begin(); itemIt != catIt->second.end(); ++itemIt)
 		{
-			cout << "  Key: " << itemIt->first +" => ";
-			for (vector<string>::const_iterator valueIt = itemIt->second.begin(); valueIt != itemIt->second.end(); ++valueIt)
+			for (std::vector<std::string>::const_iterator valueIt = itemIt->second.begin(); valueIt != itemIt->second.end(); ++valueIt)
 			{
 				// Category "global"
 				if (catIt->first == "global" && itemIt->first == "maxClient")
 					if (!itemIt->second[0].empty())
-					{
 						configStruct.maxClient = std::atoi(itemIt->second[0].c_str());
-						print(itemIt->second[0]);
-					}
 				if (catIt->first == "global" && itemIt->first == "listingDirectories")
 					if (!itemIt->second[0].empty())
-					{
 						configStruct.listingDirectories = std::atoi(itemIt->second[0].c_str());
-						print(itemIt->second[0]);
-					}
 				if (catIt->first == "global" && itemIt->first == "indexFiles")
 					if (!(*valueIt).empty())
-					{
 						configStruct.indexFiles.push_back(*valueIt);
-						print(*valueIt);
-					}
 				// category "errorPages"
 				if (catIt->first == "errorPages" && itemIt->first == "errorPage_400")
 					if (!(*valueIt).empty())
-					{
 						configStruct.errorPaths.insert(std::make_pair(CODE_400_BAD_REQUEST, itemIt->second[0]));
-						print(itemIt->second[0]);
-					}
 				if (catIt->first == "errorPages" && itemIt->first == "errorPage_401")
 					if (!(*valueIt).empty())
-					{
 						configStruct.errorPaths.insert(std::make_pair(CODE_401_UNAUTHORIZED, itemIt->second[0]));
-						print(itemIt->second[0]);
-					}
 				if (catIt->first == "errorPages" && itemIt->first == "errorPage_403")
 					if (!(*valueIt).empty())
-					{
 						configStruct.errorPaths.insert(std::make_pair(CODE_403_FORBIDDEN, itemIt->second[0]));
-						print(itemIt->second[0]);
-					}
 				if (catIt->first == "errorPages" && itemIt->first == "errorPage_404")
 					if (!(*valueIt).empty())
-					{
 						configStruct.errorPaths.insert(std::make_pair(CODE_404_NOT_FOUND, itemIt->second[0]));
-						print(itemIt->second[0]);
-					}
 				if (catIt->first == "errorPages" && itemIt->first == "errorPage_500")
 					if (!(*valueIt).empty())
-					{
 						configStruct.errorPaths.insert(std::make_pair(CODE_500_INTERNAL_SERVER_ERROR, itemIt->second[0]));
-						print(itemIt->second[0]);
-					}
 				if (catIt->first == "errorPages" && itemIt->first == "errorPage_502")
 					if (!(*valueIt).empty())
-					{
 						configStruct.errorPaths.insert(std::make_pair(CODE_502_BAD_GATEWAY, itemIt->second[0]));
-						print(itemIt->second[0]);
-					}
 				if (catIt->first == "errorPages" && itemIt->first == "errorPage_503")
 					if (!(*valueIt).empty())
-					{
 						configStruct.errorPaths.insert(std::make_pair(CODE_503_SERVICE_UNAVAILABLE, itemIt->second[0]));
-						print(itemIt->second[0]);
-					}
 				if (catIt->first == "errorPages" && itemIt->first == "errorPage_504")
 					if (!(*valueIt).empty())
-					{
 						configStruct.errorPaths.insert(std::make_pair(CODE_504_GATEWAY_TIMEOUT, itemIt->second[0]));
-						print(itemIt->second[0]);
-					}
 				// category server
 				if (isServerData(catIt->first) && itemIt->first == "host")
 				{
 					if (!(*valueIt).empty())
-					{
 						serverStruct[j].host = itemIt->second[0];
-						std::cout << itemIt->second[0] + "\n";
-					}
 				}
 				if (isServerData(catIt->first) && itemIt->first == "port")
 				{
 					if (!(*valueIt).empty())
-					{
 						serverStruct[j].port = itemIt->second[0];
-						std::cout << itemIt->second[0] + "\n";
-					}
 				}
 				if (isServerData(catIt->first) && itemIt->first == "serverName")
 				{
 					if (!(*valueIt).empty())
-					{
 						serverStruct[j].serverName = itemIt->second[0];
-						std::cout << itemIt->second[0] + "\n";
-					}
 				}
 
 /**================================================================================================
  *?                                          WHAT NEXT?
  *? problemes potentiels pour l'initialisation des serveurs:
  *? - les serveurs eux-memes ne sont pas encore initialises avec ces donnees
- *? - une fois initialises, les serveurs doivent etre ajoutes au vector
+ *? - une fois initialises, les serveurs doivent etre ajoutes au std::vector
  *? - grand besoin de refactorisation une fois que la logique fonctionnera.
  *================================================================================================**/
 
 
 
 				
-				// category "serverX"
-				struct sockaddr_in server;	
-				std::memset(&server, 0, sizeof(server));
-				server.sin_family = AF_INET;
-				server.sin_addr.s_addr = htonl(INADDR_ANY);
-				server.sin_port = htons(1510);
-				configStruct.sockAddress[i++];
-				configStruct.sockAddress.push_back(server);
-				// category "routeX" NOT IMPLEMENTED YET
+				// // category "serverX"
+				// struct sockaddr_in server;	
+				// std::memset(&server, 0, sizeof(server));
+				// server.sin_family = AF_INET;
+				// server.sin_addr.s_addr = htonl(INADDR_ANY);
+				// server.sin_port = htons(1510);
+				// configStruct.sockAddress[i++];
+				// configStruct.sockAddress.push_back(server);
+				// // category "routeX" NOT IMPLEMENTED YET
 			}
 		}
 	}
+	printData(data);
 	printServerData(serverStruct, j + 1);
 }
 int main(void)
@@ -160,71 +116,71 @@ int main(void)
 }
 
 
-void	ConfigFileParser::print(string str)
+void	ConfigFileParser::print(std::string str)
 {
-	cout << str << endl;
+	std::cout << str << std::endl;
 }
 
-void	ConfigFileParser::trim(string& str)
+void	ConfigFileParser::trim(std::string& str)
 {
 	str.erase(0, str.find_first_not_of(" \t\r\n"));
 	str.erase(str.find_last_not_of(" \t\r\n") + 1);
 }
 
-void ConfigFileParser::printData(const map<string, map<string, vector<string> > >& data) {
-	for (map<string, map<string, vector<string> > >::const_iterator catIt = data.begin(); catIt != data.end(); ++catIt)
+void ConfigFileParser::printData(const std::map<std::string, std::map<std::string, std::vector<std::string> > >& data) {
+	for (std::map<std::string, std::map<std::string, std::vector<std::string> > >::const_iterator catIt = data.begin(); catIt != data.end(); ++catIt)
 	{
-		cout << "Category: " << catIt->first << endl;
-		for (map<string, vector<string> >::const_iterator itemIt = catIt->second.begin(); itemIt != catIt->second.end(); ++itemIt)
+		std::cout << "Category: " << catIt->first << std::endl;
+		for (std::map<std::string, std::vector<std::string> >::const_iterator itemIt = catIt->second.begin(); itemIt != catIt->second.end(); ++itemIt)
 		{
-			cout << "  Key: >" << itemIt->first +"<" << endl;
-			cout << "  Values: >";
-			for (vector<string>::const_iterator valueIt = itemIt->second.begin(); valueIt != itemIt->second.end(); ++valueIt)
+			std::cout << "  Key: >" << itemIt->first +"<" << std::endl;
+			std::cout << "  Values: >";
+			for (std::vector<std::string>::const_iterator valueIt = itemIt->second.begin(); valueIt != itemIt->second.end(); ++valueIt)
 			{
-				cout << *valueIt << "< >"; 
+				std::cout << *valueIt << "< >"; 
 			}
-			cout << endl;
+			std::cout << std::endl;
 		}
 	}
 }
 
 void ConfigFileParser::printServerData(const server serverStruct[], size_t size) {
 	for (size_t i = 0; i < size; ++i) {
-		cout << "Server " << i + 1 << ":" << endl;
-		cout << "  Host: " << serverStruct[i].host << endl;
-		cout << "  Port: " << serverStruct[i].port << endl;
-		cout << "  Server Name: " << serverStruct[i].serverName << endl;
-		cout << "------------------------" << endl;
+		std::cout << "Server " << i + 1 << ":" << std::endl;
+		std::cout << "  Host: " << serverStruct[i].host << std::endl;
+		std::cout << "  Port: " << serverStruct[i].port << std::endl;
+		std::cout << "  Server Name: " << serverStruct[i].serverName << std::endl;
+		std::cout << "------------------------" << std::endl;
 	}
 }
 
-int	ConfigFileParser::ignoreComents(string& line)
+int	ConfigFileParser::ignoreComents(std::string& line)
 {
 	size_t firstChar = line.find('#');
-	if (firstChar != string::npos)
+	if (firstChar != std::string::npos)
 		line.erase(firstChar);
 	firstChar = line.find_first_not_of(" \t");
-	if (firstChar != string::npos)
+	if (firstChar != std::string::npos)
 		line.erase(0, firstChar);
 	firstChar = line.find("]");
-	if (firstChar != string::npos)
+	if (firstChar != std::string::npos)
 		line.erase(firstChar + 1);
-	if (line.find_first_not_of(" \t") == string::npos)
+	if (line.find_first_not_of(" \t") == std::string::npos)
 		return (0);
 	return (1);
 }
 
-int	ConfigFileParser::getCurrentCategory(string& line, string& currentCategory)
+int	ConfigFileParser::getCurrentCategory(std::string& line, std::string& currentCategory)
 {
 	if (!line.empty() && line[0] == '[')
 	{
 		size_t lastChar = line.find_last_not_of(" \t");
-		if (lastChar != string::npos && line[lastChar] == ']')
+		if (lastChar != std::string::npos && line[lastChar] == ']')
 		{
 			currentCategory = line.substr(1, lastChar - 1);
 			// print("\nCurrent category: " + currentCategory);
 			if (data.find(currentCategory) == data.end()) {
-				data[currentCategory] = map<string, vector<string> >();
+				data[currentCategory] = std::map<std::string, std::vector<std::string> >();
 				// print("Added new category: " + currentCategory);
 			}
 			return (0);
@@ -234,17 +190,17 @@ int	ConfigFileParser::getCurrentCategory(string& line, string& currentCategory)
 	return (1);
 }
 
-void	ConfigFileParser::extractKeyValuePairs(string& line, string& currentCategory)
+void	ConfigFileParser::extractKeyValuePairs(std::string& line, std::string& currentCategory)
 {
 	size_t colonPos = line.find('=');
-	if (colonPos != string::npos)
+	if (colonPos != std::string::npos)
 	{
-		string key = line.substr(0, colonPos);
-		string value = line.substr(colonPos + 1);
+		std::string key = line.substr(0, colonPos);
+		std::string value = line.substr(colonPos + 1);
 		trim(key); trim(value);
-		istringstream valueStream(value);
-		string singleValue;
-		while (getline(valueStream, singleValue, ','))
+		std::istringstream valueStream(value);
+		std::string singleValue;
+		while (std::getline(valueStream, singleValue, ','))
 		{
 			trim(singleValue);
 			data[currentCategory][key].push_back(singleValue);
@@ -254,12 +210,12 @@ void	ConfigFileParser::extractKeyValuePairs(string& line, string& currentCategor
 
 int	ConfigFileParser::extractDataFromConfigFile(const std::string str)
 {
-	ifstream file(str.c_str());
+	std::ifstream file(str.c_str());
 	if (!file.is_open())
-		return (cerr << "could not open config file" << endl, 1);
+		return (std::cerr << "could not open config file" << std::endl, 1);
 	// print("Config file opened");
-	string line;
-	string currentCategory;
+	std::string line;
+	std::string currentCategory;
 	while (getline(file, line))
 	{
 		// ignore comments
