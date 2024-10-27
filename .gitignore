@@ -34,22 +34,29 @@
 # macOS
 .DS_Store/
 
-# VS Code files
-.vscode/
-
-# Custom
-webserv
-docs_dan
-
-.vscode
+# Makefile
 .compiled
-access.log
+.compiled_debug
+
+# VSCode files
+.vscode/settings.json
+
+# Intra Testers
 intra_binaries/ubuntu_tester
 intra_binaries/ubuntu_cgi_tester
+
+# Executables
+webserv
 tests/webtest
+debug_webserv
+
+# Logs
+src/ResponseBuilder/error.log
+src/kernel/error.log
+error.log
+access.log
+
+# Tests Dan
+docs_dan
 tests/config/my_ip.txt
 tests/siege/siege_urls.txt
-src/kernel/error.log
-src/ResponseBuilder/error.log
-error.log
-error.log
