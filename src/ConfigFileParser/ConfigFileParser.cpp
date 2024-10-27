@@ -1,24 +1,73 @@
 #include "ConfigFileParser.hpp"
+#include "tmpConfig.hpp"
+#include <cstdlib>
 
 using namespace std;
 map<string, map<string, vector<string> > > data;
 
-void	print(string str)
+void	ConfigFileParser::intializeConfigStruct(Config configStruct)
+{
+	// printData(data);
+	for (map<string, map<string, vector<string> > >::const_iterator catIt = data.begin(); catIt != data.end(); ++catIt)
+	{
+		cout << "Category: " << catIt->first << endl;
+		for (map<string, vector<string> >::const_iterator itemIt = catIt->second.begin(); itemIt != catIt->second.end(); ++itemIt)
+		{
+			cout << "  Key: >" << itemIt->first +"<" << endl;
+			cout << "  Values: >";
+			for (vector<string>::const_iterator valueIt = itemIt->second.begin(); valueIt != itemIt->second.end(); ++valueIt)
+			{
+				if (catIt->first == "global" && itemIt->first == "maxClient")
+					if (!itemIt->second[0].empty())
+					{
+						configStruct.maxClient = std::atoi(itemIt->second[0].c_str());
+						print("*******" + itemIt->second[0] + " added to struct *******");
+					}
+				if (catIt->first == "global" && itemIt->first == "listingDirectories")
+					if (!itemIt->second[0].empty())
+					{
+						configStruct.listingDirectories = std::atoi(itemIt->second[0].c_str());
+						print("*******" + itemIt->second[0] + " added to struct *******");
+					}
+				if (catIt->first == "global" && itemIt->first == "indexFiles")
+					if (!(*valueIt).empty())
+					{
+						configStruct.indexFiles.push_back(*valueIt);
+						print("*******" + *valueIt + " added to struct *******");
+					}
+				
+				cout << *valueIt << "< >"; 
+			}
+			cout << endl;
+		}
+	}
+}
+int main(void)
+{
+	Config configStruct;
+	ConfigFileParser toto;
+	toto.extractDataFromConfigFile("config.ini");
+	toto.intializeConfigStruct(configStruct);
+	return (0);
+}
+
+
+void	ConfigFileParser::print(string str)
 {
 	cout << str << endl;
 }
 
-void	trim(string& str)
+void	ConfigFileParser::trim(string& str)
 {
 	str.erase(0, str.find_first_not_of(" \t\r\n"));
 	str.erase(str.find_last_not_of(" \t\r\n") + 1);
 }
 
-void printData(const map<string, map<string, vector<string> > >& data) {
+void ConfigFileParser::printData(const map<string, map<string, vector<string> > >& data) {
 	for (map<string, map<string, vector<string> > >::const_iterator catIt = data.begin(); catIt != data.end(); ++catIt)
 	{
 		cout << "Category: " << catIt->first << endl;
-				for (map<string, vector<string> >::const_iterator itemIt = catIt->second.begin(); itemIt != catIt->second.end(); ++itemIt)
+		for (map<string, vector<string> >::const_iterator itemIt = catIt->second.begin(); itemIt != catIt->second.end(); ++itemIt)
 		{
 			cout << "  Key: >" << itemIt->first +"<" << endl;
 			cout << "  Values: >";
@@ -30,7 +79,7 @@ void printData(const map<string, map<string, vector<string> > >& data) {
 		}
 	}
 }
-int	ignoreComents(string& line)
+int	ConfigFileParser::ignoreComents(string& line)
 {
 	size_t firstChar = line.find('#');
 	if (firstChar != string::npos)
@@ -46,7 +95,7 @@ int	ignoreComents(string& line)
 	return (1);
 }
 
-int	getCurrentCategory(string& line, string& currentCategory)
+int	ConfigFileParser::getCurrentCategory(string& line, string& currentCategory)
 {
 	if (!line.empty() && line[0] == '[')
 	{
@@ -54,19 +103,19 @@ int	getCurrentCategory(string& line, string& currentCategory)
 		if (lastChar != string::npos && line[lastChar] == ']')
 		{
 			currentCategory = line.substr(1, lastChar - 1);
-			print("\nCurrent category: " + currentCategory);
+			// print("\nCurrent category: " + currentCategory);
 			if (data.find(currentCategory) == data.end()) {
 				data[currentCategory] = map<string, vector<string> >();
-				print("Added new category: " + currentCategory);
+				// print("Added new category: " + currentCategory);
 			}
 			return (0);
 		}
 	}
-	print(currentCategory + " =>	" + line);
+	// print(currentCategory + " =>	" + line);
 	return (1);
 }
 
-void	extractKeyValuePairs(string& line, string& currentCategory)
+void	ConfigFileParser::extractKeyValuePairs(string& line, string& currentCategory)
 {
 	size_t colonPos = line.find('=');
 	if (colonPos != string::npos)
@@ -84,12 +133,12 @@ void	extractKeyValuePairs(string& line, string& currentCategory)
 	}
 }
 
-int main(void)
+int	ConfigFileParser::extractDataFromConfigFile(const std::string str)
 {
-	ifstream file("config.ini");
+	ifstream file(str.c_str());
 	if (!file.is_open())
 		return (cerr << "could not open config file" << endl, 1);
-	print("Config file opened");
+	// print("Config file opened");
 	string line;
 	string currentCategory;
 	while (getline(file, line))
@@ -104,7 +153,6 @@ int main(void)
 		extractKeyValuePairs(line, currentCategory);
 	}
 	file.close();
-	print("Config file closed");
-	printData(data);
+	// print("Config file closed");
 	return (0);
 }
