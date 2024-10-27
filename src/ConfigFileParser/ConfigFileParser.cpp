@@ -62,9 +62,26 @@ int	getCurrentCategory(string& line, string& currentCategory)
 			return (0);
 		}
 	}
-	
 	print(currentCategory + " =>	" + line);
 	return (1);
+}
+
+void	extractKeyValuePairs(string& line, string& currentCategory)
+{
+	size_t colonPos = line.find('=');
+	if (colonPos != string::npos)
+	{
+		string key = line.substr(0, colonPos);
+		string value = line.substr(colonPos + 1);
+		trim(key); trim(value);
+		istringstream valueStream(value);
+		string singleValue;
+		while (getline(valueStream, singleValue, ','))
+		{
+			trim(singleValue);
+			data[currentCategory][key].push_back(singleValue);
+		}
+	}
 }
 
 int main(void)
@@ -80,29 +97,12 @@ int main(void)
 		// ignore comments
 		if (ignoreComents(line) == 0)
 			continue ;
-
 		// get current category
 		if(getCurrentCategory(line, currentCategory) == 0)
 			continue ;
-
 		// add key-value(s) to category
-		size_t colonPos = line.find('=');
-		if (colonPos != string::npos)
-		{
-			string key = line.substr(0, colonPos);
-			string value = line.substr(colonPos + 1);
-			trim(key); trim(value);
-			istringstream valueStream(value);
-			string singleValue;
-			while (getline(valueStream, singleValue, ','))
-			{
-				trim(singleValue);
-				data[currentCategory][key].push_back(singleValue);
-			}
-		}
-		
+		extractKeyValuePairs(line, currentCategory);
 	}
-
 	file.close();
 	print("Config file closed");
 	printData(data);
