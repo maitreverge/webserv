@@ -1,10 +1,4 @@
 #include "ConfigFileParser.hpp"
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <sstream>
-#include <map>
-#include <vector>
 
 void	print(std::string str)
 {
@@ -19,6 +13,9 @@ int	ignoreComents(std::string& line)
 	firstChar = line.find_first_not_of(" \t");
 	if (firstChar != std::string::npos)
 		line.erase(0, firstChar);
+	firstChar = line.find("]");
+	if (firstChar != std::string::npos)
+		line.erase(firstChar + 1);
 	if (line.find_first_not_of(" \t") == std::string::npos)
 		return (0);
 	return (1);
@@ -29,7 +26,7 @@ int main(void)
 	std::ifstream file("config.ini");
 	if (!file.is_open())
 		return (std::cerr << "could not open config file" << std::endl, 1);
-	print("Hello world");
+	print("Config file opened");
 	std::string line;
 	std::string currentCategory;
 	while (std::getline(file, line))
@@ -37,6 +34,8 @@ int main(void)
 		// ignore comments
 		if (ignoreComents(line) == 0)
 			continue;
+
+		// identify category
 		if (!line.empty() && line[0] == '[')
 		{
 			size_t lastChar = line.find_last_not_of(" \t");
@@ -47,9 +46,10 @@ int main(void)
 				continue;
 			}
 		}
-		print(line);
+		
+		print(currentCategory + " =>	" + line);
 	}
 	file.close();
-
+	print("Config file closed");
 	return (0);
 }
