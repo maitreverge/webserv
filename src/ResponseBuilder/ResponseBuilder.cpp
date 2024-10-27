@@ -9,7 +9,7 @@ ResponseBuilder::ResponseBuilder( void ) :
 	_errorType(CODE_200_OK),
 	_headerSent(false)
 	{
-
+	this->_streamHead = 0;
 	_mimeTypes.insert(std::make_pair("html", "text/html"));
 	_mimeTypes.insert(std::make_pair("htm", "text/htm"));
 	_mimeTypes.insert(std::make_pair("txt", "text/txt"));
@@ -38,13 +38,14 @@ ResponseBuilder::ResponseBuilder( void ) :
 	_mimeTypes.insert(std::make_pair("ogv", "video/ogv"));
 }
 
-ResponseBuilder::ResponseBuilder( const ResponseBuilder & ) :
+ResponseBuilder::ResponseBuilder( const ResponseBuilder & rhs ) :
 	_isDirectory(false),
 	_isFile(false),
 	_isCGI(false),
 	_errorType(CODE_200_OK),
 	_headerSent(false)
 	{
+		this->_streamHead = rhs._streamHead;
 	// this->_client = src._client;
 	// this->_config = src._config;
 	// this->_mimeTypes = src._mimeTypes;
@@ -401,7 +402,10 @@ ssize_t	ResponseBuilder::getBody( Client &inputClient ){
 	// std::cout << "CLIENT " << inputClient.fd << std::endl;
 
 	if (!this->_ifs.is_open())
+	{
 		this->_ifs.open("test.html", std::ios::binary);
+		
+	}
 
 	// this->_bodyStream.open(_realURI.c_str(), std::ios::binary);
 // this->inputClient.->messageSend.resize(3000);
@@ -409,12 +413,12 @@ ssize_t	ResponseBuilder::getBody( Client &inputClient ){
 
 	if (this->_ifs.is_open())
 	{
+		this->_ifs.seekg(this->_streamHead);
 		inputClient.messageSend.clear(); inputClient.messageSend.resize(SEND_BUFF_SIZE);//!
 		this->_ifs.read(inputClient.messageSend.data(), static_cast<std::streamsize>(inputClient.messageSend.size()));	
-	
+		this->_streamHead = this->_ifs.tellg();  
 		std::string str(inputClient.messageSend.data(), this->_ifs.gcount());	
-		Logger::getInstance().log(INFO, str);  
-		Logger::getInstance().log(DEBUG, "apres ");	
+		Logger::getInstance().log(INFO, str);  	
 		// std::string str2(inputClient.messageSend.data(), inputClient.messageSend.size());	
 		// Logger::getInstance().log(INFO, str2);  
 std::streamsize test = this->_ifs.gcount();

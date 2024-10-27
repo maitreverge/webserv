@@ -71,6 +71,7 @@ Connection: close\r\n\
 		readyRecev = true;
 		statusCodes = CODE_200_OK;
 	}
+	~Client();
 };
 
 class Server

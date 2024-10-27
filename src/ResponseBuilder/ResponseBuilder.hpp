@@ -108,8 +108,9 @@ public:
 		return *this;
 	};
 
-	bool _headerSent;
-	std::ifstream _ifs;
+	bool			_headerSent;
+	std::ifstream 	_ifs;
+	std::streampos	_streamHead;
 
 	void	getHeader( Client &, Config& );
 	ssize_t	getBody( Client &inputClient );

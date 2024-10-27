@@ -17,6 +17,11 @@ const sockaddr_in & Server::getSockAdress() const
 	return (this->_sockAddr);
 }
 
+Client::~Client()
+{
+	Logger::getInstance().log(ERROR, "\e[30;101mclient deleted\e[0m", *this);
+}
+
 bool Server::setup()
 {	
 	this->_maxFd = this->_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -80,7 +85,7 @@ void Server::catchClients()
 		if (client.fd < 0)		
 			return Logger::getInstance().log(ERROR, "accept");	
 
-		Logger::getInstance().log(INFO, "new client", client);
+		Logger::getInstance().log(INFO, "\e[30;101mnew client\e[0m", client);
 		FD_SET(client.fd, &this->_actualSet);
 		this->_maxFd = std::max(this->_maxFd, client.fd);
 		this->_clients.push_back(client);
@@ -420,7 +425,7 @@ void Server::replyClient(Client & client, std::vector<char> & response,
 
 void Server::exitClient(size_t i)
 {
-	Logger::getInstance().log(INFO, "client exited", this->_clients[i]);
+	Logger::getInstance().log(INFO, "\e[30;101mclient exited\e[0m", this->_clients[i]);
 
 	FD_CLR(this->_clients[i].fd, &this->_actualSet);
 	close(this->_clients[i].fd);	
