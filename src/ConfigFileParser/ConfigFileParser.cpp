@@ -5,8 +5,25 @@
 using namespace std;
 map<string, map<string, vector<string> > > data;
 
+struct server
+{
+	string	host;
+	string	port;
+	string	serverName;
+};
+
+bool isServerData(const std::string& category) {
+    const std::string prefix = "server";
+    // Vérifie que la longueur de la catégorie est au moins aussi longue que le préfixe, 
+    // et que la chaîne commence bien par "server".
+    return category.size() >= prefix.size() && category.find(prefix) == 0;
+}
+
 void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 {
+	int	i = 0;
+	int	j = 0;
+	struct server serverStruct[4];
 	// printData(data);
 	for (map<string, map<string, vector<string> > >::const_iterator catIt = data.begin(); catIt != data.end(); ++catIt)
 	{
@@ -85,8 +102,45 @@ void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 						configStruct.errorPaths.insert(std::make_pair(CODE_504_GATEWAY_TIMEOUT, itemIt->second[0]));
 						print("*******" + itemIt->second[0] + " added to struct *******");
 					}
+				if (isServerData(catIt->first) && itemIt->first == "host")
+				{
+					if (!(*valueIt).empty())
+					{
+						serverStruct[j].host = itemIt->second[0];
+						std::cout << "*******" + itemIt->second[0] + " added to struct " << j << " *******\n";
+					}
+				}
+				if (isServerData(catIt->first) && itemIt->first == "port")
+				{
+					if (!(*valueIt).empty())
+					{
+						serverStruct[j].port = itemIt->second[0];
+						std::cout << "*******" + itemIt->second[0] + " added to struct " << j << " *******\n";
+					}
+				}
+				if (isServerData(catIt->first) && itemIt->first == "serverName")
+				{
+					if (!(*valueIt).empty())
+					{
+						serverStruct[j].serverName = itemIt->second[0];
+						std::cout << "*******" + itemIt->second[0] + " added to struct " << j << " *******\n";
+					}
+				}
+
+
+
+				// j++; WHEN TO INCREMENT to get servers data right???
+
+				
 				// category "serverX"
-				// category "routeX"
+				struct sockaddr_in server;	
+				std::memset(&server, 0, sizeof(server));
+				server.sin_family = AF_INET;
+				server.sin_addr.s_addr = htonl(INADDR_ANY);
+				server.sin_port = htons(1510);
+				configStruct.sockAddress[i++];
+				configStruct.sockAddress.push_back(server);
+				// category "routeX" NOT IMPLEMENTED YET
 				cout << *valueIt << "< >"; 
 			}
 			cout << endl;
