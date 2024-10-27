@@ -34,15 +34,24 @@ typedef enum
  *========================================================================**/
 class Logger
 {
-private:
+	#ifdef UNIT_TEST
+	public:
+	#else
+	private:
+	#endif
 	std::ofstream	_accessFile;
 	std::ofstream	_errorFile;
 	bool			logToStdOut;
 	int				_logLevel[LOG_LEVEL_COUNT];
 
+	void logOut(logLevel logLevel, const std::string& message);
+	std::string	formatLogLevel(logLevel loglevel) const;
+	std::string removeAnsiCodes(const std::string& message);
+
+	std::string ipToString(const struct sockaddr_in& addr);
+	int portToInt(const struct sockaddr_in& addr);
+	std::string intToString(int value);
 public:
-	Logger();
-	~Logger();
 	void log(logLevel logLevel, const std::string& message);
 	void log(logLevel logLevel, const std::string& message, const Kernel& context);
 	void log(logLevel logLevel, const std::string& message, const RequestParser& context);
@@ -51,13 +60,8 @@ public:
 	void log(logLevel logLevel, const std::string& message, const Client& client, const Server&obj);
 	void log(logLevel logLevel, std::string& message, struct Client& client, const Error& error);
 	void log(logLevel logLevel, const std::string& message, const Server&server);
-	void logOut(logLevel logLevel, const std::string& message);
-	std::string	formatLogLevel(logLevel loglevel) const;
+	Logger();
+	~Logger();
 	static Logger& getInstance();
-	std::string removeAnsiCodes(const std::string& message);
-
-	std::string ipToString(const struct sockaddr_in& addr);
-	int portToInt(const struct sockaddr_in& addr);
-	std::string intToString(int value);
 };
 
