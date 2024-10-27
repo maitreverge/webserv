@@ -74,17 +74,25 @@ void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 			}
 		}
 	}
-	printData(_data);
-	printServerData(_serverStruct, i + 1);
+	// printData(_data);
+	// printServerData(_serverStruct, i + 1);
+	initializeServers(configStruct, i);
 }
 
-/**================================================================================================
- *?                                          WHAT NEXT?
-*? problemes potentiels pour l'initialisation des serveurs:
-*? - les serveurs eux-memes ne sont pas encore initialises avec ces donnees
-*? - une fois initialises, les serveurs doivent etre ajoutes au std::vector
-*? - grand besoin de refactorisation une fois que la logique fonctionnera.
-*================================================================================================**/
+void	ConfigFileParser::initializeServers(Config configStruct, int& i)
+{
+	// printServerData(_serverStruct, i + 1);
+	for (int j = 0; j < i + 1; j++)
+	{
+		struct sockaddr_in server;	
+		std::memset(&server, 0, sizeof(server));
+		server.sin_family = AF_INET;
+		server.sin_addr.s_addr = htonl(INADDR_ANY);
+		server.sin_port = htons(1510);
+		configStruct.sockAddress.push_back(server);
+		std::cout << "server " << j + 1 << " initialized " << std::endl;
+	}
+}
 
 int main(void)
 {
@@ -92,7 +100,7 @@ int main(void)
 	ConfigFileParser toto;
 	toto.extractDataFromConfigFile("config.ini");
 	toto.intializeConfigStruct(configStruct);
-
+	// toto.initializeServers();
 	return (0);
 }
 
