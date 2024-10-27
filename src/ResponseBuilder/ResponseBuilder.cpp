@@ -98,7 +98,7 @@ void ResponseBuilder::resolveURI( void )
 
 void ResponseBuilder::setError(e_errorCodes code){
 
-	_realURI = _config->errorPaths.at(CODE_404_NOT_FOUND);
+	_realURI = _config->errorPaths.at(code);
 	_errorType = code;
 }
 
@@ -114,19 +114,19 @@ void	ResponseBuilder::extractAuthorizations( void ){
 		{
 			case GET:
 				if (_isCGI and not _isXOK)
-					setError(CODE_403_FORBIDDEN);
+					setError(CODE_401_UNAUTHORIZED);
 				else if (not _isROK)
-					setError(CODE_403_FORBIDDEN);
+					setError(CODE_401_UNAUTHORIZED);
 				break;
 			case POST:
 				if (_isCGI and not _isXOK)
-					setError(CODE_403_FORBIDDEN);
+					setError(CODE_401_UNAUTHORIZED);
 				else if (not _isWOK)
-					setError(CODE_403_FORBIDDEN);
+					setError(CODE_401_UNAUTHORIZED);
 				break;
 			case DELETE:
 				if (not _isWOK)
-					setError(CODE_403_FORBIDDEN);
+					setError(CODE_401_UNAUTHORIZED);
 				break;
 			default:
 				setError(CODE_405_METHOD_NOT_ALLOWED);
@@ -142,7 +142,9 @@ void	ResponseBuilder::validateURI( void ){
 
 	// ! STEP 1 = EDGE CASES FOR EMPTY PATH or PATH == "/"
 	if (_realURI.empty())
-		setError(CODE_404_NOT_FOUND);
+	{
+		setError(CODE_404_NOT_FOUND); return;
+	}
 	else if (_realURI == "/") // What if the resolved URI is a directory and not just "/"
 	{
 		// string originalURI = "/";
@@ -159,9 +161,13 @@ void	ResponseBuilder::validateURI( void ){
 		if (it == _config->indexFiles.end())
 		{
 			if (errno == EACCES) // The process does not have execute permissions on one or more directories in the path.
-				setError(CODE_401_UNAUTHORIZED);
+			{
+				setError(CODE_401_UNAUTHORIZED); return;
+			}
 			else if (errno == ENOENT) // The file or directory does not exist.
-				setError(CODE_404_NOT_FOUND);
+			{
+				setError(CODE_404_NOT_FOUND); return;
+			}
 		}
 	}
 	else
@@ -187,14 +193,19 @@ void	ResponseBuilder::validateURI( void ){
 		else
 		{
 			// TODO : Do I need to set up an error code if the ressource is neither a file or a directory
+			setError(CODE_422_UNPROCESSABLE_ENTITY); return;
 		}
 	}
 	else // Supposed invalid path
 	{
 		if (errno == EACCES)
-			setError(CODE_401_UNAUTHORIZED);
+		{
+			setError(CODE_401_UNAUTHORIZED); return;
+		}
 		else if (errno == ENOENT or errno == EFAULT) // EFAULT The provided path is invalid or points to a restricted memory space.
-			setError(CODE_404_NOT_FOUND);
+		{
+			setError(CODE_404_NOT_FOUND); return;
+		}
 	}
 
 	// TODO = Is URI a CGI ??
@@ -210,7 +221,7 @@ void	ResponseBuilder::validateURI( void ){
 	}
 
 
-	if (_isDirectory and (_method == GET) and _config->listingDirectories)
+	if (_isDirectory and (_method == GET))
 	{
 		generateListingHTML();
 	}
@@ -304,9 +315,9 @@ void	ResponseBuilder::setContentLenght(){
 	if (stat(_realURI.c_str(), &_fileInfo) == -1)
 	{
 		if (errno == EACCES)
-			_errorType = CODE_401_UNAUTHORIZED;
+			setError(CODE_401_UNAUTHORIZED);
 		else if (errno == ENOENT or errno == EFAULT)
-			_errorType = CODE_404_NOT_FOUND;
+			setError(CODE_404_NOT_FOUND);
 	}
 	else if (_isFile) // valid path and PATH is a file
 		Headers.bodyLenght = static_cast<uint64_t>(_fileInfo.st_size);
@@ -332,15 +343,6 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 		
 	if (_headerSent)
 	{
-
-		/*
-			Ask Seb if he prefers a cleared vector 
-		!					OR
-			a empty vector
-		-----------------------------------------------------
-		_client.headerSend.clear();
-		_client.headerSend = vector<char>();
-		*/
 		_client->headerSend = vector<char>();
 		return;
 	}
@@ -351,20 +353,13 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	extractMethod();
 	
 	_realURI = _client->header.getURI();
-	// _realURI = "test.html";
 
 	resolveURI();
 	validateURI();
 	
-	if (_isCGI )
-	{
-		launchCGI(); // CGI must write within a file
-		// _realURI = outputCGI.html
-	}
-	/*
-		! At this point of the function, the _readURI has ben correctly set up
-		We can safely extract the ContentLenght with `stat`
-	*/
+	if (_isCGI and _errorType <= CODE_400_BAD_REQUEST)
+		launchCGI();
+	
 	setContentLenght();
 	buildHeaders();
 
@@ -372,7 +367,6 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	_client->headerSend = Headers.masterHeader;
 
 	printAllHeaders();
-
 
 	_headerSent = true;
 }

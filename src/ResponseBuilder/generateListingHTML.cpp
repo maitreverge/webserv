@@ -7,6 +7,9 @@ bool ResponseBuilder::foundDefaultPath( void ){
 
 	vector<string>::iterator it;
 
+	{
+		// TODO : If default path does not exists => 403 forbiden
+	}
 	// Looks accross all default files
 	// ! Can possibly be another map in the config file !
 	for (it = _config->indexFiles.begin(); it < _config->indexFiles.end(); ++it)
@@ -75,12 +78,17 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 	// Build Body for each entry
     while ((listing = readdir(dir)) != NULL)
 	{
-		// TODO : Turn each file in a link
 		string curFile = listing->d_name;
-		if (curFile != "." or curFile != "..") // do not list either "." or ".."
+		string curPath = _realURI + "/" + listing->d_name;
+		if (curFile != "." and curFile != "..") // do not list either "." or ".."
 		{
+			// <a href="test.html">Go to Test Page</a>
 			result << "<h1>";
+			result << "<a href=\"";
+			result << curPath;
+			result << "\">";
 			result << listing->d_name;
+			result << "</a>\n";
 			result << "</h1>\n";
 		}
 	}
@@ -89,7 +97,6 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 	result	<< "</body>\n"
 			<< "</html>\n";
 	
-	closedir(dir);
 
 	// TODO : Get from config the default file name for listing directories
 
@@ -100,6 +107,9 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 
 	_realURI = defautFile;
 
+	closedir(dir);
+
+	listingFile.close();
 	// test
 	// localhost:1510/testResponseBuilder/listingDirectory
 }
@@ -109,21 +119,18 @@ void ResponseBuilder::generateListingHTML( void ){
 	// ! STEP 0 : check if we can read in the directory
 	if ( not _isROK )
 	{
-		setError(CODE_403_FORBIDDEN);
+		setError(CODE_401_UNAUTHORIZED);
 		return;
 	}
 	// ! STEP 1 : Checks if the Directory has been touched since, and if there is a default path
 	else if (foundDefaultPath())
 		return;
 
-	// ! STEP 3 : Sauvegarder un index.html dans le dossier cible (verifier si les droits autho sont OK dans le dossier)
-	if (not _isWOK)
-	{
-		// If we can't write a default file in the directory, we need to index it in another place
-		// or eventually make it a stream straight to the body
-	}
 	// ! STEP 2 : Generate an index.html for the current page	
-	listingHTMLBuilder();
+	if (_config->listingDirectories)
+		listingHTMLBuilder();
+	else
+		setError(CODE_401_UNAUTHORIZED);
 
 	// TODO : Update URI depending on the default file location
 }
