@@ -223,6 +223,7 @@ void Server::replyClients()
 				else
 				{
 					Logger::getInstance().log(DEBUG, "reinit response Builder, ready true, tog false", this->_clients[i]);
+					this->_clients[i].response._streamHead = 0;
 					this->_clients[i].response._ifs.close();
 					this->_clients[i].response = ResponseBuilder();
 					this->_clients[i].readySend = false;

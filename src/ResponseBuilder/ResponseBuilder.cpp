@@ -386,7 +386,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	buildHeaders();
 
 	// Copying the build Headers in headerSend
-	_client->headerSend = Headers.masterHeader;
+	inputClient.headerSend = Headers.masterHeader;
 
 	// string temp(Headers.masterHeader.begin(), Headers.masterHeader.end() );
 	// cout << "HOULA IN FLO" <<  temp << endl;
@@ -426,7 +426,7 @@ std::streamsize test = this->_ifs.gcount();
 		{
 			Logger::getInstance().log(INFO, "file end", inputClient);
 			this->_ifs.clear(); // Réinitialiser les flags pour continuer la lecture si besoin
-			this->_streamHead = 0;
+			
 			// this->_ifs.close();
 			
 		}
