@@ -10,9 +10,30 @@ bool isServerData(const std::string& category)
 
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, Config& configStruct, const char str[], e_errorCodes e)
 {
-	if (catIt->first == "errorPages" && itemIt->first == "errorPage_400")
+	if (catIt->first == "errorPages" && itemIt->first == str)
 		if (!(*valIt).empty())
-			configStruct.errorPaths.insert(std::make_pair(CODE_400_BAD_REQUEST, itemIt->second[0]));
+			configStruct.errorPaths.insert(std::make_pair(e, itemIt->second[0]));
+}
+
+void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::string& field, const char str[], int& i)
+{
+	if (isServerData(catIt->first) && itemIt->first == str)
+		if (!(*valIt).empty())
+			field = itemIt->second[0];
+}
+
+void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, short& field, const char str[])
+{
+	if (catIt->first == "global" && itemIt->first == str)
+		if (!itemIt->second[0].empty())
+			field = std::atoi(itemIt->second[0].c_str());
+}
+
+void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, bool& field, const char str[])
+{
+	if (catIt->first == "global" && itemIt->first == str)
+		if (!itemIt->second[0].empty())
+			field = std::atoi(itemIt->second[0].c_str());
 }
 
 void	ConfigFileParser::intializeConfigStruct(Config configStruct)
@@ -27,12 +48,9 @@ void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 			for (valIt valIt = itemIt->second.begin(); valIt != itemIt->second.end(); ++valIt)
 			{
 				// Category "global"
-				if (catIt->first == "global" && itemIt->first == "maxClient")
-					if (!itemIt->second[0].empty())
-						configStruct.maxClient = std::atoi(itemIt->second[0].c_str());
-				if (catIt->first == "global" && itemIt->first == "listingDirectories")
-					if (!itemIt->second[0].empty())
-						configStruct.listingDirectories = std::atoi(itemIt->second[0].c_str());
+				setConfigValue(catIt, itemIt, configStruct.maxClient, "maxClient");
+				setConfigValue(catIt, itemIt, configStruct.listingDirectories, "listingDirectories");
+				
 				if (catIt->first == "global" && itemIt->first == "indexFiles")
 					if (!(*valIt).empty())
 						configStruct.indexFiles.push_back(*valIt);
@@ -46,21 +64,15 @@ void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_503", CODE_503_SERVICE_UNAVAILABLE);
 				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_504", CODE_504_GATEWAY_TIMEOUT);
 				// category server
-				if (isServerData(catIt->first) && itemIt->first == "host")
-				{
-					if (!(*valIt).empty())
-						_serverStruct[i].host = itemIt->second[0];
-				}
-				if (isServerData(catIt->first) && itemIt->first == "port")
-				{
-					if (!(*valIt).empty())
-						_serverStruct[i].port = itemIt->second[0];
-				}
-				if (isServerData(catIt->first) && itemIt->first == "serverName")
-				{
-					if (!(*valIt).empty())
-						_serverStruct[i].serverName = itemIt->second[0];
-				}
+				setConfigValue(catIt, itemIt, valIt, _serverStruct[i].host, "host", i);
+				setConfigValue(catIt, itemIt, valIt, _serverStruct[i].port, "port", i);
+				setConfigValue(catIt, itemIt, valIt, _serverStruct[i].serverName, "serverName", i);
+			}
+		}
+	}
+	printData(_data);
+	printServerData(_serverStruct, i + 1);
+}
 
 /**================================================================================================
  *?                                          WHAT NEXT?
@@ -70,24 +82,6 @@ void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 *? - grand besoin de refactorisation une fois que la logique fonctionnera.
 *================================================================================================**/
 
-
-
-				
-				// // category "serverX"
-				// struct sockaddr_in server;	
-				// std::memset(&server, 0, sizeof(server));
-				// server.sin_family = AF_INET;
-				// server.sin_addr.s_addr = htonl(INADDR_ANY);
-				// server.sin_port = htons(1510);
-				// configStruct.sockAddress[i++];
-				// configStruct.sockAddress.push_back(server);
-				// // category "routeX" NOT IMPLEMENTED YET
-			}
-		}
-	}
-	printData(_data);
-	printServerData(_serverStruct, i + 1);
-}
 int main(void)
 {
 	Config configStruct;
