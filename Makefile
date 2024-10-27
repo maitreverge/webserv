@@ -117,7 +117,7 @@ $(DEBUG_NAME) : $(OBJ_DEBUG)
 	@echo "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b debug linked              ☑️\n$(RESET)"
 	@echo ""
 	@echo " $(ORANGE)⛔ Do Not Launch ./debug_webserv on the CLI ⛔$(RESET)"
-	@echo " $(GREEN)✅       Just run "RUN DEBUG" on VSCode      ✅$(RESET)"
+	@echo " $(GREEN)✅     Just click on "RUN DEBUG" in VSCode    ✅$(RESET)"
 	@echo -n "$(SHOW_CURSOR)"
 	@touch $(TEMP_FILE_DEBUG)  # Create a temporary file after a successful build
 
@@ -143,7 +143,7 @@ design:
 		echo "$(RESIZE_WINDOW)"; \
 		echo "$(GREEN)"; \
 		./makescript.sh; \
-		echo "					by The TryHardTeam Compagny© $(RESET)"; \
+		echo "by The TryHardTeam Compagny© $(RESET)"; \
 	fi
 
 design_debug:
@@ -170,4 +170,4 @@ re: fclean backline all
 redebug: fclean backline debug
 
 # phony mon ami
-.PHONY: all debug nof test emoticon emoticon_debug newline backline design design_debug clean fclean re
+.PHONY: all debug nof test emoticon emoticon_debug newline backline design design_debug clean fclean re redebug
