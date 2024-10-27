@@ -5,3 +5,8 @@ void ResponseBuilder::launchCGI( void ){
 
 	// TODO
 }
+
+void ResponseBuilder::checkCGI( void ){
+
+	
+}

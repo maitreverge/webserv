@@ -88,17 +88,18 @@ private:
 
 
 	// generateListingHTML.cpp
-	// map<string, timespec> _lastDir_M_Time;
-	// map<string, timespec> _lastDir_C_Time;
+	/*
+		map<string, timespec> _lastDir_M_Time;
+		map<string, timespec> _lastDir_C_Time;
+		bool	isDirectoryUnchanged( void );
+	*/
 	void	generateListingHTML( void );
 	bool	foundDefaultPath( void );
-	// bool	isDirectoryUnchanged( void );
 	void	listingHTMLBuilder( void);
 
 
-
-
 	// CGI.cpp
+	void	checkCGI( void );
 	void	launchCGI( void );
 
 
@@ -136,5 +137,4 @@ public:
 	ssize_t	getBody( Client &inputClient );
 
 	void	printAllHeaders( void );
-
 };

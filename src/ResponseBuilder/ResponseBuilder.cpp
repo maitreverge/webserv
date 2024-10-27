@@ -23,7 +23,7 @@ void ResponseBuilder::initMimes( void ){
 		_mimeTypes.insert(std::make_pair("gif", "image/gif"));
 		_mimeTypes.insert(std::make_pair("webp", "image/webp"));
 		_mimeTypes.insert(std::make_pair("bmp", "image/bmp"));
-		_mimeTypes.insert(std::make_pair("ico", "image/x-icon"));
+		_mimeTypes.insert(std::make_pair("ico", "image/x-icon")); // FIXME : for favicon stuff
 		// Audio Content Types
 		_mimeTypes.insert(std::make_pair("mp3", "audio/mp3"));
 		_mimeTypes.insert(std::make_pair("mpeg", "audio/mpeg"));
@@ -88,10 +88,17 @@ void ResponseBuilder::sanatizeURI( string &oldURI ){
 
 void ResponseBuilder::resolveURI( void )
 {
-	// /images/../config/../../logo.png
-
 	// ! STEP 1 : Trim all "../" from the URI for transversal path attacks
 	sanatizeURI(_realURI);
+
+	if (_realURI.size() > 1)
+	{
+		_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
+		if ( (*(_realURI.rbegin()) == '/') ) // Removing all ending '/' URIs
+		{
+			_realURI.erase(_realURI.size() -1);
+		}
+	}
 
 	// TODO STEP 2 : Resolve URI with rooted path from config file
 }
@@ -170,14 +177,9 @@ void	ResponseBuilder::validateURI( void ){
 			}
 		}
 	}
-	else
-	{
-		_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
-		if ( (*(_realURI.rbegin()) == '/') ) // Removing all ending '/' URIs
-		{
-			_realURI.erase(_realURI.size() -1);
-		}
-	}
+
+	// TODO = Is URI a CGI ??
+	checkCGI();
 
 	// ! STEP 2 : Identify URI nature
 	if (stat(_realURI.c_str(), &_fileInfo) == 0)
@@ -196,7 +198,7 @@ void	ResponseBuilder::validateURI( void ){
 			setError(CODE_422_UNPROCESSABLE_ENTITY); return;
 		}
 	}
-	else // Supposed invalid path
+	else // Can't access file
 	{
 		if (errno == EACCES)
 		{
@@ -208,10 +210,6 @@ void	ResponseBuilder::validateURI( void ){
 		}
 	}
 
-	// TODO = Is URI a CGI ??
-	{
-
-	}
 	
 	extractAuthorizations();
 
@@ -357,7 +355,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	resolveURI();
 	validateURI();
 	
-	if (_isCGI and _errorType <= CODE_400_BAD_REQUEST)
+	if (_isCGI and _errorType <= CODE_400_BAD_REQUEST) // or potentially another adress
 		launchCGI();
 	
 	setContentLenght();
@@ -446,7 +444,7 @@ void	ResponseBuilder::printAllHeaders( void ){
 	printColorNoEndl(BOLD_CYAN, "Content Lenght : (header)");
 	print(Headers.contentLenght);
 
-	printColorNoEndl(BOLD_CYAN, "Body Lenght (uint64_t)");
+	printColorNoEndl(BOLD_BLUE, "Body Lenght (uint64_t)");
 	print(Headers.bodyLenght);
 
 	print("=========== printAllHeaders ========");
