@@ -8,10 +8,15 @@
 
 struct Config
 {
+	short int						maxClient;
 	std::vector<struct sockaddr_in> sockAddress;
+	vector<std::string>					indexFiles; // default files names if the URI == "/"
+	bool							listingDirectories; // activer ou non le listing des repertoires
+	map<e_errorCodes, string>		errorPaths;
 
 	Config()
 	{
+		maxClient = 1024;
 		struct sockaddr_in server1;	
 		std::memset(&server1, 0, sizeof(server1));
 		server1.sin_family = AF_INET;
@@ -39,5 +44,16 @@ struct Config
 		server4.sin_addr.s_addr = htonl(INADDR_ANY);
 		server4.sin_port = htons(80);
 		sockAddress.push_back(server4);
+
+		// Default files to look for if the URI is "/"
+		indexFiles.push_back("index.html");
+		indexFiles.push_back("index.htm");
+		indexFiles.push_back("default.html");
+
+		listingDirectories = false;
+
+		errorPaths.insert(std::make_pair(CODE_404_NOT_FOUND, "path/to/404.html"));
+		errorPaths.insert(std::make_pair(CODE_403_FORBIDDEN, "path/to/403.html"));
+		errorPaths.insert(std::make_pair(CODE_500_INTERNAL_SERVER_ERROR, "path/to/404.html"));
 	}
 };
