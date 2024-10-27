@@ -17,6 +17,41 @@ const sockaddr_in & Server::getSockAdress() const
 	return (this->_sockAddr);
 }
 
+Client::Client()
+{
+	Logger::getInstance().log(INFO, "\e[30;101mclient created\e[0m", *this);
+
+	id = 0;
+	fd = 0;		
+	memset(&address, 0, sizeof(address));
+	len = sizeof(address);
+	statusCode = CODE_200_OK;
+	len = sizeof(address);	
+	bodySize = 0;
+	messageSend.reserve(MAX_HDR_SIZE);
+	messageSend.resize(SEND_BUFF_SIZE);
+	tog = false;
+headerSend.reserve(300); //!
+message.reserve(300); //!
+	std::stringstream ss;		
+	ss << 
+	"HTTP/1.1 200 OK\r\n\
+Content-Type: text/html\r\n\
+Content-Length: 316\r\n\
+Connection: close\r\n\
+\r\n\
+"; 
+	std::string str = ss.str();
+	std::vector<char> res(str.begin(), str.end());	
+	headerSend = res;
+	readySend = false;
+	readyRecev = true;
+	statusCodes = CODE_200_OK;
+}
+Client::Client(const Client &)
+{
+	Logger::getInstance().log(INFO, "\e[30;101mclient copy created\e[0m", *this);
+}
 Client::~Client()
 {
 	Logger::getInstance().log(INFO, "\e[30;101mclient deleted\e[0m", *this);
@@ -204,7 +239,7 @@ void Server::replyClients()
 					if(replyClient(i, this->_clients[i].headerSend,
 						static_cast<ssize_t>
 						(this->_clients[i].headerSend.size())))
-						continue ;
+						break ;
 					this->_clients[i].headerSend.clear();
 				}		
 				
@@ -216,7 +251,7 @@ void Server::replyClients()
 					Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
 							
 					if(replyClient(i, this->_clients[i].messageSend, ret))
-						continue ;
+						break ;
 					this->_clients[i].messageSend.clear();	
 					this->_clients[i].messageSend.resize(SEND_BUFF_SIZE);				
 					usleep(100000);
