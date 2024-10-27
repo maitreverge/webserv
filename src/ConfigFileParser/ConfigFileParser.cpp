@@ -36,6 +36,13 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, bool& field,
 			field = std::atoi(itemIt->second[0].c_str());
 }
 
+void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::vector<std::string> vec, const char str[])
+{
+	if (catIt->first == "global" && itemIt->first == str)
+		if (!(*valIt).empty())
+			vec.push_back(*valIt);
+}
+
 void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 {
 	int	i = 0;
@@ -50,10 +57,7 @@ void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 				// Category "global"
 				setConfigValue(catIt, itemIt, configStruct.maxClient, "maxClient");
 				setConfigValue(catIt, itemIt, configStruct.listingDirectories, "listingDirectories");
-				
-				if (catIt->first == "global" && itemIt->first == "indexFiles")
-					if (!(*valIt).empty())
-						configStruct.indexFiles.push_back(*valIt);
+				setConfigValue(catIt, itemIt, valIt, configStruct.indexFiles, "indexFiles");
 				// category "errorPages"
 				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_400", CODE_400_BAD_REQUEST);
 				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_401", CODE_401_UNAUTHORIZED);

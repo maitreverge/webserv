@@ -42,7 +42,7 @@ class ConfigFileParser
 	void	setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::string& field, const char str[], int& i);
 	void	setConfigValue(catIt& catIt, itemIt& itemIt, short& field, const char str[]);
 	void	setConfigValue(catIt& catIt, itemIt& itemIt, bool& field, const char str[]);
-
+	void	setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::vector<std::string> vec, const char str[]);
 
 
 };
