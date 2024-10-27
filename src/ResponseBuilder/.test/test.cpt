@@ -1,0 +1,21 @@
+#include <iostream>
+#include <string>
+#include <string>
+#include <sys/stat.h>
+#include <cstdint>
+
+using namespace std;
+
+
+int main(void)
+{
+		struct stat _fileInfo;
+
+		stat("image_chat.jpeg", &_fileInfo);
+
+		uint64_t test = static_cast<uint64_t>(_fileInfo.st_size);
+
+		cout << "File size = " << test << endl;
+
+	
+}

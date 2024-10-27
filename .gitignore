@@ -55,6 +55,7 @@ src/ResponseBuilder/error.log
 src/kernel/error.log
 error.log
 access.log
+*.log
 
 # Tests Dan
 docs_dan
