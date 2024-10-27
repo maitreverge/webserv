@@ -7,4 +7,5 @@ class ConfigFileParser
 	#endif
 
 	public:
+		
 };
