@@ -19,7 +19,7 @@ const sockaddr_in & Server::getSockAdress() const
 
 Client::~Client()
 {
-	Logger::getInstance().log(ERROR, "\e[30;101mclient deleted\e[0m", *this);
+	Logger::getInstance().log(INFO, "\e[30;101mclient deleted\e[0m", *this);
 }
 
 bool Server::setup()

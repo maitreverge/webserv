@@ -426,7 +426,7 @@ std::streamsize test = this->_ifs.gcount();
 		{
 			Logger::getInstance().log(INFO, "file end", inputClient);
 			this->_ifs.clear(); // Réinitialiser les flags pour continuer la lecture si besoin
-			
+			this->_streamHead = 0;
 			// this->_ifs.close();
 			
 		}
