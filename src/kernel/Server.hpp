@@ -43,7 +43,7 @@ struct Client
 	bool				readyRecev;
 
 	Client();
-	Client(const Client &)
+	Client(const Client &);
 	~Client();
 };
 

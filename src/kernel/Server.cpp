@@ -48,9 +48,11 @@ Connection: close\r\n\
 	readyRecev = true;
 	statusCodes = CODE_200_OK;
 }
-Client::Client(const Client &)
+Client::Client(const Client & src)
 {
 	Logger::getInstance().log(INFO, "\e[30;101mclient copy created\e[0m", *this);
+
+	*this = src;
 }
 Client::~Client()
 {
@@ -111,7 +113,9 @@ Connection: keep-alive\r\n\
 }
 
 void Server::catchClients()
-{	
+{
+	Logger::getInstance().log(INFO, "Catch clients", *this);
+
 	if (FD_ISSET(this->_fd, &this->_readSet))
 	{		
 		Client client;			
@@ -119,14 +123,23 @@ void Server::catchClients()
 			(&client.address), &client.len);
 		if (client.fd < 0)		
 			return Logger::getInstance().log(ERROR, "accept");	
-
+		if (this->_clients.size() >= 1)
+			std::cout << this->_clients[0].response._streamHead << std::endl;
+		if (this->_clients.size() >= 2)
+		std::cout << this->_clients[1].response._streamHead << std::endl;
 		Logger::getInstance().log(INFO, "\e[30;101mnew client\e[0m", client);
+
 		FD_SET(client.fd, &this->_actualSet);
 		this->_maxFd = std::max(this->_maxFd, client.fd);
 		this->_clients.push_back(client);
-			
+
+		if (this->_clients.size() >= 1)		
+			std::cout << this->_clients[0].response._streamHead << std::endl;
+		if (this->_clients.size() >= 2)
+			std::cout << this->_clients[1].response._streamHead << std::endl;	
 		// std::vector<char> hardResp = buildHardResponseTest();
-		// replyClient(client, hardResp);		
+		// replyClient(client, hardResp);
+		Logger::getInstance().log(INFO, "Catch clients end", *this);		
 	}
 }
 

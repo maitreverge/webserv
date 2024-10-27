@@ -9,6 +9,7 @@ ResponseBuilder::ResponseBuilder( void ) :
 	_errorType(CODE_200_OK),
 	_headerSent(false)
 	{
+	Logger::getInstance().log(INFO, "ResponseBuilder constructor");
 	this->_streamHead = 0;
 	_mimeTypes.insert(std::make_pair("html", "text/html"));
 	_mimeTypes.insert(std::make_pair("htm", "text/htm"));
@@ -45,7 +46,10 @@ ResponseBuilder::ResponseBuilder( const ResponseBuilder & rhs ) :
 	_errorType(CODE_200_OK),
 	_headerSent(false)
 	{
+		
 		this->_streamHead = rhs._streamHead;
+		Logger::getInstance().log(INFO, "ResponseBuilder copy constructor");
+		std::cout <<  rhs._streamHead << std::endl;
 	// this->_client = src._client;
 	// this->_config = src._config;
 	// this->_mimeTypes = src._mimeTypes;
@@ -88,6 +92,30 @@ ResponseBuilder::ResponseBuilder( const ResponseBuilder & rhs ) :
 	_mimeTypes.insert(std::make_pair("webm", "video/webm"));
 	_mimeTypes.insert(std::make_pair("ogv", "video/ogv"));
 }
+
+ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
+{
+	Logger::getInstance().log(INFO, "ResponseBuilder operator=");
+
+	this->_streamHead = rhs._streamHead;
+	this->_client = rhs._client;
+	this->_config = rhs._config;
+	this->_mimeTypes = rhs._mimeTypes;
+	this->_headerSent = rhs._headerSent;
+
+	this->Headers = rhs.Headers;
+	this->_method = rhs._method;
+	this->_errorType = rhs._errorType;
+	this->_realURI = rhs._realURI;
+	this->_fileExtension = rhs._fileExtension;
+	this->_fileInfo = rhs._fileInfo;			
+	this->_isDirectory = rhs._isDirectory;	
+	this->_isFile = rhs._isFile;
+	this->_isCGI = rhs._isCGI;
+	this->_fileName = rhs._fileName;	
+
+	return *this;
+};
 
 ResponseBuilder::~ResponseBuilder( void )
 {
