@@ -303,6 +303,11 @@ void printVectorCharTest(const std::vector<char> & vect)
 	std::cout << "-\e[0m" << std::endl << std::endl;
 }
 
+void isDelimiterFind()
+{
+	
+}
+
 void Server::handleClientHeader(size_t i, ssize_t ret)
 {
 	stringstream ss;
@@ -448,8 +453,7 @@ bool Server::replyClient(size_t i, std::vector<char> & response,
 	Logger::getInstance().log(INFO, "reply client", this->_clients[i]);
 	printVectorCharTest(response);
 
-	this->_writeBuffer.assign(response.begin(), response.begin() + repSize);	
-				
+	this->_writeBuffer.assign(response.begin(), response.begin() + repSize);					
 	this->_readSet = this->_writeSet = this->_actualSet;		
 	if (select(this->_maxFd + 1, &this->_readSet, &this->_writeSet, 0, NULL)
 		< 0)	
