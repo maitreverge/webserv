@@ -23,6 +23,7 @@ void ResponseBuilder::initMimes( void ){
 		_mimeTypes.insert(std::make_pair("gif", "image/gif"));
 		_mimeTypes.insert(std::make_pair("webp", "image/webp"));
 		_mimeTypes.insert(std::make_pair("bmp", "image/bmp"));
+		_mimeTypes.insert(std::make_pair("ico", "image/x-icon"));
 		// Audio Content Types
 		_mimeTypes.insert(std::make_pair("mp3", "audio/mp3"));
 		_mimeTypes.insert(std::make_pair("mpeg", "audio/mpeg"));

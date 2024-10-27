@@ -68,9 +68,9 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 			<< "<title>"
 			<< documentTitle.str()
 			<< "</title>\n"
-			<< "</head>";
+			<< "</head>\n";
 
-	result	<< "<body>";
+	result	<< "<body>\n";
 
 	// Build Body for each entry
     while ((listing = readdir(dir)) != NULL)
@@ -81,7 +81,7 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 		{
 			result << "<h1>";
 			result << listing->d_name;
-			result << "</h1>";
+			result << "</h1>\n";
 		}
 	}
 	
@@ -98,7 +98,7 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 
 	listingFile << result.str();
 
-	_realURI += "/index.html";
+	_realURI = defautFile;
 
 	// test
 	// localhost:1510/testResponseBuilder/listingDirectory
