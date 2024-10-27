@@ -7,6 +7,13 @@
 #include <vector>
 #include "tmpConfig.hpp"
 
+struct server
+{
+	std::string	host;
+	std::string	port;
+	std::string	serverName;
+};
+
 class ConfigFileParser
 {
 	#ifdef UNIT_TEST
@@ -25,5 +32,5 @@ class ConfigFileParser
 	void	extractKeyValuePairs(std::string& line, std::string& currentCategory);
 	int		extractDataFromConfigFile(const std::string);
 	void	intializeConfigStruct(Config configStruct);
-		
+	void	printServerData(const server serverStruct[], size_t size);
 };

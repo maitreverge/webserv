@@ -5,12 +5,7 @@
 using namespace std;
 map<string, map<string, vector<string> > > data;
 
-struct server
-{
-	string	host;
-	string	port;
-	string	serverName;
-};
+
 
 bool isServerData(const std::string& category) {
     const std::string prefix = "server";
@@ -27,11 +22,12 @@ void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 	// printData(data);
 	for (map<string, map<string, vector<string> > >::const_iterator catIt = data.begin(); catIt != data.end(); ++catIt)
 	{
+		if (!serverStruct[j].host.empty() && !serverStruct[j].port.empty())
+			j++;
 		cout << "Category: " << catIt->first << endl;
 		for (map<string, vector<string> >::const_iterator itemIt = catIt->second.begin(); itemIt != catIt->second.end(); ++itemIt)
 		{
-			cout << "  Key: >" << itemIt->first +"<" << endl;
-			cout << "  Values: >";
+			cout << "  Key: " << itemIt->first +" => ";
 			for (vector<string>::const_iterator valueIt = itemIt->second.begin(); valueIt != itemIt->second.end(); ++valueIt)
 			{
 				// Category "global"
@@ -39,75 +35,76 @@ void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 					if (!itemIt->second[0].empty())
 					{
 						configStruct.maxClient = std::atoi(itemIt->second[0].c_str());
-						print("*******" + itemIt->second[0] + " added to struct *******");
+						print(itemIt->second[0]);
 					}
 				if (catIt->first == "global" && itemIt->first == "listingDirectories")
 					if (!itemIt->second[0].empty())
 					{
 						configStruct.listingDirectories = std::atoi(itemIt->second[0].c_str());
-						print("*******" + itemIt->second[0] + " added to struct *******");
+						print(itemIt->second[0]);
 					}
 				if (catIt->first == "global" && itemIt->first == "indexFiles")
 					if (!(*valueIt).empty())
 					{
 						configStruct.indexFiles.push_back(*valueIt);
-						print("*******" + *valueIt + " added to struct *******");
+						print(*valueIt);
 					}
 				// category "errorPages"
 				if (catIt->first == "errorPages" && itemIt->first == "errorPage_400")
 					if (!(*valueIt).empty())
 					{
 						configStruct.errorPaths.insert(std::make_pair(CODE_400_BAD_REQUEST, itemIt->second[0]));
-						print("*******" + itemIt->second[0] + " added to struct *******");
+						print(itemIt->second[0]);
 					}
 				if (catIt->first == "errorPages" && itemIt->first == "errorPage_401")
 					if (!(*valueIt).empty())
 					{
 						configStruct.errorPaths.insert(std::make_pair(CODE_401_UNAUTHORIZED, itemIt->second[0]));
-						print("*******" + itemIt->second[0] + " added to struct *******");
+						print(itemIt->second[0]);
 					}
 				if (catIt->first == "errorPages" && itemIt->first == "errorPage_403")
 					if (!(*valueIt).empty())
 					{
 						configStruct.errorPaths.insert(std::make_pair(CODE_403_FORBIDDEN, itemIt->second[0]));
-						print("*******" + itemIt->second[0] + " added to struct *******");
+						print(itemIt->second[0]);
 					}
 				if (catIt->first == "errorPages" && itemIt->first == "errorPage_404")
 					if (!(*valueIt).empty())
 					{
 						configStruct.errorPaths.insert(std::make_pair(CODE_404_NOT_FOUND, itemIt->second[0]));
-						print("*******" + itemIt->second[0] + " added to struct *******");
+						print(itemIt->second[0]);
 					}
 				if (catIt->first == "errorPages" && itemIt->first == "errorPage_500")
 					if (!(*valueIt).empty())
 					{
 						configStruct.errorPaths.insert(std::make_pair(CODE_500_INTERNAL_SERVER_ERROR, itemIt->second[0]));
-						print("*******" + itemIt->second[0] + " added to struct *******");
+						print(itemIt->second[0]);
 					}
 				if (catIt->first == "errorPages" && itemIt->first == "errorPage_502")
 					if (!(*valueIt).empty())
 					{
 						configStruct.errorPaths.insert(std::make_pair(CODE_502_BAD_GATEWAY, itemIt->second[0]));
-						print("*******" + itemIt->second[0] + " added to struct *******");
+						print(itemIt->second[0]);
 					}
 				if (catIt->first == "errorPages" && itemIt->first == "errorPage_503")
 					if (!(*valueIt).empty())
 					{
 						configStruct.errorPaths.insert(std::make_pair(CODE_503_SERVICE_UNAVAILABLE, itemIt->second[0]));
-						print("*******" + itemIt->second[0] + " added to struct *******");
+						print(itemIt->second[0]);
 					}
 				if (catIt->first == "errorPages" && itemIt->first == "errorPage_504")
 					if (!(*valueIt).empty())
 					{
 						configStruct.errorPaths.insert(std::make_pair(CODE_504_GATEWAY_TIMEOUT, itemIt->second[0]));
-						print("*******" + itemIt->second[0] + " added to struct *******");
+						print(itemIt->second[0]);
 					}
+				// category server
 				if (isServerData(catIt->first) && itemIt->first == "host")
 				{
 					if (!(*valueIt).empty())
 					{
 						serverStruct[j].host = itemIt->second[0];
-						std::cout << "*******" + itemIt->second[0] + " added to struct " << j << " *******\n";
+						std::cout << itemIt->second[0] + "\n";
 					}
 				}
 				if (isServerData(catIt->first) && itemIt->first == "port")
@@ -115,7 +112,7 @@ void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 					if (!(*valueIt).empty())
 					{
 						serverStruct[j].port = itemIt->second[0];
-						std::cout << "*******" + itemIt->second[0] + " added to struct " << j << " *******\n";
+						std::cout << itemIt->second[0] + "\n";
 					}
 				}
 				if (isServerData(catIt->first) && itemIt->first == "serverName")
@@ -123,21 +120,19 @@ void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 					if (!(*valueIt).empty())
 					{
 						serverStruct[j].serverName = itemIt->second[0];
-						std::cout << "*******" + itemIt->second[0] + " added to struct " << j << " *******\n";
+						std::cout << itemIt->second[0] + "\n";
 					}
 				}
 
 /**================================================================================================
  *?                                          WHAT NEXT?
  *? problemes potentiels pour l'initialisation des serveurs:
- *? - j n'est jamais incrementes, donc les donnees peuvent ecraser les donnees precedentes
  *? - les serveurs eux-memes ne sont pas encore initialises avec ces donnees
  *? - une fois initialises, les serveurs doivent etre ajoutes au vector
  *? - grand besoin de refactorisation une fois que la logique fonctionnera.
  *================================================================================================**/
 
 
-				// j++; WHEN TO INCREMENT to get servers data right???
 
 				
 				// category "serverX"
@@ -149,11 +144,10 @@ void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 				configStruct.sockAddress[i++];
 				configStruct.sockAddress.push_back(server);
 				// category "routeX" NOT IMPLEMENTED YET
-				cout << *valueIt << "< >"; 
 			}
-			cout << endl;
 		}
 	}
+	printServerData(serverStruct, j + 1);
 }
 int main(void)
 {
@@ -161,6 +155,7 @@ int main(void)
 	ConfigFileParser toto;
 	toto.extractDataFromConfigFile("config.ini");
 	toto.intializeConfigStruct(configStruct);
+
 	return (0);
 }
 
@@ -192,6 +187,17 @@ void ConfigFileParser::printData(const map<string, map<string, vector<string> > 
 		}
 	}
 }
+
+void ConfigFileParser::printServerData(const server serverStruct[], size_t size) {
+	for (size_t i = 0; i < size; ++i) {
+		cout << "Server " << i + 1 << ":" << endl;
+		cout << "  Host: " << serverStruct[i].host << endl;
+		cout << "  Port: " << serverStruct[i].port << endl;
+		cout << "  Server Name: " << serverStruct[i].serverName << endl;
+		cout << "------------------------" << endl;
+	}
+}
+
 int	ConfigFileParser::ignoreComents(string& line)
 {
 	size_t firstChar = line.find('#');
