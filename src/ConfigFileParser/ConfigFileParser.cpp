@@ -127,6 +127,14 @@ void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 					}
 				}
 
+/**================================================================================================
+ *?                                          WHAT NEXT?
+ *? problemes potentiels pour l'initialisation des serveurs:
+ *? - j n'est jamais incrementes, donc les donnees peuvent ecraser les donnees precedentes
+ *? - les serveurs eux-memes ne sont pas encore initialises avec ces donnees
+ *? - une fois initialises, les serveurs doivent etre ajoutes au vector
+ *? - grand besoin de refactorisation une fois que la logique fonctionnera.
+ *================================================================================================**/
 
 
 				// j++; WHEN TO INCREMENT to get servers data right???
