@@ -1,53 +1,6 @@
 #include "ResponseBuilder.hpp"
 #include "Logger.hpp" 
 
-/**
- * @brief This function extracts two timestamps from `stat`
- * `st_ctim` and `st_mtim` and store them in a map.
- * 
- * @return true 
- * @return false 
- */
-bool ResponseBuilder::isDirectoryUnchanged( void ){
-
-	// Current TimeStamps
-	timespec cur_M_Time;
-	timespec cur_C_Time;
-
-	// Stored Timestamps
-	timespec last_M_Time;
-	timespec last_C_Time;
-
-	// Extract data of the Directory
-	stat(_realURI.c_str(), &_fileInfo);
-	cur_M_Time = _fileInfo.st_ctim;
-	cur_C_Time = _fileInfo.st_mtim;
-	
-	// Check for new entries by raising a std::out_of_bounds exception
-	try
-	{
-		last_M_Time = _lastDir_M_Time.at(_realURI);
-		last_C_Time = _lastDir_C_Time.at(_realURI);
-	}
-	catch(const std::exception& e)
-	{
-		_lastDir_M_Time.insert(std::make_pair(_realURI, cur_M_Time));
-		_lastDir_C_Time.insert(std::make_pair(_realURI, cur_C_Time));
-		return true;
-	}
-
-	// If any of the timestamp does not match, it means that target has been modified
-	if ((cur_C_Time.tv_nsec != last_C_Time.tv_nsec) or (cur_C_Time.tv_sec != last_C_Time.tv_sec) or
-		(cur_M_Time.tv_nsec != last_M_Time.tv_nsec) or (cur_M_Time.tv_sec != last_M_Time.tv_sec))
-	{
-		_lastDir_M_Time[_realURI] = cur_M_Time;
-		_lastDir_C_Time[_realURI] = cur_C_Time;
-		return false;
-	}
-	
-	return true;
-}
-
 bool ResponseBuilder::foundDefaultPath( void ){
 
 	string saveURI = _realURI;
@@ -68,7 +21,7 @@ bool ResponseBuilder::foundDefaultPath( void ){
 
 	if (it == _config->indexFiles.end())
 		return false;
-	else if ( (_fileInfo.st_mode & S_IFMT) == S_IFREG )
+	else if ( (_fileInfo.st_mode & S_IFMT) == S_IFREG and ( _fileInfo.st_mode & S_IRUSR) ) // check if the index.html is a file AND can be read
 	{
 		_realURI = saveURI;
 		return true;
@@ -76,20 +29,32 @@ bool ResponseBuilder::foundDefaultPath( void ){
 	return false;
 }
 
+void	ResponseBuilder::listingHTMLBuilder( void ){
+
+	// TODO  EDGE CASE TO HANDLE :  what is we can't write in the directory
+
+	/*
+		! NOTE FOR EDGE CASE
+		Either I make a timeStamp checker + a authorization checker to avoiding generating the same file over and over
+		OR
+		I just check the authorizations within the 
+	*/
+}
+
 void ResponseBuilder::generateListingHTML( void ){
 
-	// ! STEP 0 : check if we can write and 
+	// ! STEP 0 : check if we can read in the directory
 	if ( not _isROK )
 	{
 		setError(CODE_403_FORBIDDEN);
 		return;
 	}
 	// ! STEP 1 : Checks if the Directory has been touched since, and if there is a default path
-	else if ( isDirectoryUnchanged() and foundDefaultPath())
+	else if (foundDefaultPath())
 		return;
 
 	// ! STEP 2 : Generate an index.html for the current page	
-	// Build the HTLM generator
+	listingHTMLBuilder();
 
 
 	// ! STEP 3 : Sauvegarder un index.html dans le dossier cible (verifier si les droits autho sont OK dans le dossier)

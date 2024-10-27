@@ -270,6 +270,11 @@ void	ResponseBuilder::buildHeaders(){
 	
 	Headers.contentLenght = streamContentLenght.str();
 
+	// TODO : Coockie and session generator
+	{
+		
+	}
+
 	// Building Final Headers
 	streamMasterHeader	<< Headers.statusLine
 						<< Headers.timeStamp

@@ -34,6 +34,8 @@
 - Executing the CGI ⛔
 	==> Possibly extract timestamp from Last-Modified CGI code source for avoiding generating twice the same CGI.html ( depends if the CGI.py does outputs the same thing or not, will depend mosty on PATH_INFO and body, if one or another are exploited)
 
+- Checker a chaque fois les authos des fichiers d'erreurs. Si un 404 est corrompu/illisible ou introuvable, en generer un a la volee (ou simplement renvoyer le code au navigateur)
+
 
 ## BUILDING BODY
 - Done by Seb, needs explanations on the stream ⛔
@@ -42,14 +44,6 @@
 
 ## HOTFIX :
 
-Retour de page IMAGES foireux
+Retour de page IMAGES foireux ✅ => image_chat.jpeg was an empty file
 
 Refactorer le timestamp path access to a higher scope, accessible to all clients (needs a generic function for CGI as well)
-
-
-
-✅
-
-⛔
-
-🔥

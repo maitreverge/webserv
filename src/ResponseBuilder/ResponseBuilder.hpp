@@ -88,11 +88,12 @@ private:
 
 
 	// generateListingHTML.cpp
-	map<string, timespec> _lastDir_M_Time;
-	map<string, timespec> _lastDir_C_Time;
+	// map<string, timespec> _lastDir_M_Time;
+	// map<string, timespec> _lastDir_C_Time;
 	void	generateListingHTML( void );
 	bool	foundDefaultPath( void );
-	bool	isDirectoryUnchanged( void );
+	// bool	isDirectoryUnchanged( void );
+	void	listingHTMLBuilder( void);
 
 
 
