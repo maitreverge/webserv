@@ -1,46 +1,28 @@
 #include "ConfigFileParser.hpp"
-#include "tmpConfig.hpp"
-#include <cstdlib>
 
-bool isServerData(const std::string& category)
+
+
+/**========================================================================
+ *                             WIP
+ *?  il faut brancher la classe au reste du projet!
+ *?  Il devrait etre possible d'initialiser cette structure dans Kernel,
+ *?  et linker la structure de config dans les servers
+ *?  => tests a faire!
+ *========================================================================**/
+
+int main(void)
 {
-	const std::string prefix = "server";
-	return category.size() >= prefix.size() && category.find(prefix) == 0;
+	Config configStruct;
+	ConfigFileParser toto;
+	toto.extractDataFromConfigFile("config.ini");
+	toto.intializeConfigStruct(configStruct);
+	return (0);
 }
 
-void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, Config& configStruct, const char str[], e_errorCodes e)
+void ConfigFileParser::parseConfigFile(Config configStruct)
 {
-	if (catIt->first == "errorPages" && itemIt->first == str)
-		if (!(*valIt).empty())
-			configStruct.errorPaths.insert(std::make_pair(e, itemIt->second[0]));
-}
-
-void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::string& field, const char str[], int& i)
-{
-	if (isServerData(catIt->first) && itemIt->first == str)
-		if (!(*valIt).empty())
-			field = itemIt->second[0];
-}
-
-void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, short& field, const char str[])
-{
-	if (catIt->first == "global" && itemIt->first == str)
-		if (!itemIt->second[0].empty())
-			field = std::atoi(itemIt->second[0].c_str());
-}
-
-void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, bool& field, const char str[])
-{
-	if (catIt->first == "global" && itemIt->first == str)
-		if (!itemIt->second[0].empty())
-			field = std::atoi(itemIt->second[0].c_str());
-}
-
-void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::vector<std::string> vec, const char str[])
-{
-	if (catIt->first == "global" && itemIt->first == str)
-		if (!(*valIt).empty())
-			vec.push_back(*valIt);
+	extractDataFromConfigFile("config.ini");
+	intializeConfigStruct(configStruct);
 }
 
 void	ConfigFileParser::intializeConfigStruct(Config configStruct)
@@ -94,55 +76,87 @@ void	ConfigFileParser::initializeServers(Config configStruct, int& i)
 	}
 }
 
-int main(void)
+/**========================================================================
+ *                           SETCONFIGVALUE OVERLOADS
+ *========================================================================**/
+void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, Config& configStruct, const char str[], e_errorCodes e)
 {
-	Config configStruct;
-	ConfigFileParser toto;
-	toto.extractDataFromConfigFile("config.ini");
-	toto.intializeConfigStruct(configStruct);
-	// toto.initializeServers();
-	return (0);
+	if (catIt->first == "errorPages" && itemIt->first == str)
+		if (!(*valIt).empty())
+			configStruct.errorPaths.insert(std::make_pair(e, itemIt->second[0]));
 }
 
-
-void	ConfigFileParser::print(std::string str)
+void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::string& field, const char str[], int& i)
 {
-	std::cout << str << std::endl;
+	if (isServerData(catIt->first) && itemIt->first == str)
+		if (!(*valIt).empty())
+			field = itemIt->second[0];
 }
 
-void	ConfigFileParser::trim(std::string& str)
+void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, short& field, const char str[])
 {
-	str.erase(0, str.find_first_not_of(" \t\r\n"));
-	str.erase(str.find_last_not_of(" \t\r\n") + 1);
+	if (catIt->first == "global" && itemIt->first == str)
+		if (!itemIt->second[0].empty())
+			field = std::atoi(itemIt->second[0].c_str());
 }
 
-void ConfigFileParser::printData(const std::map<std::string, std::map<std::string, std::vector<std::string> > >& _data) {
-	for (std::map<std::string, std::map<std::string, std::vector<std::string> > >::const_iterator catIt = _data.begin(); catIt != _data.end(); ++catIt)
+void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, bool& field, const char str[])
+{
+	if (catIt->first == "global" && itemIt->first == str)
+		if (!itemIt->second[0].empty())
+			field = std::atoi(itemIt->second[0].c_str());
+}
+
+void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::vector<std::string> vec, const char str[])
+{
+	if (catIt->first == "global" && itemIt->first == str)
+		if (!(*valIt).empty())
+			vec.push_back(*valIt);
+}
+
+/**========================================================================
+ *                           EXTRACTION FROM FILE
+ *========================================================================**/
+void	ConfigFileParser::extractKeyValuePairs(std::string& line, std::string& currentCategory)
+{
+	size_t colonPos = line.find('=');
+	if (colonPos != std::string::npos)
 	{
-		std::cout << "Category: " << catIt->first << std::endl;
-		for (std::map<std::string, std::vector<std::string> >::const_iterator itemIt = catIt->second.begin(); itemIt != catIt->second.end(); ++itemIt)
+		std::string key = line.substr(0, colonPos);
+		std::string value = line.substr(colonPos + 1);
+		trim(key); trim(value);
+		std::istringstream valueStream(value);
+		std::string singleValue;
+		while (std::getline(valueStream, singleValue, ','))
 		{
-			std::cout << "  Key: >" << itemIt->first +"<" << std::endl;
-			std::cout << "  Values: >";
-			for (std::vector<std::string>::const_iterator valIt = itemIt->second.begin(); valIt != itemIt->second.end(); ++valIt)
-			{
-				std::cout << *valIt << "< >"; 
-			}
-			std::cout << std::endl;
+			trim(singleValue);
+			_data[currentCategory][key].push_back(singleValue);
 		}
 	}
 }
 
-void ConfigFileParser::printServerData(const server _serverStruct[], size_t size) {
-	for (size_t i = 0; i < size; ++i) {
-		std::cout << "Server " << i + 1 << ":" << std::endl;
-		std::cout << "  Host: " << _serverStruct[i].host << std::endl;
-		std::cout << "  Port: " << _serverStruct[i].port << std::endl;
-		std::cout << "  Server Name: " << _serverStruct[i].serverName << std::endl;
-		std::cout << "------------------------" << std::endl;
+int	ConfigFileParser::extractDataFromConfigFile(const std::string str)
+{
+	std::ifstream file(str.c_str());
+	if (!file.is_open())
+		return (std::cerr << "could not open config file" << std::endl, 1);
+	std::string line;
+	std::string currentCategory;
+	while (getline(file, line))
+	{
+		if (ignoreComents(line) == 0)
+			continue ;
+		if(getCurrentCategory(line, currentCategory) == 0)
+			continue ;
+		extractKeyValuePairs(line, currentCategory);
 	}
+	file.close();
+	return (0);
 }
 
+/**========================================================================
+ *                           UTILS
+ *========================================================================**/
 int	ConfigFileParser::ignoreComents(std::string& line)
 {
 	size_t firstChar = line.find('#');
@@ -167,56 +181,58 @@ int	ConfigFileParser::getCurrentCategory(std::string& line, std::string& current
 		if (lastChar != std::string::npos && line[lastChar] == ']')
 		{
 			currentCategory = line.substr(1, lastChar - 1);
-			// print("\nCurrent category: " + currentCategory);
-			if (_data.find(currentCategory) == _data.end()) {
+			if (_data.find(currentCategory) == _data.end())
 				_data[currentCategory] = std::map<std::string, std::vector<std::string> >();
-				// print("Added new category: " + currentCategory);
-			}
 			return (0);
 		}
 	}
-	// print(currentCategory + " =>	" + line);
 	return (1);
 }
 
-void	ConfigFileParser::extractKeyValuePairs(std::string& line, std::string& currentCategory)
+bool ConfigFileParser::isServerData(const std::string& category)
 {
-	size_t colonPos = line.find('=');
-	if (colonPos != std::string::npos)
+	const std::string prefix = "server";
+	return category.size() >= prefix.size() && category.find(prefix) == 0;
+}
+
+
+void	ConfigFileParser::print(std::string str)
+{
+	std::cout << str << std::endl;
+}
+
+void	ConfigFileParser::trim(std::string& str)
+{
+	str.erase(0, str.find_first_not_of(" \t\r\n"));
+	str.erase(str.find_last_not_of(" \t\r\n") + 1);
+}
+
+/**========================================================================
+ *                           DISPLAY
+ *========================================================================**/
+void ConfigFileParser::printData(const std::map<std::string, std::map<std::string, std::vector<std::string> > >& _data)
+{
+	for (std::map<std::string, std::map<std::string, std::vector<std::string> > >::const_iterator catIt = _data.begin(); catIt != _data.end(); ++catIt)
 	{
-		std::string key = line.substr(0, colonPos);
-		std::string value = line.substr(colonPos + 1);
-		trim(key); trim(value);
-		std::istringstream valueStream(value);
-		std::string singleValue;
-		while (std::getline(valueStream, singleValue, ','))
+		std::cout << "Category: " << catIt->first << std::endl;
+		for (std::map<std::string, std::vector<std::string> >::const_iterator itemIt = catIt->second.begin(); itemIt != catIt->second.end(); ++itemIt)
 		{
-			trim(singleValue);
-			_data[currentCategory][key].push_back(singleValue);
+			std::cout << "  Key: >" << itemIt->first +"<" << std::endl;
+			std::cout << "  Values: >";
+			for (std::vector<std::string>::const_iterator valIt = itemIt->second.begin(); valIt != itemIt->second.end(); ++valIt)
+				std::cout << *valIt << "< >"; 
+			std::cout << std::endl;
 		}
 	}
 }
 
-int	ConfigFileParser::extractDataFromConfigFile(const std::string str)
+void ConfigFileParser::printServerData(const server _serverStruct[], size_t size)
 {
-	std::ifstream file(str.c_str());
-	if (!file.is_open())
-		return (std::cerr << "could not open config file" << std::endl, 1);
-	// print("Config file opened");
-	std::string line;
-	std::string currentCategory;
-	while (getline(file, line))
-	{
-		// ignore comments
-		if (ignoreComents(line) == 0)
-			continue ;
-		// get current category
-		if(getCurrentCategory(line, currentCategory) == 0)
-			continue ;
-		// add key-value(s) to category
-		extractKeyValuePairs(line, currentCategory);
+	for (size_t i = 0; i < size; ++i) {
+		std::cout << "Server " << i + 1 << ":" << std::endl;
+		std::cout << "  Host: " << _serverStruct[i].host << std::endl;
+		std::cout << "  Port: " << _serverStruct[i].port << std::endl;
+		std::cout << "  Server Name: " << _serverStruct[i].serverName << std::endl;
+		std::cout << "------------------------" << std::endl;
 	}
-	file.close();
-	// print("Config file closed");
-	return (0);
 }
