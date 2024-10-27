@@ -8,6 +8,13 @@ bool isServerData(const std::string& category)
 	return category.size() >= prefix.size() && category.find(prefix) == 0;
 }
 
+void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, Config& configStruct, const char str[], e_errorCodes e)
+{
+	if (catIt->first == "errorPages" && itemIt->first == "errorPage_400")
+		if (!(*valIt).empty())
+			configStruct.errorPaths.insert(std::make_pair(CODE_400_BAD_REQUEST, itemIt->second[0]));
+}
+
 void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 {
 	int	i = 0;
@@ -30,30 +37,14 @@ void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 					if (!(*valIt).empty())
 						configStruct.indexFiles.push_back(*valIt);
 				// category "errorPages"
-				if (catIt->first == "errorPages" && itemIt->first == "errorPage_400")
-					if (!(*valIt).empty())
-						configStruct.errorPaths.insert(std::make_pair(CODE_400_BAD_REQUEST, itemIt->second[0]));
-				if (catIt->first == "errorPages" && itemIt->first == "errorPage_401")
-					if (!(*valIt).empty())
-						configStruct.errorPaths.insert(std::make_pair(CODE_401_UNAUTHORIZED, itemIt->second[0]));
-				if (catIt->first == "errorPages" && itemIt->first == "errorPage_403")
-					if (!(*valIt).empty())
-						configStruct.errorPaths.insert(std::make_pair(CODE_403_FORBIDDEN, itemIt->second[0]));
-				if (catIt->first == "errorPages" && itemIt->first == "errorPage_404")
-					if (!(*valIt).empty())
-						configStruct.errorPaths.insert(std::make_pair(CODE_404_NOT_FOUND, itemIt->second[0]));
-				if (catIt->first == "errorPages" && itemIt->first == "errorPage_500")
-					if (!(*valIt).empty())
-						configStruct.errorPaths.insert(std::make_pair(CODE_500_INTERNAL_SERVER_ERROR, itemIt->second[0]));
-				if (catIt->first == "errorPages" && itemIt->first == "errorPage_502")
-					if (!(*valIt).empty())
-						configStruct.errorPaths.insert(std::make_pair(CODE_502_BAD_GATEWAY, itemIt->second[0]));
-				if (catIt->first == "errorPages" && itemIt->first == "errorPage_503")
-					if (!(*valIt).empty())
-						configStruct.errorPaths.insert(std::make_pair(CODE_503_SERVICE_UNAVAILABLE, itemIt->second[0]));
-				if (catIt->first == "errorPages" && itemIt->first == "errorPage_504")
-					if (!(*valIt).empty())
-						configStruct.errorPaths.insert(std::make_pair(CODE_504_GATEWAY_TIMEOUT, itemIt->second[0]));
+				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_400", CODE_400_BAD_REQUEST);
+				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_401", CODE_401_UNAUTHORIZED);
+				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_403", CODE_403_FORBIDDEN);
+				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_404", CODE_404_NOT_FOUND);
+				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_500", CODE_500_INTERNAL_SERVER_ERROR);
+				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_502", CODE_502_BAD_GATEWAY);
+				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_503", CODE_503_SERVICE_UNAVAILABLE);
+				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_504", CODE_504_GATEWAY_TIMEOUT);
 				// category server
 				if (isServerData(catIt->first) && itemIt->first == "host")
 				{

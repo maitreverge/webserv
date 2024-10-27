@@ -38,4 +38,7 @@ class ConfigFileParser
 	int		extractDataFromConfigFile(const std::string);
 	void	intializeConfigStruct(Config configStruct);
 	void	printServerData(const server serverStruct[], size_t size);
+	void	setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, Config& configStruct, const char str[], e_errorCodes e);
+
+
 };
