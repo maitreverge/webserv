@@ -34,7 +34,7 @@ struct ResponseHeaders
 	ResponseHeaders()
 	{
 		masterHeader.clear();
-		bodyLenght = 0; // ? doublon par rapport a la struct client 
+		bodyLenght = 0;
 	}
 };
 
@@ -105,11 +105,6 @@ class ResponseBuilder
 	bool 	redirectURI( void );
 	void 	swapForRoot( void );
 	bool	isErrorRedirect( void );
-
-
-
-
-
 
 	// generateListingHTML.cpp
 	/*

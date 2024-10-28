@@ -91,12 +91,16 @@ void ResponseBuilder::sanatizeURI( string &oldURI ){
 
 bool ResponseBuilder::redirectURI( void ){
 
-	// ! ADAPT METHOD for CODE 300
-	if (_config->redirection.empty())
+	try
+	{
+		_config->redirection.at(_realURI);
+	}
+	catch(const std::exception& e)
+	{
 		return false;
+	}
 	
 	_errorType = CODE_307_TEMPORARY_REDIRECT;
-	_realURI.clear();
 	return true;
 }
 
@@ -173,6 +177,8 @@ void	ResponseBuilder::validateURI( void ){
 	}
 
 }
+
+
 void	ResponseBuilder::buildHeaders(){
 
 	errorCode codes;
@@ -181,8 +187,9 @@ void	ResponseBuilder::buildHeaders(){
 					streamTimeStamp,
 					streamContentLenght,
 					streamMasterHeader;
+
 	
-	// Madatory Headers
+	// -------------- Madatory Headers --------------  
 
 	streamStatusLine	<< HTTP_PROTOCOL
 						<< SPACE
@@ -190,22 +197,27 @@ void	ResponseBuilder::buildHeaders(){
 						<< SPACE 
 						<< codes.getCode(_errorType)
 						<< HTTP_HEADER_SEPARATOR;
-	
 	Headers.statusLine = streamStatusLine.str();
 
-	streamTimeStamp	<< "Date:"
-					<< SPACE 
-					<< timeStamp::getTime() // ! TIMESTAMP
-					<< HTTP_HEADER_SEPARATOR;
-
+	streamTimeStamp		<< "Date:"
+						<< SPACE 
+						<< timeStamp::getTime()
+						<< HTTP_HEADER_SEPARATOR;
 	Headers.timeStamp = streamTimeStamp.str();
+	
+	// Content Lenght
+	streamContentLenght	<< "Content-Length:"
+						<< SPACE
+						<< Headers.bodyLenght
+						<< HTTP_HEADER_SEPARATOR;
+	Headers.contentLenght = streamContentLenght.str();
 
 	
-	// Optionals Headers
-	// * Content-Type (if body)
+	// --------------  Optionals Headers --------------  
+
 	if (Headers.bodyLenght > 0)
 	{
-		stringstream streamContentType, streamContentLenght;
+		stringstream streamContentType;
 		
 		// Content Type
 		string contentType = extractType(_fileExtension);
@@ -215,19 +227,6 @@ void	ResponseBuilder::buildHeaders(){
 							<< HTTP_HEADER_SEPARATOR;
 		
 		Headers.contentType = streamContentType.str();
-		
-		// Content Lenght
-		streamContentLenght	<< "Content-Length:"
-							<< SPACE
-							<< Headers.bodyLenght
-							<< HTTP_HEADER_SEPARATOR;
-		
-		Headers.contentLenght = streamContentLenght.str();
-	}
-
-	// TODO : Coockie and session generator
-	{
-		
 	}
 
 	if (isErrorRedirect())
@@ -235,20 +234,25 @@ void	ResponseBuilder::buildHeaders(){
 		stringstream streamLocation;
 		streamLocation	<< "Location:"
 						<< SPACE
-						// << _config->redirection
-						<< "http://www.github.com/maitreverge"
+						<< _config->redirection.at(_realURI)
+						// << "http://www.github.com/maitreverge"
 						<< HTTP_HEADER_SEPARATOR;
-		
 		Headers.location = streamLocation.str();
 	}
 
+	// TODO : Coockie and session generator
+	{
+		
+	}
+	// ----------------- Building Final Headers ----------------
 
-	// Building Final Headers
 	streamMasterHeader	<< Headers.statusLine
 						<< Headers.timeStamp
-						<< Headers.contentType
-						<< (Headers.bodyLenght ? Headers.contentLenght : Headers.transfertEncoding)
+						<< Headers.contentType 
+						// Optionals
 						<< Headers.location
+						// << (Headers.bodyLenght ? Headers.contentLenght : Headers.transfertEncoding)
+						<< Headers.contentLenght
 						<< HTTP_HEADER_SEPARATOR; // HEADER / BODY SEPARATOR
 	
 	string tempAllHeaders = streamMasterHeader.str();
@@ -264,10 +268,11 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	_client = &inputClient; // init client
 	_config = &inputConfig; // init config
 	
+	_realURI = _client->header.getURI();
+
 	extractMethod();
 	if ( not redirectURI())
 	{
-		_realURI = _client->header.getURI();
 		
 		resolveURI();
 		validateURI();

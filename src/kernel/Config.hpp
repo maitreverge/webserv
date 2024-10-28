@@ -14,7 +14,7 @@ struct Config
 	bool							listingDirectories; // activer ou non le listing des repertoires
 	map<e_errorCodes, string>		errorPaths;
 	string rootSearch;
-	string redirection;
+	map<string, string> redirection; // Associate a Route = One Redirection
 
 	Config()
 	{
@@ -65,6 +65,7 @@ struct Config
 		errorPaths.insert(std::make_pair(CODE_504_GATEWAY_TIMEOUT, "errorPages/504.html"));
 
 		rootSearch = "/var/www/images";
-		redirection = "/testResponseBuilder/dir1/cats.html";
+		redirection.insert(std::make_pair(/* ONE ROUTE*/"/", /* ONE REDIRECTION*/"/testResponseBuilder/redirectDefaultPath/cats.html"));
+		redirection.insert(std::make_pair("/nope", "/nopenopenope"));
 	}
 };
