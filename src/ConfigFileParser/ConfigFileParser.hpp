@@ -39,7 +39,7 @@ class ConfigFileParser
 		void	extractKeyValuePairs(std::string& line, std::string& currentCategory);
 		void	printServerData(const server serverStruct[], size_t size);
 		void	setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, Config& configStruct, const char str[], e_errorCodes e);
-		void	setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::string& field, const char str[], int& i);
+		void	setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::string& field, const char str[]);
 		void	setConfigValue(catIt& catIt, itemIt& itemIt, short& field, const char str[]);
 		void	setConfigValue(catIt& catIt, itemIt& itemIt, bool& field, const char str[]);
 		void	setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::vector<std::string> vec, const char str[]);

@@ -10,14 +10,14 @@
  *?  => tests a faire!
  *========================================================================**/
 
-int main(void)
-{
-	Config configStruct;
-	ConfigFileParser toto;
-	toto.extractDataFromConfigFile("config.ini");
-	toto.intializeConfigStruct(configStruct);
-	return (0);
-}
+// int main(void)
+// {
+// 	Config configStruct;
+// 	ConfigFileParser toto;
+// 	toto.extractDataFromConfigFile("config.ini");
+// 	toto.intializeConfigStruct(configStruct);
+// 	return (0);
+// }
 
 void ConfigFileParser::parseConfigFile(Config configStruct)
 {
@@ -50,9 +50,9 @@ void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_503", CODE_503_SERVICE_UNAVAILABLE);
 				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_504", CODE_504_GATEWAY_TIMEOUT);
 				// category server
-				setConfigValue(catIt, itemIt, valIt, _serverStruct[i].host, "host", i);
-				setConfigValue(catIt, itemIt, valIt, _serverStruct[i].port, "port", i);
-				setConfigValue(catIt, itemIt, valIt, _serverStruct[i].serverName, "serverName", i);
+				setConfigValue(catIt, itemIt, valIt, _serverStruct[i].host, "host");
+				setConfigValue(catIt, itemIt, valIt, _serverStruct[i].port, "port");
+				setConfigValue(catIt, itemIt, valIt, _serverStruct[i].serverName, "serverName");
 			}
 		}
 	}
@@ -86,7 +86,7 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt
 			configStruct.errorPaths.insert(std::make_pair(e, itemIt->second[0]));
 }
 
-void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::string& field, const char str[], int& i)
+void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::string& field, const char str[])
 {
 	if (isServerData(catIt->first) && itemIt->first == str)
 		if (!(*valIt).empty())
@@ -97,7 +97,7 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, short& field
 {
 	if (catIt->first == "global" && itemIt->first == str)
 		if (!itemIt->second[0].empty())
-			field = std::atoi(itemIt->second[0].c_str());
+			field = (short)std::atoi(itemIt->second[0].c_str());
 }
 
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, bool& field, const char str[])
