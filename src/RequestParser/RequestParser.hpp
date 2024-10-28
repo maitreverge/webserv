@@ -37,11 +37,11 @@ struct Client;
  *========================================================================**/
 class RequestParser
 {
-		#ifdef UNIT_TEST
-		public:
-		#else
-		private:
-		#endif
+	#ifdef UNIT_TEST
+	public:
+	#else
+	private:
+	#endif
 
 		//attributes
 		std::string											_method;
@@ -81,6 +81,7 @@ class RequestParser
 		bool		getIsValid() const;
 		Client*		getClient() const;
 		Headers		getHeaders() const;
+		std::map<std::string, std::vector<std::string> >		getTmpHeaders() const;
 
 		// display methods
 		void	displayParsingResult() const;

@@ -5,16 +5,23 @@
 
 class Error
 {
+	#ifdef UNIT_TEST
+	public:
+	#else
 	private:
-		std::map<int, std::string> _errorPages;
+	#endif
+	
+		std::vector<std::string> 	_errorPages;
+		int							_erorCode;
 
+		std::vector<char>	buildErrorRequest(unsigned long errorCode);
+		std::string			getErrorPagePath(unsigned long errorCode) const;
+		std::vector<char>	stringToVector(std::string& str);
 	public:
 		Error();
 		~Error();
 		static Error& getInstance();
-		void				handleError(int errorCode, struct Client &client);
-		void				handleError(std::string message) const;
-		std::vector<char>	buildErrorRequest(int errorCode);
-		std::string			getErrorPagePath(int errorCode) const;
-		std::vector<char>	stringToVector(std::string& str);
+		int		getErrorCode() const;
+		void	handleError(unsigned long errorCode, struct Client &client);
+		void	handleError(std::string message) const;
 };
