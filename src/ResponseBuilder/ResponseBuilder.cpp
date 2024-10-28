@@ -38,6 +38,55 @@ ResponseBuilder::ResponseBuilder( void ) :
 	_mimeTypes.insert(std::make_pair("ogv", "video/ogv"));
 }
 
+ResponseBuilder::ResponseBuilder( const ResponseBuilder & ) :
+	_isDirectory(false),
+	_isFile(false),
+	_isCGI(false),
+	_errorType(CODE_200_OK),
+	_headerSent(false)
+	{
+	// this->_client = src._client;
+	// this->_config = src._config;
+	// this->_mimeTypes = src._mimeTypes;
+	// this->_headerSent = src._headerSent;
+
+	// this->Headers = src.Headers;
+	// this->_method = src._method;
+	// this->_errorType = src._errorType;
+	// this->_realURI = src._realURI;
+	// this->_fileExtension = src._fileExtension;
+	// this->_fileInfo = src._fileInfo;			
+	// this->_isDirectory = src._isDirectory;	
+	// this->_isFile = src._isFile;
+	// this->_isCGI = src._isCGI;
+	// this->_fileName = src._fileName;
+	_mimeTypes.insert(std::make_pair("html", "text/html"));
+	_mimeTypes.insert(std::make_pair("htm", "text/htm"));
+	_mimeTypes.insert(std::make_pair("txt", "text/txt"));
+	_mimeTypes.insert(std::make_pair("css", "text/css"));
+	_mimeTypes.insert(std::make_pair("xml", "text/xml"));
+	// Application Content Types
+	_mimeTypes.insert(std::make_pair("js", "application/javascript")); // FIXME doubt on this one
+	_mimeTypes.insert(std::make_pair("json", "application/json"));
+	_mimeTypes.insert(std::make_pair("pdf", "application/pdf"));
+	_mimeTypes.insert(std::make_pair("zip", "application/zip"));
+	// Image Content Types
+	_mimeTypes.insert(std::make_pair("jpeg", "image/jpeg"));
+	_mimeTypes.insert(std::make_pair("jpg", "image/jpg"));
+	_mimeTypes.insert(std::make_pair("png", "image/png"));
+	_mimeTypes.insert(std::make_pair("gif", "image/gif"));
+	_mimeTypes.insert(std::make_pair("webp", "image/webp"));
+	_mimeTypes.insert(std::make_pair("bmp", "image/bmp"));
+	// Audio Content Types
+	_mimeTypes.insert(std::make_pair("mp3", "audio/mp3"));
+	_mimeTypes.insert(std::make_pair("mpeg", "audio/mpeg"));
+	_mimeTypes.insert(std::make_pair("ogg", "audio/ogg"));
+	_mimeTypes.insert(std::make_pair("wav", "audio/wav"));
+	// Video Content Types
+	_mimeTypes.insert(std::make_pair("mp4", "video/mp4"));
+	_mimeTypes.insert(std::make_pair("webm", "video/webm"));
+	_mimeTypes.insert(std::make_pair("ogv", "video/ogv"));
+}
 
 ResponseBuilder::~ResponseBuilder( void ){}
 
@@ -57,7 +106,6 @@ void ResponseBuilder::sanatizeURI( string &oldURI ){
 		found = oldURI.find(needle);
 	}
 }
-
 
 void ResponseBuilder::resolveURI( void )
 {
@@ -211,14 +259,14 @@ void	ResponseBuilder::buildHeaders(){
 						<< _errorType
 						<< SPACE 
 						<< codes.getCode(_errorType)
-						<< HTTP_REPONSE_SEPARATOR;
+						<< HTTP_HEADER_SEPARATOR;
 	
 	Headers.statusLine = streamStatusLine.str();
 
 	streamTimeStamp	<< "Date:"
 					<< SPACE 
 					<< timeStamp::getTime() // ! TIMESTAMP
-					<< HTTP_REPONSE_SEPARATOR;
+					<< HTTP_HEADER_SEPARATOR;
 
 	Headers.timeStamp = streamTimeStamp.str();
 
@@ -230,7 +278,7 @@ void	ResponseBuilder::buildHeaders(){
 		streamContentType	<< "Content-Type:"
 							<< SPACE 
 							<< contentType 
-							<< HTTP_REPONSE_SEPARATOR;
+							<< HTTP_HEADER_SEPARATOR;
 		
 		Headers.contentType = streamContentType.str();
 	}
@@ -242,7 +290,7 @@ void	ResponseBuilder::buildHeaders(){
 		streamContentLenght	<< "Content-Length:"
 							<< SPACE
 							<< Headers.bodyLenght
-							<< HTTP_REPONSE_SEPARATOR;
+							<< HTTP_HEADER_SEPARATOR;
 	}
 	
 	Headers.contentLenght = streamContentLenght.str();
@@ -293,8 +341,8 @@ void	ResponseBuilder::extractMethod( void ){
 
 void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
-	Logger::getInstance().log(DEBUG, "Response Builder Get Header");
-
+	Logger::getInstance().log(DEBUG, "Response Builder Get Header", inputClient);
+		
 	if (_headerSent)
 	{
 
@@ -336,37 +384,48 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	// Copying the build Headers in headerSend
 	_client->headerSend = Headers.masterHeader;
 
-	string temp(Headers.masterHeader.begin(), Headers.masterHeader.end() );
-	cout << temp << endl;
+	// string temp(Headers.masterHeader.begin(), Headers.masterHeader.end() );
+	// cout << "HOULA IN FLO" <<  temp << endl;
 
 
 	_headerSent = true;
 }
 
+ssize_t	ResponseBuilder::getBody( Client &inputClient ){
 
-bool	ResponseBuilder::getBody( void ){
+	Logger::getInstance().log(INFO, "Response Builder Get Body", inputClient);
+	// std::cout << "CLIENT " << inputClient.fd << std::endl;
+	// std::cout << "CLIENT " << inputClient.fd << std::endl;
 
-	Logger::getInstance().log(DEBUG, "Response Builder Get Body");
+	if (!this->_ifs.is_open())
+		this->_ifs.open("test.html", std::ios::binary);
 
-	static std::ifstream BodyStream("test.html", std::ios::binary);
 	// this->_bodyStream.open(_realURI.c_str(), std::ios::binary);
+// this->inputClient.->messageSend.resize(3000);
+		// this->inputClient.->messageSend.resize(SEND_BUFF_SIZE);
 
-	if (BodyStream.is_open())
+	if (this->_ifs.is_open())
 	{
-		BodyStream.read(_client->messageSend.data(), static_cast<std::streamsize>(_client->messageSend.size()));		
-		// std::string str(client.messageSend.data(), BodyStream.gcount());	
+			
+		this->_ifs.read(inputClient.messageSend.data(), static_cast<std::streamsize>(inputClient.messageSend.size()));	
+	
+		// std::string str(inputClient.messageSend.data(), this->_ifs.gcount());	
 		// Logger::getInstance().log(INFO, str);  
-		
-		if (BodyStream.eof()) 
+		// 	Logger::getInstance().log(DEBUG, "apres ");	
+		// std::string str2(inputClient.messageSend.data(), inputClient.messageSend.size());	
+		// Logger::getInstance().log(INFO, str2);  
+		if (this->_ifs.eof()) 
 		{
-			Logger::getInstance().log(DEBUG, "Fin de fichier atteinte");
-			BodyStream.clear(); // Réinitialiser les flags pour continuer la lecture si besoin
-			BodyStream.close();
+			Logger::getInstance().log(INFO, "Fin de fichier atteinte", inputClient);
+			this->_ifs.clear(); // Réinitialiser les flags pour continuer la lecture si besoin
+			// this->_ifs.close();
+		}
 
-			// return false;
-			// ofs.seekg(0); // Remettre le pointeur au début du fichier si tu veux recommencer
-		}    
-		return true;
+		std::stringstream ss;
+		ss << "gcount: " << this->_ifs.gcount();
+		Logger::getInstance().log(DEBUG, ss.str(), inputClient);
+
+		return static_cast<ssize_t>(this->_ifs.gcount());
     }
 	else
 	{
@@ -376,11 +435,11 @@ bool	ResponseBuilder::getBody( void ){
 			Possibly just do
 			----------------
 			string error = "Internal error Message";
-			_client->messageSend.insert(_client->messageSend.end(), error.begin(), error.end());
+			inputClient->messageSend.insert(inputClient->messageSend.end(), error.begin(), error.end());
 			----------------
 			despite already sent a Content-Lenght in the headers (or possibly not)
 		*/
-		Logger::getInstance().log(ERROR, "Failed Stream happend");
-    }
-	return false;
+		Logger::getInstance().log(ERROR, "Failed Stream happend", inputClient);
+    }	
+	return 0;
 }

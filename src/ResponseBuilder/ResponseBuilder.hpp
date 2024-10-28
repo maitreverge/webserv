@@ -8,6 +8,7 @@
 #define HTTP_PROTOCOL "HTTP/1.1"
 #define SPACE " "
 #define HTTP_REPONSE_SEPARATOR "\r\n\r\n"
+#define HTTP_HEADER_SEPARATOR "\r\n"
 
 struct Client;
 struct Config;
@@ -84,11 +85,32 @@ private:
 public:
 
 	ResponseBuilder( void );
-	~ResponseBuilder();
+	~ResponseBuilder( void );
+	ResponseBuilder( const ResponseBuilder & );
+	ResponseBuilder & operator=( const ResponseBuilder & )
+	{
+		// this->_client = rhs._client;
+		// this->_config = rhs._config;
+		// this->_mimeTypes = rhs._mimeTypes;
+		// this->_headerSent = rhs._headerSent;
+
+		// this->Headers = rhs.Headers;
+		// this->_method = rhs._method;
+		// this->_errorType = rhs._errorType;
+		// this->_realURI = rhs._realURI;
+		// this->_fileExtension = rhs._fileExtension;
+		// this->_fileInfo = rhs._fileInfo;			
+		// this->_isDirectory = rhs._isDirectory;	
+		// this->_isFile = rhs._isFile;
+		// this->_isCGI = rhs._isCGI;
+		// this->_fileName = rhs._fileName;	
 	
-	// std::ifstream _bodyStream;
-	bool _headerSent; // master bool
+		return *this;
+	};
+
+	bool _headerSent;
+	std::ifstream _ifs;
 
 	void	getHeader( Client &, Config& );
-	bool	getBody( void );
+	ssize_t	getBody( Client &inputClient );
 };

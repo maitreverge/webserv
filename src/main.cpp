@@ -17,12 +17,13 @@ void signalHandle(int)
 {		
 	Kernel::_exit = true;	
 }
+struct mystruct{int i; mystruct(){i = 42;} };
 
 int main()
 {
 	signal(2, signalHandle);
 	disableSignalEcho();
-	
+		
 	std::cout << std::endl;
 	Logger::getInstance().log(INFO, "Server is Online!");
 	Kernel kernel;

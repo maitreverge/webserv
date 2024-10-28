@@ -19,7 +19,7 @@ Error::~Error() {}
 
 Error& Error::getInstance()
 {
-	static Error(instance);
+	static Error instance;
 	return instance;
 }
 

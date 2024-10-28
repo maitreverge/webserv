@@ -13,7 +13,9 @@
 #include "ResponseBuilder.hpp"
 
 #define BUFF_SIZE 4096
+
 #define MAX_HDR_SIZE 8192
+#define SEND_BUFF_SIZE 6
 #define MAX_CNT_SIZE 30000000
 
 // vector<char> masterBuilder(vector<char> &bodyInput, e_errorCodes errorCode,
@@ -37,7 +39,8 @@ struct Client
 	e_errorCodes		statusCode;
 	bool tog;
 	std::vector<char>	headerSend;
-	bool				ready;
+	bool				readySend;
+	bool				readyRecev;
 
 	Client()
 	{
@@ -48,9 +51,11 @@ struct Client
 		statusCode = CODE_200_OK;
 		len = sizeof(address);	
 		bodySize = 0;
-		messageSend.reserve(5000);
+		messageSend.reserve(MAX_HDR_SIZE);
+		messageSend.resize(SEND_BUFF_SIZE);
 		tog = false;
-
+	headerSend.reserve(300); //!
+	message.reserve(300); //!
 		std::stringstream ss;		
 		ss << 
 		"HTTP/1.1 200 OK\r\n\
@@ -62,7 +67,8 @@ Connection: close\r\n\
 		std::string str = ss.str();
 		std::vector<char> res(str.begin(), str.end());	
 		headerSend = res;
-		ready = false;
+		readySend = false;
+		readyRecev = true;
 		statusCodes = CODE_200_OK;
 	}
 };
@@ -88,7 +94,8 @@ class Server
 	bool isContentLengthValid(size_t i);
 	bool isBodyTerminated(size_t i);
 	bool isBodyTooLarge(size_t i);
-	void replyClient(Client & client, std::vector<char> & response);
+	void replyClient(Client & client, std::vector<char> & response,
+		ssize_t repSize);
 	void exitClient(size_t index);
 	void exitClients();
 
