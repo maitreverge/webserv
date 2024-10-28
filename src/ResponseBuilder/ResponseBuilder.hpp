@@ -53,7 +53,6 @@ private:
 	map<string, string> _mimeTypes;
 
 	string _realURI;
-	e_errorCodes _errorType;
 	e_method _method;
 
 	// Nature File
@@ -62,6 +61,7 @@ private:
 
 	// CGI Stuff
 	bool _isCGI;
+	e_errorCodes _errorType;
 	string _pathInfo;
 
 	// Struct for File Info
@@ -79,7 +79,7 @@ private:
 
 	ResponseHeaders Headers;
 
-
+	// bool test;
 
 	// ------------- Priv Methods
 	void	resolveURI( void );

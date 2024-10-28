@@ -191,7 +191,7 @@ Connection: keep-alive\r\n\
 
 void floSimulatorPut(std::vector<char> part)
 {	
-	usleep(100000);
+	usleep(50000);
     Logger::getInstance().log(DEBUG, "FLO POST");
 
     static std::ofstream ofs("image_chat.jpeg", std::ios::binary);
@@ -238,7 +238,7 @@ void Server::replyClients()
 					break ;
 				this->_clients[i].messageSend.clear();	
 				this->_clients[i].messageSend.resize(SEND_BUFF_SIZE);				
-				usleep(1000000);
+				usleep(5000);
 			}
 			else
 			{
