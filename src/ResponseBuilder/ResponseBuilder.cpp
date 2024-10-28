@@ -95,7 +95,7 @@ bool ResponseBuilder::redirectURI( void ){
 	if (_config->redirection.empty())
 		return false;
 	
-	_errorType = CODE_308_PERMANENT_REDIRECT;
+	_errorType = CODE_307_TEMPORARY_REDIRECT;
 	_realURI.clear();
 	return true;
 }
@@ -236,7 +236,7 @@ void	ResponseBuilder::buildHeaders(){
 		streamLocation	<< "Location:"
 						<< SPACE
 						// << _config->redirection
-						<< "http://www/github.com/maitreverge"
+						<< "http://www.github.com/maitreverge"
 						<< HTTP_HEADER_SEPARATOR;
 		
 		Headers.location = streamLocation.str();
