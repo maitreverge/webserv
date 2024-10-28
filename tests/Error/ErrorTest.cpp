@@ -120,7 +120,7 @@ TEST_F(ErrorTest, BuildErrorRequest_SpecificErrorCode) {
 
 // Test pour vérifier la requête HTTP construite pour un code d'erreur non défini (retour à la page par défaut)
 TEST_F(ErrorTest, BuildErrorRequest_DefaultErrorCode) {
-    unsigned long errorCode = 999;  // Code inexistant dans _errorPages
+    unsigned long errorCode = 66;  // Code inexistant dans _errorPages
     std::string expectedRequest = "GET errorPages/default.html HTTP/1.1";
     std::vector<char> expectedVector(expectedRequest.begin(), expectedRequest.end());
 

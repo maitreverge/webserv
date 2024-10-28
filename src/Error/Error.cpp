@@ -2,10 +2,6 @@
 #include "Logger.hpp"
 #include "master.hpp"
 #include "errorCode.hpp"
-
-/**========================================================================
- *                           INIT && GETTERS
- *========================================================================**/
 Error::Error() {
 					_errorPages.resize(505); // segfault without this!!!
 					_errorPages[400] = "errorPages/400.html";
@@ -32,7 +28,7 @@ int	Error::getErrorCode() const { return (_erorCode); }
 /**========================================================================
  *                           HANDLEERROR
  *! CLASS NOT FINISHED
- *? => buildErrorRequest produces right vector, to be sent back to RequestParser
+ *? => buildErrorRequest produces right vector, to be sent back to RequstParser
  *? => _errorPages to be initialized during config file parsing
  *========================================================================**/
 void	Error::handleError(unsigned long errCode, Client &client)
@@ -52,13 +48,14 @@ void	Error::handleError(unsigned long errCode, Client &client)
 void	Error::handleError(std::string message) const
 {
 	Logger::getInstance().log(ERROR, message);
-	// other things to be done?
 }
 
 
 std::string Error::getErrorPagePath(unsigned long errorCode) const
 {
-	if (!_errorPages[errorCode].empty())
+	if (errorCode > 504)
+		return (_errorPages[0]);
+	else if (!_errorPages[errorCode].empty())
 		return (_errorPages[errorCode]);
 	else
 		return (_errorPages[0]);

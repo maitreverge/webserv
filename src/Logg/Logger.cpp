@@ -25,55 +25,15 @@ Logger::~Logger()
 		_errorFile.close();
 }
 
+Logger& Logger::getInstance()
+{
+static Logger instance;
+return instance;
+}
+
 /**========================================================================
- *                           ACTION
+ *                           UTILS
  *========================================================================**/
-void Logger::logOut(logLevel logLevel, const std::string& message)
-{
-	std::string logEntry;
-
-	if (logToStdOut)
-		std::cout << message;
-	logEntry = removeAnsiCodes(message);
-	if (logLevel == INFO || logLevel == DEBUG)
-	{
-		_accessFile << logEntry;
-		_accessFile.flush();
-	}
-	else if (logLevel == WARNING || logLevel == ERROR)
-	{
-		_errorFile << logEntry;
-		_errorFile.flush();
-	}
-}
-
-
-
-void Logger::log(logLevel logLevel, const std::string& message)
-{
-	std::string logEntry;
-
-	if (_logLevel[logLevel] == 0)
-		return ;
-	logEntry = 	BLUE + timeStamp::getTime() + ": " 
-				+ formatLogLevel(logLevel) 
-				+ BLACK + message 
-				+ RESET + "\n";
-	if (logToStdOut)
-		std::cout << logEntry;
-	logEntry = removeAnsiCodes(logEntry);
-	if (logLevel == INFO || logLevel == DEBUG)
-	{
-		_accessFile << logEntry;
-		_accessFile.flush();
-	}
-	else if (logLevel == WARNING || logLevel == ERROR)
-	{
-		_errorFile << logEntry;
-		_errorFile.flush();
-	}
-}
-
 std::string Logger::formatLogLevel(logLevel level) const
 {
 	switch (level)
@@ -126,13 +86,57 @@ std::string Logger::removeAnsiCodes(const std::string& message)
 }
 
 /**========================================================================
- *                           LOG KERNEL
- * ? to be filled as soon as I know which vars to display
+ *                           LOG OVERLOADS
  *========================================================================**/
+void Logger::logOut(logLevel logLevel, const std::string& message)
+{
+	std::string logEntry;
+
+	if (logToStdOut)
+		std::cout << message;
+	logEntry = removeAnsiCodes(message);
+	if (logLevel == INFO || logLevel == DEBUG)
+	{
+		_accessFile << logEntry;
+		_accessFile.flush();
+	}
+	else if (logLevel == WARNING || logLevel == ERROR)
+	{
+		_errorFile << logEntry;
+		_errorFile.flush();
+	}
+}
+
+void Logger::log(logLevel logLevel, const std::string& message)
+{
+	std::string logEntry;
+
+	if (_logLevel[logLevel] == 0)
+		return ;
+	logEntry = 	BLUE + timeStamp::getTime() + ": " 
+				+ formatLogLevel(logLevel) 
+				+ BLACK + message 
+				+ RESET + "\n";
+	if (logToStdOut)
+		std::cout << logEntry;
+	logEntry = removeAnsiCodes(logEntry);
+	if (logLevel == INFO || logLevel == DEBUG)
+	{
+		_accessFile << logEntry;
+		_accessFile.flush();
+	}
+	else if (logLevel == WARNING || logLevel == ERROR)
+	{
+		_errorFile << logEntry;
+		_errorFile.flush();
+	}
+}
+
 void Logger::log(logLevel logLevel, const std::string& message, const Kernel& obj)
 {
 	if (_logLevel[logLevel] == 0)
 		return ;
+	 //! to be filled as soon as I know which vars to display
 	//[timestamp][loglevel][message][ip][port][fd]
 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) 
@@ -240,13 +244,3 @@ void Logger::log(logLevel logLevel, std::string& message, struct Client& client,
 							+ RESET + "\n";
 	logOut(logLevel, logEntry);
 }
-
-/**========================================================================
- *                       SINGLETON ACCESS
- *========================================================================**/
-Logger& Logger::getInstance()
-{
-static Logger instance;
-return instance;
-}
-
