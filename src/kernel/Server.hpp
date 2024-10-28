@@ -39,9 +39,9 @@ struct Client
 	e_errorCodes		statusCode;
 	bool tog;
 	std::vector<char>	headerSend;
-	bool				readySend;
-	bool				readyRecev;
-
+	// bool				readySend;
+	// bool				readyRecev;
+	bool				ping;
 	Client();
 	Client(const Client &);
 	~Client();

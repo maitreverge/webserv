@@ -44,8 +44,9 @@ Connection: close\r\n\
 	std::string str = ss.str();
 	std::vector<char> res(str.begin(), str.end());	
 	headerSend = res;
-	readySend = false;
-	readyRecev = true;
+	ping = true;
+	// readySend = false;
+	// readyRecev = true;
 	statusCodes = CODE_200_OK;
 }
 Client::Client(const Client & src)
@@ -147,7 +148,8 @@ void Server::listenClients()
 {	
 	for (size_t i = 0; i < this->_clients.size(); i++)
 	{	
-		if (FD_ISSET(this->_clients[i].fd, &this->_readSet) && this->_clients[i].readyRecev)
+		if (this->_clients[i].ping
+			&& FD_ISSET(this->_clients[i].fd, &this->_readSet))
 		{
 			this->_readBuffer.clear();
 			this->_readBuffer.resize(BUFF_SIZE);
@@ -241,50 +243,50 @@ void floSimulatorPut(std::vector<char> part)
 void Server::replyClients()
 {
 	for (size_t i = 0; i < this->_clients.size(); i++)
-	{	
-		if (this->_clients[i].readySend == true)
+	{		
+		if (!this->_clients[i].ping
+			&& FD_ISSET(this->_clients[i].fd, &this->_writeSet))
 		{
-			if (FD_ISSET(this->_clients[i].fd, &this->_writeSet))
+			if (!this->_clients[i].tog)
 			{
-				if (!this->_clients[i].tog)
-				{
-					Logger::getInstance().log(DEBUG, "first header: tog true", this->_clients[i]);
-					this->_clients[i].tog = true;				
-					if(replyClient(i, this->_clients[i].headerSend,
-						static_cast<ssize_t>
-						(this->_clients[i].headerSend.size())))
-						break ;
-					this->_clients[i].headerSend.clear();
-				}		
-				
-				if (ssize_t ret = this->_clients[i].response.
-					getBody(this->_clients[i]))
-				{	
-					std::stringstream ss;
-					ss << "stream body continue: " << ret;
-					Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
-							
-					if(replyClient(i, this->_clients[i].messageSend, ret))
-						break ;
-					this->_clients[i].messageSend.clear();	
-					this->_clients[i].messageSend.resize(SEND_BUFF_SIZE);				
-					usleep(100000);
-				}
-				else
-				{
-					Logger::getInstance().log(DEBUG, "reinit response Builder, ready true, tog false", this->_clients[i]);
-					this->_clients[i].response._streamHead = 0;
-					this->_clients[i].response._ifs.close();
-					this->_clients[i].response = ResponseBuilder();
-					this->_clients[i].readySend = false;
-					this->_clients[i].readyRecev = true;
-					this->_clients[i].tog = false;
-					// break; //! ?
-				}
-			}	
-		}
+				Logger::getInstance().log(DEBUG, "first header: tog true", this->_clients[i]);
+				this->_clients[i].tog = true;				
+				if(replyClient(i, this->_clients[i].headerSend,
+					static_cast<ssize_t>
+					(this->_clients[i].headerSend.size())))
+					break ;
+				this->_clients[i].headerSend.clear();
+			}		
+			
+			if (ssize_t ret = this->_clients[i].response.
+				getBody(this->_clients[i]))
+			{	
+				std::stringstream ss;
+				ss << "stream body continue: " << ret;
+				Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
+						
+				if(replyClient(i, this->_clients[i].messageSend, ret))
+					break ;
+				this->_clients[i].messageSend.clear();	
+				this->_clients[i].messageSend.resize(SEND_BUFF_SIZE);				
+				usleep(100000);
+			}
+			else
+			{
+				Logger::getInstance().log(DEBUG, "reinit response Builder, ready true, tog false", this->_clients[i]);
+				this->_clients[i].response._streamHead = 0;
+				this->_clients[i].response._ifs.close();
+				this->_clients[i].response = ResponseBuilder();
+				this->_clients[i].ping = true;
+				// this->_clients[i].readySend = false;
+				// this->_clients[i].readyRecev = true;
+				this->_clients[i].tog = false;
+				// break; //! ?
+			}
+		}	
 	}
 }
+
 
 void printMessageClientTest(const Client & client)
 {
@@ -313,7 +315,7 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 	stringstream ss;
 	ss << "receiv client request" << " " << ret << " bytes";
 	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
-	this->_clients[i].readySend = false;
+	// this->_clients[i].readySend = false;
 	std::string delimiter = "\r\n\r\n";
 	std::vector<char>::iterator it = std::search
 		(this->_clients[i].message.begin(),
@@ -429,9 +431,10 @@ bool Server::isBodyTerminated(size_t i)
 			floSimulatorPut(this->_clients[i].message);//? POST
 		this->_clients[i].message.clear();
 			//!
-		this->_clients[i].readyRecev = false;
-		this->_clients[i].readySend = true;
-		Logger::getInstance().log(DEBUG, "ready false", this->_clients[i]);
+		this->_clients[i].ping = false;
+		// this->_clients[i].readyRecev = false;
+		// this->_clients[i].readySend = true;
+		// Logger::getInstance().log(DEBUG, "ready false", this->_clients[i]);
 		return true;
 	}
 	return false;
