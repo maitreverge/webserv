@@ -153,7 +153,7 @@ int	ConfigFileParser::extractDataFromConfigFile(const std::string str)
 	file.close();
 	return (0);
 }
-
+ 
 /**========================================================================
  *                           UTILS
  *========================================================================**/

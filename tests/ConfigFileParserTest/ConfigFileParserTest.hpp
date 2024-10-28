@@ -4,6 +4,7 @@
 class ConfigFileParserTest : public ::testing::Test {
 protected:
     ConfigFileParser configParser;
+
     void SetUp() override {
         // Code à exécuter avant chaque test
 		// std::freopen("/dev/null", "w", stdout);
