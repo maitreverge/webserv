@@ -7,11 +7,11 @@ protected:
 
     void SetUp() override {
         // Code à exécuter avant chaque test
-		// std::freopen("/dev/null", "w", stdout);
+		std::freopen("/dev/null", "w", stdout);
     }
 
     void TearDown() override {
-        // std::freopen("/dev/tty", "w", stdout);
+        std::freopen("/dev/tty", "w", stdout);
         // Code à exécuter après chaque test
     }
     // Vous pouvez ajouter des méthodes ou des données supplémentaires si nécessaire
