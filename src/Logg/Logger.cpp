@@ -115,7 +115,7 @@ void Logger::log(logLevel logLevel, const std::string& message)
 		return ;
 	logEntry = 	BLUE + timeStamp::getTime() + ": " 
 				+ formatLogLevel(logLevel) 
-				+ BLACK + message 
+				+ GREEN + message 
 				+ RESET + "\n";
 	if (logToStdOut)
 		std::cout << logEntry;

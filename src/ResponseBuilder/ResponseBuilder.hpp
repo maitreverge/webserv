@@ -79,7 +79,6 @@ private:
 
 	ResponseHeaders Headers;
 
-	std::streampos	_streamHead; // ! ABSOLUMENT METTRE DANS LES CONSTRUCTEURS
 
 
 	// ------------- Priv Methods
@@ -118,6 +117,7 @@ private:
 
 public:
 
+	std::streampos	_streamHead; // ! ABSOLUMENT METTRE DANS LES CONSTRUCTEURS
 	std::ifstream 	_ifs; // ! PAS DANS LES CONSTRUCTEURS
 	ResponseBuilder( void );
 	~ResponseBuilder( void );
