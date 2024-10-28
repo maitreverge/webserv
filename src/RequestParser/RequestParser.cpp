@@ -74,6 +74,9 @@ void	RequestParser::parse(Client& client)
 	_Client = NULL;
 }
 
+/**========================================================================
+ *                           INIT METHODS
+ *========================================================================**/
 void Headers::reset()
 {
 	Connection = "";
@@ -95,6 +98,9 @@ void	RequestParser::reset_values()
 	_Headers.reset();
 }
 
+/**========================================================================
+ *                           HANDLE LINES METHODS
+ *========================================================================**/
 void	RequestParser::handleFirstLine(std::istringstream& requestStream)
 {
 	std::string firstLine;
@@ -117,22 +123,6 @@ void	RequestParser::handleFirstLine(std::istringstream& requestStream)
 		Logger::getInstance().log(ERROR, "Request first line wrong", *this);
 }
 
-
-/**========================================================================
- *                           EXTRACTHEADERS
- * headers first put in map<string, vector<string> > _tmpHeaders
- * then asigned accoriding to their type (see assignHeader overloads)
- *========================================================================**/
-void	RequestParser::extractHeaders()
-{
-	assignHeader("Host", _Headers.Host);
-	assignHeader("Connection", _Headers.Connection);
-	assignHeader("Content-Type", _Headers.ContentType);
-	assignHeader("Accept", _Headers.Accept);
-	assignHeader("Content-Length", _Headers.ContentLength);
-	assignHeader("Cookie", _Headers.Cookie);
-}
-
 void	RequestParser::handleHeaderLines(std::istringstream& requestStream)
 {
 	std::string headerLine;
@@ -153,9 +143,26 @@ void	RequestParser::handleHeaderLines(std::istringstream& requestStream)
 			}
 		}
 	}
-
 }
 
+/**========================================================================
+ *                           EXTRACTHEADERS
+ * headers first put in map<string, vector<string> > _tmpHeaders
+ * then asigned accoriding to their type (see assignHeader overloads)
+ *========================================================================**/
+void	RequestParser::extractHeaders()
+{
+	assignHeader("Host", _Headers.Host);
+	assignHeader("Connection", _Headers.Connection);
+	assignHeader("Content-Type", _Headers.ContentType);
+	assignHeader("Accept", _Headers.Accept);
+	assignHeader("Content-Length", _Headers.ContentLength);
+	assignHeader("Cookie", _Headers.Cookie);
+}
+
+/**========================================================================
+ *                           ASSIGNHEADERS OVERLOADS
+ *========================================================================**/
 void RequestParser::assignHeader(const std::string& key, std::string& headerField)
 {
 	std::map<std::string, std::vector<std::string> >::const_iterator it = _tmpHeaders.find(key);

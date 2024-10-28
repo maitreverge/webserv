@@ -37,11 +37,11 @@ struct Client;
  *========================================================================**/
 class RequestParser
 {
-		#ifdef UNIT_TEST
-		public:
-		#else
-		private:
-		#endif
+	#ifdef UNIT_TEST
+	public:
+	#else
+	private:
+	#endif
 
 		//attributes
 		std::string											_method;
