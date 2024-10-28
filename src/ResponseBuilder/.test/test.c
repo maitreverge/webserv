@@ -2,28 +2,28 @@
 #include <iostream>
 #include <cstring>
 
+using namespace std;
 int main() {
-    const char *directory_path = "."; // Specify the directory path (current directory)
-    DIR *dir = opendir(directory_path); // Open the directory
-
-    if (dir == nullptr) {
-        perror("opendir");
-        return 1;
-    }
-
-    struct dirent *entry;
     
-    // Read entries from the directory
-    while ((entry = readdir(dir)) != nullptr) {
-        std::cout << "Found: " << entry->d_name << std::endl; // Print the entry name
-		std::cout << "Type : " << entry->d_ino << std::endl;
-		std::cout << "Type : " << entry->d_off << std::endl;
-		std::cout << "Type : " << entry->d_reclen << std::endl;
-		std::cout << "Type : " << entry->d_type << std::endl;
-    }
+	string targetPython = ".py";
+	string targetPHP = ".php";
 
-    // Close the directory
-    closedir(dir);
+	string _realURI = "dir1/dir2/script.py/dindon/farci/aux/pommes";
 
-    return 0;
+	std::string::size_type phpLoc = _realURI.find(targetPHP);
+	std::string::size_type pythonLoc = _realURI.find(targetPython);
+
+	if (phpLoc == std::string::npos and pythonLoc == std::string::npos )
+	{
+		// _isCGI = false;
+		return 0;
+	}
+	
+	std::string::size_type realLoc = ( phpLoc == std::string::npos ) ? pythonLoc : phpLoc;
+
+	string _pathInfo = _realURI.substr(realLoc);
+
+	_pathInfo.erase(_pathInfo.begin() + _pathInfo.find_first_of('/'));
+
+	cout << _pathInfo << endl;
 }
