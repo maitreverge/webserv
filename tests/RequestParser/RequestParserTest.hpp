@@ -23,13 +23,15 @@ public:
 class RequestParserTest : public ::testing::Test {
 		friend class RequestParser;
 	protected:
-    RequestParser parser;  // Instance de RequestParser à tester
+    RequestParser parser;
 
     void SetUp() override {
-        // Optionnel : réinitialiser l'état de parser avant chaque test
+        std::freopen("/dev/null", "w", stdout);
     }
 
     void TearDown() override {
-        // Optionnel : nettoyer après chaque test
+        std::freopen("/dev/tty", "w", stdout);
     }
 };
+
+

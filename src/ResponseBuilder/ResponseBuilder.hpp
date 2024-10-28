@@ -7,7 +7,6 @@
 
 #define HTTP_PROTOCOL "HTTP/1.1"
 #define SPACE " "
-#define HTTP_REPONSE_SEPARATOR "\r\n\r\n"
 #define HTTP_HEADER_SEPARATOR "\r\n"
 
 struct Client;
@@ -25,7 +24,9 @@ struct ResponseHeaders
 	string contentLenght; // ! OPTION TWO
 
 	// Utils
-	u_int64_t bodyLenght;
+	uint64_t bodyLenght;
+
+	// ! ADD COCKIES HERE
 	
 	ResponseHeaders()
 	{
@@ -47,39 +48,65 @@ private:
 		DELETE
 	} e_method;
 
-	// ------------- Coplian Useless Methods
-
 	// ------------- Priv Variables
 	
 	map<string, string> _mimeTypes;
-	bool _isDirectory;
-	bool _isFile;
-	bool _isCGI;
-	struct stat _fileInfo;
 
-	string _fileName;
-	string _fileExtension;
 	string _realURI;
 	e_errorCodes _errorType;
 	e_method _method;
 
+	// Nature File
+	bool _isDirectory;
+	bool _isFile;
+
+	// CGI Stuff
+	bool _isCGI;
+	string _pathInfo;
+
+	// Struct for File Info
+	struct stat _fileInfo;
+
+	// File Characteristics
+	bool _isROK;
+	bool _isWOK;
+	bool _isXOK;
+	string _fileName;
+	string _fileExtension;
 
 	Client* _client;
 	Config* _config;
 
 	ResponseHeaders Headers;
 
-
 	// ------------- Priv Methods
 	void	resolveURI( void );
 	void	sanatizeURI( string & );
 	void	validateURI( void );
-	void	launchCGI( void );
 	void	buildHeaders( void );
-	void	setContentLenght(); // not a regular setter
+	void	setContentLenght( void ); // not a regular setter
 	void	extractMethod( void );
 	void	setError( e_errorCodes );
 	string	extractType( const string& extension ) const;
+	void	initMimes( void );
+	void	extractAuthorizations( void );
+
+
+	// generateListingHTML.cpp
+	/*
+		map<string, timespec> _lastDir_M_Time;
+		map<string, timespec> _lastDir_C_Time;
+		bool	isDirectoryUnchanged( void );
+	*/
+	void	generateListingHTML( void );
+	bool	foundDefaultPath( void );
+	void	listingHTMLBuilder( void);
+
+
+	// CGI.cpp
+	void	checkCGI( void );
+	void	launchCGI( void );
+
 
 
 public:
@@ -95,4 +122,6 @@ public:
 
 	void	getHeader( Client &, Config& );
 	ssize_t	getBody( Client &inputClient );
+
+	void	printAllHeaders( void );
 };

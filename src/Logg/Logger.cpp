@@ -5,44 +5,81 @@
 /**========================================================================
  *                           CONSTRUCTOR && DESTRUCTOR
  *========================================================================**/
-Logger::Logger() : logToStdOut(1), _logLevel(0)
+Logger::Logger() : logToStdOut(1)
 {
+	_logLevel[INFO] = 		1;
+	_logLevel[DEBUG] = 		1;
+	_logLevel[WARNING] = 	1;
+	_logLevel[ERROR] = 		1;
 	_accessFile.open("access.log", std::ios::app);
 	_errorFile.open("error.log", std::ios::app);
 	if (!_accessFile.is_open() || !_errorFile.is_open())
 		Logger::getInstance().log(ERROR, "Erreur : Impossible d'ouvrir le fichier de log.");
-	(void)_logLevel;
-}
+}	
 
 Logger::~Logger()
 {
 	if (_accessFile.is_open())
 		_accessFile.close();
+	if (_errorFile.is_open())
+		_errorFile.close();
 }
 
 /**========================================================================
  *                           ACTION
  *========================================================================**/
+void Logger::logOut(logLevel logLevel, const std::string& message)
+{
+	std::string logEntry;
+
+	if (logToStdOut)
+		std::cout << message;
+	logEntry = removeAnsiCodes(message);
+	if (logLevel == INFO || logLevel == DEBUG)
+	{
+		_accessFile << logEntry;
+		_accessFile.flush();
+	}
+	else if (logLevel == WARNING || logLevel == ERROR)
+	{
+		_errorFile << logEntry;
+		_errorFile.flush();
+	}
+}
+
 void Logger::log(logLevel logLevel, const std::string& message)
 {
-	
-	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
-							+ formatLogLevel(logLevel) 
-							+ GREEN + message 
-							+ RESET + "\n";	if (logToStdOut)
-	std::cout << logEntry;
-	_accessFile << logEntry;
-	_accessFile.flush();
+	std::string logEntry;
+
+	if (_logLevel[logLevel] == 0)
+		return ;
+	logEntry = 	BLUE + timeStamp::getTime() + ": " 
+				+ formatLogLevel(logLevel) 
+				+ GREEN + message 
+				+ RESET + "\n";
+	if (logToStdOut)
+		std::cout << logEntry;
+	logEntry = removeAnsiCodes(logEntry);
+	if (logLevel == INFO || logLevel == DEBUG)
+	{
+		_accessFile << logEntry;
+		_accessFile.flush();
+	}
+	else if (logLevel == WARNING || logLevel == ERROR)
+	{
+		_errorFile << logEntry;
+		_errorFile.flush();
+	}
 }
 
 std::string Logger::formatLogLevel(logLevel level) const
 {
 	switch (level)
 	{
-		case DEBUG:
-			return std::string(BLUE) + "[DEBUG] " + RESET;
 		case INFO:
 			return std::string(GREEN) + "[INFO] " + RESET;
+		case DEBUG:
+			return std::string(BLUE) + "[DEBUG] " + RESET;
 		case WARNING:
 			return std::string(YELLOW) + "[WARNING] " + RESET;
 		case ERROR:
@@ -54,19 +91,36 @@ std::string Logger::formatLogLevel(logLevel level) const
 
 std::string Logger::ipToString(const struct sockaddr_in& addr)
 {
-    return std::string(inet_ntoa(addr.sin_addr));
+	return std::string(inet_ntoa(addr.sin_addr));
+	}
+
+	int Logger::portToInt(const struct sockaddr_in& addr)
+	{
+	return ntohs(addr.sin_port); // Convertit le port en host byte order
+	}
+
+	std::string Logger::intToString(int value)
+	{
+	std::stringstream ss;
+	ss << value;
+	return ss.str();
 }
 
-int Logger::portToInt(const struct sockaddr_in& addr)
+std::string Logger::removeAnsiCodes(const std::string& message)
 {
-    return ntohs(addr.sin_port); // Convertit le port en host byte order
-}
+	std::string cleanMessage;
+	bool inAnsi = false;
 
-std::string Logger::intToString(int value)
-{
-    std::stringstream ss;
-    ss << value;
-    return ss.str();
+	for (size_t i = 0; i < message.length(); ++i) {
+		if (message[i] == '\033') {
+			inAnsi = true;
+		} else if (inAnsi && (message[i] == 'm' || message[i] == 'K')) {
+			inAnsi = false;
+		} else if (!inAnsi) {
+			cleanMessage += message[i];
+		}
+	}
+	return cleanMessage;
 }
 
 /**========================================================================
@@ -75,6 +129,8 @@ std::string Logger::intToString(int value)
  *========================================================================**/
 void Logger::log(logLevel logLevel, const std::string& message, const Kernel& obj)
 {
+	if (_logLevel[logLevel] == 0)
+		return ;
 	//[timestamp][loglevel][message][ip][port][fd]
 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) 
@@ -87,14 +143,14 @@ void Logger::log(logLevel logLevel, const std::string& message, const Kernel& ob
 							// + YELLOW + intToString(portToInt(server._sockAddr)) + " "
 							+ RESET + "\n"
 							;
-	if (logToStdOut)
-		std::cout << logEntry;
+		log(logLevel, logEntry);
 	(void)obj;
-	_accessFile.flush();
 }
 
 void Logger::log(logLevel logLevel, const std::string& message, const RequestParser& obj)
 {
+	if (_logLevel[logLevel] == 0)
+		return ;
 	std::string logEntry;
 	//[timestamp][loglevel][message][method][ip][port][fd]
 	if (obj.getClient())
@@ -114,14 +170,13 @@ void Logger::log(logLevel logLevel, const std::string& message, const RequestPar
 					+ GREEN + message + " "
 					+ RESET + "\n";
 	}
-	if (logToStdOut)
-		std::cout << logEntry;
-	_accessFile << logEntry;
-	_accessFile.flush();
+	logOut(logLevel, logEntry);
 }
 
 void Logger::log(logLevel logLevel, const std::string& message, const Client& client)
 {
+	if (_logLevel[logLevel] == 0)
+		return ;
 	//[timestamp][loglevel][message][ip][port][fd]
 	std::string logEntry;
 	logEntry = 	BLUE + timeStamp::getTime() + ": " 
@@ -131,15 +186,13 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 							+ YELLOW + intToString(portToInt(client.address)) + " "
 							+ GREEN + intToString(client.fd)
 							+ RESET + "\n";
-	if (logToStdOut)
-		std::cout << logEntry;
-	if (_accessFile.is_open())
-		_accessFile << logEntry;
-	_accessFile.flush();
+	logOut(logLevel, logEntry);
 }
 
 void Logger::log(logLevel logLevel, const std::string& message, const Client& client, const Server&server)
 {
+	if (_logLevel[logLevel] == 0)
+		return ;
 	//[timestamp][loglevel][message][ip][port][fd]
 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) + " "
@@ -151,15 +204,46 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 							+ MAGENTA + ipToString(server.getSockAdress()) + " "
 							+ YELLOW + intToString(portToInt(server.getSockAdress())) + " "
 							+ RESET + "\n";
-	if (logToStdOut)
-		std::cout << logEntry;
-	if (_accessFile.is_open())
-		_accessFile << logEntry;
-	_accessFile.flush();
+	logOut(logLevel, logEntry);
 }
+/**========================================================================
+ *!                           DEBUG METHOD
+ *========================================================================**/
+void Logger::log(logLevel logLevel, const std::string& message, const Client& client, bool yesNo)
+{
+	if (_logLevel[logLevel] == 0)
+		return ;
+	//[timestamp][loglevel][message][ip][port][fd]
+	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
+							+ formatLogLevel(logLevel) + " "
+							+ BOLD_HIGH_INTENSITY_WHITE + message
+							+ MAGENTA + "Client: " + ipToString(client.address) + " "
+							+ YELLOW + intToString(portToInt(client.address)) + " "
+							+ GREEN + intToString(client.fd) + " "
+							+ BOLD_HIGH_INTENSITY_WHITE + "Server: "
+							+ RESET + "\n";
+	
+
+	// Convertir le fd en string pour nommer le fichier
+    std::string filename = intToString(client.fd) + ".log";  
+    std::ofstream logFile(filename.c_str());  
+    
+    if (logFile.is_open() && yesNo)
+    {
+        logFile << removeAnsiCodes(logEntry);
+        logFile.close();
+    } 
+    else 
+    {
+        std::cerr << "Erreur : impossible d'ouvrir le fichier de log." << std::endl;
+    }
+}
+
 
 void Logger::log(logLevel logLevel, const std::string& message, const Server&server)
 {
+	if (_logLevel[logLevel] == 0)
+		return ;
 	//[timestamp][loglevel][message][ip][port]
 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) 
@@ -168,16 +252,39 @@ void Logger::log(logLevel logLevel, const std::string& message, const Server&ser
 							+ MAGENTA + ipToString(server.getSockAdress()) + " "
 							+ YELLOW + intToString(portToInt(server.getSockAdress())) + " "
 							+ RESET + "\n";
-	if (logToStdOut)
-		std::cout << logEntry;
-	if (_accessFile.is_open())
-		_accessFile << logEntry;
-	_accessFile.flush();
+	logOut(logLevel, logEntry);
+}
+
+/**========================================================================
+ *!                           DEBUG FUN!!!
+*========================================================================**/
+void Logger::log(logLevel logLevel, const std::string& message, const Server&server, bool yesNo)
+{
+	if (_logLevel[logLevel] == 0)
+		return ;
+	//[timestamp][loglevel][message][ip][port]
+	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
+							+ formatLogLevel(logLevel) 
+							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
+							+ BOLD_HIGH_INTENSITY_WHITE + "Server: "
+							+ MAGENTA + ipToString(server.getSockAdress()) + " "
+							+ YELLOW + intToString(portToInt(server.getSockAdress())) + " "
+							+ RESET + "\n";
+	std::ofstream logFile("debugOutput.log", std::ios_base::app);  
+	if (logFile.is_open() && yesNo)
+	{
+		logFile << removeAnsiCodes(logEntry);
+		logFile.close();
+	} else {
+		std::cerr << "Erreur : impossible d'ouvrir le fichier de log." << std::endl;
+	}
 }
 
 void Logger::log(logLevel logLevel, std::string& message, struct Client& client, const Error& error)
 {
-	// [timestamp][loglevel][message][ip][port]
+	if (_logLevel[logLevel] == 0)
+		return ;
+	// [timestamp][errorCode][loglevel][message][ip][port]
 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) 
 							+ GREEN + message + " "
@@ -186,11 +293,7 @@ void Logger::log(logLevel logLevel, std::string& message, struct Client& client,
 							+ YELLOW + intToString(portToInt(client.address)) + " "
 							+ GREEN + intToString(client.fd) + " "
 							+ RESET + "\n";
-	if (logToStdOut)
-		std::cout << logEntry;
-	if (_accessFile.is_open())
-		_accessFile << logEntry;
-	_accessFile.flush();
+	logOut(logLevel, logEntry);
 	(void)error;
 }
 
