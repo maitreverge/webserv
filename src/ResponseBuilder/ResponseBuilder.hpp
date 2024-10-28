@@ -51,28 +51,33 @@ private:
 	// ------------- Priv Variables
 	
 	map<string, string> _mimeTypes;
-	bool _isDirectory;
-	bool _isFile;
-	bool _isCGI;
-	struct stat _fileInfo;
 
-	// File Authorizations
-	bool _isROK;
-	bool _isWOK;
-	bool _isXOK;
-
-	string _fileName;
-	string _fileExtension;
 	string _realURI;
 	e_errorCodes _errorType;
 	e_method _method;
 
+	// Nature File
+	bool _isDirectory;
+	bool _isFile;
+
+	// CGI Stuff
+	bool _isCGI;
+	string _pathInfo;
+
+	// Struct for File Info
+	struct stat _fileInfo;
+
+	// File Characteristics
+	bool _isROK;
+	bool _isWOK;
+	bool _isXOK;
+	string _fileName;
+	string _fileExtension;
 
 	Client* _client;
 	Config* _config;
 
 	ResponseHeaders Headers;
-
 
 	// ------------- Priv Methods
 	void	resolveURI( void );

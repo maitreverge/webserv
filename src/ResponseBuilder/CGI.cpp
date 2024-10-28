@@ -3,7 +3,9 @@
 
 void ResponseBuilder::launchCGI( void ){
 
-	// TODO
+	// ! STEP 1 : Export PATH_INFO
+
+	// ! LAST STEP : UNSET PATH_INFO
 }
 
 void ResponseBuilder::checkCGI( void ){
