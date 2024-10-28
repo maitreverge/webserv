@@ -10,6 +10,7 @@ class Error
 	#else
 	private:
 	#endif
+	
 		std::vector<std::string> 	_errorPages;
 		int							_erorCode;
 
