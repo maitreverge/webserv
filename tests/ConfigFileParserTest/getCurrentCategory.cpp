@@ -42,7 +42,7 @@ TEST_F(ConfigFileParserTest, GetCurrentCategory_ReturnsOne_ForMalformedLine) {
 
 TEST_F(ConfigFileParserTest, GetCurrentCategory_SetsCategoryForTrimmedLine) {
     // Arrange
-    std::string line = "   [trimmedCategory]   ";
+    std::string line = "   [global]   ";
     std::string currentCategory;
 
     // Act
@@ -50,7 +50,7 @@ TEST_F(ConfigFileParserTest, GetCurrentCategory_SetsCategoryForTrimmedLine) {
 
     // Assert
     EXPECT_EQ(result, 0);
-    EXPECT_EQ(currentCategory, "trimmedCategory");
+    EXPECT_EQ(currentCategory, "global");
 }
 
 TEST_F(ConfigFileParserTest, GetCurrentCategory_UpdatesDataMap) {

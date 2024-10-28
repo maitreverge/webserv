@@ -159,12 +159,17 @@ int	ConfigFileParser::extractDataFromConfigFile(const std::string str)
  *========================================================================**/
 int	ConfigFileParser::ignoreComents(std::string& line)
 {
+	trim(line);
 	size_t firstChar = line.find('#');
 	if (firstChar != std::string::npos)
 		line.erase(firstChar);
+	if (line.empty())
+		return (0);
 	firstChar = line.find_first_not_of(" \t");
 	if (firstChar != std::string::npos)
 		line.erase(0, firstChar);
+	if (line.empty())
+		return (0);
 	firstChar = line.find("]");
 	if (firstChar != std::string::npos)
 		line.erase(firstChar + 1);
@@ -175,6 +180,7 @@ int	ConfigFileParser::ignoreComents(std::string& line)
 
 int	ConfigFileParser::getCurrentCategory(std::string& line, std::string& currentCategory)
 {
+	trim(line);
 	if (!line.empty() && line[0] == '[')
 	{
 		size_t lastChar = line.find_last_not_of(" \t");

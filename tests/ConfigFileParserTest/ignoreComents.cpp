@@ -8,14 +8,14 @@ protected:
 
 TEST_F(ConfigFileParserTest, IgnoreComents_RemovesCommentAndLeadingSpaces) {
     // Arrange
-    std::string line = "    # This is a comment\n";
+    std::string line = "              # This is a comment\n";
     
     // Act
     int result = configParser.ignoreComents(line);
 
     // Assert
-    EXPECT_EQ(result, 1);
-    EXPECT_EQ(line, "\n"); // Laisse uniquement la nouvelle ligne
+    EXPECT_EQ(result, 0);
+    EXPECT_EQ(line, ""); // Laisse uniquement la nouvelle ligne
 }
 
 TEST_F(ConfigFileParserTest, IgnoreComents_RemovesLeadingSpaces) {
@@ -27,7 +27,7 @@ TEST_F(ConfigFileParserTest, IgnoreComents_RemovesLeadingSpaces) {
 
     // Assert
     EXPECT_EQ(result, 1);
-    EXPECT_EQ(line, "[category] "); // Retire l'espace devant
+    EXPECT_EQ(line, "[category]"); // Retire l'espace devant
 }
 
 TEST_F(ConfigFileParserTest, IgnoreComents_RemovesTrailingCharactersAfterBracket) {
@@ -39,7 +39,7 @@ TEST_F(ConfigFileParserTest, IgnoreComents_RemovesTrailingCharactersAfterBracket
 
     // Assert
     EXPECT_EQ(result, 1);
-    EXPECT_EQ(line, "[category] "); // Retire la partie commentaire
+    EXPECT_EQ(line, "[category]"); // Retire la partie commentaire
 }
 
 TEST_F(ConfigFileParserTest, IgnoreComents_ReturnsZero_WhenLineIsEmptyAfterProcessing) {
