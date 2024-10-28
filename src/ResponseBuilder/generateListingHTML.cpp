@@ -57,10 +57,8 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 
 	stringstream documentTitle;
 	
-	documentTitle	<< "<h1 style=\"color: #ff5733; font-family: Arial, sans-serif;\">"
-					<< "Listing Directory of URL "
-					<< _realURI
-					<< " </h1>";
+	documentTitle	<< "Listing Directory of URL "
+					<< _realURI;
 
 	// Build Head							
 	result	<< "<!DOCTYPE html>\n"
@@ -73,7 +71,7 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 			<< "</title>\n"
 			<< "</head>\n";
 
-	result	<< "<body>\n";
+	result	<< "<body>\n<ul>";
 
 	// Build Body for each entry
     while ((listing = readdir(dir)) != NULL)
@@ -83,18 +81,19 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 		if (curFile != "." and curFile != "..") // do not list either "." or ".."
 		{
 			// <a href="test.html">Go to Test Page</a>
-			result << "<h1>";
+			result << "<li>";
 			result << "<a href=\"";
 			result << curPath;
 			result << "\">";
 			result << listing->d_name;
-			result << "</a>\n";
-			result << "</h1>\n";
+			result << "</a>";
+			result << "</li>\n";
 		}
 	}
 	
 	// End on the body and the file
-	result	<< "</body>\n"
+	result	<< "</ul>"
+			<< "</body>\n"
 			<< "</html>\n";
 	
 

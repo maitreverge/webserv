@@ -40,6 +40,7 @@
 
 # VSCode files
 .vscode/settings.json
+.vscode/tasks.json
 
 # Intra Testers
 intra_binaries/ubuntu_tester
