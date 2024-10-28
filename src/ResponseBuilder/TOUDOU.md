@@ -40,6 +40,10 @@
 ## BUILDING BODY
 - Done by Seb, needs explanations on the stream ⛔
 
+## REQUETES POST
+
+- Quand je vais recevoir un BODY de POSt, il faudra verifier le content type pour svaoir vers quelle extension je vais devoir l'enregistrer sur le PATH => verifier les authorizations, et basculer sur une erreur si j'ai pas les droits d'ecriture sur le chemin (faire attention si on me demande un POST sur un fichier et pas un dossier )
+
 
 
 ## HOTFIX :

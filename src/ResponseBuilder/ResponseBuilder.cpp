@@ -22,6 +22,7 @@ void ResponseBuilder::initMimes( void ){
 		_mimeTypes.insert(std::make_pair("gif", "image/gif"));
 		_mimeTypes.insert(std::make_pair("webp", "image/webp"));
 		_mimeTypes.insert(std::make_pair("bmp", "image/bmp"));
+		_mimeTypes.insert(std::make_pair("ico", "image/x-icon"));
 		// Audio Content Types
 		_mimeTypes.insert(std::make_pair("mp3", "audio/mp3"));
 		_mimeTypes.insert(std::make_pair("mpeg", "audio/mpeg"));
@@ -321,7 +322,10 @@ ssize_t	ResponseBuilder::getBody( Client &inputClient ){
 	
 	*/
 	if (!this->_ifs.is_open())
+	{
+		Logger::getInstance().log(INFO, _realURI.c_str(), inputClient);	
 		this->_ifs.open(_realURI.c_str(), std::ios::binary);
+	}
 
 	// this->_bodyStream.open(_realURI.c_str(), std::ios::binary);
 // this->inputClient.->messageSend.resize(3000);
@@ -336,8 +340,8 @@ ssize_t	ResponseBuilder::getBody( Client &inputClient ){
 		this->_ifs.read(inputClient.messageSend.data(), static_cast<std::streamsize>(inputClient.messageSend.size()));	
 		this->_streamHead = this->_ifs.tellg();
 
-		std::string str(inputClient.messageSend.data(), this->_ifs.gcount());	
-		Logger::getInstance().log(INFO, str);  	
+		// std::string str(inputClient.messageSend.data(), static_cast<int>(this->_ifs.gcount()));	
+		// Logger::getInstance().log(INFO, str);  	
 	
 		std::streamsize gcount = this->_ifs.gcount();
 		if (this->_ifs.eof()) 

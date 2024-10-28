@@ -254,6 +254,15 @@ void Server::replyClients()
 	}
 }
 
+void printVectorCharTest(const std::vector<char> & vect)
+{
+	std::cout << std::endl << "\e[34mPrint Vector: \e[31m" << std::endl;
+	std::cout << "-";		
+	for (size_t i = 0; i < vect.size(); i++)				
+		std::cout << vect[i];
+	std::cout << "-\e[0m" << std::endl << std::endl;
+}
+
 bool Server::replyClient(size_t i, std::vector<char> & response,
 	ssize_t repSize)
 {	
@@ -301,14 +310,6 @@ void printMessageClientTest(const Client & client)
 	std::cout << "\e[0m" << std::endl << std::endl;
 }	
 
-void printVectorCharTest(const std::vector<char> & vect)
-{
-	std::cout << std::endl << "\e[34mPrint Vector: \e[31m" << std::endl;
-	std::cout << "-";		
-	for (size_t i = 0; i < vect.size(); i++)				
-		std::cout << vect[i];
-	std::cout << "-\e[0m" << std::endl << std::endl;
-}
 
 bool Server::isDelimiterFind(size_t i, std::vector<char>::iterator & it)
 {

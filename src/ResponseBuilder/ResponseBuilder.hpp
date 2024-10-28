@@ -65,7 +65,7 @@ private:
 	string _pathInfo;
 
 	// Struct for File Info
-	struct stat _fileInfo;
+	struct stat _fileInfo; // ! PAS DANS LES CONSTRUCTEURS
 
 	// File Characteristics
 	bool _isROK;
@@ -78,6 +78,9 @@ private:
 	Config* _config;
 
 	ResponseHeaders Headers;
+
+	std::streampos	_streamHead; // ! ABSOLUMENT METTRE DANS LES CONSTRUCTEURS
+
 
 	// ------------- Priv Methods
 	void	resolveURI( void );
@@ -111,14 +114,11 @@ private:
 
 public:
 
+	std::ifstream 	_ifs; // ! PAS DANS LES CONSTRUCTEURS
 	ResponseBuilder( void );
 	~ResponseBuilder( void );
 	ResponseBuilder( const ResponseBuilder & );
 	ResponseBuilder & operator=( const ResponseBuilder & rhs);	
-
-	bool			_headerSent;
-	std::ifstream 	_ifs;
-	std::streampos	_streamHead;
 
 	void	getHeader( Client &, Config& );
 	ssize_t	getBody( Client &inputClient );
