@@ -66,6 +66,11 @@ ResponseBuilder::ResponseBuilder( const ResponseBuilder & src)
 	*this = src;
 }
 
+void ResponseBuilder::setMethod( const e_method& method )
+{
+	_method = method;
+}
+
 
 ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 {

@@ -131,5 +131,8 @@ public:
 	void	getHeader( Client &, Config& );
 	ssize_t	getBody( Client &inputClient );
 
+	// For testing
+	void	setMethod( const e_method& method );
+
 	void	printAllHeaders( void );
 };

@@ -1,6 +1,6 @@
 #include "ResponseBuilderTest.hpp"
 
-TEST_F(ResponseBuilderTest, ExtractType_ReturnsCorrectMimeType) {
+TEST_F(ResponseBuilderTest, Returns_Correct_Mimes_Types) {
     // Préparer les mime types pour le test
     responseBuilder->_mimeTypes.insert(std::make_pair("html", "text/html"));
     responseBuilder->_mimeTypes.insert(std::make_pair("htm", "text/htm"));
@@ -55,4 +55,59 @@ TEST_F(ResponseBuilderTest, ExtractType_ReturnsCorrectMimeType) {
     EXPECT_EQ(responseBuilder->extractType("unknown"), "application/octet-stream");
     EXPECT_EQ(responseBuilder->extractType(""), "application/octet-stream"); // Test with empty string as well
 }
+
+TEST_F(ResponseBuilderTest, SetMethod_SetsGET) {
+    // Tester le cas où la méthode est GET
+    responseBuilder->setMethod(ResponseBuilder::GET);
+    EXPECT_EQ(responseBuilder->_method, ResponseBuilder::GET);
+}
+
+TEST_F(ResponseBuilderTest, SetMethod_SetsPOST) {
+    // Tester le cas où la méthode est POST
+    responseBuilder->setMethod(ResponseBuilder::POST);
+    EXPECT_EQ(responseBuilder->_method, ResponseBuilder::POST);
+}
+
+TEST_F(ResponseBuilderTest, SetMethod_SetsDELETE) {
+    // Tester le cas où la méthode est DELETE
+    responseBuilder->setMethod(ResponseBuilder::DELETE);
+    EXPECT_EQ(responseBuilder->_method, ResponseBuilder::DELETE);
+}
+
+TEST_F(ResponseBuilderTest, SanatizeURI_RemovesSingleOccurrence) {
+    std::string uri = "/path/to/../resource";
+    responseBuilder->sanatizeURI(uri);
+    EXPECT_EQ(uri, "/path/to/resource");
+}
+
+TEST_F(ResponseBuilderTest, SanatizeURI_RemovesMultipleOccurrences) {
+    std::string uri = "/path/../../to/../resource/../";
+    responseBuilder->sanatizeURI(uri);
+    EXPECT_EQ(uri, "/path/to/resource/");
+}
+
+TEST_F(ResponseBuilderTest, SanatizeURI_NoChangeWhenNoNeedle) {
+    std::string uri = "/path/to/resource";
+    responseBuilder->sanatizeURI(uri);
+    EXPECT_EQ(uri, "/path/to/resource");
+}
+
+TEST_F(ResponseBuilderTest, SanatizeURI_RemovesConsecutiveOccurrences) {
+    std::string uri = "/path/../../../to/../resource";
+    responseBuilder->sanatizeURI(uri);
+    EXPECT_EQ(uri, "/path/to/resource");
+}
+
+TEST_F(ResponseBuilderTest, SanatizeURI_OnlyNeedles) {
+    std::string uri = "../..";
+    responseBuilder->sanatizeURI(uri);
+    EXPECT_EQ(uri, "..");
+}
+
+TEST_F(ResponseBuilderTest, SanatizeURI_EmptyString) {
+    std::string uri = "";
+    responseBuilder->sanatizeURI(uri);
+    EXPECT_EQ(uri, "");
+}
+
 
