@@ -15,7 +15,7 @@
 #define BUFF_SIZE 4096
 
 #define MAX_HDR_SIZE 8192
-#define SEND_BUFF_SIZE 6
+#define SEND_BUFF_SIZE 4
 #define MAX_CNT_SIZE 30000000
 
 // vector<char> masterBuilder(vector<char> &bodyInput, e_errorCodes errorCode,
@@ -31,46 +31,20 @@ struct Client
 	socklen_t 			len;
 	size_t				bodySize;
 	
-	e_errorCodes statusCodes;
+	e_errorCodes 		statusCodes;
 
 	RequestParser		header;
 	ResponseBuilder		response;
 
 	e_errorCodes		statusCode;
-	bool tog;
 	std::vector<char>	headerSend;
-	bool				readySend;
-	bool				readyRecev;
 
-	Client()
-	{
-		id = 0;
-		fd = 0;		
-		memset(&address, 0, sizeof(address));
-		len = sizeof(address);
-		statusCode = CODE_200_OK;
-		len = sizeof(address);	
-		bodySize = 0;
-		messageSend.reserve(MAX_HDR_SIZE);
-		messageSend.resize(SEND_BUFF_SIZE);
-		tog = false;
-	headerSend.reserve(300); //!
-	message.reserve(300); //!
-		std::stringstream ss;		
-		ss << 
-		"HTTP/1.1 200 OK\r\n\
-Content-Type: text/html\r\n\
-Content-Length: 316\r\n\
-Connection: close\r\n\
-\r\n\
-"; 
-		std::string str = ss.str();
-		std::vector<char> res(str.begin(), str.end());	
-		headerSend = res;
-		readySend = false;
-		readyRecev = true;
-		statusCodes = CODE_200_OK;
-	}
+	bool				ping;
+	bool 				respHeader;
+	
+	Client();
+	Client(const Client &);
+	~Client();
 };
 
 class Server
@@ -90,11 +64,12 @@ class Server
 	void displayClient(Client & client) const;
 	void handleClientHeader(size_t i, ssize_t ret);
 	void handleClientBody(size_t i, ssize_t ret);
+	bool isDelimiterFind(size_t i, std::vector<char>::iterator & it);
 	bool isMaxHeaderSize(std::vector<char>::iterator it, size_t i);
 	bool isContentLengthValid(size_t i);
 	bool isBodyTerminated(size_t i);
 	bool isBodyTooLarge(size_t i);
-	void replyClient(Client & client, std::vector<char> & response,
+	bool replyClient(size_t i, std::vector<char> & response,
 		ssize_t repSize);
 	void exitClient(size_t index);
 	void exitClients();

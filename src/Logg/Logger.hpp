@@ -59,6 +59,8 @@ class Logger
 		void log(logLevel logLevel, const std::string& message, const RequestParser& context);
 		void log(logLevel logLevel, const std::string& message, const Client& context);
 		// void log(logLevel logLevel, const std::string& message, const class buildResponse& obj);
+		void log(logLevel logLevel, const std::string& message, const Client& client, bool yesNo);
+		void log(logLevel logLevel, const std::string& message, const Server&server, bool yesNo);
 		void log(logLevel logLevel, const std::string& message, const Client& client, const Server&obj);
 		void log(logLevel logLevel, std::string& message, struct Client& client, const Error& error);
 		void log(logLevel logLevel, const std::string& message, const Server&server);
