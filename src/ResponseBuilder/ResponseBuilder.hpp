@@ -38,7 +38,11 @@ struct ResponseHeaders
 class ResponseBuilder
 {
 
-private:
+	#ifdef UNIT_TEST
+	public:
+	#else
+	private:
+	#endif
 
 	// Enum
 	typedef enum
