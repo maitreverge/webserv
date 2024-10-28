@@ -32,7 +32,4 @@ void ResponseBuilder::checkCGI( void ){
 
 	_realURI = _realURI.substr(0, realLoc);
 
-	#ifndef UNIT_TEST
-	checkNatureAndAuthoURI();
-	#endif
 }

@@ -181,9 +181,6 @@ void	ResponseBuilder::validateURI( void ){
 	{
 		// Set un fichier par défaut comme réponse si la requête est un répertoire.
 	}
-
-	// ! STEP 2 : Identify URI nature
-	
 	
 	checkNatureAndAuthoURI();
 

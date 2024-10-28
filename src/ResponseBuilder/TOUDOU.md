@@ -10,7 +10,7 @@
 - Validate URI
 	==> Is the URI accessible  ✅
 	==> Is the path a directory  ✅
-	==> Is the path a CGI  ⛔
+	==> Is the path a CGI  ✅
 	==> Does the route accepts the current method  ⛔
 	==> Definir une redirection HTTP ⛔ (possibly send a CODE_300 and let the client sent back another GET request)
 	==> DEFINE AUTHORIZATION DEPENDING ON THE METHOD  ✅
