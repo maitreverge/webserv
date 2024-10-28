@@ -31,17 +31,17 @@ struct Client
 	socklen_t 			len;
 	size_t				bodySize;
 	
-	e_errorCodes statusCodes;
+	e_errorCodes 		statusCodes;
 
 	RequestParser		header;
 	ResponseBuilder		response;
 
 	e_errorCodes		statusCode;
-	bool tog;
 	std::vector<char>	headerSend;
-	// bool				readySend;
-	// bool				readyRecev;
+
 	bool				ping;
+	bool 				respHeader;
+	
 	Client();
 	Client(const Client &);
 	~Client();
@@ -64,6 +64,7 @@ class Server
 	void displayClient(Client & client) const;
 	void handleClientHeader(size_t i, ssize_t ret);
 	void handleClientBody(size_t i, ssize_t ret);
+	bool isDelimiterFind(size_t i, std::vector<char>::iterator & it);
 	bool isMaxHeaderSize(std::vector<char>::iterator it, size_t i);
 	bool isContentLengthValid(size_t i);
 	bool isBodyTerminated(size_t i);
