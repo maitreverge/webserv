@@ -22,6 +22,9 @@ struct ResponseHeaders
 	string transfertEncoding; // ! OPTION ONE
 	// !           OR
 	string contentLenght; // ! OPTION TWO
+	
+	// TODO : All Headers
+	string location; // Only if redirection
 
 	// Utils
 	uint64_t bodyLenght;
@@ -99,6 +102,11 @@ class ResponseBuilder
 	void	checkNatureAndAuthoURI( void );
 	void	checkAutho( void );
 	void	checkNature( void );
+	bool 	redirectURI( void );
+	void 	swapForRoot( void );
+	bool	isErrorRedirect( void );
+
+
 
 
 

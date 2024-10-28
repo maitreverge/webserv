@@ -13,6 +13,8 @@ struct Config
 	vector<std::string>					indexFiles; // default files names if the URI == "/"
 	bool							listingDirectories; // activer ou non le listing des repertoires
 	map<e_errorCodes, string>		errorPaths;
+	string rootSearch;
+	string redirection;
 
 	Config()
 	{
@@ -61,5 +63,8 @@ struct Config
 		errorPaths.insert(std::make_pair(CODE_502_BAD_GATEWAY, "errorPages/502.html"));
 		errorPaths.insert(std::make_pair(CODE_503_SERVICE_UNAVAILABLE, "errorPages/503.html"));
 		errorPaths.insert(std::make_pair(CODE_504_GATEWAY_TIMEOUT, "errorPages/504.html"));
+
+		rootSearch = "/var/www/images";
+		redirection = "/testResponseBuilder/dir1/cats.html";
 	}
 };

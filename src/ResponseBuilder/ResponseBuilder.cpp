@@ -1,42 +1,7 @@
 #include "ResponseBuilder.hpp"
 #include "Logger.hpp" 
 
-void ResponseBuilder::initMimes( void ){
-
-	// Init Mimes Types
-	{
-		_mimeTypes.insert(std::make_pair("html", "text/html"));
-		_mimeTypes.insert(std::make_pair("htm", "text/htm"));
-		_mimeTypes.insert(std::make_pair("txt", "text/txt"));
-		_mimeTypes.insert(std::make_pair("css", "text/css"));
-		_mimeTypes.insert(std::make_pair("xml", "text/xml"));
-		// Application Content Types
-		_mimeTypes.insert(std::make_pair("js", "application/javascript")); // FIXME doubt on this one
-		_mimeTypes.insert(std::make_pair("json", "application/json"));
-		_mimeTypes.insert(std::make_pair("pdf", "application/pdf"));
-		_mimeTypes.insert(std::make_pair("zip", "application/zip"));
-		// Image Content Types
-		_mimeTypes.insert(std::make_pair("jpeg", "image/jpeg"));
-		_mimeTypes.insert(std::make_pair("jpg", "image/jpg"));
-		_mimeTypes.insert(std::make_pair("png", "image/png"));
-		_mimeTypes.insert(std::make_pair("gif", "image/gif"));
-		_mimeTypes.insert(std::make_pair("webp", "image/webp"));
-		_mimeTypes.insert(std::make_pair("bmp", "image/bmp"));
-		_mimeTypes.insert(std::make_pair("ico", "image/x-icon"));
-		// Audio Content Types
-		_mimeTypes.insert(std::make_pair("mp3", "audio/mp3"));
-		_mimeTypes.insert(std::make_pair("mpeg", "audio/mpeg"));
-		_mimeTypes.insert(std::make_pair("ogg", "audio/ogg"));
-		_mimeTypes.insert(std::make_pair("wav", "audio/wav"));
-		// Video Content Types
-		_mimeTypes.insert(std::make_pair("mp4", "video/mp4"));
-		_mimeTypes.insert(std::make_pair("webm", "video/webm"));
-		_mimeTypes.insert(std::make_pair("ogv", "video/ogv"));
-	}
-}
-
 // ------------------------- COPLIAN FORM -----------------------------
-
 ResponseBuilder::ResponseBuilder( void ){
 	
 	// SEB UTILS
@@ -124,9 +89,28 @@ void ResponseBuilder::sanatizeURI( string &oldURI ){
 	}
 }
 
+bool ResponseBuilder::redirectURI( void ){
+
+	// ! ADAPT METHOD for CODE 300
+	if (_config->redirection.empty())
+		return false;
+	
+	_errorType = CODE_308_PERMANENT_REDIRECT;
+	_realURI.clear();
+	return true;
+}
+
+void ResponseBuilder::swapForRoot( void ){
+
+
+}
+
 void ResponseBuilder::resolveURI( void )
 {
-	// ! STEP 1 : Trim all "../" from the URI for transversal path attacks
+	// TODO STEP 2 : Resolve URI with rooted path from config file
+	swapForRoot();
+	
+	// ! STEP 3 : Trim all "../" from the URI for transversal path attacks
 	sanatizeURI(_realURI);
 
 	if (_realURI.size() > 1)
@@ -138,7 +122,6 @@ void ResponseBuilder::resolveURI( void )
 		}
 	}
 
-	// TODO STEP 2 : Resolve URI with rooted path from config file
 }
 
 void	ResponseBuilder::validateURI( void ){
@@ -196,10 +179,10 @@ void	ResponseBuilder::buildHeaders(){
 
 	stringstream	streamStatusLine,
 					streamTimeStamp,
-					streamContentType,
 					streamContentLenght,
-					streamMasterHeader,
-					stream;
+					streamMasterHeader;
+	
+	// Madatory Headers
 
 	streamStatusLine	<< HTTP_PROTOCOL
 						<< SPACE
@@ -218,9 +201,13 @@ void	ResponseBuilder::buildHeaders(){
 	Headers.timeStamp = streamTimeStamp.str();
 
 	
+	// Optionals Headers
 	// * Content-Type (if body)
 	if (Headers.bodyLenght > 0)
 	{
+		stringstream streamContentType, streamContentLenght;
+		
+		// Content Type
 		string contentType = extractType(_fileExtension);
 		streamContentType	<< "Content-Type:"
 							<< SPACE 
@@ -228,30 +215,40 @@ void	ResponseBuilder::buildHeaders(){
 							<< HTTP_HEADER_SEPARATOR;
 		
 		Headers.contentType = streamContentType.str();
-	}
-
-	// ContentLenght
-	// ! Potential condition for returning or not a body-lenght
-	if (Headers.bodyLenght > 0)
-	{
+		
+		// Content Lenght
 		streamContentLenght	<< "Content-Length:"
 							<< SPACE
 							<< Headers.bodyLenght
 							<< HTTP_HEADER_SEPARATOR;
+		
+		Headers.contentLenght = streamContentLenght.str();
 	}
-	
-	Headers.contentLenght = streamContentLenght.str();
 
 	// TODO : Coockie and session generator
 	{
 		
 	}
 
+	if (isErrorRedirect())
+	{
+		stringstream streamLocation;
+		streamLocation	<< "Location:"
+						<< SPACE
+						// << _config->redirection
+						<< "http://www/github.com/maitreverge"
+						<< HTTP_HEADER_SEPARATOR;
+		
+		Headers.location = streamLocation.str();
+	}
+
+
 	// Building Final Headers
 	streamMasterHeader	<< Headers.statusLine
 						<< Headers.timeStamp
 						<< Headers.contentType
 						<< (Headers.bodyLenght ? Headers.contentLenght : Headers.transfertEncoding)
+						<< Headers.location
 						<< HTTP_HEADER_SEPARATOR; // HEADER / BODY SEPARATOR
 	
 	string tempAllHeaders = streamMasterHeader.str();
@@ -268,17 +265,21 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	_config = &inputConfig; // init config
 	
 	extractMethod();
-	
-	_realURI = _client->header.getURI();
+	if ( not redirectURI())
+	{
+		_realURI = _client->header.getURI();
+		
+		resolveURI();
+		validateURI();
+		
+		if (_isCGI and _errorType <= CODE_400_BAD_REQUEST) // or potentially another adress
+			launchCGI();
+		
+		checkNatureAndAuthoURI();
+		setContentLenght();
 
-	resolveURI();
-	validateURI();
+	}
 	
-	if (_isCGI and _errorType <= CODE_400_BAD_REQUEST) // or potentially another adress
-		launchCGI();
-	
-	checkNatureAndAuthoURI();
-	setContentLenght();
 	buildHeaders();
 
 
@@ -293,11 +294,14 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 ssize_t	ResponseBuilder::getBody( Client &inputClient ){
 
 	Logger::getInstance().log(INFO, "Response Builder Get Body", inputClient);
-	/*
-		if ( pas de body, par exemple le 404html est pas dispo )
-			return 0;
 	
-	*/
+	// Edge case where you don't need a body
+	if (isErrorRedirect() ) // Code 300 Redirect
+	{
+		Logger::getInstance().log(INFO, "Redirect Non Body Response", inputClient);
+		return 0;
+	}
+
 	if (!this->_ifs.is_open())
 	{
 		Logger::getInstance().log(INFO, _realURI.c_str(), inputClient);	
