@@ -140,11 +140,11 @@ void Logger::log(logLevel logLevel, const std::string& message, const Kernel& ob
 	//[timestamp][loglevel][message][ip][port][fd]
 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) 
-							+ BLACK + message + " "
+							+ GREEN + message + " "
 							// + MAGENTA + ipToString(client.address) + " "
 							// + YELLOW + intToString(portToInt(client.address)) + " "
 							// + GREEN + intToString(client.fd) + " "
-							// + BLACK + "Server: "
+							// + GREEN + "Server: "
 							// + MAGENTA + ipToString(server._sockAddr) + " "
 							// + YELLOW + intToString(portToInt(server._sockAddr)) + " "
 							+ RESET + "\n"
@@ -163,7 +163,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const RequestPar
 	{
 		logEntry = 	BLUE + timeStamp::getTime() + ": " 
 								+ formatLogLevel(logLevel) 
-								+ BLACK + message + " "
+								+ GREEN + message + " "
 								+ MAGENTA + "Client: " + ipToString(obj.getClient()->address) + " "
 								+ YELLOW + intToString(portToInt(obj.getClient()->address)) + " "
 								+ GREEN + intToString(obj.getClient()->fd)
@@ -173,7 +173,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const RequestPar
 	{
 		logEntry = 	BLUE + timeStamp::getTime() + ": " 
 					+ formatLogLevel(logLevel) 
-					+ BLACK + message + " "
+					+ GREEN + message + " "
 					+ RESET + "\n";
 	}
 	logOut(logLevel, logEntry);
@@ -187,7 +187,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 	std::string logEntry;
 	logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) 
-							+ BLACK + message + " "
+							+ GREEN + message + " "
 							+ MAGENTA + "Client: " + ipToString(client.address) + " "
 							+ YELLOW + intToString(portToInt(client.address)) + " "
 							+ GREEN + intToString(client.fd)
@@ -202,16 +202,49 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 	//[timestamp][loglevel][message][ip][port][fd]
 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) + " "
-							+ BLACK + message
+							+ GREEN + message
 							+ MAGENTA + "Client: " + ipToString(client.address) + " "
 							+ YELLOW + intToString(portToInt(client.address)) + " "
 							+ GREEN + intToString(client.fd) + " "
-							+ BLACK + "Server: "
+							+ GREEN + "Server: "
 							+ MAGENTA + ipToString(server.getSockAdress()) + " "
 							+ YELLOW + intToString(portToInt(server.getSockAdress())) + " "
 							+ RESET + "\n";
 	logOut(logLevel, logEntry);
 }
+/**========================================================================
+ *!                           DEBUG METHOD
+ *========================================================================**/
+void Logger::log(logLevel logLevel, const std::string& message, const Client& client, bool yesNo)
+{
+	if (_logLevel[logLevel] == 0)
+		return ;
+	//[timestamp][loglevel][message][ip][port][fd]
+	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
+							+ formatLogLevel(logLevel) + " "
+							+ BOLD_HIGH_INTENSITY_WHITE + message
+							+ MAGENTA + "Client: " + ipToString(client.address) + " "
+							+ YELLOW + intToString(portToInt(client.address)) + " "
+							+ GREEN + intToString(client.fd) + " "
+							+ BOLD_HIGH_INTENSITY_WHITE + "Server: "
+							+ RESET + "\n";
+	
+
+	// Convertir le fd en string pour nommer le fichier
+    std::string filename = intToString(client.fd) + ".log";  
+    std::ofstream logFile(filename.c_str());  
+    
+    if (logFile.is_open() && yesNo)
+    {
+        logFile << removeAnsiCodes(logEntry);
+        logFile.close();
+    } 
+    else 
+    {
+        std::cerr << "Erreur : impossible d'ouvrir le fichier de log." << std::endl;
+    }
+}
+
 
 void Logger::log(logLevel logLevel, const std::string& message, const Server&server)
 {
@@ -220,12 +253,37 @@ void Logger::log(logLevel logLevel, const std::string& message, const Server&ser
 	//[timestamp][loglevel][message][ip][port]
 	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) 
-							+ BLACK + message + " "
-							+ BLACK + "Server: "
+							+ GREEN + message + " "
+							+ GREEN + "Server: "
 							+ MAGENTA + ipToString(server.getSockAdress()) + " "
 							+ YELLOW + intToString(portToInt(server.getSockAdress())) + " "
 							+ RESET + "\n";
 	logOut(logLevel, logEntry);
+}
+
+/**========================================================================
+ *!                           DEBUG FUN!!!
+*========================================================================**/
+void Logger::log(logLevel logLevel, const std::string& message, const Server&server, bool yesNo)
+{
+	if (_logLevel[logLevel] == 0)
+		return ;
+	//[timestamp][loglevel][message][ip][port]
+	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
+							+ formatLogLevel(logLevel) 
+							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
+							+ BOLD_HIGH_INTENSITY_WHITE + "Server: "
+							+ MAGENTA + ipToString(server.getSockAdress()) + " "
+							+ YELLOW + intToString(portToInt(server.getSockAdress())) + " "
+							+ RESET + "\n";
+	std::ofstream logFile("debugOutput.log", std::ios_base::app);  
+	if (logFile.is_open() && yesNo)
+	{
+		logFile << removeAnsiCodes(logEntry);
+		logFile.close();
+	} else {
+		std::cerr << "Erreur : impossible d'ouvrir le fichier de log." << std::endl;
+	}
 }
 
 void Logger::log(logLevel logLevel, std::string& message, struct Client& client, const Error& error)
@@ -243,4 +301,5 @@ void Logger::log(logLevel logLevel, std::string& message, struct Client& client,
 							+ GREEN + intToString(client.fd) + " "
 							+ RESET + "\n";
 	logOut(logLevel, logEntry);
+	(void)error;
 }

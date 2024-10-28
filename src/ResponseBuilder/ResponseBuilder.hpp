@@ -7,7 +7,6 @@
 
 #define HTTP_PROTOCOL "HTTP/1.1"
 #define SPACE " "
-#define HTTP_REPONSE_SEPARATOR "\r\n\r\n"
 #define HTTP_HEADER_SEPARATOR "\r\n"
 
 struct Client;
@@ -25,7 +24,9 @@ struct ResponseHeaders
 	string contentLenght; // ! OPTION TWO
 
 	// Utils
-	u_int64_t bodyLenght;
+	uint64_t bodyLenght;
+
+	// ! ADD COCKIES HERE
 	
 	ResponseHeaders()
 	{
@@ -47,70 +48,80 @@ private:
 		DELETE
 	} e_method;
 
-	// ------------- Coplian Useless Methods
-
 	// ------------- Priv Variables
 	
 	map<string, string> _mimeTypes;
-	bool _isDirectory;
-	bool _isFile;
-	bool _isCGI;
-	struct stat _fileInfo;
 
-	string _fileName;
-	string _fileExtension;
 	string _realURI;
 	e_errorCodes _errorType;
 	e_method _method;
 
+	// Nature File
+	bool _isDirectory;
+	bool _isFile;
+
+	// CGI Stuff
+	bool _isCGI;
+	string _pathInfo;
+
+	// Struct for File Info
+	struct stat _fileInfo; // ! PAS DANS LES CONSTRUCTEURS
+
+	// File Characteristics
+	bool _isROK;
+	bool _isWOK;
+	bool _isXOK;
+	string _fileName;
+	string _fileExtension;
 
 	Client* _client;
 	Config* _config;
 
 	ResponseHeaders Headers;
 
+	std::streampos	_streamHead; // ! ABSOLUMENT METTRE DANS LES CONSTRUCTEURS
+
 
 	// ------------- Priv Methods
 	void	resolveURI( void );
 	void	sanatizeURI( string & );
 	void	validateURI( void );
-	void	launchCGI( void );
 	void	buildHeaders( void );
-	void	setContentLenght(); // not a regular setter
+	void	setContentLenght( void ); // not a regular setter
 	void	extractMethod( void );
 	void	setError( e_errorCodes );
 	string	extractType( const string& extension ) const;
+	void	initMimes( void );
+	void	extractAuthorizations( void );
+
+
+	// generateListingHTML.cpp
+	/*
+		map<string, timespec> _lastDir_M_Time;
+		map<string, timespec> _lastDir_C_Time;
+		bool	isDirectoryUnchanged( void );
+	*/
+	void	generateListingHTML( void );
+	bool	foundDefaultPath( void );
+	void	listingHTMLBuilder( void);
+
+
+	// CGI.cpp
+	void	checkCGI( void );
+	void	launchCGI( void );
+
 
 
 public:
 
+	std::ifstream 	_ifs; // ! PAS DANS LES CONSTRUCTEURS
 	ResponseBuilder( void );
 	~ResponseBuilder( void );
 	ResponseBuilder( const ResponseBuilder & );
-	ResponseBuilder & operator=( const ResponseBuilder & )
-	{
-		// this->_client = rhs._client;
-		// this->_config = rhs._config;
-		// this->_mimeTypes = rhs._mimeTypes;
-		// this->_headerSent = rhs._headerSent;
-
-		// this->Headers = rhs.Headers;
-		// this->_method = rhs._method;
-		// this->_errorType = rhs._errorType;
-		// this->_realURI = rhs._realURI;
-		// this->_fileExtension = rhs._fileExtension;
-		// this->_fileInfo = rhs._fileInfo;			
-		// this->_isDirectory = rhs._isDirectory;	
-		// this->_isFile = rhs._isFile;
-		// this->_isCGI = rhs._isCGI;
-		// this->_fileName = rhs._fileName;	
-	
-		return *this;
-	};
-
-	bool _headerSent;
-	std::ifstream _ifs;
+	ResponseBuilder & operator=( const ResponseBuilder & rhs);	
 
 	void	getHeader( Client &, Config& );
 	ssize_t	getBody( Client &inputClient );
+
+	void	printAllHeaders( void );
 };

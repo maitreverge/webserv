@@ -6,15 +6,56 @@ Server::Server(sockaddr_in & sockAddr, int & maxFd,
 fd_set & actualSet, fd_set & readSet, fd_set & writeSet)
 	: _sockAddr(sockAddr), _maxFd(maxFd),
 	_actualSet(actualSet), _readSet(readSet), _writeSet(writeSet) 
-{	
-	this->_clients.reserve(300);//!
+{		
 	this->_readBuffer.reserve(BUFF_SIZE);	
 	this->_writeBuffer.reserve(BUFF_SIZE);
+	this->_writeBuffer.resize(BUFF_SIZE);//!
 }
 
 const sockaddr_in & Server::getSockAdress() const
 {
 	return (this->_sockAddr);
+}
+
+Client::Client()
+{
+	Logger::getInstance().log(INFO, "\e[30;101mclient created\e[0m", *this);
+
+	id = 0;
+	fd = 0;		
+	memset(&address, 0, sizeof(address));
+	len = sizeof(address);
+	statusCode = CODE_200_OK;
+	len = sizeof(address);	
+	bodySize = 0;
+	messageSend.reserve(MAX_HDR_SIZE);
+	messageSend.resize(SEND_BUFF_SIZE);
+	respHeader = false;
+headerSend.reserve(300); //!
+message.reserve(300); //!
+	std::stringstream ss;		
+	ss << 
+	"HTTP/1.1 200 OK\r\n\
+Content-Type: text/html\r\n\
+Content-Length: 316\r\n\
+Connection: close\r\n\
+\r\n\
+"; 
+	std::string str = ss.str();
+	std::vector<char> res(str.begin(), str.end());	
+	headerSend = res;
+	ping = true;	
+	statusCodes = CODE_200_OK;
+}
+Client::Client(const Client & src)
+{
+	Logger::getInstance().log(INFO, "\e[30;101mclient copy created\e[0m", *this);
+
+	*this = src;
+}
+Client::~Client()
+{
+	Logger::getInstance().log(INFO, "\e[30;101mclient deleted\e[0m", *this);
 }
 
 bool Server::setup()
@@ -71,7 +112,9 @@ Connection: keep-alive\r\n\
 }
 
 void Server::catchClients()
-{	
+{
+	// Logger::getInstance().log(INFO, "Catch clients", *this);
+
 	if (FD_ISSET(this->_fd, &this->_readSet))
 	{		
 		Client client;			
@@ -79,14 +122,23 @@ void Server::catchClients()
 			(&client.address), &client.len);
 		if (client.fd < 0)		
 			return Logger::getInstance().log(ERROR, "accept");	
+		// if (this->_clients.size() >= 1)
+		// 	std::cout << this->_clients[0].response._streamHead << std::endl;
+		// if (this->_clients.size() >= 2)
+		// std::cout << this->_clients[1].response._streamHead << std::endl;
+		Logger::getInstance().log(INFO, "\e[30;101mnew client\e[0m", client);
 
-		Logger::getInstance().log(INFO, "new client", client);
 		FD_SET(client.fd, &this->_actualSet);
 		this->_maxFd = std::max(this->_maxFd, client.fd);
 		this->_clients.push_back(client);
-			
+
+		// if (this->_clients.size() >= 1)		
+		// 	std::cout << this->_clients[0].response._streamHead << std::endl;
+		// if (this->_clients.size() >= 2)
+		// 	std::cout << this->_clients[1].response._streamHead << std::endl;	
 		// std::vector<char> hardResp = buildHardResponseTest();
-		// replyClient(client, hardResp);		
+		// replyClient(client, hardResp);
+		// Logger::getInstance().log(INFO, "Catch clients end", *this);		
 	}
 }
 
@@ -94,7 +146,8 @@ void Server::listenClients()
 {	
 	for (size_t i = 0; i < this->_clients.size(); i++)
 	{	
-		if (FD_ISSET(this->_clients[i].fd, &this->_readSet) && this->_clients[i].readyRecev)
+		if (this->_clients[i].ping
+			&& FD_ISSET(this->_clients[i].fd, &this->_readSet))
 		{
 			this->_readBuffer.clear();
 			this->_readBuffer.resize(BUFF_SIZE);
@@ -103,7 +156,6 @@ void Server::listenClients()
 			if (ret < 0)
 			{
 				Logger::getInstance().log(ERROR, "recv");
-
 				this->exitClient(i);				
 			}
 			else if (ret == 0)					
@@ -139,6 +191,7 @@ Connection: keep-alive\r\n\
 
 void floSimulatorPut(std::vector<char> part)
 {	
+	usleep(100000);
     Logger::getInstance().log(DEBUG, "FLO POST");
 
     static std::ofstream ofs("image_chat.jpeg", std::ios::binary);
@@ -156,77 +209,97 @@ void floSimulatorPut(std::vector<char> part)
     }
 }
 
-// bool floSimulatorGet(Client & client)
-// {	
-//     //Logger::getInstance().log(DEBUG, "FLO GET"); 
-
-//     static std::ifstream ofs("test.html", std::ios::binary);
-
-//     if (ofs.is_open()) {
-	
-//         ofs.read(client.messageSend.data(), static_cast<std::streamsize>(client.messageSend.size()));		
-// 		// std::string str(client.messageSend.data(), ofs.gcount());	
-// 		// Logger::getInstance().log(INFO, str);  
-	 
-// 		if (ofs.eof()) 
-// 		{
-// 			Logger::getInstance().log(DEBUG, "Fin de fichier atteinte");
-// 			ofs.clear(); // Réinitialiser les flags pour continuer la lecture si besoin
-// 			ofs.close();
-// 			// return false;
-// 			// ofs.seekg(0); // Remettre le pointeur au début du fichier si tu veux recommencer
-//    		 }    
-// 			return true;
-//     } else {
-//         // std::cout << "Erreur : impossible d'ouvrir le fichier." << std::endl;
-//     }
-// 	// ghead = buildHeaderTest();
-// 	return false;
-// }
-
 void Server::replyClients()
 {
 	for (size_t i = 0; i < this->_clients.size(); i++)
-	{	
-		if (this->_clients[i].readySend == true)
+	{		
+		if (!this->_clients[i].ping
+			&& FD_ISSET(this->_clients[i].fd, &this->_writeSet))
 		{
-			if (FD_ISSET(this->_clients[i].fd, &this->_writeSet))
+			if (!this->_clients[i].respHeader)
 			{
-				if (!this->_clients[i].tog)
-				{
-					Logger::getInstance().log(DEBUG, "first header: tog true", this->_clients[i]);
-					this->_clients[i].tog = true;				
-					replyClient(this->_clients[i],
-						this->_clients[i].headerSend, static_cast<ssize_t>
-						(this->_clients[i].headerSend.size()));
-					this->_clients[i].headerSend.clear();
-				}		
-				
-				if (ssize_t ret = this->_clients[i].response.
-					getBody(this->_clients[i]))
-				{	
-					std::stringstream ss;
-					ss << "stream body continue: " << ret;
-					Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
-							
-					replyClient(this->_clients[i],
-						this->_clients[i].messageSend, ret);
-					this->_clients[i].messageSend.clear();	
-					this->_clients[i].messageSend.resize(SEND_BUFF_SIZE);				
-					usleep(800000);
-				}
-				else
-				{
-					Logger::getInstance().log(DEBUG, "reinit response Builder, ready true, tog false", this->_clients[i]);
-					this->_clients[i].response._ifs.close();
-					this->_clients[i].response = ResponseBuilder();
-					this->_clients[i].readySend = false;
-					this->_clients[i].readyRecev = true;
-					this->_clients[i].tog = false;
-				}
-			}	
-		}
+				Logger::getInstance().log(DEBUG, "first header: tog true", this->_clients[i]);
+				this->_clients[i].respHeader = true;				
+				if(replyClient(i, this->_clients[i].headerSend,
+					static_cast<ssize_t>
+					(this->_clients[i].headerSend.size())))
+					break ;
+				this->_clients[i].headerSend.clear();
+			}		
+			
+			if (ssize_t ret = this->_clients[i].response.
+				getBody(this->_clients[i]))
+			{	
+				std::stringstream ss;
+				ss << "stream body continue: " << ret;
+				Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
+						
+				if (replyClient(i, this->_clients[i].messageSend, ret))
+					break ;
+				this->_clients[i].messageSend.clear();	
+				this->_clients[i].messageSend.resize(SEND_BUFF_SIZE);				
+				usleep(100000);
+			}
+			else
+			{
+				Logger::getInstance().log(DEBUG, "reinit response Builder, ready true, tog false", this->_clients[i]);
+				// this->_clients[i].response._streamHead = 0;
+				this->_clients[i].response._ifs.close();
+				this->_clients[i].response = ResponseBuilder();
+				this->_clients[i].ping = true;			
+				this->_clients[i].respHeader = false;
+				// break; //! ?
+			}
+		}	
 	}
+}
+
+void printVectorCharTest(const std::vector<char> & vect)
+{
+	std::cout << std::endl << "\e[34mPrint Vector: \e[31m" << std::endl;
+	std::cout << "-";		
+	for (size_t i = 0; i < vect.size(); i++)				
+		std::cout << vect[i];
+	std::cout << "-\e[0m" << std::endl << std::endl;
+}
+
+bool Server::replyClient(size_t i, std::vector<char> & response,
+	ssize_t repSize)
+{	
+	Logger::getInstance().log(INFO, "reply client", this->_clients[i]);
+	printVectorCharTest(response);
+
+	this->_writeBuffer.assign(response.begin(), response.begin() + repSize);					
+	this->_readSet = this->_writeSet = this->_actualSet;		
+	if (select(this->_maxFd + 1, &this->_readSet, &this->_writeSet, 0, NULL) //!
+		< 0)	
+		return Logger::getInstance().log(ERROR, "select", this->_clients[i]),
+			true;	
+	if(!FD_ISSET(this->_clients[i].fd, &this->_writeSet))	
+		return Logger::getInstance().
+			log(ERROR, "client not ready for response", this->_clients[i]),
+			true;	
+	ssize_t ret;
+	char * writeHead = this->_writeBuffer.data();
+	size_t writeSize = this->_writeBuffer.size();
+	while (writeSize > 0)
+	{			
+		if ((ret = send(this->_clients[i].fd, writeHead, writeSize,
+			MSG_NOSIGNAL)) < 0)
+		{
+			Logger::getInstance().log(ERROR, "send", this->_clients[i]);
+			this->exitClient(i);
+			return true;
+		}		
+
+		std::string str(writeHead, writeHead + static_cast<size_t>(ret));
+		std::stringstream ss; ss << "data sent to client: -" << str << "-";	
+		Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]); 	
+
+		writeHead += ret;
+		writeSize -= static_cast<size_t>(ret);
+	}
+	return false;
 }
 
 void printMessageClientTest(const Client & client)
@@ -237,12 +310,18 @@ void printMessageClientTest(const Client & client)
 	std::cout << "\e[0m" << std::endl << std::endl;
 }	
 
-void printVectorCharTest(const std::vector<char> & vect)
+
+bool Server::isDelimiterFind(size_t i, std::vector<char>::iterator & it)
 {
-	std::cout << std::endl << "\e[34mPrint Vector: \e[31m" << std::endl;		
-	for (size_t i = 0; i < vect.size(); i++)				
-		std::cout << vect[i];
-	std::cout << "\e[0m" << std::endl << std::endl;
+	std::string delimiter = "\r\n\r\n";
+	it = std::search
+		(this->_clients[i].message.begin(),
+		this->_clients[i].message.end(),
+		delimiter.begin(),
+		delimiter.end() - 1);
+	if (it != this->_clients[i].message.end())
+		return true;
+	return false;
 }
 
 void Server::handleClientHeader(size_t i, ssize_t ret)
@@ -250,14 +329,9 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 	stringstream ss;
 	ss << "receiv client request" << " " << ret << " bytes";
 	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
-	this->_clients[i].readySend = false;
-	std::string delimiter = "\r\n\r\n";
-	std::vector<char>::iterator it = std::search
-		(this->_clients[i].message.begin(),
-		this->_clients[i].message.end(),
-		delimiter.begin(),
-		delimiter.end() - 1);		
-	if (it != this->_clients[i].message.end())		
+		
+	std::vector<char>::iterator it;		
+	if (isDelimiterFind(i, it))		
 	{	
 		Logger::getInstance().log(DEBUG, "header terminated",
 			this->_clients[i]);
@@ -292,7 +366,7 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 	if (this->isBodyTooLarge(i) || this->isBodyTerminated(i))
 		return ;
 	if (this->_clients[i].header.getMethod() == "POST")
-		floSimulatorPut(this->_clients[i].message); //? POST
+		floSimulatorPut(this->_clients[i].message);
 	this->_clients[i].message.clear();	
 }
 
@@ -363,11 +437,9 @@ bool Server::isBodyTerminated(size_t i)
 
 		this->_clients[i].bodySize = 0;
 		if (this->_clients[i].header.getMethod() == "POST")
-			floSimulatorPut(this->_clients[i].message);//? POST
+			floSimulatorPut(this->_clients[i].message);
 		this->_clients[i].message.clear();
-			//!
-		this->_clients[i].readySend = true;
-		Logger::getInstance().log(DEBUG, "ready false", this->_clients[i]);
+		this->_clients[i].ping = false;		
 		return true;
 	}
 	return false;
@@ -383,40 +455,10 @@ void Server::displayClient(Client & client) const
 	Logger::getInstance().log(INFO, ss.str(), client);
 }
 
-void Server::replyClient(Client & client, std::vector<char> & response,
-	ssize_t repSize)
-{	
-	Logger::getInstance().log(INFO, "reply client", client);
-	printVectorCharTest(response);
-
-	this->_writeBuffer.assign(response.begin(), response.begin() + repSize);	
-				
-	this->_readSet = this->_writeSet = this->_actualSet;		
-	if (select(this->_maxFd + 1, &this->_readSet, &this->_writeSet, 0, NULL)
-		< 0)	
-		return Logger::getInstance().log(ERROR, "select", client);	
-	if(!FD_ISSET(client.fd, &this->_writeSet))	
-		return Logger::getInstance().
-			log(ERROR, "client not ready for response", client);	
-	ssize_t ret;
-	char * writeHead = this->_writeBuffer.data();
-	size_t writeSize = this->_writeBuffer.size();
-	while (writeSize > 0)
-	{	
-		std::string str(writeHead, writeHead + static_cast<size_t>(repSize));
-		std::stringstream ss; ss << "send data to client: -" << str << "-";	
-		Logger::getInstance().log(DEBUG, ss.str(), client); 					
-		
-		if ((ret = send(client.fd, writeHead, writeSize, 0)) < 0)		
-			return Logger::getInstance().log(ERROR, "send", client);
-		writeHead += ret;
-		writeSize -= static_cast<size_t>(ret);			
-	}
-}
-
 void Server::exitClient(size_t i)
 {
-	Logger::getInstance().log(INFO, "client exited", this->_clients[i]);
+	Logger::getInstance().log(INFO, "\e[30;101mclient exited\e[0m",
+		this->_clients[i]);
 
 	FD_CLR(this->_clients[i].fd, &this->_actualSet);
 	close(this->_clients[i].fd);	
