@@ -92,7 +92,11 @@ private:
 	void	setError( e_errorCodes );
 	string	extractType( const string& extension ) const;
 	void	initMimes( void );
-	void	extractAuthorizations( void );
+	void	checkNatureAndAuthoURI( void );
+	void	checkAutho( void );
+	void	checkNature( void );
+
+
 
 
 	// generateListingHTML.cpp

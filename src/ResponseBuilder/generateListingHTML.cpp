@@ -131,5 +131,5 @@ void ResponseBuilder::generateListingHTML( void ){
 	else
 		setError(CODE_401_UNAUTHORIZED);
 
-	// TODO : Update URI depending on the default file location
+	checkNatureAndAuthoURI(); // Update URI and Nature
 }

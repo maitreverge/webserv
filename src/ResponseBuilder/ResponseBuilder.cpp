@@ -178,42 +178,16 @@ void	ResponseBuilder::validateURI( void ){
 	}
 
 	// ! STEP 2 : Identify URI nature
-	if (stat(_realURI.c_str(), &_fileInfo) == 0)
-	{
-		if ((_fileInfo.st_mode & S_IFMT) == S_IFDIR) // checks is the given path is a DIRECTORY
-			_isDirectory = true;
-		else if ((_fileInfo.st_mode & S_IFMT) == S_IFREG) // checks is the given path is a FILE
-		{
-			_isFile = true;
-			_fileName = _realURI.substr(_realURI.find_last_of("/") + 1); // extract file name
-			_fileExtension = _fileName.substr(_fileName.find_last_of(".") + 1); // extract file extension
-		}
-		else
-		{
-			// TODO : Do I need to set up an error code if the ressource is neither a file or a directory
-			setError(CODE_422_UNPROCESSABLE_ENTITY); return;
-		}
-	}
-	else // Can't access file
-	{
-		if (errno == EACCES)
-		{
-			setError(CODE_401_UNAUTHORIZED); return;
-		}
-		else if (errno == ENOENT or errno == EFAULT) // EFAULT The provided path is invalid or points to a restricted memory space.
-		{
-			setError(CODE_404_NOT_FOUND); return;
-		}
-	}
 	
-	extractAuthorizations();
+	
+	checkNatureAndAuthoURI();
 
-	if (_isDirectory and (_method == GET))
+	if (_isDirectory and (_method == GET) and (not _isCGI))
 	{
 		generateListingHTML();
 	}
-}
 
+}
 void	ResponseBuilder::buildHeaders(){
 
 	errorCode codes;
@@ -301,6 +275,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	if (_isCGI and _errorType <= CODE_400_BAD_REQUEST) // or potentially another adress
 		launchCGI();
 	
+	checkNatureAndAuthoURI();
 	setContentLenght();
 	buildHeaders();
 
