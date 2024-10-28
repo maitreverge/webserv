@@ -9,7 +9,7 @@ protected:
         client = new Client();
         config = new Config();
         responseBuilder = new ResponseBuilder();
-		std::freopen("/dev/null", "w", stdout);
+		// std::freopen("/dev/null", "w", stdout);
     }
 
     // Cette méthode est appelée après chaque test
@@ -18,7 +18,7 @@ protected:
         delete client;
         delete config;
         delete responseBuilder;
-        std::freopen("/dev/tty", "w", stdout);
+        // std::freopen("/dev/tty", "w", stdout);
     }
 
     // Objets utilisés pour les tests

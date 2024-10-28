@@ -7,7 +7,12 @@
  *========================================================================**/
 Logger::Logger() : logToStdOut(1)
 {
+	#ifdef UNIT_TEST
+	_logLevel[INFO] = 		0;
+	#else
 	_logLevel[INFO] = 		1;
+	#endif
+	
 	_logLevel[DEBUG] = 		1;
 	_logLevel[WARNING] = 	1;
 	_logLevel[ERROR] = 		1;
