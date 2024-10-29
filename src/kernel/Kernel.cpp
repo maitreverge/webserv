@@ -10,6 +10,15 @@ Kernel::Kernel(void)
 	this->launch();
 }
 
+Kernel::Kernel(char* path)
+{	
+	std::cout << path << std::endl << std::flush;
+	this->_servers.reserve(300);//!
+	FD_ZERO(&this->_actualSet);
+	this->setup();
+	this->launch();
+}
+
 void Kernel::callCatch(Server & server)
 {
 	server.catchClients();

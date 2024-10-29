@@ -29,6 +29,7 @@ class Kernel
 
 		static bool		_exit;
 		Kernel(void);
+		Kernel(char* path);
 
 		void setup();
 		void launch();
