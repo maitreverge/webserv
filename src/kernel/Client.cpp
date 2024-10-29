@@ -9,12 +9,11 @@ Client::Client()
 	memset(&address, 0, sizeof(address));
 	addressLen = sizeof(address);
 	
-	messageRecv.reserve(300); //!
+	messageRecv.reserve(MAX_HDR_SIZE); 
 	bodySize = 0;
 
-	headerRespons.reserve(300); //!
-	messageSend.reserve(MAX_HDR_SIZE);
-	messageSend.resize(SEND_BUFF_SIZE);
+	headerRespons.reserve(MAX_HDR_SIZE); 
+	messageSend.reserve(SEND_BUFF_SIZE);
 	
 	ping = true;	
 	pongHeader = false;

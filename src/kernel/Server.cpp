@@ -6,9 +6,9 @@ fd_set & actualSet, fd_set & readSet, fd_set & writeSet)
 	: _sockAddr(sockAddr), _maxFd(maxFd),
 	_actualSet(actualSet), _readSet(readSet), _writeSet(writeSet) 
 {		
-	this->_readBuffer.reserve(BUFF_SIZE);	
-	this->_writeBuffer.reserve(BUFF_SIZE);
-	this->_writeBuffer.resize(BUFF_SIZE);//!
+	this->_clients.reserve(MAX_CLIENTS);
+	this->_readBuffer.reserve(RECV_BUFF_SIZE);	
+	this->_writeBuffer.reserve(SEND_BUFF_SIZE);
 }
 
 const sockaddr_in & Server::getSockAdress() const
@@ -42,33 +42,6 @@ bool Server::setup()
 	return true;
 }
 
-std::vector<char> buildHardResponseTest()
-{
-	std::stringstream ss;	
-	std::string strBody =
-"<html>\
-<head><title>My Styled Page</title></head>\
-<body style=\"background-color: #f0f0f0; text-align: center; padding: 50px;\">\
-<h1 style=\"color: #ff5733; font-family: Arial, sans-serif;\">Hello, World!</h1>\
-<p style=\"color: #555; font-size: 18px;\">This is a simple page with inline CSS.</p>\
-</body>\
-</html>";	
-	ss << 
-"HTTP/1.1 200 OK\r\n\
-Content-Type: text/html\r\n\
-Content-Length: "
-	<< strBody.size() <<
-"\r\n\
-Connection: keep-alive\r\n\
-\r\n\
-" << strBody;	
-	std::string strtest(ss.str()); 
-	std::vector<char> res (strtest.begin(), strtest.end());
-	std::vector<char> flo (strBody.begin(), strBody.end());	
-	string flo_file_extension = "index.html";	
-	return res;	
-}
-
 void Server::catchClients()
 {
 	// Logger::getInstance().log(INFO, "Catch clients", *this);
@@ -83,11 +56,7 @@ void Server::catchClients()
 	
 		FD_SET(client.fd, &this->_actualSet);
 		this->_maxFd = std::max(this->_maxFd, client.fd);
-		this->_clients.push_back(client);
-
-		// std::vector<char> hardResp = buildHardResponseTest();
-		// replyClient(client, hardResp);
-		// Logger::getInstance().log(INFO, "Catch clients end", *this);		
+		this->_clients.push_back(client);				
 	}
 }
 
@@ -99,7 +68,7 @@ void Server::listenClients()
 			&& FD_ISSET(this->_clients[i].fd, &this->_readSet))
 		{
 			this->_readBuffer.clear();
-			this->_readBuffer.resize(BUFF_SIZE);
+			this->_readBuffer.resize(RECV_BUFF_SIZE);
 			ssize_t ret = recv(this->_clients[i].fd, this->_readBuffer.data(),
 				this->_readBuffer.size(), 0);
 			if (ret < 0)
@@ -120,22 +89,6 @@ void Server::listenClients()
 			}
 		}	
 	}
-}
-
-std::vector<char> buildHeaderTest()
-{
-	std::stringstream ss;	
-		
-	ss << 
-"HTTP/1.1 200 OK\r\n\
-Content-Type: text/html\r\n\
-Content-Length: 317\r\n\
-Connection: keep-alive\r\n\
-\r\n\
-"; 
-	std::string str = ss.str();
-	std::vector<char> res(str.begin(), str.end());
-	return res;	
 }
 
 void floSimulatorPut(std::vector<char> part)
@@ -202,6 +155,14 @@ void printVectorCharTest(const std::vector<char> & vect)
 	std::cout << "-\e[0m" << std::endl << std::endl;
 }
 
+void printMessageClientTest(const Client & client)
+{
+	std::cout << std::endl << "\e[34mmessage client: " << std::endl;		
+	for (size_t i = 0; i < client.messageRecv.size(); i++)				
+		std::cout << client.messageRecv[i];
+	std::cout << "\e[0m" << std::endl << std::endl;
+}
+
 bool Server::replyClient(size_t i, std::vector<char> & response,
 	ssize_t repSize)
 {	
@@ -232,14 +193,6 @@ bool Server::replyClient(size_t i, std::vector<char> & response,
 	}
 	return false;
 }
-
-void printMessageClientTest(const Client & client)
-{
-	std::cout << std::endl << "\e[34mmessage client: " << std::endl;		
-	for (size_t i = 0; i < client.messageRecv.size(); i++)				
-		std::cout << client.messageRecv[i];
-	std::cout << "\e[0m" << std::endl << std::endl;
-}	
 
 bool Server::isDelimiterFind(size_t i, std::vector<char>::iterator & it)
 {

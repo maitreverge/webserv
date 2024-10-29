@@ -4,7 +4,7 @@ bool Kernel::_exit = false;
 
 Kernel::Kernel(void)
 {	
-	this->_servers.reserve(300);//!
+	this->_servers.reserve(MAX_SERVERS);
 	FD_ZERO(&this->_actualSet);
 	this->setup();
 	this->launch();

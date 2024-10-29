@@ -8,6 +8,9 @@
 #include "Server.hpp"
 #include "Logger.hpp"
 
+#define MAX_SERVERS 42
+#define MAX_CLIENTS 1000
+
 class Server;
 
 class Kernel
