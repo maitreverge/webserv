@@ -73,8 +73,17 @@ void	Config::initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddre
 	sockAddress.push_back(server);
 }
 
-// Config::Config(Config& other)
-// {
-// 	_
-
-// }
+Config::Config(const Config& other)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		_serverStruct[i].host = other._serverStruct[i].host;
+		_serverStruct[i].port = other._serverStruct[i].port;
+		_serverStruct[i].serverName = other._serverStruct[i].serverName;
+	}
+	maxClient = other.maxClient;
+	sockAddress = other.sockAddress;
+	indexFiles = other.indexFiles;
+	listingDirectories = other.listingDirectories;
+	errorPaths = other.errorPaths;
+}

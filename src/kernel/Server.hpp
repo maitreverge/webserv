@@ -49,7 +49,6 @@ struct Client
 
 class Server
 {
-	Config 				_conf;
 	sockaddr_in 		_sockAddr;
 	std::vector<Client> _clients;
 	std::vector<char>	_writeBuffer;
@@ -60,6 +59,7 @@ class Server
 	fd_set &			_actualSet;
 	fd_set &			_readSet;
 	fd_set &			_writeSet;
+	Config 				_conf;
 
 	void displayClient(Client & client) const;
 	void handleClientHeader(size_t i, ssize_t ret);
@@ -78,6 +78,8 @@ class Server
 
 		Server(sockaddr_in & sockaddr, int & maxFd, fd_set & actualSet,
 			fd_set & readSet, fd_set & writeSet);
+		Server(sockaddr_in & sockaddr, int & maxFd, fd_set & actualSet,
+			fd_set & readSet, fd_set & writeSet, Config & conf);
 
 		const sockaddr_in & getSockAdress() const;
 

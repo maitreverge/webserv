@@ -12,6 +12,16 @@ fd_set & actualSet, fd_set & readSet, fd_set & writeSet)
 	this->_writeBuffer.resize(BUFF_SIZE);//!
 }
 
+Server::Server(sockaddr_in & sockAddr, int & maxFd,
+fd_set & actualSet, fd_set & readSet, fd_set & writeSet, Config & conf)
+	: _sockAddr(sockAddr), _maxFd(maxFd),
+	_actualSet(actualSet), _readSet(readSet), _writeSet(writeSet), _conf(conf)
+{		
+	this->_readBuffer.reserve(BUFF_SIZE);	
+	this->_writeBuffer.reserve(BUFF_SIZE);
+	this->_writeBuffer.resize(BUFF_SIZE);//!
+}
+
 const sockaddr_in & Server::getSockAdress() const
 {
 	return (this->_sockAddr);
