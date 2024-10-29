@@ -2,29 +2,12 @@
 #include "ConfigFileParser.hpp"
 #include "master.hpp"
 
-Config::Config()
+Config::Config(char *path)
 {
-	ConfigFileParser::printServerData(_serverStruct, 8);
+	// ConfigFileParser::printServerData(_serverStruct, 8);
+	// printColor(RED, "STRUCT CONTENT:");
 	ConfigFileParser toto;
-	toto.parseConfigFile(*this, (char *)"config.ini");
-	printColor(RED, "STRUCT CONTENT:");
-	for (int i = 0; i < 8; i++)
-	{
-		print(_serverStruct[i].host);
-		print(_serverStruct[i].port);
-		print(_serverStruct[i].serverName);
-	}
-
-
-	// _serverStruct[0].host = "0.0.0.0";
-	// _serverStruct[0].port = "1510";
-	// _serverStruct[0].serverName = "server1";
-	// _serverStruct[1].host = "0.0.0.0";
-	// _serverStruct[1].port = "1511";
-	// _serverStruct[1].serverName = "server2";
-	// _serverStruct[2].host = "0.0.0.0";
-	// _serverStruct[2].port = "1512";
-	// _serverStruct[2].serverName = "server3";
+	toto.parseConfigFile(*this, path);
 
 	maxClient = 1024;
 	for (int i = 0; i < 8; i++)
@@ -34,6 +17,59 @@ Config::Config()
 		initializeServer(_serverStruct[2], sockAddress);
 	}
 	initializeServer(80, sockAddress);
+	ConfigFileParser::printConfig(*this);
+	
+	// Default files to look for if the URI is "/"
+	indexFiles.push_back("index.html");
+	indexFiles.push_back("index.htm");
+	indexFiles.push_back("default.html");
+
+	listingDirectories = true;
+
+	// Error paths files
+	errorPaths.insert(std::make_pair(CODE_400_BAD_REQUEST, "errorPages/400.html"));
+	errorPaths.insert(std::make_pair(CODE_401_UNAUTHORIZED, "errorPages/401.html"));
+	errorPaths.insert(std::make_pair(CODE_403_FORBIDDEN, "errorPages/403.html"));
+	errorPaths.insert(std::make_pair(CODE_404_NOT_FOUND, "errorPages/404.html"));
+	errorPaths.insert(std::make_pair(CODE_500_INTERNAL_SERVER_ERROR, "errorPages/500.html"));
+	errorPaths.insert(std::make_pair(CODE_502_BAD_GATEWAY, "errorPages/502.html"));
+	errorPaths.insert(std::make_pair(CODE_503_SERVICE_UNAVAILABLE, "errorPages/503.html"));
+	errorPaths.insert(std::make_pair(CODE_504_GATEWAY_TIMEOUT, "errorPages/504.html"));
+}
+
+Config::Config()
+{
+	// ConfigFileParser::printServerData(_serverStruct, 8);
+	// printColor(RED, "STRUCT CONTENT:");
+	// ConfigFileParser toto;
+	// toto.parseConfigFile(*this, path);
+	// for (int i = 0; i < 8; i++)
+	// {
+	// 	print(_serverStruct[i].host);
+	// 	print(_serverStruct[i].port);
+	// 	print(_serverStruct[i].serverName);
+	// }
+
+
+	_serverStruct[0].host = "0.0.0.0";
+	_serverStruct[0].port = "1510";
+	_serverStruct[0].serverName = "server1";
+	_serverStruct[1].host = "0.0.0.0";
+	_serverStruct[1].port = "1511";
+	_serverStruct[1].serverName = "server2";
+	_serverStruct[2].host = "0.0.0.0";
+	_serverStruct[2].port = "1512";
+	_serverStruct[2].serverName = "server3";
+
+	maxClient = 1024;
+	for (int i = 0; i < 8; i++)
+	{
+		initializeServer(_serverStruct[0], sockAddress);
+		initializeServer(_serverStruct[1], sockAddress);
+		initializeServer(_serverStruct[2], sockAddress);
+	}
+	initializeServer(80, sockAddress);
+	ConfigFileParser::printConfig(*this);
 	
 	// Default files to look for if the URI is "/"
 	indexFiles.push_back("index.html");

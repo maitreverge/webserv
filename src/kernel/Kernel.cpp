@@ -2,26 +2,30 @@
 
 bool Kernel::_exit = false;
 
-Kernel::Kernel(void)
+Kernel::Kernel(void) : _conf()
 {
+	print("Kernel default constructor");
 	this->_servers.reserve(300);//!
 	FD_ZERO(&this->_actualSet);
 	this->setup();
-	_configFileParser.printConfig(_conf);
+	// _configFileParser.printConfig(_conf);
 	this->launch();
 }
 
-Kernel::Kernel(char* path)
+Kernel::Kernel(char* path) : _conf(path)
 {
+	// _configFileParser.parseConfigFile(_conf, (char *)path);	
+	// ConfigFileParser::printConfig(_conf);
+	print("Kernel path constructor");
 	this->_servers.reserve(300);//!
 	FD_ZERO(&this->_actualSet);
 	this->setup();
-	std::cout << path << std::endl << std::flush;
-	printColor(RED, "before:");
-	_configFileParser.printConfig(_conf);
-	_configFileParser.parseConfigFile(_conf, path);	
-	printColor(RED, "after:");
-	_configFileParser.printConfig(_conf);
+	// std::cout << path << std::endl << std::flush;
+	// printColor(RED, "before:");
+	// _configFileParser.printConfig(_conf);
+	// printColor(RED, "after:");
+	// _configFileParser.printConfig(_conf);
+
 	this->launch();
 
 
@@ -53,7 +57,7 @@ void Kernel::setup()
 	for (size_t i = 0; i < this->_conf.sockAddress.size(); i++)
 	{
 		Server server(this->_conf.sockAddress[i], this->_maxFd,
-			this->_actualSet, this->_readSet, this->_writeSet);
+			this->_actualSet, this->_readSet, this->_writeSet, this->_conf);
 		if (server.setup())
 			this->_servers.push_back(server);	
 	}	

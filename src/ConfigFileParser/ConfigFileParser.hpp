@@ -49,6 +49,6 @@ class ConfigFileParser
 		void	intializeConfigStruct(Config& configStruct);
 		int		extractDataFromConfigFile(const std::string& path);
 		void	parseConfigFile(Config& configStruct, char* path);
-		void 	printConfig(const Config& config);
+		static void 	printConfig(const Config& config);
 
 };
