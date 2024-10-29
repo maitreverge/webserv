@@ -1,7 +1,6 @@
 #include "Server.hpp"
 #include "Logger.hpp" 
 
-
 Server::Server(sockaddr_in & sockAddr, int & maxFd,
 fd_set & actualSet, fd_set & readSet, fd_set & writeSet)
 	: _sockAddr(sockAddr), _maxFd(maxFd),
@@ -122,20 +121,11 @@ void Server::catchClients()
 			(&client.address), &client.len);
 		if (client.fd < 0)		
 			return Logger::getInstance().log(ERROR, "accept");	
-		if (this->_clients.size() >= 1)
-			std::cout << this->_clients[0].response._streamHead << std::endl;
-		if (this->_clients.size() >= 2)
-		std::cout << this->_clients[1].response._streamHead << std::endl;
-		Logger::getInstance().log(INFO, "\e[30;101mnew client\e[0m", client);
-
+	
 		FD_SET(client.fd, &this->_actualSet);
 		this->_maxFd = std::max(this->_maxFd, client.fd);
 		this->_clients.push_back(client);
 
-		if (this->_clients.size() >= 1)		
-			std::cout << this->_clients[0].response._streamHead << std::endl;
-		if (this->_clients.size() >= 2)
-			std::cout << this->_clients[1].response._streamHead << std::endl;	
 		// std::vector<char> hardResp = buildHardResponseTest();
 		// replyClient(client, hardResp);
 		// Logger::getInstance().log(INFO, "Catch clients end", *this);		
@@ -217,23 +207,16 @@ void Server::replyClients()
 			&& FD_ISSET(this->_clients[i].fd, &this->_writeSet))
 		{
 			if (!this->_clients[i].respHeader)
-			{
-				Logger::getInstance().log(DEBUG, "first header: tog true", this->_clients[i]);
-				this->_clients[i].respHeader = true;				
-				if(replyClient(i, this->_clients[i].headerSend,
+			{				
+				if (replyClient(i, this->_clients[i].headerSend,
 					static_cast<ssize_t>
 					(this->_clients[i].headerSend.size())))
-					break ;
-				// this->_clients[i].headerSend.clear();
-			}		
-			
+					break ;				
+				this->_clients[i].respHeader = true;				
+			}				
 			if (ssize_t ret = this->_clients[i].response.
 				getBody(this->_clients[i]))
-			{	
-				std::stringstream ss;
-				ss << "stream body continue: " << ret;
-				Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
-						
+			{							
 				if (replyClient(i, this->_clients[i].messageSend, ret))
 					break ;
 				this->_clients[i].messageSend.clear();	
@@ -242,13 +225,12 @@ void Server::replyClients()
 			}
 			else
 			{
-				Logger::getInstance().log(DEBUG, "reinit response Builder, ready true, tog false", this->_clients[i]);
-				// this->_clients[i].response._streamHead = 0;
-				// this->_clients[i].response._ifs.close();
+				Logger::getInstance().log(DEBUG, "reinit response Builder",
+					this->_clients[i]);
+
 				this->_clients[i].response = ResponseBuilder();
 				this->_clients[i].ping = true;			
-				this->_clients[i].respHeader = false;
-				// break; //! ?
+				this->_clients[i].respHeader = false;				
 			}
 		}	
 	}
