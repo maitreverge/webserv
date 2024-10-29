@@ -47,14 +47,10 @@ void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
 			}
 		}
 	}
-	// printData(_data);
-	// printServerData(_serverStruct, i + 1);
-	// initializeServers_serverStruct(configStruct, i);
 }
 
 void	ConfigFileParser::initializeServers(Config& configStruct, int& i)
 {
-	printServerData(_serverStruct, (size_t)i + 1);
 	for (int j = 0; j < i + 1; j++)
 	{
 		struct sockaddr_in server;	
@@ -85,7 +81,7 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt
 		if (!(*valIt).empty())
 		{
 			field = itemIt->second[0];
-			printColor(GREEN, field);
+			// printColor(GREEN, field);
 		}
 		
 }
