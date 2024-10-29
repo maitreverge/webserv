@@ -4,15 +4,17 @@
 #include "errorCode.hpp"
 Error::Error() {
 					_errorPages.resize(505); // segfault without this!!!
-					_errorPages[400] = "errorPages/400.html";
-					_errorPages[401] = "errorPages/401.html";
-					_errorPages[403] = "errorPages/403.html";
-					_errorPages[404] = "errorPages/404.html";
-					_errorPages[500] = "errorPages/500.html";
-					_errorPages[502] = "errorPages/502.html";
-					_errorPages[503] = "errorPages/503.html";
-					_errorPages[504] = "errorPages/504.html";
-					_errorPages[0]	 = "errorPages/default.html";
+					_errorPages[400] = "/errorPages/400.html";
+					_errorPages[401] = "/errorPages/401.html";
+					_errorPages[403] = "/errorPages/403.html";
+					_errorPages[404] = "/errorPages/404.html";
+					_errorPages[413] = "/errorPages/413.html";
+					_errorPages[431] = "/errorPages/431.html";
+					_errorPages[500] = "/errorPages/500.html";
+					_errorPages[502] = "/errorPages/502.html";
+					_errorPages[503] = "/errorPages/503.html";
+					_errorPages[504] = "/errorPages/504.html";
+					_errorPages[0]	 = "/errorPages/default.html";
 }
 
 Error::~Error() {}
@@ -71,7 +73,8 @@ std::vector<char>	Error::buildErrorRequest(unsigned long errorCode)
 	std::string	errorRequestString;
 	std::vector<char>	ErrorRequestVector;
 
-	errorRequestString = "GET " + getErrorPagePath(errorCode) + " HTTP/1.1";
+	// errorRequestString = "GET " + getErrorPagePath(errorCode) + " HTTP/1.1";
+	errorRequestString = getErrorPagePath(errorCode);
 	ErrorRequestVector = stringToVector(errorRequestString);
 	return (ErrorRequestVector);
 }

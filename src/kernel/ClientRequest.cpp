@@ -56,7 +56,7 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 	std::vector<char>::iterator it;		
 	if (isDelimiterFind(i, it))		
 	{	
-		Logger::getInstance().log(DEBUG, "headerRespons terminated",
+		Logger::getInstance().log(DEBUG, "header terminated",
 			this->_clients[i]);
 		
 		if (isMaxHeaderSize(it + 4, i))
@@ -114,38 +114,64 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 }
 #include "Error.hpp"
 
+bool tog = true;
 bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
 {
+	// if (tog)
 	if (it - this->_clients[i].messageRecv.begin() > MAX_HDR_SIZE)
 	{
+		// tog = !tog;
 		stringstream ss;
-		ss << "headerRespons size" << " Actual-Size: "
+		ss << "header size" << " Actual-Size: "
             << it - this->_clients[i].messageRecv.begin()
             << " - Max-Header-Size : "	<< MAX_HDR_SIZE;
 
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
 		// std::vector<char> err = Error::getInstance().handleError(static_cast<e_errorCodes>(431), this->_clients[i]);
 			//! 431 Request Header Fields Too Large !!
-		// this->_clients[i].headerRequest.getHeaders().Host = err;
-		this->exitClient(i);
+		std::vector<char> err = Error::getInstance().handleError(static_cast<e_errorCodes>(431), this->_clients[i]);
+		std::string errStr(err.begin(), err.end());
+		std::cout << errStr << std::endl;
+		this->_clients[i].headerRequest.setURI(errStr);
+		this->_clients[i].responseBuilder = ResponseBuilder();
+		this->_clients[i].responseBuilder.getHeader(this->_clients[i], this->_conf);
+		this->_clients[i].messageRecv.clear();
+		this->_clients[i].ping = false;	
+		
+		// this->exitClient(i);//!
 		return true;	
 	}
 	return false;
 }
-
 bool Server::isContentLengthValid(size_t i)
 {
+	Logger::getInstance().log(ERROR, "CONTENT", this->_clients[i]);
+	std::cout << this->_clients[i].headerRequest.getHeaders().ContentLength; 
+	Logger::getInstance().log(ERROR, "CONTENT", this->_clients[i]);
+
 	if (this->_clients[i].headerRequest.getHeaders().ContentLength
 		> MAX_CNT_SIZE)
+	// if (tog)
 	{
+		// tog = !tog;
+		Logger::getInstance().log(ERROR, "CONTENT YEAH", this->_clients[i]);
 		stringstream ss;
 		ss << "max content size reached" << " - Content-Lenght: "
 			<< this->_clients[i].headerRequest.getHeaders().ContentLength
 			<< " - Max content size: " << MAX_CNT_SIZE << std::endl;
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
 			//! 413 Payload Too Large
-	
-		this->exitClient(i);
+
+		std::vector<char> err = Error::getInstance().handleError(static_cast<e_errorCodes>(413), this->_clients[i]);
+		std::string errStr(err.begin(), err.end());
+		std::cout << errStr << std::endl;
+		this->_clients[i].headerRequest.setURI(errStr);
+		this->_clients[i].responseBuilder = ResponseBuilder();
+		this->_clients[i].responseBuilder.getHeader(this->_clients[i], this->_conf);
+		this->_clients[i].messageRecv.clear();
+		this->_clients[i].ping = false;
+		
+		// this->exitClient(i);//!
 		return false;
 	}
 	return true;
@@ -153,9 +179,11 @@ bool Server::isContentLengthValid(size_t i)
 
 bool Server::isBodyTooLarge(size_t i)
 {
-	if (this->_clients[i].bodySize >
-		this->_clients[i].headerRequest.getHeaders().ContentLength)
+	// if (this->_clients[i].bodySize >
+	// 	this->_clients[i].headerRequest.getHeaders().ContentLength)
+	if (tog)
 	{
+		tog = !tog;
 		stringstream ss;
 		ss << "content size" << " - Body-Size: "
 		    << this->_clients[i].bodySize << " Content-Lenght: "
@@ -163,8 +191,17 @@ bool Server::isBodyTooLarge(size_t i)
             << std::endl;
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
 			//! 413 Payload Too Large
-	
-		this->exitClient(i);//!
+
+		std::vector<char> err = Error::getInstance().handleError(static_cast<e_errorCodes>(413), this->_clients[i]);
+		std::string errStr(err.begin(), err.end());
+		std::cout << errStr << std::endl;
+		this->_clients[i].headerRequest.setURI(errStr);
+		this->_clients[i].responseBuilder = ResponseBuilder();
+		this->_clients[i].responseBuilder.getHeader(this->_clients[i], this->_conf);
+		this->_clients[i].messageRecv.clear();
+		this->_clients[i].ping = false;
+		
+		// this->exitClient(i);//!
 		return true;;
 	}
 	return false;
