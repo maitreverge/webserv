@@ -13,8 +13,8 @@ struct Config
 	vector<std::string>					indexFiles; // default files names if the URI == "/"
 	bool							listingDirectories; // activer ou non le listing des repertoires
 	map<e_errorCodes, string>		errorPaths;
-	string rootSearch;
 	map<string, string> redirection; // Associate a Route = One Redirection
+	map<string, string> routeMapping; // Associate a Route = One Root
 
 	Config()
 	{
@@ -64,8 +64,13 @@ struct Config
 		errorPaths.insert(std::make_pair(CODE_503_SERVICE_UNAVAILABLE, "errorPages/503.html"));
 		errorPaths.insert(std::make_pair(CODE_504_GATEWAY_TIMEOUT, "errorPages/504.html"));
 
-		rootSearch = "/var/www/images";
+		// Redirections
 		redirection.insert(std::make_pair(/* ONE ROUTE*/"/", /* ONE REDIRECTION*/"/testResponseBuilder/redirectDefaultPath/cats.html"));
 		redirection.insert(std::make_pair("/nope", "/nopenopenope"));
+		// ! Edge case => Tester Route A => Route B and Route B => Route A
+
+		// Route Mapping
+		routeMapping.insert(std::make_pair(/*ONE ROUTE*/"/coucou", /*ONE MAPPING */"/testResponseBuilder/mapingPath"));
+		routeMapping.insert(std::make_pair(/*ONE ROUTE*/"/non", /*ONE MAPPING */"/mdr_non"));
 	}
 };

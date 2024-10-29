@@ -102,7 +102,7 @@ class ResponseBuilder
 	void	checkAutho( void );
 	void	checkNature( void );
 	bool 	redirectURI( void );
-	void 	swapForRoot( void );
+	void 	rootMapping( void );
 	bool	isErrorRedirect( void );
 
 	// generateListingHTML.cpp

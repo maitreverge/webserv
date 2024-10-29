@@ -2,6 +2,7 @@
 
 ## BUILDING HEADER
 - Extract Method (GET, POST or DELETE) ✅
+- Implement URI Redirection ✅
 - Get URI ✅
 - Resolve URI  
 	==> Rooted path from config file ⛔
@@ -11,8 +12,9 @@
 	==> Is the URI accessible  ✅
 	==> Is the path a directory  ✅
 	==> Is the path a CGI  ✅
+	==> Route Mapping  ⛔
 	==> Does the route accepts the current method  ⛔
-	==> Definir une redirection HTTP ⛔ (possibly send a CODE_300 and let the client sent back another GET request)
+	==> Definir une redirection HTTP ✅
 	==> DEFINE AUTHORIZATION DEPENDING ON THE METHOD  ✅
 		# GET Request:
 			* Read Permission: The server needs to read the file or directory contents.
@@ -28,8 +30,8 @@
 			* Execute Permission: If the target is a directory, the server needs execute permission to access the directory.
 			* POSIX Permission: X_OK (Execute permission)
 
-	==> HTML Generator for Listing Directories 🔥
-		#   TimeStamp checker for avoiding making twice the same work (also) 🔥
+	==> HTML Generator for Listing Directories ✅
+		#   TimeStamp checker for avoiding making twice the same work (also) ⛔
 
 - Executing the CGI ⛔
 	==> Possibly extract timestamp from Last-Modified CGI code source for avoiding generating twice the same CGI.html ( depends if the CGI.py does outputs the same thing or not, will depend mosty on PATH_INFO and body, if one or another are exploited)

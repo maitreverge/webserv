@@ -31,15 +31,18 @@ bool ResponseBuilder::redirectURI( void ){
 	return true;
 }
 
-void ResponseBuilder::swapForRoot( void ){
+void ResponseBuilder::rootMapping( void ){
 
+	// ! STEP 1 : Check for root mapping presence
+
+	// Modify _realURI
 
 }
 
 void ResponseBuilder::resolveURI( void )
 {
-	// TODO STEP 2 : Resolve URI with rooted path from config file
-	swapForRoot();
+	// ! STEP 1 : Check the rootMapping
+	rootMapping();
 	
 	// ! STEP 3 : Trim all "../" from the URI for transversal path attacks
 	sanatizeURI(_realURI);
