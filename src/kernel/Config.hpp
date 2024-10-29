@@ -6,11 +6,19 @@
 #include <cstring>
 #include "errorCode.hpp"
 
+
+/**========================================================================
+ *                             Idée
+ *  ajouter une structure serverStruct somme variable
+ *  pour initiliaser a partir des donnees parsees
+ *  directement ici?
+ *  
+ *========================================================================**/
 struct Config
 {
 	short int						maxClient;
 	std::vector<struct sockaddr_in> sockAddress;
-	vector<std::string>					indexFiles; // default files names if the URI == "/"
+	vector<std::string>				indexFiles; // default files names if the URI == "/"
 	bool							listingDirectories; // activer ou non le listing des repertoires
 	map<e_errorCodes, string>		errorPaths;
 
