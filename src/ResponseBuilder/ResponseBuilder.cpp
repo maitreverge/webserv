@@ -33,9 +33,39 @@ bool ResponseBuilder::redirectURI( void ){
 
 void ResponseBuilder::rootMapping( void ){
 
-	// ! STEP 1 : Check for root mapping presence
+	// ! STEP 1 : Check for any routes matching the URI, in reverse order
+	string originalURI = _realURI;
+	string trimmedURI = _realURI;
+	/*
+		/dir1/dir2/foo/bar/www/hello.jpeg
 
-	// Modify _realURI
+	*/
+
+	// Try every Route in reverse order. If not found, then trim the URI from the end.
+	while (not trimmedURI.empty())
+	{
+		try
+		{
+			_config->routeMapping.at(trimmedURI);
+		}
+		catch(const std::out_of_range& e) // Route not found, need to trim the URI and try again
+		{
+			if (trimmedURI.size() == 1)
+				return; // Route not found
+			// If the first "/" is also the last, we're left with the last "/" default path
+			else if (trimmedURI.find_first_of('/') == trimmedURI.find_last_of('/'))
+			{
+				// erasing keeping the "/"
+				trimmedURI.erase(trimmedURI.find_first_of('/') + 1);
+			}
+			else
+				trimmedURI.erase(trimmedURI.find_last_of('/'));
+		}
+	}
+
+	// From this Point, a route has been found
+	// if ()
+
 
 }
 

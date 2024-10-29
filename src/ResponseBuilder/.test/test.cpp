@@ -1,39 +1,41 @@
-// #include <dirent.h>
-// #include <iostream>
-// #include <cstring>
+#include <dirent.h>
+#include <iostream>
+#include <cstring>
 
-// using namespace std;
+using namespace std;
 
-// #ifdef UNIT_TEST
+#ifdef UNIT_TEST
 
-// #else
+#else
 
-// int main() {
-// 	string targetPython = ".py";
-// 	string targetPHP = ".php";
+int main() {
 
-// 	string _realURI = "dir1/dir2/script.py/dindon/ducon/mescouilles";
-
-// 	std::string::size_type phpLoc = _realURI.find(targetPHP);
-// 	std::string::size_type pythonLoc = _realURI.find(targetPython);
-
-// 	if (phpLoc == std::string::npos and pythonLoc == std::string::npos) {
-// 		// _isCGI = false;
-// 		return 0;
-// 	}
-
-// 	std::string::size_type realLoc = (phpLoc == std::string::npos) ? pythonLoc : phpLoc;
-// 	realLoc += (phpLoc == std::string::npos) ? targetPython.length() : targetPHP.length();
-
-// 	string _pathInfo = _realURI.substr(realLoc);
-
-// 	_realURI = _realURI.substr(0, realLoc);
+	string _realURI = "/dir1/dir2/script.py/dindon/ducon/mescouilles";
+	// string _realURI = "/dir1";
 
 
-// 	cout << "Path info = " <<  _pathInfo << endl;
-// 	cout << "Real URI = " <<  _realURI << endl;
+	while (_realURI != "/")
+	{
+		if (_realURI.find_first_of('/') == _realURI.find_last_of('/'))
+		{
+			// last real path
+			_realURI.erase(_realURI.find_first_of('/') + 1);
+		}
+		else
+			_realURI.erase(_realURI.find_last_of('/'));
+		cout << "After trim : " << _realURI << endl;
+	}
+	
+	
+	// {
+	// 	cout << "Before trim : " << _realURI << endl;
 
-// 	return 0;
-// }
+	// 	_realURI.erase(_realURI.find_last_of('/'));
+		
+	// 	cout << "After trim : " << _realURI << endl;
+	// }
 
-// #endif
+	return 0;
+}
+
+#endif

@@ -14,7 +14,7 @@ struct Config
 	bool							listingDirectories; // activer ou non le listing des repertoires
 	map<e_errorCodes, string>		errorPaths;
 	map<string, string> redirection; // Associate a Route = One Redirection
-	map<string, string> routeMapping; // Associate a Route = One Root
+	map<string, map<string, string> > routeMapping; // Associate a Route = One mapping
 
 	Config()
 	{
@@ -69,8 +69,15 @@ struct Config
 		redirection.insert(std::make_pair("/nope", "/nopenopenope"));
 		// ! Edge case => Tester Route A => Route B and Route B => Route A
 
-		// Route Mapping
-		routeMapping.insert(std::make_pair(/*ONE ROUTE*/"/coucou", /*ONE MAPPING */"/testResponseBuilder/mapingPath"));
-		routeMapping.insert(std::make_pair(/*ONE ROUTE*/"/non", /*ONE MAPPING */"/mdr_non"));
+		// Route mapping 1
+		std::map<std::string, std::string> innerMap1;
+		innerMap1.insert(std::make_pair("/coucou", "/testResponseBuilder/mapingPath"));
+		routeMapping.insert(std::make_pair("/", innerMap1));
+
+		std::map<std::string, std::string> innerMap2;
+		innerMap2.insert(std::make_pair("/coucou", "/testResponseBuilder/mapingPath"));
+		routeMapping.insert(std::make_pair("/testResponseBuilder/listingDirectory", innerMap2));
+		
+		
 	}
 };
