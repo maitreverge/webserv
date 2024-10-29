@@ -77,8 +77,6 @@ class Server
 	public:
 
 		Server(sockaddr_in & sockaddr, int & maxFd, fd_set & actualSet,
-			fd_set & readSet, fd_set & writeSet);
-		Server(sockaddr_in & sockaddr, int & maxFd, fd_set & actualSet,
 			fd_set & readSet, fd_set & writeSet, Config & conf);
 
 		const sockaddr_in & getSockAdress() const;
