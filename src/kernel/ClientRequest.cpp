@@ -202,7 +202,7 @@ bool Server::isBodyTooLarge(size_t i)
 	return false;
 }
 
-bool Server::isBodyTerminated(size_t i) 
+bool Server::isBodyTerminated(size_t i)
 {
 	if (this->_clients[i].bodySize ==
 		this->_clients[i].headerRequest.getHeaders().ContentLength)
