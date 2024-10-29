@@ -18,6 +18,7 @@ typedef std::map<std::string, std::map<std::string, std::vector<std::string> > >
 typedef std::map<std::string, std::vector<std::string> >::const_iterator itemIt;
 typedef std::vector<std::string>::const_iterator valIt;
 typedef std::map<std::string, std::map<std::string, std::vector<std::string> > > Data;
+
 struct server
 {
 	std::string	host;

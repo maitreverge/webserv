@@ -54,23 +54,23 @@ void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
 
 void	ConfigFileParser::initializeServers(Config& configStruct, int& i)
 {
-	// printServerData(_serverStruct, i + 1);
+	printServerData(_serverStruct, i + 1);
 	for (int j = 0; j < i + 1; j++)
 	{
 		struct sockaddr_in server;	
 		std::memset(&server, 0, sizeof(server));
 		server.sin_family = AF_INET;
-		server.sin_addr.s_addr = htonl(INADDR_ANY);
-		server.sin_port = htons(1510);
+		server.sin_addr.s_addr = inet_addr(_serverStruct[j].host.c_str());
+		server.sin_port = htons(static_cast<uint16_t>(std::atoi(_serverStruct[j].port.c_str())));
 		configStruct.sockAddress.push_back(server);
-		std::cout << "server " << j + 1 << " initialized " << std::endl;
+		std::cout << "server " << _serverStruct[j].serverName << " initialized " << std::endl;
 	}
 }
 
 /**========================================================================
  *                           SETCONFIGVALUE OVERLOADS
  *========================================================================**/
-//? WORKING
+//? error pages paths
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, Config& configStruct, const char str[], e_errorCodes e)
 {
 	if (catIt->first == "errorPages" && itemIt->first == str)
@@ -78,15 +78,19 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt
 			configStruct.errorPaths[e] = *valIt;
 }
 
-
+//! struct server
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::string& field, const char str[])
 {
 	if (isServerData(catIt->first) && itemIt->first == str)
 		if (!(*valIt).empty())
+		{
 			field = itemIt->second[0];
+			printColor(GREEN, field);
+		}
+		
 }
 
-//? WORKING
+//? maxClient
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, short& field, const char str[])
 {
 	if (catIt->first == "global" && itemIt->first == str)
@@ -94,7 +98,7 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, short& field
 			field = (short)std::atoi(itemIt->second[0].c_str());
 }
 
-//? WORKING
+//? listingDirectories
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, bool& field, const char str[])
 {
 	if (catIt->first == "global" && itemIt->first == str)
@@ -102,7 +106,7 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, bool& field,
 			field = std::atoi(itemIt->second[0].c_str());
 }
 
-//? WORKING
+//? indexFiles
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::vector<std::string>& vec, const char str[])
 {
 	static bool hasUserConfig = false;
