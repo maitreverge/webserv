@@ -17,6 +17,7 @@ Client::Client()
 	
 	ping = true;	
 	pongHeader = false;
+	exitRequired = false;
 }
 
 Client::Client(const Client & src)
