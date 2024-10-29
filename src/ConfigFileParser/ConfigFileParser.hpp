@@ -19,13 +19,6 @@ typedef std::map<std::string, std::vector<std::string> >::const_iterator itemIt;
 typedef std::vector<std::string>::const_iterator valIt;
 typedef std::map<std::string, std::map<std::string, std::vector<std::string> > > Data;
 
-struct server
-{
-	std::string	host;
-	std::string	port;
-	std::string	serverName;
-};
-
 class ConfigFileParser
 {
 	#ifdef UNIT_TEST
@@ -42,7 +35,7 @@ class ConfigFileParser
 		int		ignoreComents(std::string& line);
 		int		getCurrentCategory(std::string& line, std::string& currentCategory);
 		void	extractKeyValuePairs(std::string& line, std::string& currentCategory);
-		void	printServerData(const server serverStruct[], size_t size);
+		// void	printServerData(const server serverStruct[], size_t size);
 		void	setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, Config& configStruct, const char str[], e_errorCodes e);
 		void	setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::string& field, const char str[]);
 		void	setConfigValue(catIt& catIt, itemIt& itemIt, short& field, const char str[]);
@@ -52,6 +45,7 @@ class ConfigFileParser
 		bool	isServerData(const std::string& category);
 
 	public:
+		static void 	printServerData(const server _serverStruct[], size_t size);
 		void	intializeConfigStruct(Config& configStruct);
 		int		extractDataFromConfigFile(const std::string& path);
 		void	parseConfigFile(Config& configStruct, char* path);

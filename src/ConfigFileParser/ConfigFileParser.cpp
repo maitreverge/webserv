@@ -21,7 +21,7 @@ void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
 	int	i = 0;
 	for (catIt catIt = _data.begin(); catIt != _data.end(); ++catIt)
 	{
-		if (!_serverStruct[i].host.empty() && !_serverStruct[i].port.empty())
+		if (!configStruct._serverStruct[i].host.empty() && !configStruct._serverStruct[i].port.empty())
 			i++;
 		for (itemIt itemIt = catIt->second.begin(); itemIt != catIt->second.end(); ++itemIt)
 		{
@@ -41,15 +41,15 @@ void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
 				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_503", CODE_503_SERVICE_UNAVAILABLE);
 				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_504", CODE_504_GATEWAY_TIMEOUT);
 				// category server
-				setConfigValue(catIt, itemIt, valIt, _serverStruct[i].host, "host");
-				setConfigValue(catIt, itemIt, valIt, _serverStruct[i].port, "port");
-				setConfigValue(catIt, itemIt, valIt, _serverStruct[i].serverName, "serverName");
+				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].host, "host");
+				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].port, "port");
+				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].serverName, "serverName");
 			}
 		}
 	}
 	// printData(_data);
 	// printServerData(_serverStruct, i + 1);
-	initializeServers(configStruct, i);
+	// initializeServers_serverStruct(configStruct, i);
 }
 
 void	ConfigFileParser::initializeServers(Config& configStruct, int& i)
