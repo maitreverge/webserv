@@ -20,10 +20,10 @@ struct Config
 	std::vector<struct sockaddr_in> sockAddress;
 	vector<std::string>				indexFiles;			// default files names if the URI == "/"
 	bool							listingDirectories; // activer ou non le listing des repertoires
-	map<e_errorCodes, string>		errorPaths;			
+	map<e_errorCodes, string>		errorPaths;	
+		
 	Config();
 	Config(char* path);
-	Config(const Config& other);
 	void	initializeServer(server _serverStruct, std::vector<sockaddr_in>& sockAddress);
 	void	initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddress);
 };
