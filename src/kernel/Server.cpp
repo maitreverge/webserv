@@ -267,7 +267,7 @@ bool Server::replyClient(size_t i, std::vector<char> & response,
 	ssize_t repSize)
 {	
 	Logger::getInstance().log(INFO, "reply client", this->_clients[i]);
-	printVectorCharTest(response);
+	// printVectorCharTest(response);
 
 	this->_writeBuffer.assign(response.begin(), response.begin() + repSize);					
 	this->_readSet = this->_writeSet = this->_actualSet;		
@@ -339,7 +339,7 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 		if (isMaxHeaderSize(it + 4, i))
 			return ;				
 		this->_clients[i].header.parse(this->_clients[i]);								
-		this->_clients[i].header.displayParsingResult();
+		// this->_clients[i].header.displayParsingResult();
 		if (this->_clients[i].header.getMethod() == "GET")		
 			this->_clients[i].response.getHeader(this->_clients[i],
 			this->_conf);
