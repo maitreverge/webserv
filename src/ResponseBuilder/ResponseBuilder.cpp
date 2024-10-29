@@ -33,38 +33,53 @@ bool ResponseBuilder::redirectURI( void ){
 
 void ResponseBuilder::rootMapping( void ){
 
-	// ! STEP 1 : Check for any routes matching the URI, in reverse order
 	string originalURI = _realURI;
-	string trimmedURI = _realURI;
+	string mainRoute = _realURI;
 	/*
 		/dir1/dir2/foo/bar/www/hello.jpeg
 
 	*/
 
-	// Try every Route in reverse order. If not found, then trim the URI from the end.
-	while (not trimmedURI.empty())
+	// ! STEP 1 : Try every MainRoute in reverse order. If not found, then trim the URI from the end.
+	while (not mainRoute.empty())
 	{
 		try
 		{
-			_config->routeMapping.at(trimmedURI);
+			_config->routeMapping.at(mainRoute);
 		}
-		catch(const std::out_of_range& e) // Route not found, need to trim the URI and try again
+		catch(const std::out_of_range& e) // MainRoute not found, need to trim the URI and try again
 		{
-			if (trimmedURI.size() == 1)
-				return; // Route not found
+			if (mainRoute.size() == 1)
+				return; // MainRoute not found
 			// If the first "/" is also the last, we're left with the last "/" default path
-			else if (trimmedURI.find_first_of('/') == trimmedURI.find_last_of('/'))
+			else if (mainRoute.find_first_of('/') == mainRoute.find_last_of('/'))
 			{
 				// erasing keeping the "/"
-				trimmedURI.erase(trimmedURI.find_first_of('/') + 1);
+				mainRoute.erase(mainRoute.find_first_of('/') + 1);
 			}
 			else
-				trimmedURI.erase(trimmedURI.find_last_of('/'));
+				mainRoute.erase(mainRoute.find_last_of('/'));
 		}
 	}
 
 	// From this Point, a route has been found
-	// if ()
+	string target = originalURI.substr(mainRoute.size());
+
+	string needle;
+	string reroute;
+	try
+	{
+		needle = _config->routeMapping.at(mainRoute).begin()->first;
+		reroute = _config->routeMapping.at(mainRoute).begin()->second;
+	}
+	catch(const std::exception& e)
+	{
+		// Map needle or reroute has not been found.
+		return;
+	}
+
+	// From this Point, a needle and a reroute has been found, we need to find them, hotshap them and return
+	
 
 
 }
