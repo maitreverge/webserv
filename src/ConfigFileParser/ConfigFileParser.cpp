@@ -54,7 +54,7 @@ void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
 
 void	ConfigFileParser::initializeServers(Config& configStruct, int& i)
 {
-	printServerData(_serverStruct, i + 1);
+	printServerData(_serverStruct, (size_t)i + 1);
 	for (int j = 0; j < i + 1; j++)
 	{
 		struct sockaddr_in server;	
