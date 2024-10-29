@@ -79,9 +79,15 @@ void ResponseBuilder::rootMapping( void ){
 	}
 
 	// From this Point, a needle and a reroute has been found, we need to find them, hotshap them and return
-	
+	if (target.compare(0, needle.size(), needle))
+	{
+		// Erase both the routePath and the target
+		target.erase(needle.size() + 1);
+		
+		originalURI = reroute + target;
+	}
 
-
+	_realURI = originalURI;
 }
 
 void ResponseBuilder::resolveURI( void )
