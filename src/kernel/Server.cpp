@@ -53,7 +53,9 @@ void Server::catchClients()
 			(&client.address), &client.addressLen);
 		if (client.fd < 0)		
 			return Logger::getInstance().log(ERROR, "accept");	
-	
+		
+		Logger::getInstance().log(INFO, "\e[30;101mnew client\e[0m", client);
+
 		FD_SET(client.fd, &this->_actualSet);
 		this->_maxFd = std::max(this->_maxFd, client.fd);
 		this->_clients.push_back(client);				
