@@ -11,11 +11,14 @@ ssize_t	ResponseBuilder::getBody( Client &inputClient ){
 		Logger::getInstance().log(INFO, "Redirect Non Body Response", inputClient);
 		return 0;
 	}
-
 	if (!this->_ifs.is_open())
 	{
+		std::cout << "\e[103m avant" << std::endl;
 		Logger::getInstance().log(INFO, _realURI.c_str(), inputClient);	
+		std::cout << " apres\e[0m" << std::endl;
 		this->_ifs.open(_realURI.c_str(), std::ios::binary);
+		// this->test = false;
+		// this->_ifs.open("test.html", std::ios::binary);
 	}
 
 	// this->_bodyStream.open(_realURI.c_str(), std::ios::binary);
@@ -32,7 +35,7 @@ ssize_t	ResponseBuilder::getBody( Client &inputClient ){
 		this->_streamHead = this->_ifs.tellg();
 
 		// std::string str(inputClient.messageSend.data(), static_cast<int>(this->_ifs.gcount()));	
-		// Logger::getInstance().log(INFO, str);  	
+		Logger::getInstance().log(INFO, "file open");  	
 	
 		std::streamsize gcount = this->_ifs.gcount();
 		if (this->_ifs.eof()) 

@@ -60,7 +60,6 @@ class ResponseBuilder
 	map<string, string> _mimeTypes;
 
 	string _realURI;
-	e_errorCodes _errorType;
 	e_method _method;
 
 	// Nature File
@@ -69,6 +68,7 @@ class ResponseBuilder
 
 	// CGI Stuff
 	bool _isCGI;
+	e_errorCodes _errorType;
 	string _pathInfo;
 
 	// Struct for File Info
@@ -86,8 +86,7 @@ class ResponseBuilder
 
 	ResponseHeaders Headers;
 
-	std::streampos	_streamHead; // ! ABSOLUMENT METTRE DANS LES CONSTRUCTEURS
-
+	// bool test;
 
 	// ------------- Priv Methods
 	void	resolveURI( void );
@@ -125,6 +124,7 @@ class ResponseBuilder
 
 public:
 
+	std::streampos	_streamHead; // ! ABSOLUMENT METTRE DANS LES CONSTRUCTEURS
 	std::ifstream 	_ifs; // ! PAS DANS LES CONSTRUCTEURS
 	ResponseBuilder( void );
 	~ResponseBuilder( void );

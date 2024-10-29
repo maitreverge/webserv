@@ -17,6 +17,7 @@ ResponseBuilder::ResponseBuilder( void ){
 	_isXOK = false;
 
 	this->_streamHead = 0; // ! NE PAS TOUCHER
+	// this->test = true;
 }
 
 ResponseBuilder::ResponseBuilder( const ResponseBuilder & src)
@@ -40,6 +41,17 @@ ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 {
 	Logger::getInstance().log(INFO, "ResponseBuilder operator=");
 
+	initMimes();//!
+	
+	// Init priv variables
+	_isDirectory = false;
+	_isFile = false;
+	_isCGI = false;
+	_errorType = CODE_200_OK;
+	_isROK = false;
+	_isWOK = false;
+	_isXOK = false;//!
+
 	// PRIV
 	this->_mimeTypes = rhs._mimeTypes;
 	this->_realURI = rhs._realURI;
@@ -62,7 +74,8 @@ ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 
 	// ! DO NOT FUCKING TOUCH (Kernel copy stuff)
 	this->_streamHead = rhs._streamHead;
-
+	this->_ifs.close();
+	// this->test = rhs.test;
 	return *this;
 };
 
