@@ -52,7 +52,7 @@ struct Config
 		indexFiles.push_back("fff.htm");
 		indexFiles.push_back("ffff.html");
 
-		// listingDirectories = true;
+		listingDirectories = true;
 
 		// Error paths files
 		errorPaths.insert(std::make_pair(CODE_400_BAD_REQUEST, "errorPages/400.html"));
