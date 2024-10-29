@@ -7,6 +7,7 @@ Kernel::Kernel(void)
 	this->_servers.reserve(300);//!
 	FD_ZERO(&this->_actualSet);
 	this->setup();
+	_configFileParser.printConfig(_conf);
 	this->launch();
 }
 

@@ -9,6 +9,10 @@
 #include <vector>
 #include <cstdlib>
 #include "Server.hpp"
+#include <iostream>
+#include <netinet/in.h> // pour struct sockaddr_in et AF_INET
+#include <arpa/inet.h> // pour inet_ntoa
+#include <cstring> // pour memset
 
 typedef std::map<std::string, std::map<std::string, std::vector<std::string> > >::const_iterator catIt;
 typedef std::map<std::string, std::vector<std::string> >::const_iterator itemIt;
@@ -50,4 +54,6 @@ class ConfigFileParser
 		void	intializeConfigStruct(Config configStruct);
 		int		extractDataFromConfigFile(const std::string);
 		void	parseConfigFile(Config configStruct, char* path);
+		void 	printConfig(const Config& config);
+
 };

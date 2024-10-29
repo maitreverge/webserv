@@ -233,3 +233,25 @@ void ConfigFileParser::printServerData(const server _serverStruct[], size_t size
 		std::cout << "------------------------" << std::endl;
 	}
 }
+
+void ConfigFileParser::printConfig(const Config& config) {
+    std::cout << "maxClient: " << config.maxClient << std::endl;
+
+    std::cout << "sockAddress:" << std::endl;
+    for (std::vector<struct sockaddr_in>::const_iterator it = config.sockAddress.begin(); it != config.sockAddress.end(); ++it) {
+        std::cout << "  - IP: " << inet_ntoa(it->sin_addr) << ", Port: " << ntohs(it->sin_port) << std::endl;
+    }
+
+    std::cout << "indexFiles: ";
+    for (std::vector<std::string>::const_iterator it = config.indexFiles.begin(); it != config.indexFiles.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "listingDirectories: " << (config.listingDirectories ? "true" : "false") << std::endl;
+
+    std::cout << "errorPaths:" << std::endl;
+    for (std::map<e_errorCodes, std::string>::const_iterator it = config.errorPaths.begin(); it != config.errorPaths.end(); ++it) {
+        std::cout << "  Code: " << it->first << " -> Path: " << it->second << std::endl;
+    }
+}
