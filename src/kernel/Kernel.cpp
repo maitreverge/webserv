@@ -3,7 +3,7 @@
 bool Kernel::_exit = false;
 
 Kernel::Kernel(void)
-{	
+{
 	this->_servers.reserve(300);//!
 	FD_ZERO(&this->_actualSet);
 	this->setup();
@@ -11,12 +11,10 @@ Kernel::Kernel(void)
 }
 
 Kernel::Kernel(char* path)
-{	
+{
+	_configFileParser.parseConfigFile(_conf, path);	
 	std::cout << path << std::endl << std::flush;
-	this->_servers.reserve(300);//!
-	FD_ZERO(&this->_actualSet);
-	this->setup();
-	this->launch();
+	Kernel();
 }
 
 void Kernel::callCatch(Server & server)

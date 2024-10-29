@@ -7,8 +7,8 @@
 #include <sstream>
 #include <map>
 #include <vector>
-#include "tmpConfig.hpp"
 #include <cstdlib>
+#include "Server.hpp"
 
 typedef std::map<std::string, std::map<std::string, std::vector<std::string> > >::const_iterator catIt;
 typedef std::map<std::string, std::vector<std::string> >::const_iterator itemIt;
@@ -49,5 +49,5 @@ class ConfigFileParser
 	public:
 		void	intializeConfigStruct(Config configStruct);
 		int		extractDataFromConfigFile(const std::string);
-		void	parseConfigFile(Config configStruct);
+		void	parseConfigFile(Config configStruct, char* path);
 };

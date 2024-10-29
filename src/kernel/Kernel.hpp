@@ -7,6 +7,7 @@
 #include <algorithm>
 #include "Server.hpp"
 #include "Logger.hpp"
+#include "ConfigFileParser.hpp"
 
 class Server;
 
@@ -19,6 +20,7 @@ class Kernel
 	fd_set 				_readSet;
 	fd_set 				_writeSet;
 	int					_maxFd; 
+	ConfigFileParser	_configFileParser;
 
 	static void callCatch(Server & server);
 	static void callListen(Server & server);
@@ -30,6 +32,7 @@ class Kernel
 		static bool		_exit;
 		Kernel(void);
 		Kernel(char* path);
+
 
 		void setup();
 		void launch();

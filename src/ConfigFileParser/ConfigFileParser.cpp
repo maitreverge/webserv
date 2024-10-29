@@ -10,18 +10,9 @@
  *?  => tests a faire!
  *========================================================================**/
 
-// int main(void)
-// {
-// 	Config configStruct;
-// 	ConfigFileParser toto;
-// 	toto.extractDataFromConfigFile("config.ini");
-// 	toto.intializeConfigStruct(configStruct);
-// 	return (0);
-// }
-
-void ConfigFileParser::parseConfigFile(Config configStruct)
+void ConfigFileParser::parseConfigFile(Config configStruct, char* path)
 {
-	extractDataFromConfigFile("config.ini");
+	extractDataFromConfigFile(path);
 	intializeConfigStruct(configStruct);
 }
 
@@ -56,8 +47,8 @@ void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 			}
 		}
 	}
-	// printData(_data);
-	// printServerData(_serverStruct, i + 1);
+	printData(_data);
+	printServerData(_serverStruct, i + 1);
 	initializeServers(configStruct, i);
 }
 
