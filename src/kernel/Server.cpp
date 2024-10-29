@@ -224,7 +224,7 @@ void Server::replyClients()
 					static_cast<ssize_t>
 					(this->_clients[i].headerSend.size())))
 					break ;
-				this->_clients[i].headerSend.clear();
+				// this->_clients[i].headerSend.clear();
 			}		
 			
 			if (ssize_t ret = this->_clients[i].response.
@@ -243,8 +243,8 @@ void Server::replyClients()
 			else
 			{
 				Logger::getInstance().log(DEBUG, "reinit response Builder, ready true, tog false", this->_clients[i]);
-				this->_clients[i].response._streamHead = 0;
-				this->_clients[i].response._ifs.close();
+				// this->_clients[i].response._streamHead = 0;
+				// this->_clients[i].response._ifs.close();
 				this->_clients[i].response = ResponseBuilder();
 				this->_clients[i].ping = true;			
 				this->_clients[i].respHeader = false;
@@ -270,15 +270,7 @@ bool Server::replyClient(size_t i, std::vector<char> & response,
 	printVectorCharTest(response);
 
 	this->_writeBuffer.assign(response.begin(), response.begin() + repSize);					
-	this->_readSet = this->_writeSet = this->_actualSet;		
-	if (select(this->_maxFd + 1, &this->_readSet, &this->_writeSet, 0, NULL) //!
-		< 0)	
-		return Logger::getInstance().log(ERROR, "select", this->_clients[i]),
-			true;	
-	if(!FD_ISSET(this->_clients[i].fd, &this->_writeSet))	
-		return Logger::getInstance().
-			log(ERROR, "client not ready for response", this->_clients[i]),
-			true;	
+
 	ssize_t ret;
 	char * writeHead = this->_writeBuffer.data();
 	size_t writeSize = this->_writeBuffer.size();
