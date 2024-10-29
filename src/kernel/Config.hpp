@@ -22,6 +22,7 @@ struct Config
 		std::string	port;
 		std::string	serverName;
 	};
+	struct server	_serverStruct[4];
 
 	server serverA, serverB, serverC;
 
@@ -33,36 +34,36 @@ struct Config
 
 	Config()
 	{
-		serverA.host = "0.0.0.0";
-		serverA.port = "1510";
-		serverA.serverName = "server1";
-		serverB.host = "0.0.0.0";
-		serverB.port = "1511";
-		serverB.serverName = "server2";
-		serverC.host = "0.0.0.0";
-		serverC.port = "1512";
-		serverC.serverName = "server3";
+		_serverStruct[0].host = "0.0.0.0";
+		_serverStruct[0].port = "1510";
+		_serverStruct[0].serverName = "server1";
+		_serverStruct[1].host = "0.0.0.0";
+		_serverStruct[1].port = "1511";
+		_serverStruct[1].serverName = "server2";
+		_serverStruct[2].host = "0.0.0.0";
+		_serverStruct[2].port = "1512";
+		_serverStruct[2].serverName = "server3";
 	
 		maxClient = 1024;
 		struct sockaddr_in server1;	
 		std::memset(&server1, 0, sizeof(server1));
 		server1.sin_family = AF_INET;
 		server1.sin_addr.s_addr = htonl(INADDR_ANY);
-		server1.sin_port = htons((uint16_t)std::atoi(serverA.port.c_str()));
+		server1.sin_port = htons((uint16_t)std::atoi(_serverStruct[0].port.c_str()));
 		sockAddress.push_back(server1);
 
 		struct sockaddr_in server2;	
 		std::memset(&server2, 0, sizeof(server2));
 		server2.sin_family = AF_INET;
 		server2.sin_addr.s_addr = htonl(INADDR_ANY);
-		server2.sin_port = htons((uint16_t)std::atoi(serverB.port.c_str()));
+		server2.sin_port = htons((uint16_t)std::atoi(_serverStruct[1].port.c_str()));
 		sockAddress.push_back(server2);
 
 		struct sockaddr_in server3;	
 		std::memset(&server3, 0, sizeof(server3));
 		server3.sin_family = AF_INET;
 		server3.sin_addr.s_addr = htonl(INADDR_ANY);
-		server3.sin_port = htons((uint16_t)std::atoi(serverC.port.c_str()));
+		server3.sin_port = htons((uint16_t)std::atoi(_serverStruct[2].port.c_str()));
 		sockAddress.push_back(server3);
 
 		struct sockaddr_in server4;	
