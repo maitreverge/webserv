@@ -26,10 +26,11 @@ int main()
 	disableSignalEcho();
 		
 	std::cout << std::endl;
-	Logger::getInstance().log(INFO, "Server is Online!");
+	Logger::getInstance().log(INFO, "\e[1;3;36mServer is Online!\e[0m");
+	std::cout << std::endl;
 	Kernel kernel;
 	std::cout << std::endl;
-	Logger::getInstance().log(INFO, "Server is Offline.");	
-
+	Logger::getInstance().log(INFO, "\e[1;3;91mServer is Offline.\e[0m");	
+	std::cout << std::endl;
 	return (0);
 }

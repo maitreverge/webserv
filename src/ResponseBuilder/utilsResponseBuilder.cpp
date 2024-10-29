@@ -12,7 +12,7 @@ string ResponseBuilder::extractType( const string& extension ) const {
 
 void	ResponseBuilder::extractMethod( void ){
 
-	string tempMethod = _client->header.getMethod();
+	string tempMethod = _client->headerRequest.getMethod();
 
 	// verif already made by Dan
 	if (tempMethod == "GET")
