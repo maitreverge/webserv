@@ -53,7 +53,6 @@ void Server::printResponse(const std::vector<char> & response)
 	std::cout << "-\e[0m" << std::endl << std::endl;
 }
 
-
 bool Server::replyClient(size_t i, std::vector<char> & response,
 	ssize_t repSize)
 {	
@@ -68,11 +67,8 @@ bool Server::replyClient(size_t i, std::vector<char> & response,
 	{			
 		if ((ret = send(this->_clients[i].fd, writeHead, writeSize,
 			MSG_NOSIGNAL)) < 0)
-		{
-			Logger::getInstance().log(ERROR, "send", this->_clients[i]);
-			this->exitClient(i);
-			return true;
-		}		
+		return Logger::getInstance().log(ERROR, "send", this->_clients[i]),
+			this->exitClient(i), true;		
 
 		std::string str(writeHead, writeHead + static_cast<size_t>(ret));
 		std::stringstream ss; ss << "data sent to client: -" << str << "-";	
