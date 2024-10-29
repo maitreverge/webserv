@@ -33,30 +33,18 @@ bool ResponseBuilder::redirectURI( void ){
 
 void ResponseBuilder::rootMapping( void ){
 
-	Config* config;
-	#ifdef UNIT_TEST
-		Config* mockConfig;
-		config = mockConfig;
-	#else
-		config = _config;
-	#endif
-
 	string originalURI = _realURI;
 	string mainRoute = _realURI;
-
-	/*
-		/dir1/dir2/foo/bar/www/hello.jpeg
-
-	*/
 
 	// ! STEP 1 : Try every MainRoute in reverse order. If not found, then trim the URI from the end.
 	while (not mainRoute.empty())
 	{
 		try
 		{
-			config->routeMapping.at(mainRoute);
+			_config->routeMapping.at(mainRoute);
+			break;
 		}
-		catch(const std::exception& e) // MainRoute not found, need to trim the URI and try again
+		catch(const std::exception& e)
 		{
 			if (mainRoute == "/")
 				return; // MainRoute not found
@@ -70,9 +58,25 @@ void ResponseBuilder::rootMapping( void ){
 
 				mainRoute.erase(mainRoute.find_last_of('/'));
 			}
-			continue;
 		}
-		break;
+		
+		// if (_config->routeMapping.find(mainRoute) != _config->routeMapping.end())
+		// 	break;
+		// else // MainRoute not found, need to trim the URI and try again
+		// {
+		// 	if (mainRoute == "/")
+		// 		return; // MainRoute not found
+		// 	// If the first "/" is also the last, we're left with the last "/" default path
+		// 	else if (mainRoute.find_first_of('/') == mainRoute.find_last_of('/'))
+		// 	{
+		// 		// erasing keeping the "/"
+		// 		mainRoute.erase(mainRoute.find_first_of('/') + 1);
+		// 	}
+		// 	else{
+
+		// 		mainRoute.erase(mainRoute.find_last_of('/'));
+		// 	}
+		// }
 	}
 
 	// From this Point, a route has been found
@@ -82,8 +86,8 @@ void ResponseBuilder::rootMapping( void ){
 	string reroute;
 	try
 	{
-		needle = config->routeMapping.at(mainRoute).begin()->first;
-		reroute = config->routeMapping.at(mainRoute).begin()->second;
+		needle = _config->routeMapping.at(mainRoute).begin()->first;
+		reroute = _config->routeMapping.at(mainRoute).begin()->second;
 	}
 	catch(const std::exception& e)
 	{

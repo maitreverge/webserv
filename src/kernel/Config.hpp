@@ -48,11 +48,11 @@ struct Config
 		sockAddress.push_back(server4);
 
 		// Default files to look for if the URI is "/"
-		indexFiles.push_back("index.html");
-		indexFiles.push_back("index.htm");
-		indexFiles.push_back("default.html");
+		indexFiles.push_back("ff.html");
+		indexFiles.push_back("fff.htm");
+		indexFiles.push_back("ffff.html");
 
-		listingDirectories = true;
+		// listingDirectories = true;
 
 		// Error paths files
 		errorPaths.insert(std::make_pair(CODE_400_BAD_REQUEST, "errorPages/400.html"));
@@ -65,8 +65,8 @@ struct Config
 		errorPaths.insert(std::make_pair(CODE_504_GATEWAY_TIMEOUT, "errorPages/504.html"));
 
 		// Redirections
-		redirection.insert(std::make_pair(/* ONE ROUTE*/"/", /* ONE REDIRECTION*/"/testResponseBuilder/redirectDefaultPath/cats.html"));
-		redirection.insert(std::make_pair("/nope", "/nopenopenope"));
+		// redirection.insert(std::make_pair(/* ONE ROUTE*/"/", /* ONE REDIRECTION*/"/testResponseBuilder/redirectDefaultPath/cats.html"));
+		// redirection.insert(std::make_pair("/nope", "/nopenopenope"));
 		// ! Edge case => Tester Route A => Route B and Route B => Route A
 
 		// Route mapping 1

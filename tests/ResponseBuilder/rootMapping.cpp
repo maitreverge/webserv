@@ -1,48 +1,96 @@
 #include "ResponseBuilderTest.hpp"
 
-TEST_F(ResponseBuilderTest, RootMapping_MainRouteFoundImmediately) {
-	// responseBuilder->_realURI = "/hello";
-
-	mockConfig->routeMapping["/dir1"] = {{"foo", "bar"}};
-	responseBuilder->_realURI = "/dir1/foo";
+TEST_F(ResponseBuilderTest, RootMapping_MainRouteFoundDirectly1) {
+	config->routeMapping["/"] = {{"/coucou", "/tmp/www"}};
+	responseBuilder->_realURI = "/main/image.jpeg";
 
 	responseBuilder->rootMapping();
 
-	EXPECT_EQ(responseBuilder->_realURI, "/dir1/bar");
+	EXPECT_EQ(responseBuilder->_realURI, "/tmp/www/image.jpeg");
 }
 
-TEST_F(ResponseBuilderTest, RootMapping_MainRouteFoundAfterTrimming) {
-	mockConfig->routeMapping["/dir1"] = {{"foo", "bar"}};
-	responseBuilder->_realURI = "/dir1/dir2/foo";
+TEST_F(ResponseBuilderTest, RootMapping_MainRouteFoundDirectly2) {
+	config->routeMapping["/src/default_folder"] = {{"/coucou", "/tmp/www"}};
+	responseBuilder->_realURI = "/src/default_folder/coucou/tmp/www";
 
 	responseBuilder->rootMapping();
 
-	EXPECT_EQ(responseBuilder->_realURI, "/dir1/bar");
+	EXPECT_EQ(responseBuilder->_realURI, "/tmp/www/image.jpeg");
 }
 
-TEST_F(ResponseBuilderTest, RootMapping_MainRouteNotFound) {
-	mockConfig->routeMapping["/dir1"] = {{"foo", "bar"}};
-	responseBuilder->_realURI = "/dir2/foo";
+TEST_F(ResponseBuilderTest, RootMapping_MainRouteFoundDirectly3) {
+	config->routeMapping["/src/default_folder"] = {{"/coucou/les/amis/mdr", "/tmp/www"}};
+	responseBuilder->_realURI = "/src/default_folder/coucou/les/amis/mdr/image.jpeg";
 
 	responseBuilder->rootMapping();
 
-	EXPECT_EQ(responseBuilder->_realURI, "/dir2/foo");
+	EXPECT_EQ(responseBuilder->_realURI, "/tmp/www/image.jpeg");
 }
 
-TEST_F(ResponseBuilderTest, RootMapping_TargetNeedsReroute) {
-	mockConfig->routeMapping["/dir1"] = {{"foo", "bar"}};
-	responseBuilder->_realURI = "/dir1/foo/bar";
+TEST_F(ResponseBuilderTest, RootMapping_RouteFoundButNeedleNotFound) {
+	config->routeMapping["/src/default_folder"] = {{"/coucou/les/amis/mdr/NOPE", "/tmp/www"}};
+	responseBuilder->_realURI = "/src/default_folder/coucou/les/amis/mdr/image.jpeg";
 
 	responseBuilder->rootMapping();
 
-	EXPECT_EQ(responseBuilder->_realURI, "/dir1/bar/bar");
+	EXPECT_EQ(responseBuilder->_realURI, "/src/default_folder/coucou/les/amis/mdr/image.jpeg");
 }
 
-TEST_F(ResponseBuilderTest, RootMapping_TargetDoesNotNeedReroute) {
-	mockConfig->routeMapping["/dir1"] = {{"foo", "bar"}};
-	responseBuilder->_realURI = "/dir1/bar";
+TEST_F(ResponseBuilderTest, RootMapping_RouteNotFoundButExistingNeedle) {
+	config->routeMapping["/src/default_folder/NOPE"] = {{"/coucou/les/amis/mdr", "/tmp/www"}};
+	responseBuilder->_realURI = "/src/default_folder/coucou/les/amis/mdr/image.jpeg";
 
 	responseBuilder->rootMapping();
 
-	EXPECT_EQ(responseBuilder->_realURI, "/dir1/bar");
+	EXPECT_EQ(responseBuilder->_realURI, "/src/default_folder/coucou/les/amis/mdr/image.jpeg");
+}
+
+TEST_F(ResponseBuilderTest, RootMapping_RouteNotFoundAndNotExistingNeedle) {
+	config->routeMapping["/src/default_folder/NOPE"] = {{"/coucou/les/amis/mdr/NOPE", "/tmp/www"}};
+	responseBuilder->_realURI = "/src/default_folder/coucou/les/amis/mdr/image.jpeg";
+
+	responseBuilder->rootMapping();
+
+	EXPECT_EQ(responseBuilder->_realURI, "/src/default_folder/coucou/les/amis/mdr/image.jpeg");
+}
+
+// Tests with path imbricated
+TEST_F(ResponseBuilderTest, RootMapping_MultipleRoutesFirstCorrect) {
+	config->routeMapping["/src/default_folder"] = {{"/coucou/les/amis/mdr", "/foo/var"}};
+	config->routeMapping["/src/default_folder/temp"] = {{"/coucou/les/amis/mdr", "/tmp/www"}};
+	responseBuilder->_realURI = "/src/default_folder/coucou/les/amis/mdr/image.jpeg";
+
+	responseBuilder->rootMapping();
+
+	EXPECT_EQ(responseBuilder->_realURI, "/foo/var/image.jpeg");
+}
+
+TEST_F(ResponseBuilderTest, RootMapping_MultipleRoutesSecondCorrect) {
+	config->routeMapping["/src/default_folder/temp"] = {{"/coucou/les/amis/mdr", "/tmp/www"}};
+	config->routeMapping["/src/default_folder"] = {{"/coucou/les/amis/mdr", "/foo/var"}};
+	responseBuilder->_realURI = "/src/default_folder/coucou/les/amis/mdr/image.jpeg";
+
+	responseBuilder->rootMapping();
+
+	EXPECT_EQ(responseBuilder->_realURI, "/foo/var/image.jpeg");
+}
+
+TEST_F(ResponseBuilderTest, RootMapping_MultipleRoutes) {
+	config->routeMapping["/src/default_folder"] = {{"/coucou/les/amis/mdr", "/foo/var"}};
+	config->routeMapping["/src/default_folder/temp"] = {{"/coucou/les/amis/mdr", "/tmp/www"}};
+	responseBuilder->_realURI = "/src/default_folder/temp/coucou/les/amis/mdr/image.jpeg";
+
+	responseBuilder->rootMapping();
+
+	EXPECT_EQ(responseBuilder->_realURI, "/tmp/www/image.jpeg");
+}
+
+TEST_F(ResponseBuilderTest, RootMapping_PartialPath) {
+	config->routeMapping["/src/default_folder"] = {{"/coucou/les/amis/mdr", "/foo/var"}};
+	config->routeMapping["/src/default_folder/temp"] = {{"/coucou/les/amis/mdr", "/tmp/www"}};
+	responseBuilder->_realURI = "/src/coucou/les/amis/mdr/image.jpeg";
+
+	responseBuilder->rootMapping();
+
+	EXPECT_EQ(responseBuilder->_realURI, "/src/coucou/les/amis/mdr/image.jpeg");
 }

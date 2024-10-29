@@ -11,6 +11,7 @@
 
 struct Client;
 struct Config;
+class MockConfig;
 
 struct ResponseHeaders
 {
@@ -120,7 +121,7 @@ class ResponseBuilder
 	void	checkCGI( void );
 	void	launchCGI( void );
 
-
+	MockConfig* mockConfig;
 
 public:
 
@@ -129,7 +130,9 @@ public:
 	ResponseBuilder( void );
 	~ResponseBuilder( void );
 	ResponseBuilder( const ResponseBuilder & );
-	ResponseBuilder & operator=( const ResponseBuilder & rhs);	
+	ResponseBuilder & operator=( const ResponseBuilder & rhs);
+
+	ResponseBuilder(MockConfig* config) : mockConfig(config){};
 
 	void	getHeader( Client &, Config& );
 	ssize_t	getBody( Client &inputClient );
