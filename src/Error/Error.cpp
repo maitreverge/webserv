@@ -31,7 +31,7 @@ int	Error::getErrorCode() const { return (_erorCode); }
  *? => buildErrorRequest produces right vector, to be sent back to RequstParser
  *? => _errorPages to be initialized during config file parsing
  *========================================================================**/
-void	Error::handleError(unsigned long errCode, Client &client)
+std::vector<char> Error::handleError(unsigned long errCode, Client &client)
 {
 	_erorCode = static_cast<int>(errCode);
 	errorCode err;
@@ -41,7 +41,7 @@ void	Error::handleError(unsigned long errCode, Client &client)
 	e_errCode = static_cast<e_errorCodes>(errCode);
 	str = err.getCode(e_errCode);
 	Logger::getInstance().log(ERROR, str, client, *this);
-	buildErrorRequest(errCode); //!!! DO SOMETHING WITH THIS !!!
+	return buildErrorRequest(errCode); //!!! DO SOMETHING WITH THIS !!!
 	// client.statusCode = e_errCode;// !!!! cleanned by seb 
 }
 

@@ -112,6 +112,7 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 		floSimulatorPut(this->_clients[i].messageRecv);
 	this->_clients[i].messageRecv.clear();	
 }
+#include "Error.hpp"
 
 bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
 {
@@ -123,8 +124,9 @@ bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
             << " - Max-Header-Size : "	<< MAX_HDR_SIZE;
 
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
+		// std::vector<char> err = Error::getInstance().handleError(static_cast<e_errorCodes>(431), this->_clients[i]);
 			//! 431 Request Header Fields Too Large !!
-
+		// this->_clients[i].headerRequest.getHeaders().Host = err;
 		this->exitClient(i);
 		return true;	
 	}
@@ -161,8 +163,8 @@ bool Server::isBodyTooLarge(size_t i)
             << std::endl;
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
 			//! 413 Payload Too Large
-		
-		this->exitClient(i);
+	
+		this->exitClient(i);//!
 		return true;;
 	}
 	return false;
