@@ -4,8 +4,7 @@
 
 Config::Config(char *path)
 {
-	// ConfigFileParser::printServerData(_serverStruct, 8);
-	// printColor(RED, "STRUCT CONTENT:");
+	Config();
 	ConfigFileParser toto;
 	toto.parseConfigFile(*this, path);
 
@@ -17,40 +16,25 @@ Config::Config(char *path)
 		initializeServer(_serverStruct[2], sockAddress);
 	}
 	initializeServer(80, sockAddress);
-	ConfigFileParser::printConfig(*this);
-	
-	// Default files to look for if the URI is "/"
-	indexFiles.push_back("index.html");
-	indexFiles.push_back("index.htm");
-	indexFiles.push_back("default.html");
+	toto.printConfig(*this);
+	// indexFiles.push_back("index.html");
+	// indexFiles.push_back("index.htm");
+	// indexFiles.push_back("default.html");
 
-	listingDirectories = true;
+	// listingDirectories = true;
 
-	// Error paths files
-	errorPaths.insert(std::make_pair(CODE_400_BAD_REQUEST, "errorPages/400.html"));
-	errorPaths.insert(std::make_pair(CODE_401_UNAUTHORIZED, "errorPages/401.html"));
-	errorPaths.insert(std::make_pair(CODE_403_FORBIDDEN, "errorPages/403.html"));
-	errorPaths.insert(std::make_pair(CODE_404_NOT_FOUND, "errorPages/404.html"));
-	errorPaths.insert(std::make_pair(CODE_500_INTERNAL_SERVER_ERROR, "errorPages/500.html"));
-	errorPaths.insert(std::make_pair(CODE_502_BAD_GATEWAY, "errorPages/502.html"));
-	errorPaths.insert(std::make_pair(CODE_503_SERVICE_UNAVAILABLE, "errorPages/503.html"));
-	errorPaths.insert(std::make_pair(CODE_504_GATEWAY_TIMEOUT, "errorPages/504.html"));
+	// errorPaths.insert(std::make_pair(CODE_400_BAD_REQUEST, "errorPages/400.html"));
+	// errorPaths.insert(std::make_pair(CODE_401_UNAUTHORIZED, "errorPages/401.html"));
+	// errorPaths.insert(std::make_pair(CODE_403_FORBIDDEN, "errorPages/403.html"));
+	// errorPaths.insert(std::make_pair(CODE_404_NOT_FOUND, "errorPages/404.html"));
+	// errorPaths.insert(std::make_pair(CODE_500_INTERNAL_SERVER_ERROR, "errorPages/500.html"));
+	// errorPaths.insert(std::make_pair(CODE_502_BAD_GATEWAY, "errorPages/502.html"));
+	// errorPaths.insert(std::make_pair(CODE_503_SERVICE_UNAVAILABLE, "errorPages/503.html"));
+	// errorPaths.insert(std::make_pair(CODE_504_GATEWAY_TIMEOUT, "errorPages/504.html"));
 }
 
 Config::Config()
 {
-	// ConfigFileParser::printServerData(_serverStruct, 8);
-	// printColor(RED, "STRUCT CONTENT:");
-	// ConfigFileParser toto;
-	// toto.parseConfigFile(*this, path);
-	// for (int i = 0; i < 8; i++)
-	// {
-	// 	print(_serverStruct[i].host);
-	// 	print(_serverStruct[i].port);
-	// 	print(_serverStruct[i].serverName);
-	// }
-
-
 	_serverStruct[0].host = "0.0.0.0";
 	_serverStruct[0].port = "1510";
 	_serverStruct[0].serverName = "server1";
@@ -69,7 +53,6 @@ Config::Config()
 		initializeServer(_serverStruct[2], sockAddress);
 	}
 	initializeServer(80, sockAddress);
-	ConfigFileParser::printConfig(*this);
 	
 	// Default files to look for if the URI is "/"
 	indexFiles.push_back("index.html");
