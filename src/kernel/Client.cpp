@@ -3,7 +3,7 @@
 
 Client::Client()
 {
-	Logger::getInstance().log(INFO, "\e[30;101mclient created\e[0m", *this);
+	// Logger::getInstance().log(INFO, "\e[30;101mclient created\e[0m", *this);
 	
 	fd = 0;		
 	memset(&address, 0, sizeof(address));
@@ -21,14 +21,14 @@ Client::Client()
 
 Client::Client(const Client & src)
 {
-	Logger::getInstance().log(INFO, "\e[30;101mclient copy created\e[0m",
-		*this);
+	// Logger::getInstance().log(INFO, "\e[30;101mclient copy created\e[0m",
+		// *this);
 
 	*this = src;
 }
 
 Client::~Client()
 {
-	Logger::getInstance().log(INFO, "\e[30;101mclient deleted\e[0m",
-		*this);
+	// Logger::getInstance().log(INFO, "\e[30;101mclient deleted\e[0m",
+		// *this);
 }

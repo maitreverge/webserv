@@ -40,7 +40,7 @@ void ResponseBuilder::initMimes( void ){
 ResponseBuilder::ResponseBuilder( void ){
 	
 	// SEB UTILS
-	Logger::getInstance().log(INFO, "ResponseBuilder constructor");
+	// Logger::getInstance().log(INFO, "ResponseBuilder constructor");
 	initMimes();
 	
 	// Init priv variables
@@ -57,16 +57,14 @@ ResponseBuilder::ResponseBuilder( void ){
 
 ResponseBuilder::ResponseBuilder( const ResponseBuilder & src)
 {
-	this->_streamHead = src._streamHead;
-	Logger::getInstance().log(INFO, "ResponseBuilder copy constructor");
-	std::cout <<  src._streamHead << std::endl;
-
+	// Logger::getInstance().log(INFO, "ResponseBuilder copy constructor");
+		
 	*this = src;
 }
 
 ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 {
-	Logger::getInstance().log(INFO, "ResponseBuilder operator=");
+	// Logger::getInstance().log(INFO, "ResponseBuilder operator=");
 
 	initMimes();
 	
@@ -101,6 +99,7 @@ ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 	// ! DO NOT FUCKING TOUCH (Kernel copy stuff)
 	this->_streamHead = rhs._streamHead;
 	this->_ifs.close();
+
 	return *this;
 };
 
@@ -318,14 +317,11 @@ ssize_t	ResponseBuilder::getBody( Client &inputClient ){
 		// ! ADVANCED TEST : keskis passe si READ se passe mal 
 		this->_ifs.read(inputClient.messageSend.data(), static_cast<std::streamsize>(inputClient.messageSend.size()));	
 		this->_streamHead = this->_ifs.tellg();
-	
-		Logger::getInstance().log(INFO, "file open");  	
-	
+		
 		std::streamsize gcount = this->_ifs.gcount();
 		if (this->_ifs.eof()) 
 		{
-			Logger::getInstance().log(INFO, "file end", inputClient);
-			//this->_ifs.clear(); // Réinitialiser les flags pour continuer la lecture si besoin			
+			// Logger::getInstance().log(INFO, "file end", inputClient);						
 			this->_ifs.close();		
 		}
 
