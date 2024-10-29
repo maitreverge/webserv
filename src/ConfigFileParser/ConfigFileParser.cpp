@@ -10,13 +10,13 @@
  *?  => tests a faire!
  *========================================================================**/
 
-void ConfigFileParser::parseConfigFile(Config configStruct, char* path)
+void ConfigFileParser::parseConfigFile(Config& configStruct, char* path)
 {
 	extractDataFromConfigFile(path);
 	intializeConfigStruct(configStruct);
 }
 
-void	ConfigFileParser::intializeConfigStruct(Config configStruct)
+void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
 {
 	int	i = 0;
 	for (catIt catIt = _data.begin(); catIt != _data.end(); ++catIt)
@@ -47,12 +47,12 @@ void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 			}
 		}
 	}
-	printData(_data);
-	printServerData(_serverStruct, i + 1);
+	// printData(_data);
+	// printServerData(_serverStruct, i + 1);
 	initializeServers(configStruct, i);
 }
 
-void	ConfigFileParser::initializeServers(Config configStruct, int& i)
+void	ConfigFileParser::initializeServers(Config& configStruct, int& i)
 {
 	// printServerData(_serverStruct, i + 1);
 	for (int j = 0; j < i + 1; j++)
@@ -70,12 +70,14 @@ void	ConfigFileParser::initializeServers(Config configStruct, int& i)
 /**========================================================================
  *                           SETCONFIGVALUE OVERLOADS
  *========================================================================**/
+//? WORKING
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, Config& configStruct, const char str[], e_errorCodes e)
 {
 	if (catIt->first == "errorPages" && itemIt->first == str)
 		if (!(*valIt).empty())
-			configStruct.errorPaths.insert(std::make_pair(e, itemIt->second[0]));
+			configStruct.errorPaths[e] = *valIt;
 }
+
 
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::string& field, const char str[])
 {
@@ -84,6 +86,7 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt
 			field = itemIt->second[0];
 }
 
+//? WORKING
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, short& field, const char str[])
 {
 	if (catIt->first == "global" && itemIt->first == str)
@@ -91,6 +94,7 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, short& field
 			field = (short)std::atoi(itemIt->second[0].c_str());
 }
 
+//? WORKING
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, bool& field, const char str[])
 {
 	if (catIt->first == "global" && itemIt->first == str)
@@ -98,11 +102,20 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, bool& field,
 			field = std::atoi(itemIt->second[0].c_str());
 }
 
-void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::vector<std::string> vec, const char str[])
+//? WORKING
+void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::vector<std::string>& vec, const char str[])
 {
+	static bool hasUserConfig = false;
 	if (catIt->first == "global" && itemIt->first == str)
 		if (!(*valIt).empty())
+		{
+			if (!hasUserConfig)
+			{
+				vec.clear();
+				hasUserConfig = true;
+			}
 			vec.push_back(*valIt);
+		}
 }
 
 /**========================================================================
@@ -126,9 +139,9 @@ void	ConfigFileParser::extractKeyValuePairs(std::string& line, std::string& curr
 	}
 }
 
-int	ConfigFileParser::extractDataFromConfigFile(const std::string str)
+int	ConfigFileParser::extractDataFromConfigFile(const std::string& path)
 {
-	std::ifstream file(str.c_str());
+	std::ifstream file(path.c_str());
 	if (!file.is_open())
 		return (std::cerr << "could not open config file" << std::endl, 1);
 	std::string line;

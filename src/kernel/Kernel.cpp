@@ -13,9 +13,19 @@ Kernel::Kernel(void)
 
 Kernel::Kernel(char* path)
 {
-	_configFileParser.parseConfigFile(_conf, path);	
+	this->_servers.reserve(300);//!
+	FD_ZERO(&this->_actualSet);
+	this->setup();
 	std::cout << path << std::endl << std::flush;
-	Kernel();
+	printColor(RED, "before:");
+	_configFileParser.printConfig(_conf);
+	_configFileParser.parseConfigFile(_conf, path);	
+	printColor(RED, "after:");
+	_configFileParser.printConfig(_conf);
+	this->launch();
+
+
+
 }
 
 void Kernel::callCatch(Server & server)

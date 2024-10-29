@@ -46,14 +46,14 @@ class ConfigFileParser
 		void	setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::string& field, const char str[]);
 		void	setConfigValue(catIt& catIt, itemIt& itemIt, short& field, const char str[]);
 		void	setConfigValue(catIt& catIt, itemIt& itemIt, bool& field, const char str[]);
-		void	setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::vector<std::string> vec, const char str[]);
-		void	initializeServers(Config configStruct, int& i);
+		void	setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::vector<std::string>& vec, const char str[]);
+		void	initializeServers(Config& configStruct, int& i);
 		bool	isServerData(const std::string& category);
 
 	public:
-		void	intializeConfigStruct(Config configStruct);
-		int		extractDataFromConfigFile(const std::string);
-		void	parseConfigFile(Config configStruct, char* path);
+		void	intializeConfigStruct(Config& configStruct);
+		int		extractDataFromConfigFile(const std::string& path);
+		void	parseConfigFile(Config& configStruct, char* path);
 		void 	printConfig(const Config& config);
 
 };
