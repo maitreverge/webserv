@@ -165,13 +165,13 @@ void Server::replyClients()
 		if (!this->_clients[i].ping
 			&& FD_ISSET(this->_clients[i].fd, &this->_writeSet))
 		{
-			if (!this->_clients[i].respHeader)
+			if (!this->_clients[i].pongHeader)
 			{				
 				if (replyClient(i, this->_clients[i].headerRespons,
 					static_cast<ssize_t>
 					(this->_clients[i].headerRespons.size())))
 					break ;				
-				this->_clients[i].respHeader = true;				
+				this->_clients[i].pongHeader = true;				
 			}				
 			if (ssize_t ret = this->_clients[i].responseBuilder.
 				getBody(this->_clients[i]))
@@ -187,7 +187,7 @@ void Server::replyClients()
 
 				this->_clients[i].responseBuilder = ResponseBuilder();
 				this->_clients[i].ping = true;			
-				this->_clients[i].respHeader = false;				
+				this->_clients[i].pongHeader = false;				
 			}
 		}	
 	}
