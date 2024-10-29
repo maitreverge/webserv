@@ -1,40 +1,6 @@
 #include "ResponseBuilder.hpp"
 #include "Logger.hpp"
 
-void ResponseBuilder::initMimes( void ){
-
-	// Init Mimes Types
-	{
-		_mimeTypes.insert(std::make_pair("html", "text/html"));
-		_mimeTypes.insert(std::make_pair("htm", "text/htm"));
-		_mimeTypes.insert(std::make_pair("txt", "text/txt"));
-		_mimeTypes.insert(std::make_pair("css", "text/css"));
-		_mimeTypes.insert(std::make_pair("xml", "text/xml"));
-		// Application Content Types
-		_mimeTypes.insert(std::make_pair("js", "application/javascript")); // FIXME doubt on this one
-		_mimeTypes.insert(std::make_pair("json", "application/json"));
-		_mimeTypes.insert(std::make_pair("pdf", "application/pdf"));
-		_mimeTypes.insert(std::make_pair("zip", "application/zip"));
-		// Image Content Types
-		_mimeTypes.insert(std::make_pair("jpeg", "image/jpeg"));
-		_mimeTypes.insert(std::make_pair("jpg", "image/jpg"));
-		_mimeTypes.insert(std::make_pair("png", "image/png"));
-		_mimeTypes.insert(std::make_pair("gif", "image/gif"));
-		_mimeTypes.insert(std::make_pair("webp", "image/webp"));
-		_mimeTypes.insert(std::make_pair("bmp", "image/bmp"));
-		_mimeTypes.insert(std::make_pair("ico", "image/x-icon"));
-		// Audio Content Types
-		_mimeTypes.insert(std::make_pair("mp3", "audio/mp3"));
-		_mimeTypes.insert(std::make_pair("mpeg", "audio/mpeg"));
-		_mimeTypes.insert(std::make_pair("ogg", "audio/ogg"));
-		_mimeTypes.insert(std::make_pair("wav", "audio/wav"));
-		// Video Content Types
-		_mimeTypes.insert(std::make_pair("mp4", "video/mp4"));
-		_mimeTypes.insert(std::make_pair("webm", "video/webm"));
-		_mimeTypes.insert(std::make_pair("ogv", "video/ogv"));
-	}
-}
-
 string ResponseBuilder::extractType( const string& extension ) const {
     
     map<string, string>::const_iterator it = _mimeTypes.find(extension);
