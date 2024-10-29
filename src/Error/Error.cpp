@@ -42,7 +42,7 @@ void	Error::handleError(unsigned long errCode, Client &client)
 	str = err.getCode(e_errCode);
 	Logger::getInstance().log(ERROR, str, client, *this);
 	buildErrorRequest(errCode); //!!! DO SOMETHING WITH THIS !!!
-	client.statusCode = e_errCode;
+	// client.statusCode = e_errCode;// !!!! cleanned by seb 
 }
 
 void	Error::handleError(std::string message) const

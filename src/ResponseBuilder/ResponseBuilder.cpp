@@ -273,7 +273,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	
 	extractMethod();
 	
-	_realURI = _client->header.getURI();
+	_realURI = _client->headerRequest.getURI();
 
 	resolveURI();
 	validateURI();
@@ -286,8 +286,8 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	buildHeaders();
 
 
-	// Copying the build Headers in headerSend
-	inputClient.headerSend = Headers.masterHeader;
+	// Copying the build Headers in headerRespons
+	inputClient.headerRespons = Headers.masterHeader;
 	
 	Headers.masterHeader.clear();//!
 
@@ -303,29 +303,22 @@ ssize_t	ResponseBuilder::getBody( Client &inputClient ){
 	
 	*/
 	if (!this->_ifs.is_open())
-	{
-		std::cout << "\e[103m avant" << std::endl;
+	{	
 		Logger::getInstance().log(INFO, _realURI.c_str(), inputClient);	
-		std::cout << " apres\e[0m" << std::endl;
-		this->_ifs.open(_realURI.c_str(), std::ios::binary);
-		// this->test = false;
-		// this->_ifs.open("test.html", std::ios::binary);
+	
+		this->_ifs.open(_realURI.c_str(), std::ios::binary);	
 	}
-
-	// this->_bodyStream.open(_realURI.c_str(), std::ios::binary);
-// this->inputClient.->messageSend.resize(3000);
-		// this->inputClient.->messageSend.resize(SEND_BUFF_SIZE);
 
 	// ! ADVANCED TEST : keskis passe si le stream fail malgre l'URI correcte 
 	if (this->_ifs.is_open())
 	{
 		this->_ifs.seekg(this->_streamHead);
-		inputClient.messageSend.clear(); inputClient.messageSend.resize(SEND_BUFF_SIZE);//!
+		inputClient.messageSend.clear();
+		inputClient.messageSend.resize(SEND_BUFF_SIZE);//!
 		// ! ADVANCED TEST : keskis passe si READ se passe mal 
 		this->_ifs.read(inputClient.messageSend.data(), static_cast<std::streamsize>(inputClient.messageSend.size()));	
 		this->_streamHead = this->_ifs.tellg();
-
-		// std::string str(inputClient.messageSend.data(), static_cast<int>(this->_ifs.gcount()));	
+	
 		Logger::getInstance().log(INFO, "file open");  	
 	
 		std::streamsize gcount = this->_ifs.gcount();

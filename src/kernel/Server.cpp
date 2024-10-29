@@ -16,47 +16,6 @@ const sockaddr_in & Server::getSockAdress() const
 	return (this->_sockAddr);
 }
 
-Client::Client()
-{
-	Logger::getInstance().log(INFO, "\e[30;101mclient created\e[0m", *this);
-
-	id = 0;
-	fd = 0;		
-	memset(&address, 0, sizeof(address));
-	len = sizeof(address);
-	statusCode = CODE_200_OK;
-	len = sizeof(address);	
-	bodySize = 0;
-	messageSend.reserve(MAX_HDR_SIZE);
-	messageSend.resize(SEND_BUFF_SIZE);
-	respHeader = false;
-headerSend.reserve(300); //!
-message.reserve(300); //!
-	std::stringstream ss;		
-	ss << 
-	"HTTP/1.1 200 OK\r\n\
-Content-Type: text/html\r\n\
-Content-Length: 316\r\n\
-Connection: close\r\n\
-\r\n\
-"; 
-	std::string str = ss.str();
-	std::vector<char> res(str.begin(), str.end());	
-	headerSend = res;
-	ping = true;	
-	statusCodes = CODE_200_OK;
-}
-Client::Client(const Client & src)
-{
-	Logger::getInstance().log(INFO, "\e[30;101mclient copy created\e[0m", *this);
-
-	*this = src;
-}
-Client::~Client()
-{
-	Logger::getInstance().log(INFO, "\e[30;101mclient deleted\e[0m", *this);
-}
-
 bool Server::setup()
 {	
 	this->_maxFd = this->_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -118,7 +77,7 @@ void Server::catchClients()
 	{		
 		Client client;			
 		client.fd = accept(this->_fd, reinterpret_cast<sockaddr *>
-			(&client.address), &client.len);
+			(&client.address), &client.addressLen);
 		if (client.fd < 0)		
 			return Logger::getInstance().log(ERROR, "accept");	
 	
@@ -152,7 +111,7 @@ void Server::listenClients()
 				this->exitClient(i);		
 			else
 			{
-				this->_clients[i].message.insert(this->_clients[i].message.end(), 
+				this->_clients[i].messageRecv.insert(this->_clients[i].messageRecv.end(), 
 					this->_readBuffer.begin(), this->_readBuffer.begin() + ret);				
 				if (!this->_clients[i].bodySize)
 					this->handleClientHeader(i, ret);
@@ -208,19 +167,17 @@ void Server::replyClients()
 		{
 			if (!this->_clients[i].respHeader)
 			{				
-				if (replyClient(i, this->_clients[i].headerSend,
+				if (replyClient(i, this->_clients[i].headerRespons,
 					static_cast<ssize_t>
-					(this->_clients[i].headerSend.size())))
+					(this->_clients[i].headerRespons.size())))
 					break ;				
 				this->_clients[i].respHeader = true;				
 			}				
-			if (ssize_t ret = this->_clients[i].response.
+			if (ssize_t ret = this->_clients[i].responseBuilder.
 				getBody(this->_clients[i]))
 			{							
 				if (replyClient(i, this->_clients[i].messageSend, ret))
-					break ;
-				this->_clients[i].messageSend.clear();	
-				this->_clients[i].messageSend.resize(SEND_BUFF_SIZE);				
+					break ;								
 				usleep(5000);
 			}
 			else
@@ -228,7 +185,7 @@ void Server::replyClients()
 				Logger::getInstance().log(DEBUG, "reinit response Builder",
 					this->_clients[i]);
 
-				this->_clients[i].response = ResponseBuilder();
+				this->_clients[i].responseBuilder = ResponseBuilder();
 				this->_clients[i].ping = true;			
 				this->_clients[i].respHeader = false;				
 			}
@@ -279,21 +236,20 @@ bool Server::replyClient(size_t i, std::vector<char> & response,
 void printMessageClientTest(const Client & client)
 {
 	std::cout << std::endl << "\e[34mmessage client: " << std::endl;		
-	for (size_t i = 0; i < client.message.size(); i++)				
-		std::cout << client.message[i];
+	for (size_t i = 0; i < client.messageRecv.size(); i++)				
+		std::cout << client.messageRecv[i];
 	std::cout << "\e[0m" << std::endl << std::endl;
 }	
-
 
 bool Server::isDelimiterFind(size_t i, std::vector<char>::iterator & it)
 {
 	std::string delimiter = "\r\n\r\n";
 	it = std::search
-		(this->_clients[i].message.begin(),
-		this->_clients[i].message.end(),
+		(this->_clients[i].messageRecv.begin(),
+		this->_clients[i].messageRecv.end(),
 		delimiter.begin(),
 		delimiter.end() - 1);
-	if (it != this->_clients[i].message.end())
+	if (it != this->_clients[i].messageRecv.end())
 		return true;
 	return false;
 }
@@ -307,20 +263,20 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 	std::vector<char>::iterator it;		
 	if (isDelimiterFind(i, it))		
 	{	
-		Logger::getInstance().log(DEBUG, "header terminated",
+		Logger::getInstance().log(DEBUG, "headerRespons terminated",
 			this->_clients[i]);
 		
 		if (isMaxHeaderSize(it + 4, i))
 			return ;				
-		this->_clients[i].header.parse(this->_clients[i]);								
-		this->_clients[i].header.displayParsingResult();
-		if (this->_clients[i].header.getMethod() == "GET")		
-			this->_clients[i].response.getHeader(this->_clients[i],
+		this->_clients[i].headerRequest.parse(this->_clients[i]);								
+		this->_clients[i].headerRequest.displayParsingResult();
+		if (this->_clients[i].headerRequest.getMethod() == "GET")		
+			this->_clients[i].responseBuilder.getHeader(this->_clients[i],
 			this->_conf);
 
-		this->_clients[i].message.erase(this->_clients[i].message.begin(),
+		this->_clients[i].messageRecv.erase(this->_clients[i].messageRecv.begin(),
 			it + 4);
-		this->_clients[i].bodySize += this->_clients[i].message.size();
+		this->_clients[i].bodySize += this->_clients[i].messageRecv.size();
 		if (!this->isContentLengthValid(i)
 			|| this->isBodyTooLarge(i)
 			|| this->isBodyTerminated(i))
@@ -339,18 +295,18 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 	this->_clients[i].bodySize += static_cast<size_t>(ret);
 	if (this->isBodyTooLarge(i) || this->isBodyTerminated(i))
 		return ;
-	if (this->_clients[i].header.getMethod() == "POST")
-		floSimulatorPut(this->_clients[i].message);
-	this->_clients[i].message.clear();	
+	if (this->_clients[i].headerRequest.getMethod() == "POST")
+		floSimulatorPut(this->_clients[i].messageRecv);
+	this->_clients[i].messageRecv.clear();	
 }
 
 bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
 {
-	if (it - this->_clients[i].message.begin() > MAX_HDR_SIZE)
+	if (it - this->_clients[i].messageRecv.begin() > MAX_HDR_SIZE)
 	{
 		stringstream ss;
-		ss << "header size" << " Actual-Size: " <<
-			it - this->_clients[i].message.begin() << " - Max-Header-Size : "
+		ss << "headerRespons size" << " Actual-Size: " <<
+			it - this->_clients[i].messageRecv.begin() << " - Max-Header-Size : "
 			<< MAX_HDR_SIZE;
 
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
@@ -364,12 +320,12 @@ bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
 
 bool Server::isContentLengthValid(size_t i)
 {
-	if (this->_clients[i].header.getHeaders().ContentLength
+	if (this->_clients[i].headerRequest.getHeaders().ContentLength
 		> MAX_CNT_SIZE)
 	{
 		stringstream ss;
 		ss << "max content size reached" << " - Content-Lenght: "
-			<< this->_clients[i].header.getHeaders().ContentLength
+			<< this->_clients[i].headerRequest.getHeaders().ContentLength
 			<< " - Max content size: " << MAX_CNT_SIZE << std::endl;
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
 			//! 413 Payload Too Large
@@ -383,12 +339,12 @@ bool Server::isContentLengthValid(size_t i)
 bool Server::isBodyTooLarge(size_t i)
 {
 	if (this->_clients[i].bodySize >
-		this->_clients[i].header.getHeaders().ContentLength)
+		this->_clients[i].headerRequest.getHeaders().ContentLength)
 	{
 		stringstream ss;
 		ss << "content size" << " - Body-Size: "
 		<< this->_clients[i].bodySize << " Content-Lenght: "
-		<< this->_clients[i].header.getHeaders().ContentLength << std::endl;
+		<< this->_clients[i].headerRequest.getHeaders().ContentLength << std::endl;
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
 			//! 413 Payload Too Large
 		
@@ -401,18 +357,18 @@ bool Server::isBodyTooLarge(size_t i)
 bool Server::isBodyTerminated(size_t i) 
 {
 	if (this->_clients[i].bodySize ==
-		this->_clients[i].header.getHeaders().ContentLength)
+		this->_clients[i].headerRequest.getHeaders().ContentLength)
 	{
 		stringstream ss;
 		ss << "client body terminated" << " - Body-Size: "
 		<< this->_clients[i].bodySize << " Content-Lenght: "
-		<< this->_clients[i].header.getHeaders().ContentLength;
+		<< this->_clients[i].headerRequest.getHeaders().ContentLength;
 		Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
 
 		this->_clients[i].bodySize = 0;
-		if (this->_clients[i].header.getMethod() == "POST")
-			floSimulatorPut(this->_clients[i].message);
-		this->_clients[i].message.clear();
+		if (this->_clients[i].headerRequest.getMethod() == "POST")
+			floSimulatorPut(this->_clients[i].messageRecv);
+		this->_clients[i].messageRecv.clear();
 		this->_clients[i].ping = false;		
 		return true;
 	}
