@@ -16,6 +16,15 @@
  *========================================================================**/
 struct Config
 {
+	struct server
+	{
+		std::string	host;
+		std::string	port;
+		std::string	serverName;
+	};
+
+	server serverA, serverB, serverC;
+
 	short int						maxClient;
 	std::vector<struct sockaddr_in> sockAddress;
 	vector<std::string>				indexFiles; // default files names if the URI == "/"
@@ -24,26 +33,36 @@ struct Config
 
 	Config()
 	{
+		serverA.host = "0.0.0.0";
+		serverA.port = "1510";
+		serverA.serverName = "server1";
+		serverB.host = "0.0.0.0";
+		serverB.port = "1511";
+		serverB.serverName = "server2";
+		serverC.host = "0.0.0.0";
+		serverC.port = "1512";
+		serverC.serverName = "server3";
+	
 		maxClient = 1024;
 		struct sockaddr_in server1;	
 		std::memset(&server1, 0, sizeof(server1));
 		server1.sin_family = AF_INET;
 		server1.sin_addr.s_addr = htonl(INADDR_ANY);
-		server1.sin_port = htons(1510);
+		server1.sin_port = htons((uint16_t)std::atoi(serverA.port.c_str()));
 		sockAddress.push_back(server1);
 
 		struct sockaddr_in server2;	
 		std::memset(&server2, 0, sizeof(server2));
 		server2.sin_family = AF_INET;
 		server2.sin_addr.s_addr = htonl(INADDR_ANY);
-		server2.sin_port = htons(1511);
+		server2.sin_port = htons((uint16_t)std::atoi(serverB.port.c_str()));
 		sockAddress.push_back(server2);
 
 		struct sockaddr_in server3;	
 		std::memset(&server3, 0, sizeof(server3));
 		server3.sin_family = AF_INET;
 		server3.sin_addr.s_addr = htonl(INADDR_ANY);
-		server3.sin_port = htons(1512);
+		server3.sin_port = htons((uint16_t)std::atoi(serverC.port.c_str()));
 		sockAddress.push_back(server3);
 
 		struct sockaddr_in server4;	
