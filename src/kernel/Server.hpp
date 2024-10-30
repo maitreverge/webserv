@@ -33,16 +33,21 @@ class Server
 	fd_set &			_writeSet;
 	Config 				_conf;
 
+	void clientMessage(size_t i, ssize_t ret);
 	void displayClient(Client & client) const;
 	void handleClientHeader(size_t i, ssize_t ret);
+	void getRespHeader(size_t i);
 	void handleClientBody(size_t i, ssize_t ret);
 	bool isDelimiterFind(size_t i, std::vector<char>::iterator & it);
+	void errorShortCircuit(e_errorCodes err, size_t i);
 	bool isMaxHeaderSize(std::vector<char>::iterator it, size_t i);
 	bool isContentLengthValid(size_t i);
 	bool isBodyTerminated(size_t i);
 	bool isBodyTooLarge(size_t i);
+	void printResponse(const std::vector<char> & response);
 	bool replyClient(size_t i, std::vector<char> & response,
 		ssize_t repSize);
+	bool endReply(size_t i);
 	void exitClient(size_t index);
 	void exitClients();
 

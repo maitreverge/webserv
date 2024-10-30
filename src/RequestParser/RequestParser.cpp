@@ -18,11 +18,13 @@ RequestParser::RequestParser() : 	_method(""),
 RequestParser::~RequestParser() {}
 
 /**========================================================================
- *                           GETTERS
+ *                           GETTERS AND SETTER
  *========================================================================**/
 std::string	RequestParser::getMethod() const 		{return (_method);}
 
 std::string	RequestParser::getURI() const 			{return (_URI);}
+
+void	RequestParser::setURI(std::string & uri)	{_URI = uri;}
 
 std::string	RequestParser::getHTTP_version() const	{return (_HTTP_version);}
 

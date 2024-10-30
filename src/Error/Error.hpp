@@ -20,8 +20,8 @@ class Error
 	public:
 		Error();
 		~Error();
-		static Error& getInstance();
-		int		getErrorCode() const;
-		void	handleError(unsigned long errorCode, struct Client &client);
-		void	handleError(std::string message) const;
+		static Error& 		getInstance();
+		int					getErrorCode() const;
+		std::vector<char>	handleError(unsigned long errorCode, struct Client &client);
+		void				handleError(std::string message) const;
 };

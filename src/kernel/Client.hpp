@@ -21,6 +21,7 @@ struct Client
 	
 	bool				ping;
 	bool 				pongHeader;
+	bool				exitRequired;
 	
 	Client();
 	Client(const Client &);

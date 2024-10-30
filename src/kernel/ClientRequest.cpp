@@ -12,26 +12,26 @@ void Server::listenClients()
 			this->_readBuffer.resize(RECV_BUFF_SIZE);
 			ssize_t ret = recv(this->_clients[i].fd, this->_readBuffer.data(),
 				this->_readBuffer.size(), 0);
-			if (ret < 0)
-			{
-				Logger::getInstance().log(ERROR, "recv");
-				this->exitClient(i);				
-			}
+			if (ret < 0)			
+				Logger::getInstance().log(ERROR, "recv"), this->exitClient(i);	
 			else if (ret == 0)					
 				this->exitClient(i);		
 			else
-			{
-				this->_clients[i].messageRecv.
-                    insert(this->_clients[i].messageRecv.end(), 
-					this->_readBuffer.begin(),
-                    this->_readBuffer.begin() + ret);				
-				if (!this->_clients[i].bodySize)
-					this->handleClientHeader(i, ret);
-				else
-					this->handleClientBody(i, ret);
-			}
+				clientMessage(i, ret);
 		}	
 	}
+}
+
+void Server::clientMessage(size_t i, ssize_t ret)
+{
+	this->_clients[i].messageRecv.
+	insert(this->_clients[i].messageRecv.end(), 
+	this->_readBuffer.begin(),
+	this->_readBuffer.begin() + ret);				
+	if (!this->_clients[i].bodySize)
+		this->handleClientHeader(i, ret);
+	else
+		this->handleClientBody(i, ret);
 }
 
 bool Server::isDelimiterFind(size_t i, std::vector<char>::iterator & it)
@@ -56,17 +56,14 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 	std::vector<char>::iterator it;		
 	if (isDelimiterFind(i, it))		
 	{	
-		Logger::getInstance().log(DEBUG, "headerRespons terminated",
+		Logger::getInstance().log(DEBUG, "header terminated",
 			this->_clients[i]);
 		
 		if (isMaxHeaderSize(it + 4, i))
 			return ;				
 		this->_clients[i].headerRequest.parse(this->_clients[i]);								
 		this->_clients[i].headerRequest.displayParsingResult();
-		if (this->_clients[i].headerRequest.getMethod() == "GET")		
-			this->_clients[i].responseBuilder.getHeader(this->_clients[i],
-			this->_conf);
-
+		getRespHeader(i);
 		this->_clients[i].messageRecv.
             erase(this->_clients[i].messageRecv.begin(), it + 4);
 		this->_clients[i].bodySize += this->_clients[i].messageRecv.size();
@@ -77,6 +74,19 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 	}
 	else
 		isMaxHeaderSize(it + 1, i);
+}
+
+void Server::getRespHeader(size_t i)
+{
+	if (this->_clients[i].headerRequest.getMethod() == "GET")		
+		this->_clients[i].responseBuilder.getHeader(this->_clients[i],
+		this->_conf);
+	// else if (this->_clients[i].headerRequest.getMethod() == "POST")		
+	// 	this->_clients[i].responseBuilder.getHeader(this->_clients[i],
+	// 	this->_conf);
+	// else if (this->_clients[i].headerRequest.getMethod() == "DEL")		
+	// 	this->_clients[i].responseBuilder.getHeader(this->_clients[i],
+	// 	this->_conf);
 }
 
 void floSimulatorPut(std::vector<char> part)
@@ -113,19 +123,40 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 	this->_clients[i].messageRecv.clear();	
 }
 
+#include "Error.hpp"//!
+void Server::errorShortCircuit(e_errorCodes err, size_t i)
+{
+	std::vector<char> errVector = Error::getInstance().
+		handleError(err, this->_clients[i]);
+	std::string errStr(errVector.begin(), errVector.end());
+
+	std::stringstream ss;
+	ss << err << " " << errStr;
+	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);	
+	this->_clients[i].headerRequest.setURI(errStr);
+	this->_clients[i].responseBuilder = ResponseBuilder();
+	this->_clients[i].responseBuilder.getHeader(this->_clients[i],
+		this->_conf);
+	this->_clients[i].messageRecv.clear();
+	this->_clients[i].ping = false;
+	this->_clients[i].exitRequired = true;	
+}
+
+bool tog = true;
 bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
 {
+	// if (tog)
 	if (it - this->_clients[i].messageRecv.begin() > MAX_HDR_SIZE)
 	{
+		// tog = !tog;
 		stringstream ss;
-		ss << "headerRespons size" << " Actual-Size: "
+		ss << "header size" << " Actual-Size: "
             << it - this->_clients[i].messageRecv.begin()
             << " - Max-Header-Size : "	<< MAX_HDR_SIZE;
 
-		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
+		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);		
 			//! 431 Request Header Fields Too Large !!
-
-		this->exitClient(i);
+		errorShortCircuit(static_cast<e_errorCodes>(431), i);
 		return true;	
 	}
 	return false;
@@ -135,15 +166,17 @@ bool Server::isContentLengthValid(size_t i)
 {
 	if (this->_clients[i].headerRequest.getHeaders().ContentLength
 		> MAX_CNT_SIZE)
+	// if (tog)
 	{
+		// tog = !tog;
+		Logger::getInstance().log(ERROR, "CONTENT YEAH", this->_clients[i]);
 		stringstream ss;
 		ss << "max content size reached" << " - Content-Lenght: "
 			<< this->_clients[i].headerRequest.getHeaders().ContentLength
 			<< " - Max content size: " << MAX_CNT_SIZE << std::endl;
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
 			//! 413 Payload Too Large
-	
-		this->exitClient(i);
+		errorShortCircuit(static_cast<e_errorCodes>(413), i);
 		return false;
 	}
 	return true;
@@ -151,9 +184,11 @@ bool Server::isContentLengthValid(size_t i)
 
 bool Server::isBodyTooLarge(size_t i)
 {
-	if (this->_clients[i].bodySize >
-		this->_clients[i].headerRequest.getHeaders().ContentLength)
+	// if (this->_clients[i].bodySize >
+	// 	this->_clients[i].headerRequest.getHeaders().ContentLength)
+	if (tog)
 	{
+		tog = !tog;
 		stringstream ss;
 		ss << "content size" << " - Body-Size: "
 		    << this->_clients[i].bodySize << " Content-Lenght: "
@@ -161,14 +196,13 @@ bool Server::isBodyTooLarge(size_t i)
             << std::endl;
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
 			//! 413 Payload Too Large
-		
-		this->exitClient(i);
+		errorShortCircuit(static_cast<e_errorCodes>(413), i);
 		return true;;
 	}
 	return false;
 }
 
-bool Server::isBodyTerminated(size_t i) 
+bool Server::isBodyTerminated(size_t i)
 {
 	if (this->_clients[i].bodySize ==
 		this->_clients[i].headerRequest.getHeaders().ContentLength)
