@@ -12,7 +12,7 @@ string ResponseBuilder::extractType( const string& extension ) const {
 
 void	ResponseBuilder::extractMethod( void ){
 
-	string tempMethod = _client->header.getMethod();
+	string tempMethod = _client->headerRequest.getMethod();
 
 	// verif already made by Dan
 	if (tempMethod == "GET")
@@ -135,6 +135,9 @@ void	ResponseBuilder::printAllHeaders( void ){
 	printColorNoEndl(BOLD_CYAN, "Content Type :");
 	print(Headers.contentType);
 
+	printColorNoEndl(BOLD_CYAN, "Location :");
+	print(Headers.location);
+
 	printColorNoEndl(BOLD_CYAN, "Content Lenght : (header)");
 	print(Headers.contentLenght);
 
@@ -142,4 +145,11 @@ void	ResponseBuilder::printAllHeaders( void ){
 	print(Headers.bodyLenght);
 
 	print("=========== printAllHeaders ========");
+}
+
+bool ResponseBuilder::isErrorRedirect( void ){
+
+	if (this->_errorType >= CODE_300_MULTIPLE_CHOICES and this->_errorType < CODE_400_BAD_REQUEST)
+		return true;
+	return false;
 }

@@ -21,7 +21,7 @@ struct Config
 	vector<std::string>				indexFiles;			// default files names if the URI == "/"
 	bool							listingDirectories; // activer ou non le listing des repertoires
 	map<e_errorCodes, string>		errorPaths;	
-		
+	map<string, string>				redirection;
 	Config();
 	Config(char* path);
 	void	initializeServer(server _serverStruct, std::vector<sockaddr_in>& sockAddress);

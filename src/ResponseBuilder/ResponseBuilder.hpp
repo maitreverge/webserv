@@ -22,6 +22,9 @@ struct ResponseHeaders
 	string transfertEncoding; // ! OPTION ONE
 	// !           OR
 	string contentLenght; // ! OPTION TWO
+	
+	// TODO : All Headers
+	string location; // Only if redirection
 
 	// Utils
 	uint64_t bodyLenght;
@@ -31,14 +34,18 @@ struct ResponseHeaders
 	ResponseHeaders()
 	{
 		masterHeader.clear();
-		bodyLenght = 0; // ? doublon par rapport a la struct client 
+		bodyLenght = 0;
 	}
 };
 
 class ResponseBuilder
 {
 
-private:
+	#ifdef UNIT_TEST
+	public:
+	#else
+	private:
+	#endif
 
 	// Enum
 	typedef enum
@@ -94,9 +101,9 @@ private:
 	void	checkNatureAndAuthoURI( void );
 	void	checkAutho( void );
 	void	checkNature( void );
-
-
-
+	bool 	redirectURI( void );
+	void 	swapForRoot( void );
+	bool	isErrorRedirect( void );
 
 	// generateListingHTML.cpp
 	/*
@@ -126,6 +133,9 @@ public:
 
 	void	getHeader( Client &, Config& );
 	ssize_t	getBody( Client &inputClient );
+
+	// For testing
+	void	setMethod( const e_method& method );
 
 	void	printAllHeaders( void );
 };

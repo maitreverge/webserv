@@ -12,40 +12,12 @@
 #include "errorCode.hpp"
 #include "ResponseBuilder.hpp"
 
-#define BUFF_SIZE 4096
+#define RECV_BUFF_SIZE 4096
+// #define SEND_BUFF_SIZE 8
 
 #define MAX_HDR_SIZE 8192
 #define SEND_BUFF_SIZE 2000
 #define MAX_CNT_SIZE 30000000
-
-// vector<char> masterBuilder(vector<char> &bodyInput, e_errorCodes errorCode,
-	// string& fileName);
-
-struct Client
-{
-	int					id;
-	int					fd;
-	std::vector<char>	message;
-	std::vector<char>	messageSend;
-	sockaddr_in 		address;
-	socklen_t 			len;
-	size_t				bodySize;
-	
-	e_errorCodes 		statusCodes;
-
-	RequestParser		header;
-	ResponseBuilder		response;
-
-	e_errorCodes		statusCode;
-	std::vector<char>	headerSend;
-
-	bool				ping;
-	bool 				respHeader;
-	
-	Client();
-	Client(const Client &);
-	~Client();
-};
 
 class Server
 {
