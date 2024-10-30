@@ -18,11 +18,13 @@ RequestParser::RequestParser() : 	_method(""),
 RequestParser::~RequestParser() {}
 
 /**========================================================================
- *                           GETTERS
+ *                           GETTERS AND SETTER
  *========================================================================**/
 std::string	RequestParser::getMethod() const 		{return (_method);}
 
 std::string	RequestParser::getURI() const 			{return (_URI);}
+
+void	RequestParser::setURI(std::string & uri)	{_URI = uri;}
 
 std::string	RequestParser::getHTTP_version() const	{return (_HTTP_version);}
 
@@ -62,8 +64,8 @@ void	RequestParser::parse(Client& client)
 {
 	_Client = &client ;
 	reset_values();
-	std::istringstream requestStream(charVectorToString(client.message));
-	print(charVectorToString(client.message));
+	std::istringstream requestStream(charVectorToString(client.messageRecv));
+	print(charVectorToString(client.messageRecv));
 	Logger::getInstance().log(INFO, "Request parsing started", *this);
 	handleFirstLine(requestStream);
 	handleHeaderLines(requestStream);

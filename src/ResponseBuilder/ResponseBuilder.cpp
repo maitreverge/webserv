@@ -259,7 +259,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	_client = &inputClient; // init client
 	_config = &inputConfig; // init config
 	
-	_realURI = _client->header.getURI();
+	_realURI = _client->headerRequest.getURI();
 
 	extractMethod();
 	if ( not redirectURI())
@@ -279,11 +279,10 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	buildHeaders();
 
 
-	// Copying the build Headers in headerSend
-	inputClient.headerSend = Headers.masterHeader;
+	// Copying the build Headers in headerRespons
+	inputClient.headerRespons = Headers.masterHeader;
 	
-	Headers.masterHeader.clear();//!
+	// Headers.masterHeader.clear();//!
 
 	// printAllHeaders();
 }
-

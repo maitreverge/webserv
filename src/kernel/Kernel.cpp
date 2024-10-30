@@ -2,8 +2,16 @@
 
 bool Kernel::_exit = false;
 
-Kernel::Kernel(void)
-{	
+Kernel::Kernel(void) : _conf()
+{
+	this->_servers.reserve(300);//!
+	FD_ZERO(&this->_actualSet);
+	this->setup();
+	this->launch();
+}
+
+Kernel::Kernel(char* path) : _conf(path)
+{
 	this->_servers.reserve(300);//!
 	FD_ZERO(&this->_actualSet);
 	this->setup();
@@ -35,7 +43,7 @@ void Kernel::setup()
 	for (size_t i = 0; i < this->_conf.sockAddress.size(); i++)
 	{
 		Server server(this->_conf.sockAddress[i], this->_maxFd,
-			this->_actualSet, this->_readSet, this->_writeSet);
+			this->_actualSet, this->_readSet, this->_writeSet, this->_conf);
 		if (server.setup())
 			this->_servers.push_back(server);	
 	}	

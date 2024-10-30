@@ -12,44 +12,15 @@
 #include "errorCode.hpp"
 #include "ResponseBuilder.hpp"
 
-#define BUFF_SIZE 4096
+#define RECV_BUFF_SIZE 4096
+// #define SEND_BUFF_SIZE 8
+#define SEND_BUFF_SIZE 2000
 
 #define MAX_HDR_SIZE 8192
-#define SEND_BUFF_SIZE 8
 #define MAX_CNT_SIZE 30000000
-
-// vector<char> masterBuilder(vector<char> &bodyInput, e_errorCodes errorCode,
-	// string& fileName);
-
-struct Client
-{
-	int					id;
-	int					fd;
-	std::vector<char>	message;
-	std::vector<char>	messageSend;
-	sockaddr_in 		address;
-	socklen_t 			len;
-	size_t				bodySize;
-	
-	e_errorCodes 		statusCodes;
-
-	RequestParser		header;
-	ResponseBuilder		response;
-
-	e_errorCodes		statusCode;
-	std::vector<char>	headerSend;
-
-	bool				ping;
-	bool 				respHeader;
-	
-	Client();
-	Client(const Client &);
-	~Client();
-};
 
 class Server
 {
-	Config 				_conf;
 	sockaddr_in 		_sockAddr;
 	std::vector<Client> _clients;
 	std::vector<char>	_writeBuffer;
@@ -60,24 +31,30 @@ class Server
 	fd_set &			_actualSet;
 	fd_set &			_readSet;
 	fd_set &			_writeSet;
+	Config 				_conf;
 
+	void clientMessage(size_t i, ssize_t ret);
 	void displayClient(Client & client) const;
 	void handleClientHeader(size_t i, ssize_t ret);
+	void getRespHeader(size_t i);
 	void handleClientBody(size_t i, ssize_t ret);
 	bool isDelimiterFind(size_t i, std::vector<char>::iterator & it);
+	void errorShortCircuit(e_errorCodes err, size_t i);
 	bool isMaxHeaderSize(std::vector<char>::iterator it, size_t i);
 	bool isContentLengthValid(size_t i);
 	bool isBodyTerminated(size_t i);
 	bool isBodyTooLarge(size_t i);
+	void printResponse(const std::vector<char> & response);
 	bool replyClient(size_t i, std::vector<char> & response,
 		ssize_t repSize);
+	bool endReply(size_t i);
 	void exitClient(size_t index);
 	void exitClients();
 
 	public:
 
 		Server(sockaddr_in & sockaddr, int & maxFd, fd_set & actualSet,
-			fd_set & readSet, fd_set & writeSet);
+			fd_set & readSet, fd_set & writeSet, Config & conf);
 
 		const sockaddr_in & getSockAdress() const;
 

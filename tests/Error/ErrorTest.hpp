@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include "Error.hpp" // Assure-toi que le chemin d'accès est correct
-#include "Server.hpp"
+#include "Client.hpp"
 
 class ErrorTest : public ::testing::Test {
 protected:

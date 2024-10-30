@@ -8,6 +8,7 @@
 #include "Error.hpp"
 #include "timeStamp.hpp"
 #include "Kernel.hpp"
+#include "Client.hpp"
 
 class Kernel;
 class Server;

@@ -7,6 +7,10 @@
 #include <algorithm>
 #include "Server.hpp"
 #include "Logger.hpp"
+#include "ConfigFileParser.hpp"
+
+#define MAX_SERVERS 42
+#define MAX_CLIENTS 1000
 
 class Server;
 
@@ -28,7 +32,9 @@ class Kernel
 	public:
 
 		static bool		_exit;
+		
 		Kernel(void);
+		Kernel(char* path);
 
 		void setup();
 		void launch();

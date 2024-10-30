@@ -77,6 +77,7 @@ class RequestParser
 		// getters
 		std::string	getMethod() const;
 		std::string	getURI() const;
+		void		setURI(std::string & uri);
 		std::string	getHTTP_version() const;
 		bool		getIsValid() const;
 		Client*		getClient() const;

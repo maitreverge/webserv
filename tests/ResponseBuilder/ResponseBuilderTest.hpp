@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "ResponseBuilder.hpp" // Inclure le fichier de la classe à tester
 #include "Server.hpp"
-
+#include "Client.hpp"
 class ResponseBuilderTest : public ::testing::Test {
 protected:
     // Objets utilisés pour les tests

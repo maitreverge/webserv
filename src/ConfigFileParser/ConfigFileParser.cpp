@@ -10,27 +10,18 @@
  *?  => tests a faire!
  *========================================================================**/
 
-// int main(void)
-// {
-// 	Config configStruct;
-// 	ConfigFileParser toto;
-// 	toto.extractDataFromConfigFile("config.ini");
-// 	toto.intializeConfigStruct(configStruct);
-// 	return (0);
-// }
-
-void ConfigFileParser::parseConfigFile(Config configStruct)
+void ConfigFileParser::parseConfigFile(Config& configStruct, char* path)
 {
-	extractDataFromConfigFile("config.ini");
+	extractDataFromConfigFile(path);
 	intializeConfigStruct(configStruct);
 }
 
-void	ConfigFileParser::intializeConfigStruct(Config configStruct)
+void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
 {
 	int	i = 0;
 	for (catIt catIt = _data.begin(); catIt != _data.end(); ++catIt)
 	{
-		if (!_serverStruct[i].host.empty() && !_serverStruct[i].port.empty())
+		if (!configStruct._serverStruct[i].host.empty() && !configStruct._serverStruct[i].port.empty())
 			i++;
 		for (itemIt itemIt = catIt->second.begin(); itemIt != catIt->second.end(); ++itemIt)
 		{
@@ -50,49 +41,52 @@ void	ConfigFileParser::intializeConfigStruct(Config configStruct)
 				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_503", CODE_503_SERVICE_UNAVAILABLE);
 				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_504", CODE_504_GATEWAY_TIMEOUT);
 				// category server
-				setConfigValue(catIt, itemIt, valIt, _serverStruct[i].host, "host");
-				setConfigValue(catIt, itemIt, valIt, _serverStruct[i].port, "port");
-				setConfigValue(catIt, itemIt, valIt, _serverStruct[i].serverName, "serverName");
+				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].host, "host");
+				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].port, "port");
+				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].serverName, "serverName");
 			}
 		}
 	}
-	// printData(_data);
-	// printServerData(_serverStruct, i + 1);
-	initializeServers(configStruct, i);
 }
 
-void	ConfigFileParser::initializeServers(Config configStruct, int& i)
+void	ConfigFileParser::initializeServers(Config& configStruct, int& i)
 {
-	// printServerData(_serverStruct, i + 1);
 	for (int j = 0; j < i + 1; j++)
 	{
 		struct sockaddr_in server;	
 		std::memset(&server, 0, sizeof(server));
 		server.sin_family = AF_INET;
-		server.sin_addr.s_addr = htonl(INADDR_ANY);
-		server.sin_port = htons(1510);
+		server.sin_addr.s_addr = inet_addr(_serverStruct[j].host.c_str());
+		server.sin_port = htons(static_cast<uint16_t>(std::atoi(_serverStruct[j].port.c_str())));
 		configStruct.sockAddress.push_back(server);
-		std::cout << "server " << j + 1 << " initialized " << std::endl;
+		std::cout << "server " << _serverStruct[j].serverName << " initialized " << std::endl;
 	}
 }
 
 /**========================================================================
  *                           SETCONFIGVALUE OVERLOADS
  *========================================================================**/
+//? error pages paths
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, Config& configStruct, const char str[], e_errorCodes e)
 {
 	if (catIt->first == "errorPages" && itemIt->first == str)
 		if (!(*valIt).empty())
-			configStruct.errorPaths.insert(std::make_pair(e, itemIt->second[0]));
+			configStruct.errorPaths[e] = *valIt;
 }
 
+//! struct server
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::string& field, const char str[])
 {
 	if (isServerData(catIt->first) && itemIt->first == str)
 		if (!(*valIt).empty())
+		{
 			field = itemIt->second[0];
+			// printColor(GREEN, field);
+		}
+		
 }
 
+//? maxClient
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, short& field, const char str[])
 {
 	if (catIt->first == "global" && itemIt->first == str)
@@ -100,6 +94,7 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, short& field
 			field = (short)std::atoi(itemIt->second[0].c_str());
 }
 
+//? listingDirectories
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, bool& field, const char str[])
 {
 	if (catIt->first == "global" && itemIt->first == str)
@@ -107,11 +102,20 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, bool& field,
 			field = std::atoi(itemIt->second[0].c_str());
 }
 
-void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::vector<std::string> vec, const char str[])
+//? indexFiles
+void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::vector<std::string>& vec, const char str[])
 {
+	static bool hasUserConfig = false;
 	if (catIt->first == "global" && itemIt->first == str)
 		if (!(*valIt).empty())
+		{
+			if (!hasUserConfig)
+			{
+				vec.clear();
+				hasUserConfig = true;
+			}
 			vec.push_back(*valIt);
+		}
 }
 
 /**========================================================================
@@ -135,9 +139,9 @@ void	ConfigFileParser::extractKeyValuePairs(std::string& line, std::string& curr
 	}
 }
 
-int	ConfigFileParser::extractDataFromConfigFile(const std::string str)
+int	ConfigFileParser::extractDataFromConfigFile(const std::string& path)
 {
-	std::ifstream file(str.c_str());
+	std::ifstream file(path.c_str());
 	if (!file.is_open())
 		return (std::cerr << "could not open config file" << std::endl, 1);
 	std::string line;
@@ -241,4 +245,26 @@ void ConfigFileParser::printServerData(const server _serverStruct[], size_t size
 		std::cout << "  Server Name: " << _serverStruct[i].serverName << std::endl;
 		std::cout << "------------------------" << std::endl;
 	}
+}
+
+void ConfigFileParser::printConfig(const Config& config) {
+    std::cout << "maxClient: " << config.maxClient << std::endl;
+
+    std::cout << "sockAddress:" << std::endl;
+    for (std::vector<struct sockaddr_in>::const_iterator it = config.sockAddress.begin(); it != config.sockAddress.end(); ++it) {
+        std::cout << "  - IP: " << inet_ntoa(it->sin_addr) << ", Port: " << ntohs(it->sin_port) << std::endl;
+    }
+
+    std::cout << "indexFiles: ";
+    for (std::vector<std::string>::const_iterator it = config.indexFiles.begin(); it != config.indexFiles.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "listingDirectories: " << (config.listingDirectories ? "true" : "false") << std::endl;
+
+    std::cout << "errorPaths:" << std::endl;
+    for (std::map<e_errorCodes, std::string>::const_iterator it = config.errorPaths.begin(); it != config.errorPaths.end(); ++it) {
+        std::cout << "  Code: " << it->first << " -> Path: " << it->second << std::endl;
+    }
 }
