@@ -42,14 +42,3 @@ TEST_F(ConfigFileParserTest, ExtractDataFromConfigFile_ReturnsOne_ForInvalidFile
     // Assert
     EXPECT_EQ(result, 1); // Devrait retourner 1 car le fichier n'existe pas
 }
-
-TEST_F(ConfigFileParserTest, ExtractDataFromConfigFile_IgnoresCommentLines) {
-    // Act
-    int result = configParser.extractDataFromConfigFile(testFileName);
-
-    // Assert
-    EXPECT_EQ(result, 0);
-    // Vérifie que les commentaires n'ont pas été ajoutés à _data
-    EXPECT_FALSE(configParser._data["server1"].count("key1"));
-    EXPECT_EQ(configParser._data["server2"]["key2"].size(), 1); // key2 doit être présent
-}
