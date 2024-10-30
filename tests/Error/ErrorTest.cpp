@@ -1,16 +1,5 @@
 #include "ErrorTest.hpp"
 
-// Test pour vérifier que handleError met à jour client.statusCode correctement
-// TEST_F(ErrorTest, HandleError_UpdatesClientStatusCode) {
-//     Client client;
-//     unsigned long errCode = 404; // Exemple de code d'erreur
-
-//     error.handleError(errCode, client);
-
-//     // On vérifie que le statusCode du client correspond au code d'erreur attendu
-//     EXPECT_EQ(client.statusCode, static_cast<e_errorCodes>(errCode));
-// }
-
 // Test pour vérifier que handleError appelle buildErrorRequest avec le bon code d'erreur
 TEST_F(ErrorTest, HandleError_BuildErrorRequestCalled) {
     Client client;
