@@ -32,9 +32,9 @@ class Kernel
 	public:
 
 		static bool		_exit;
+		
 		Kernel(void);
 		Kernel(char* path);
-
 
 		void setup();
 		void launch();
