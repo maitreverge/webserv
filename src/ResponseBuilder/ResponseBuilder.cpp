@@ -33,6 +33,16 @@ bool ResponseBuilder::redirectURI( void ){
 
 void ResponseBuilder::rootMapping( void ){
 
+	#ifdef UNIT_TEST
+	#else
+	// _realURI = "/src/default_folder/coucou/image.jpeg";
+	// _config->routeMapping.clear();
+
+	// std::map<std::string, std::string> innerMap1;
+	// innerMap1.insert(std::make_pair("/coucou", "/tmp/www"));
+	// _config->routeMapping.insert(std::make_pair("/src/default_folder", innerMap1));
+	#endif
+
 	string originalURI = _realURI;
 	string mainRoute = _realURI;
 
@@ -59,24 +69,6 @@ void ResponseBuilder::rootMapping( void ){
 				mainRoute.erase(mainRoute.find_last_of('/'));
 			}
 		}
-		
-		// if (_config->routeMapping.find(mainRoute) != _config->routeMapping.end())
-		// 	break;
-		// else // MainRoute not found, need to trim the URI and try again
-		// {
-		// 	if (mainRoute == "/")
-		// 		return; // MainRoute not found
-		// 	// If the first "/" is also the last, we're left with the last "/" default path
-		// 	else if (mainRoute.find_first_of('/') == mainRoute.find_last_of('/'))
-		// 	{
-		// 		// erasing keeping the "/"
-		// 		mainRoute.erase(mainRoute.find_first_of('/') + 1);
-		// 	}
-		// 	else{
-
-		// 		mainRoute.erase(mainRoute.find_last_of('/'));
-		// 	}
-		// }
 	}
 
 	// From this Point, a route has been found
@@ -96,10 +88,9 @@ void ResponseBuilder::rootMapping( void ){
 	}
 
 	// From this Point, a needle and a reroute has been found, we need to find them, hotshap them and return
-	if (target.compare(0, needle.size(), needle))
+	if (target.compare(0, needle.size(), needle) == 0)
 	{
-		// Erase both the routePath and the target
-		target.erase(needle.size() + 1);
+		target.erase(0, needle.size());
 		
 		originalURI = reroute + target;
 	}
