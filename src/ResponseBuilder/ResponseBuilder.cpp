@@ -35,12 +35,12 @@ void ResponseBuilder::rootMapping( void ){
 
 	#ifdef UNIT_TEST
 	#else
-	// _realURI = "/src/default_folder/coucou/image.jpeg";
-	// _config->routeMapping.clear();
+	_realURI = "/src/default_folder/coucou/image.jpeg";
+	_config->routeMapping.clear();
 
-	// std::map<std::string, std::string> innerMap1;
-	// innerMap1.insert(std::make_pair("/coucou", "/tmp/www"));
-	// _config->routeMapping.insert(std::make_pair("/src/default_folder", innerMap1));
+	std::map<std::string, std::string> innerMap1;
+	innerMap1.insert(std::make_pair("/coucou/les/amis/mdr", "/hello/www"));
+	_config->routeMapping.insert(std::make_pair("/src/default_folder/temp", innerMap1));
 	#endif
 
 	string originalURI = _realURI;
@@ -62,10 +62,12 @@ void ResponseBuilder::rootMapping( void ){
 			else if (mainRoute.find_first_of('/') == mainRoute.find_last_of('/'))
 			{
 				// erasing keeping the "/"
+				// if (mainRoute.empty())
+				// 	return;
 				mainRoute.erase(mainRoute.find_first_of('/') + 1);
 			}
-			else{
-
+			else
+			{
 				mainRoute.erase(mainRoute.find_last_of('/'));
 			}
 		}

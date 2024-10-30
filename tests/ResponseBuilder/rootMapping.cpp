@@ -103,3 +103,46 @@ TEST_F(ResponseBuilderTest, RootMapping_PartialPath) {
 
 	EXPECT_EQ(responseBuilder->_realURI, "/src/coucou/les/amis/mdr/image.jpeg");
 }
+
+TEST_F(ResponseBuilderTest, RootMaping_TwoCorrectPathsWithTwoCorrectsNeedlesFirstCorrect) {
+	config->routeMapping["/src/default_folder/temp"] = {{"/coucou/les/amis/mdr", "/tmp/www"}};
+	config->routeMapping["/src"] = {{"/coucou/les/amis/mdr", "/foo/var"}};
+	responseBuilder->_realURI = "/src/default_folder/temp/coucou/les/amis/mdr/image.jpeg";
+
+	responseBuilder->rootMapping();
+
+	EXPECT_EQ(responseBuilder->_realURI, "/tmp/www/image.jpeg");
+}
+
+TEST_F(ResponseBuilderTest, RootMaping_TwoCorrectPathsWithTwoCorrectsNeedlesSecondCorrect) {
+	config->routeMapping["/src"] = {{"/coucou/les/amis/mdr", "/foo/var"}};
+	config->routeMapping["/src/default_folder/temp"] = {{"/coucou/les/amis/mdr", "/tmp/www"}};
+	responseBuilder->_realURI = "/src/default_folder/temp/coucou/les/amis/mdr/image.jpeg";
+
+	responseBuilder->rootMapping();
+
+	EXPECT_EQ(responseBuilder->_realURI, "/tmp/www/image.jpeg");
+}
+
+TEST_F(ResponseBuilderTest, RootMaping_TwoCorrectPathsWithTwoCorrectsNeedlesThirdSolution) {
+	config->routeMapping["/src"] = {{"/coucou/les/amis/mdr", "/foo/var"}};
+	config->routeMapping["/src/default_folder/temp"] = {{"/coucou/les/amis/mdr", "/tmp/www"}};
+	config->routeMapping["/src/default_folder/temp"] = {{"/coucou/les/amis/mdr", "/hello/www"}};
+	
+	responseBuilder->_realURI = "/src/default_folder/temp/coucou/les/amis/mdr/image.jpeg";
+
+	responseBuilder->rootMapping();
+
+	EXPECT_EQ(responseBuilder->_realURI, "/hello/www/image.jpeg");
+}
+
+// ================================= EDGE CASES =================================
+
+TEST_F(ResponseBuilderTest, RootMaping_EdgeCaseNotSlashBeginningURI) {
+	config->routeMapping["/src/default_folder/temp"] = {{"/coucou/les/amis/mdr", "/hello/www"}};
+	responseBuilder->_realURI = "src/default_folder/temp/coucou/les/amis/mdr/image.jpeg";
+
+	responseBuilder->rootMapping();
+
+	EXPECT_EQ(responseBuilder->_realURI, "src/default_folder/temp/coucou/les/amis/mdr/image.jpeg");
+}
