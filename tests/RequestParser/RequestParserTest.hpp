@@ -7,7 +7,7 @@
 #include <string>
 #include "../../src/RequestParser/RequestParser.hpp"  // Inclure le bon header de ta classe
 #include "../../src/kernel/Server.hpp"  // Inclure le bon header de ta classe
-
+#include "Client.hpp"
 
 // Mock de Logger pour éviter d'écrire dans la sortie pendant les tests
 class MockLogger {
