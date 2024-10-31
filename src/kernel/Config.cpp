@@ -9,10 +9,10 @@ Config::Config(char *path)
 	// std::cout << "test2" << this->maxClient << std::endl;
 	ConfigFileParser toto;
 	toto.parseConfigFile(*this, path);
-
-	for (int i = 0; i < 8; i++)
-		initializeServer((uint16_t)std::atoi(_serverStruct[i].port.c_str()), sockAddress);
-	initializeServer(80, sockAddress);
+	int i = 0;
+	for (i = 0; i < 8; i++)
+		initializeServer((uint16_t)std::atoi(_serverStruct[i].port.c_str()), sockAddress, i);
+	initializeServer(80, sockAddress, 42);
 	toto.printConfig(*this);
 }
 
@@ -62,15 +62,26 @@ void	Config::initializeServers()
 	_serverStruct[2].host = "0.0.0.0";
 	_serverStruct[2].port = "1512";
 	_serverStruct[2].serverName = "server3";
-
-	initializeServer((uint16_t)std::atoi(_serverStruct[0].port.c_str()), sockAddress);
-	initializeServer((uint16_t)std::atoi(_serverStruct[1].port.c_str()), sockAddress);
-	initializeServer((uint16_t)std::atoi(_serverStruct[2].port.c_str()), sockAddress);
-	initializeServer(80, sockAddress);
+	_serverStruct[3].host = "0.0.0.0";
+	_serverStruct[3].port = "80";
+	_serverStruct[3].serverName = "server4";
+	initializeServer((uint16_t)std::atoi(_serverStruct[0].port.c_str()), sockAddress, 0);
+	initializeServer((uint16_t)std::atoi(_serverStruct[1].port.c_str()), sockAddress, 1);
+	initializeServer((uint16_t)std::atoi(_serverStruct[2].port.c_str()), sockAddress, 2);
+	initializeServer(80, sockAddress, 3);
 }
 
-void	Config::initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddress)
+/**========================================================================
+ *                           INITIALIZESERVER
+ * ? ugly dirty check added: do I need to default open port 80?
+ * ? now I need to decide were to add the serverName in the data struct...
+ *========================================================================**/
+void	Config::initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddress, int i)
 {
+
+	if (!this->_serverStruct[i].host.empty() && i != 42)
+		print("SERVER NAME: " + this->_serverStruct[i].serverName);
+
 	if (port)
 	{
 		struct sockaddr_in server;	
