@@ -105,6 +105,8 @@ class ResponseBuilder
 	bool 	redirectURI( void );
 	void 	rootMapping( void );
 	bool	isErrorRedirect( void );
+	void	extractFileNature( string &target);
+
 
 	// generateListingHTML.cpp
 	/*
@@ -121,24 +123,33 @@ class ResponseBuilder
 	void	checkCGI( void );
 	void	launchCGI( void );
 
-	MockConfig* mockConfig;
+	// POST
+
+
 
 public:
 
-	std::streampos	_streamHead; // ! ABSOLUMENT METTRE DANS LES CONSTRUCTEURS
 	std::ifstream 	_ifs; // ! PAS DANS LES CONSTRUCTEURS
+	std::streampos	_ifsStreamHead; // ! ABSOLUMENT METTRE DANS LES CONSTRUCTEURS
+    std::ofstream	_ofs;
+	std::streampos	_ofsStreamHead; // ! ABSOLUMENT METTRE DANS LES CONSTRUCTEURS
+
 	ResponseBuilder( void );
 	~ResponseBuilder( void );
 	ResponseBuilder( const ResponseBuilder & );
 	ResponseBuilder & operator=( const ResponseBuilder & rhs);
 
-	ResponseBuilder(MockConfig* config) : mockConfig(config){};
-
+	// ✅ GET ONLY
 	void	getHeader( Client &, Config& );
 	ssize_t	getBody( Client &inputClient );
+
+	// ✅ POST ONLY
+	void	getHeaderPost( Client &inputClient, Config &inputConfig );
+	void	setBodyPost( std::vector<char> bodyParts );
+
 
 	// For testing
 	void	setMethod( const e_method& method );
 
-	void	printAllHeaders( void );
+	void	printAllHeaders( void )const;
 };

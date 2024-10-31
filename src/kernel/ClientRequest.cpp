@@ -80,34 +80,34 @@ void Server::getRespHeader(size_t i)
 {
 	if (this->_clients[i].headerRequest.getMethod() == "GET")		
 		this->_clients[i].responseBuilder.getHeader(this->_clients[i],
-		this->_conf);
-	// else if (this->_clients[i].headerRequest.getMethod() == "POST")		
-	// 	this->_clients[i].responseBuilder.getHeader(this->_clients[i],
-	// 	this->_conf);
+			this->_conf);
+	else if (this->_clients[i].headerRequest.getMethod() == "POST")		
+		this->_clients[i].responseBuilder.getHeaderPost(this->_clients[i],
+			this->_conf);
 	// else if (this->_clients[i].headerRequest.getMethod() == "DEL")		
 	// 	this->_clients[i].responseBuilder.getHeader(this->_clients[i],
 	// 	this->_conf);
 }
 
-void floSimulatorPut(std::vector<char> part)
-{	
-	usleep(50000);
-    Logger::getInstance().log(DEBUG, "FLO POST");
+// void floSimulatorPut(std::vector<char> part)
+// {	
+// 	usleep(50000);
+//     Logger::getInstance().log(DEBUG, "FLO POST");
 
-    static std::ofstream ofs("image_chat.jpeg", std::ios::binary);
+//     static std::ofstream ofs("image_chat.jpeg", std::ios::binary);
 
-	ofs.clear();
-    if (ofs.is_open()) {
-        ofs.write(part.data(), static_cast<std::streamsize>(part.size()));  
-        ofs.flush();
-		if (!ofs)
-		{
-			std::cout << "Erreur decriture dans le fichier." << std::endl;
-		}
-    } else {
-        std::cout << "Erreur : impossible d'ouvrir le fichier." << std::endl;
-    }
-}
+// 	ofs.clear();
+//     if (ofs.is_open()) {
+//         ofs.write(part.data(), static_cast<std::streamsize>(part.size()));  
+//         ofs.flush();
+// 		if (!ofs)
+// 		{
+// 			std::cout << "Erreur decriture dans le fichier." << std::endl;
+// 		}
+//     } else {
+//         std::cout << "Erreur : impossible d'ouvrir le fichier." << std::endl;
+//     }
+// }
 
 void Server::handleClientBody(size_t i, ssize_t ret)
 {
@@ -119,7 +119,10 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 	if (this->isBodyTooLarge(i) || this->isBodyTerminated(i))
 		return ;
 	if (this->_clients[i].headerRequest.getMethod() == "POST")
-		floSimulatorPut(this->_clients[i].messageRecv);
+	{
+		// floSimulatorPut(this->_clients[i].messageRecv);
+		this->_clients[i].responseBuilder.setBodyPost(this->_clients[i].messageRecv);
+	}
 	this->_clients[i].messageRecv.clear();	
 }
 
@@ -164,9 +167,9 @@ bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
 
 bool Server::isContentLengthValid(size_t i)
 {
+	// if (tog)
 	if (this->_clients[i].headerRequest.getHeaders().ContentLength
 		> MAX_CNT_SIZE)
-	// if (tog)
 	{
 		// tog = !tog;
 		Logger::getInstance().log(ERROR, "CONTENT YEAH", this->_clients[i]);
@@ -184,11 +187,11 @@ bool Server::isContentLengthValid(size_t i)
 
 bool Server::isBodyTooLarge(size_t i)
 {
-	// if (this->_clients[i].bodySize >
-	// 	this->_clients[i].headerRequest.getHeaders().ContentLength)
-	if (tog)
+	// if (tog)
+	if (this->_clients[i].bodySize >
+		this->_clients[i].headerRequest.getHeaders().ContentLength)
 	{
-		tog = !tog;
+		// tog = !tog;
 		stringstream ss;
 		ss << "content size" << " - Body-Size: "
 		    << this->_clients[i].bodySize << " Content-Lenght: "
@@ -215,7 +218,10 @@ bool Server::isBodyTerminated(size_t i)
 
 		this->_clients[i].bodySize = 0;
 		if (this->_clients[i].headerRequest.getMethod() == "POST")
-			floSimulatorPut(this->_clients[i].messageRecv);
+		{
+			// floSimulatorPut(this->_clients[i].messageRecv);
+			this->_clients[i].responseBuilder.setBodyPost(this->_clients[i].messageRecv);
+		}
 		this->_clients[i].messageRecv.clear();
 		this->_clients[i].ping = false;		
 		return true;
