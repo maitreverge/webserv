@@ -42,10 +42,14 @@ Config::Config()
 	listingDirectories = true;
 
 	// Error paths files
+	errorPaths.insert(std::make_pair(CODE_201_CREATED, "errorPages/201.html"));
 	errorPaths.insert(std::make_pair(CODE_400_BAD_REQUEST, "errorPages/400.html"));
 	errorPaths.insert(std::make_pair(CODE_401_UNAUTHORIZED, "errorPages/401.html"));
 	errorPaths.insert(std::make_pair(CODE_403_FORBIDDEN, "errorPages/403.html"));
 	errorPaths.insert(std::make_pair(CODE_404_NOT_FOUND, "errorPages/404.html"));
+	errorPaths.insert(std::make_pair(CODE_413_PAYLOAD_TOO_LARGE, "errorPages/413.html"));
+	errorPaths.insert(std::make_pair(CODE_422_UNPROCESSABLE_ENTITY, "errorPages/422.html"));
+	errorPaths.insert(std::make_pair(CODE_431_REQUEST_HEADER_FIELDS_TOO_LARGE, "errorPages/431.html"));
 	errorPaths.insert(std::make_pair(CODE_500_INTERNAL_SERVER_ERROR, "errorPages/500.html"));
 	errorPaths.insert(std::make_pair(CODE_502_BAD_GATEWAY, "errorPages/502.html"));
 	errorPaths.insert(std::make_pair(CODE_503_SERVICE_UNAVAILABLE, "errorPages/503.html"));
