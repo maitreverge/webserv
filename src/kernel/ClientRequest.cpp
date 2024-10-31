@@ -163,8 +163,7 @@ bool Server::isContentLengthValid(size_t i)
 {
 	if (this->_clients[i].headerRequest.getHeaders().ContentLength
 		> MAX_CNT_SIZE)
-	{
-	
+	{	
 		Logger::getInstance().log(ERROR, "CONTENT YEAH", this->_clients[i]);
 		stringstream ss;
 		ss << "max content size reached" << " - Content-Lenght: "
@@ -182,8 +181,7 @@ bool Server::isBodyTooLarge(size_t i)
 {
 	if (this->_clients[i].bodySize >
 		this->_clients[i].headerRequest.getHeaders().ContentLength)
-	{
-	
+	{	
 		stringstream ss;
 		ss << "content size" << " - Body-Size: "
 		    << this->_clients[i].bodySize << " Content-Lenght: "

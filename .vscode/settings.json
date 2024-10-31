@@ -54,5 +54,16 @@
 =======
 		"ctime": "cpp"
 >>>>>>> Stashed changes
+		
+
 	}
+,"editor.rulers": [
+        
+
+        80
+    ],
+    "workbench.colorCustomizations": {
+        "editorRuler.foreground": "#0b4f48"
+"
+    },
 }

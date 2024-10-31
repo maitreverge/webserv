@@ -70,7 +70,7 @@ bool Server::replyClient(size_t i, std::vector<char> & response,
 		return Logger::getInstance().log(ERROR, "send", this->_clients[i]),
 			this->exitClient(i), true;		
 
-		std::string str(writeHead, writeHead + static_cast<size_t>(ret));
+		std::string str(writeHead, writeHead + static_cast<size_t>(ret));      
 		std::stringstream ss; ss << "data sent to client: -" << str << "-";	
 		Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]); 	
 
