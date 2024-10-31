@@ -30,7 +30,7 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 	// if ( not redirectURI())
 	// {
 		
-		// resolveURI();
+		resolveURI();
 		validateURI();
 		
 		// if (_isCGI and _errorType <= CODE_400_BAD_REQUEST) // or potentially another adress
@@ -57,11 +57,9 @@ void	ResponseBuilder::setBodyPost( std::vector<char> bodyParts ){
 	if (!this->_ofs.is_open())
 	{	
 		Logger::getInstance().log(INFO, _realURI.c_str());	
-	
-		this->_ofs.open("uploads/image_upload.jpeg", std::ios::binary);	
+		string pathToWrite = _realURI + "/" + "apple.jpeg";
+		this->_ofs.open(pathToWrite.c_str(), std::ios::binary);
 	}
-
-
 
 	// _ofs.clear();//!
     if (_ofs.is_open()) {
@@ -77,58 +75,4 @@ void	ResponseBuilder::setBodyPost( std::vector<char> bodyParts ){
     } else {
         std::cout << "Erreur : impossible d'ouvrir le fichier." << std::endl;
     }
-
-	// 	if (!this->_ifs.is_open())
-	// {	
-	// 	Logger::getInstance().log(INFO, _realURI.c_str(), inputClient);	
-	
-	// 	this->_ifs.open(_realURI.c_str(), std::ios::binary);	
-	// }
-
-	// // ! ADVANCED TEST : keskis passe si le stream fail malgre l'URI correcte 
-	// if (this->_ifs.is_open())
-	// {
-	// 	this->_ifs.seekg(this->_ifsStreamHead);
-	// 	inputClient.messageSend.clear();
-	// 	inputClient.messageSend.resize(SEND_BUFF_SIZE);//!
-	// 	// ! ADVANCED TEST : keskis passe si READ se passe mal 
-	// 	this->_ifs.read(inputClient.messageSend.data(), static_cast<std::streamsize>(inputClient.messageSend.size()));	
-	// 	this->_ifsStreamHead = this->_ifs.tellg();
-		
-	// 	std::streamsize gcount = this->_ifs.gcount();
-	// 	if (this->_ifs.eof()) 
-	// 	{
-	// 		// Logger::getInstance().log(INFO, "file end", inputClient);						
-	// 		this->_ifs.close();		
-	// 	}
-
-	// 	std::stringstream ss;
-	// 	ss << "gcount: " << this->_ifs.gcount();
-	// 	Logger::getInstance().log(DEBUG, ss.str(), inputClient);
-		
-	// 	return static_cast<ssize_t>(gcount);
-    // }
 }
-
-/*
-
-void floSimulatorPut(std::vector<char> part)
-{	
-	usleep(50000);
-    Logger::getInstance().log(DEBUG, "FLO POST");
-
-    static std::ofstream ofs("image_chat.jpeg", std::ios::binary);
-
-	ofs.clear();
-    if (ofs.is_open()) {
-        ofs.write(part.data(), static_cast<std::streamsize>(part.size()));  
-        ofs.flush();
-		if (!ofs)
-		{
-			std::cout << "Erreur decriture dans le fichier." << std::endl;
-		}
-    } else {
-        std::cout << "Erreur : impossible d'ouvrir le fichier." << std::endl;
-    }
-}
-*/

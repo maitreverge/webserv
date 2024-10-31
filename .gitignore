@@ -62,3 +62,8 @@ access.log
 docs_dan
 tests/config/my_ip.txt
 tests/siege/siege_urls.txt
+
+# Uploads
+uploads/apple.jpeg
+uploads/image_upload.jpeg
+uploads/index.html
