@@ -74,16 +74,12 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt
 			configStruct.errorPaths[e] = configStruct.errorPagesPath + *valIt;
 }
 
-//! struct server
+//? struct server
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::string& field, const char str[])
 {
 	if (isServerData(catIt->first) && itemIt->first == str)
 		if (!(*valIt).empty())
-		{
-			field = itemIt->second[0];
-			// printColor(GREEN, field);
-		}
-		
+			field = itemIt->second[0];		
 }
 
 //? maxClient
