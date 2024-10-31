@@ -46,7 +46,9 @@ void	ResponseBuilder::setContentLenght(){
 
 void	ResponseBuilder::checkAutho( void ){
 
-	if (stat(_realURI.c_str(), &_fileInfo) == 0)
+	string targetedAnswer = (_method == GET) ? _realURI : _config->errorPaths.at(_errorType); // TODO : handle non existing 404.html
+
+	if (stat(targetedAnswer.c_str(), &_fileInfo) == 0)
 	{
 		_isROK = _fileInfo.st_mode & S_IRUSR;
 		_isWOK = _fileInfo.st_mode & S_IWUSR;
@@ -82,13 +84,19 @@ void	ResponseBuilder::checkAutho( void ){
 void	ResponseBuilder::extractFileNature( string &target){
 
 	// TODO : Handle shitty names files and put default values
-	_fileName = target.substr(target.find_last_of("/") + 1); // extract file name // DOUBT for POST
+	if (_method == GET)
+		_fileName = target.substr(target.find_last_of("/") + 1); // extract file name // DOUBT for POST
+	else if (_method == POST)
+		_fileName = target;
+
 	_fileExtension = _fileName.substr(_fileName.find_last_of(".") + 1); // extract file extension
 }				
 
 void	ResponseBuilder::checkNature( void ){
 
-	if (stat(_realURI.c_str(), &_fileInfo) == 0)
+	string targetedAnswer = (_method == GET) ? _realURI : _fileName; // TODO : handle non existing 404.html
+
+	if (stat(targetedAnswer.c_str(), &_fileInfo) == 0)
 	{
 		if ((_fileInfo.st_mode & S_IFMT) == S_IFDIR) // checks is the given path is a DIRECTORY
 			_isDirectory = true;
@@ -123,8 +131,8 @@ void	ResponseBuilder::checkNature( void ){
 
 void	ResponseBuilder::checkNatureAndAuthoURI( void ){
 
-	checkNature();
 	checkAutho();
+	checkNature();
 }
 
 void ResponseBuilder::setError(e_errorCodes code){

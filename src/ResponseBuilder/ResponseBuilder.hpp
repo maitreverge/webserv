@@ -129,8 +129,11 @@ class ResponseBuilder
 
 public:
 
-	std::streampos	_streamHead; // ! ABSOLUMENT METTRE DANS LES CONSTRUCTEURS
 	std::ifstream 	_ifs; // ! PAS DANS LES CONSTRUCTEURS
+	std::streampos	_ifsStreamHead; // ! ABSOLUMENT METTRE DANS LES CONSTRUCTEURS
+    std::ofstream	_ofs;
+	std::streampos	_ofsStreamHead; // ! ABSOLUMENT METTRE DANS LES CONSTRUCTEURS
+
 	ResponseBuilder( void );
 	~ResponseBuilder( void );
 	ResponseBuilder( const ResponseBuilder & );

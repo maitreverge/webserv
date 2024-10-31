@@ -53,19 +53,61 @@ void	ResponseBuilder::setBodyPost( std::vector<char> bodyParts ){
 	usleep(50000);
     Logger::getInstance().log(DEBUG, "setBodyPost");
 
-    static std::ofstream ofs("/uploads/image_upload.jpeg", std::ios::binary);
+    // static std::ofstream ofs("uploads/image_upload.jpeg", std::ios::binary);
+	if (!this->_ofs.is_open())
+	{	
+		Logger::getInstance().log(INFO, _realURI.c_str());	
+	
+		this->_ofs.open("uploads/image_upload.jpeg", std::ios::binary);	
+	}
 
-	ofs.clear();
-    if (ofs.is_open()) {
-        ofs.write(bodyParts.data(), static_cast<std::streamsize>(bodyParts.size()));  
-        ofs.flush();
-		if (!ofs)
+
+
+	// _ofs.clear();//!
+    if (_ofs.is_open()) {
+		this->_ofs.seekp(0, std::ios::end);
+		// this->_ofs.end();
+        _ofs.write(bodyParts.data(), static_cast<std::streamsize>(bodyParts.size())); 
+			// this->_ofsStreamHead = this->_ofs.tellg(); 
+        _ofs.flush();
+		if (!_ofs)
 		{
 			std::cout << "Erreur decriture dans le fichier." << std::endl;
 		}
     } else {
         std::cout << "Erreur : impossible d'ouvrir le fichier." << std::endl;
     }
+
+	// 	if (!this->_ifs.is_open())
+	// {	
+	// 	Logger::getInstance().log(INFO, _realURI.c_str(), inputClient);	
+	
+	// 	this->_ifs.open(_realURI.c_str(), std::ios::binary);	
+	// }
+
+	// // ! ADVANCED TEST : keskis passe si le stream fail malgre l'URI correcte 
+	// if (this->_ifs.is_open())
+	// {
+	// 	this->_ifs.seekg(this->_ifsStreamHead);
+	// 	inputClient.messageSend.clear();
+	// 	inputClient.messageSend.resize(SEND_BUFF_SIZE);//!
+	// 	// ! ADVANCED TEST : keskis passe si READ se passe mal 
+	// 	this->_ifs.read(inputClient.messageSend.data(), static_cast<std::streamsize>(inputClient.messageSend.size()));	
+	// 	this->_ifsStreamHead = this->_ifs.tellg();
+		
+	// 	std::streamsize gcount = this->_ifs.gcount();
+	// 	if (this->_ifs.eof()) 
+	// 	{
+	// 		// Logger::getInstance().log(INFO, "file end", inputClient);						
+	// 		this->_ifs.close();		
+	// 	}
+
+	// 	std::stringstream ss;
+	// 	ss << "gcount: " << this->_ifs.gcount();
+	// 	Logger::getInstance().log(DEBUG, ss.str(), inputClient);
+		
+	// 	return static_cast<ssize_t>(gcount);
+    // }
 }
 
 /*

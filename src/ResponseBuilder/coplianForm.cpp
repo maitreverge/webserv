@@ -52,7 +52,8 @@ ResponseBuilder::ResponseBuilder( void ){
 	_isWOK = false;
 	_isXOK = false;
 
-	this->_streamHead = 0; // ! NE PAS TOUCHER	
+	this->_ifsStreamHead = 0; // ! NE PAS TOUCHER	
+	this->_ofsStreamHead = 0; // ! NE PAS TOUCHER	
 }
 
 ResponseBuilder::ResponseBuilder( const ResponseBuilder & src)
@@ -97,9 +98,10 @@ ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 	this->Headers = rhs.Headers;
 
 	// ! DO NOT FUCKING TOUCH (Kernel copy stuff)
-	this->_streamHead = rhs._streamHead;
+	this->_ifsStreamHead = rhs._ifsStreamHead;
+	this->_ofsStreamHead = rhs._ofsStreamHead;// ! NE PAS TOUCHER	
 	this->_ifs.close();
-
+	this->_ofs.close();
 	return *this;
 };
 
