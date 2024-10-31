@@ -25,6 +25,5 @@ struct Config
 	map<string, string>				redirection;
 	Config();
 	Config(char* path);
-	void	initializeServer(server _serverStruct, std::vector<sockaddr_in>& sockAddress);
 	void	initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddress);
 };

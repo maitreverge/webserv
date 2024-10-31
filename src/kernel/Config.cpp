@@ -15,7 +15,7 @@ Config::Config(char *path)
 		initializeServer((uint16_t)std::atoi(_serverStruct[i].port.c_str()), sockAddress);
 	}
 	initializeServer(80, sockAddress);
-	toto.printConfig(*this);
+	// toto.printConfig(*this);
 }
 
 Config::Config()
@@ -55,8 +55,7 @@ Config::Config()
 	errorPaths.insert(std::make_pair(CODE_503_SERVICE_UNAVAILABLE, "errorPages/503.html"));
 	errorPaths.insert(std::make_pair(CODE_504_GATEWAY_TIMEOUT, "errorPages/504.html"));
 	ConfigFileParser toto;
-	toto.printConfig(*this);
-
+	// toto.printConfig(*this);
 }
 
 void	Config::initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddress)
