@@ -26,7 +26,13 @@ class Cgi
                 // char *args[] = {NULL};
                 // char *envp[] = {NULL};
                 // execve("./cgi/a.out", args, envp);
-                execve("./cgi/a.out", (char *[]){NULL}, (char *[]){NULL});
+                chdir("./cgi");
+                std::string str("PATH_INFO=coucoucpathinfo");
+                char *env[] = 
+                {
+                    const_cast<char *>(str.c_str()), NULL
+                };
+                execve("a.out", (char *[]){NULL}, env);
                 // execve("./cgi/a.out", static_cast<char **>(NULL), static_cast<char **>(NULL));
                 std::cout << "execve fail" << std::endl;
             } 

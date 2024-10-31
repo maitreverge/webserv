@@ -9,6 +9,6 @@ int main()
     read(STDIN_FILENO, &buff, sizeof(buff)); //lit ds le fd 0
     for (unsigned long i = 0; i < sizeof(buff); i++)
         printf(";%c", buff[i]);
- 
+    printf("this is path info %s", getenv("PATH_INFO"));
     return (0);
 }
