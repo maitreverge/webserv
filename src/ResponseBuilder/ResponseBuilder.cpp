@@ -246,6 +246,8 @@ void	ResponseBuilder::buildHeaders(){
 
 	}
 	// ======================== BONUS METHODS ========================
+
+	
 	// ======================== BUILDING FINAL HEADERS ========================
 
 	streamMasterHeader	<< Headers.statusLine

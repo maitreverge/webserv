@@ -82,7 +82,6 @@ void	ResponseBuilder::checkAutho( void ){
 void	ResponseBuilder::extractFileNature( string &target){
 
 	// TODO : Handle shitty names files and put default values
-
 	_fileName = target.substr(target.find_last_of("/") + 1); // extract file name // DOUBT for POST
 	_fileExtension = _fileName.substr(_fileName.find_last_of(".") + 1); // extract file extension
 }				
@@ -141,7 +140,7 @@ void ResponseBuilder::setError(e_errorCodes code){
 	}
 }
 
-void	ResponseBuilder::printAllHeaders( void ){
+void	ResponseBuilder::printAllHeaders( void ) const{
 
 	print("=========== printAllHeaders ========");
 

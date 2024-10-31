@@ -41,13 +41,13 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 
 	// }
 
-
-	
-
 	buildHeaders();
+
+	// ! Pertinent d'ecrire sur le buffer ou pas ??
+	inputClient.headerRespons = Headers.masterHeader;
 
 }
 
-void	ResponseBuilder::setBodyPost(){
+void	ResponseBuilder::setBodyPost( void ){
 
 }

@@ -124,8 +124,6 @@ class ResponseBuilder
 	void	launchCGI( void );
 
 	// POST
-	void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig );
-	void	ResponseBuilder::setBodyPost( void );
 
 
 
@@ -138,13 +136,16 @@ public:
 	ResponseBuilder( const ResponseBuilder & );
 	ResponseBuilder & operator=( const ResponseBuilder & rhs);
 
-	ResponseBuilder(MockConfig* config) : mockConfig(config){};
-
+	// ✅ GET ONLY
 	void	getHeader( Client &, Config& );
 	ssize_t	getBody( Client &inputClient );
+
+	// ✅ POST ONLY
+	void	getHeaderPost( Client &inputClient, Config &inputConfig );
+	void	setBodyPost( void );
 
 	// For testing
 	void	setMethod( const e_method& method );
 
-	void	printAllHeaders( void );
+	void	printAllHeaders( void )const;
 };
