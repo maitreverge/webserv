@@ -23,8 +23,11 @@ struct Config
 	bool							listingDirectories; // activer ou non le listing des repertoires
 	map<e_errorCodes, string>		errorPaths;	
 	map<string, string>				redirection;
+	std::string						errorPagesPath;
+
 	Config();
 	Config(char* path);
-	void	initializeServer(server _serverStruct, std::vector<sockaddr_in>& sockAddress);
+	void	initializeServers();
 	void	initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddress);
+	void	intitializeVars(bool withConfigFile);
 };

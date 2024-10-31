@@ -4,16 +4,14 @@
 
 Config::Config(char *path)
 {
-	std::cout << "test" << this->maxClient << std::endl;
-	Config(); // a debugger
-	std::cout << "test2" << this->maxClient << std::endl;
+	// std::cout << "test" << this->maxClient << std::endl;
+	intitializeVars(1);
+	// std::cout << "test2" << this->maxClient << std::endl;
 	ConfigFileParser toto;
 	toto.parseConfigFile(*this, path);
 
 	for (int i = 0; i < 8; i++)
-	{
 		initializeServer((uint16_t)std::atoi(_serverStruct[i].port.c_str()), sockAddress);
-	}
 	initializeServer(80, sockAddress);
 	toto.printConfig(*this);
 }
@@ -22,7 +20,39 @@ Config::Config()
 {
 	// var serverName a passer a la structure Client
 	// => dans le constructeur de Client, prendre le fichier de Conf en argument
+	intitializeVars(0);
+
+	ConfigFileParser toto;
+	toto.printConfig(*this);
+}
+
+void	Config::intitializeVars(bool withConfigFile)
+{
+	if (!withConfigFile)
+		initializeServers();
+	
 	maxClient = 1024;
+	errorPagesPath = "errorPages/";
+	// Default files to look for if the URI is "/"
+	indexFiles.push_back("index.html");
+	indexFiles.push_back("index.htm");
+	indexFiles.push_back("default.html");
+
+	listingDirectories = true;
+
+	// Error paths files
+	errorPaths.insert(std::make_pair(CODE_400_BAD_REQUEST, errorPagesPath + "400.html"));
+	errorPaths.insert(std::make_pair(CODE_401_UNAUTHORIZED, errorPagesPath + "401.html"));
+	errorPaths.insert(std::make_pair(CODE_403_FORBIDDEN, errorPagesPath + "403.html"));
+	errorPaths.insert(std::make_pair(CODE_404_NOT_FOUND, errorPagesPath + "404.html"));
+	errorPaths.insert(std::make_pair(CODE_500_INTERNAL_SERVER_ERROR, errorPagesPath + "500.html"));
+	errorPaths.insert(std::make_pair(CODE_502_BAD_GATEWAY, errorPagesPath + "502.html"));
+	errorPaths.insert(std::make_pair(CODE_503_SERVICE_UNAVAILABLE, errorPagesPath + "503.html"));
+	errorPaths.insert(std::make_pair(CODE_504_GATEWAY_TIMEOUT, errorPagesPath + "504.html"));
+}
+
+void	Config::initializeServers()
+{
 	_serverStruct[0].host = "0.0.0.0";
 	_serverStruct[0].port = "1510";
 	_serverStruct[0].serverName = "server1";
@@ -37,26 +67,6 @@ Config::Config()
 	initializeServer((uint16_t)std::atoi(_serverStruct[1].port.c_str()), sockAddress);
 	initializeServer((uint16_t)std::atoi(_serverStruct[2].port.c_str()), sockAddress);
 	initializeServer(80, sockAddress);
-	
-	// Default files to look for if the URI is "/"
-	indexFiles.push_back("index.html");
-	indexFiles.push_back("index.htm");
-	indexFiles.push_back("default.html");
-
-	listingDirectories = true;
-
-	// Error paths files
-	errorPaths.insert(std::make_pair(CODE_400_BAD_REQUEST, "errorPages/400.html"));
-	errorPaths.insert(std::make_pair(CODE_401_UNAUTHORIZED, "errorPages/401.html"));
-	errorPaths.insert(std::make_pair(CODE_403_FORBIDDEN, "errorPages/403.html"));
-	errorPaths.insert(std::make_pair(CODE_404_NOT_FOUND, "errorPages/404.html"));
-	errorPaths.insert(std::make_pair(CODE_500_INTERNAL_SERVER_ERROR, "errorPages/500.html"));
-	errorPaths.insert(std::make_pair(CODE_502_BAD_GATEWAY, "errorPages/502.html"));
-	errorPaths.insert(std::make_pair(CODE_503_SERVICE_UNAVAILABLE, "errorPages/503.html"));
-	errorPaths.insert(std::make_pair(CODE_504_GATEWAY_TIMEOUT, "errorPages/504.html"));
-	ConfigFileParser toto;
-	toto.printConfig(*this);
-
 }
 
 void	Config::initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddress)
