@@ -23,10 +23,11 @@ class Cgi
                 close(fds[0]);
                 close(fds[1]);
                 // int t[2] = {1,2, NULL}
-                char *args[] = {NULL};
-                char *envp[] = {NULL};
-                execve("./cgi/a.out", args, envp);
-                // execve("/cgi/a.out", (char * const  *){NULL}, (char * const  *){NULL});
+                // char *args[] = {NULL};
+                // char *envp[] = {NULL};
+                // execve("./cgi/a.out", args, envp);
+                execve("./cgi/a.out", (char *[]){NULL}, (char *[]){NULL});
+                // execve("./cgi/a.out", static_cast<char **>(NULL), static_cast<char **>(NULL));
                 std::cout << "execve fail" << std::endl;
             } 
             else
