@@ -48,6 +48,45 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 
 }
 
-void	ResponseBuilder::setBodyPost( void ){
+void	ResponseBuilder::setBodyPost( std::vector<char> bodyParts ){
 
+	usleep(50000);
+    Logger::getInstance().log(DEBUG, "setBodyPost");
+
+    static std::ofstream ofs("/uploads/image_upload.jpeg", std::ios::binary);
+
+	ofs.clear();
+    if (ofs.is_open()) {
+        ofs.write(bodyParts.data(), static_cast<std::streamsize>(bodyParts.size()));  
+        ofs.flush();
+		if (!ofs)
+		{
+			std::cout << "Erreur decriture dans le fichier." << std::endl;
+		}
+    } else {
+        std::cout << "Erreur : impossible d'ouvrir le fichier." << std::endl;
+    }
 }
+
+/*
+
+void floSimulatorPut(std::vector<char> part)
+{	
+	usleep(50000);
+    Logger::getInstance().log(DEBUG, "FLO POST");
+
+    static std::ofstream ofs("image_chat.jpeg", std::ios::binary);
+
+	ofs.clear();
+    if (ofs.is_open()) {
+        ofs.write(part.data(), static_cast<std::streamsize>(part.size()));  
+        ofs.flush();
+		if (!ofs)
+		{
+			std::cout << "Erreur decriture dans le fichier." << std::endl;
+		}
+    } else {
+        std::cout << "Erreur : impossible d'ouvrir le fichier." << std::endl;
+    }
+}
+*/

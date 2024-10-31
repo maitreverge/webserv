@@ -142,7 +142,8 @@ public:
 
 	// ✅ POST ONLY
 	void	getHeaderPost( Client &inputClient, Config &inputConfig );
-	void	setBodyPost( void );
+	void	setBodyPost( std::vector<char> bodyParts );
+
 
 	// For testing
 	void	setMethod( const e_method& method );
