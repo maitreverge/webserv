@@ -25,19 +25,23 @@ void	ResponseBuilder::extractMethod( void ){
 
 void	ResponseBuilder::setContentLenght(){
 
-	/*
-		! NOTE ON INVALID 404.html FILES
-		Need to handle those cases HERE
-	*/
-	if (stat(_realURI.c_str(), &_fileInfo) == -1)
+	string targetedAnswer = (_method == GET) ? _realURI : _config->errorPaths.at(_errorType); // TODO : handle non existing 404.html
+
+	if (stat(targetedAnswer.c_str(), &_fileInfo) == -1)
 	{
 		if (errno == EACCES)
 			setError(CODE_401_UNAUTHORIZED);
 		else if (errno == ENOENT or errno == EFAULT)
 			setError(CODE_404_NOT_FOUND);
 	}
-	else if (_isFile) // valid path and PATH is a file
-		Headers.bodyLenght = static_cast<uint64_t>(_fileInfo.st_size);
+	else if (_method == GET and _isFile) // valid path and PATH is a file
+	{
+		Headers.bodyLenght = static_cast<uint64_t>(_fileInfo.st_size); //! the targeted file in a GET requests
+	}
+	else if (_method == POST) // the body becomes the HTML defaut answer
+	{
+		Headers.bodyLenght = static_cast<uint64_t>(_fileInfo.st_size); // bodylenght == 201 HTML
+	} 
 }
 
 void	ResponseBuilder::checkAutho( void ){
@@ -75,6 +79,11 @@ void	ResponseBuilder::checkAutho( void ){
 		setError(CODE_404_NOT_FOUND);
 }
 
+void	ResponseBuilder::extractFileNature( string &target){
+
+
+}
+
 void	ResponseBuilder::checkNature( void ){
 
 	if (stat(_realURI.c_str(), &_fileInfo) == 0)
@@ -84,6 +93,7 @@ void	ResponseBuilder::checkNature( void ){
 		else if ((_fileInfo.st_mode & S_IFMT) == S_IFREG) // checks is the given path is a FILE
 		{
 			_isFile = true;
+			extractFileName( /* string to extract*/);
 			_fileName = _realURI.substr(_realURI.find_last_of("/") + 1); // extract file name
 			_fileExtension = _fileName.substr(_fileName.find_last_of(".") + 1); // extract file extension
 		}
@@ -114,8 +124,15 @@ void	ResponseBuilder::checkNatureAndAuthoURI( void ){
 
 void ResponseBuilder::setError(e_errorCodes code){
 
-	_realURI = _config->errorPaths.at(code);
-	_errorType = code;
+	if (_method == GET)
+	{
+		_realURI = _config->errorPaths.at(code); // TODO : handle non existing 404.html
+	}
+	else if (_method == POST)
+	{
+		_fileExtension = 
+	}
+		_errorType = code;
 }
 
 void	ResponseBuilder::printAllHeaders( void ){

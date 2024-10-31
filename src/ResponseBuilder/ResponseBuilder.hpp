@@ -121,7 +121,11 @@ class ResponseBuilder
 	void	checkCGI( void );
 	void	launchCGI( void );
 
-	MockConfig* mockConfig;
+	// POST
+	void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig );
+	void	ResponseBuilder::setBodyPost( void );
+
+
 
 public:
 

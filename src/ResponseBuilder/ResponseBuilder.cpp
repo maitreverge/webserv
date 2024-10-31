@@ -116,7 +116,7 @@ void	ResponseBuilder::validateURI( void ){
 	{
 		setError(CODE_404_NOT_FOUND); return;
 	}
-	else if (_realURI == "/") // What if the resolved URI is a directory and not just "/"
+	else if (_realURI == "/" and _method == GET) // What if the resolved URI is a directory and not just "/"
 	{
 		// string originalURI = "/";
 		vector<string>::iterator it;
@@ -172,6 +172,7 @@ void	ResponseBuilder::buildHeaders(){
 	
 	// -------------- Madatory Headers --------------  
 
+	// ✅ GET FRIENDLY ✅ POST FRIENDLY ⛔ DELETE FRIENDLY
 	streamStatusLine	<< HTTP_PROTOCOL
 						<< SPACE
 						<< _errorType
@@ -180,23 +181,24 @@ void	ResponseBuilder::buildHeaders(){
 						<< HTTP_HEADER_SEPARATOR;
 	Headers.statusLine = streamStatusLine.str();
 
+	// ✅ GET FRIENDLY ✅ POST FRIENDLY ⛔ DELETE FRIENDLY
 	streamTimeStamp		<< "Date:"
 						<< SPACE 
 						<< timeStamp::getTime()
 						<< HTTP_HEADER_SEPARATOR;
 	Headers.timeStamp = streamTimeStamp.str();
 	
-	// Content Lenght
+	// ✅ GET FRIENDLY ✅ POST FRIENDLY ⛔ DELETE FRIENDLY
 	streamContentLenght	<< "Content-Length:"
 						<< SPACE
-						<< Headers.bodyLenght
+						<< Headers.bodyLenght // ! NEEDLE WORKING FOR POST
 						<< HTTP_HEADER_SEPARATOR;
 	Headers.contentLenght = streamContentLenght.str();
 
 	
 	// --------------  Optionals Headers --------------  
-
-	if (Headers.bodyLenght > 0)
+	// ✅ GET ONLY
+	if (Headers.bodyLenght > 0 and _method == GET)
 	{
 		stringstream streamContentType;
 		
@@ -210,6 +212,22 @@ void	ResponseBuilder::buildHeaders(){
 		Headers.contentType = streamContentType.str();
 	}
 
+	// ✅ POST ONLY
+	if (Headers.bodyLenght > 0 and _method == POST)
+	{
+		stringstream streamContentType;
+		
+		// Content Type
+		string contentType = extractType(_fileExtension);
+		streamContentType	<< "Content-Type:"
+							<< SPACE 
+							<< contentType 
+							<< HTTP_HEADER_SEPARATOR;
+		
+		Headers.contentType = streamContentType.str();
+	}
+
+	// ✅ REDIRECTION ONLY
 	if (isErrorRedirect())
 	{
 		stringstream streamLocation;
@@ -221,11 +239,29 @@ void	ResponseBuilder::buildHeaders(){
 		Headers.location = streamLocation.str();
 	}
 
+	// ======================== POST HEADERS ========================
+	// TODO : Implement a redirection logic for a POST request, for avoiding getting stuck
+	// if (_method == POST and _errorType == CODE_201_CREATED)
+	// {
+	// 	stringstream streamLocation;
+	// 	streamLocation	<< "Location:"
+	// 					<< SPACE
+	// 					<< // ! NEEDLE WORK
+	// 					<< HTTP_HEADER_SEPARATOR;
+	// 	Headers.location = streamLocation.str();
+	// }
+
+
+	// ======================== POST HEADERS ========================
+
+
+	// ======================== BONUS METHODS ========================
 	// TODO : Coockie and session generator
 	{
-		
+
 	}
-	// ----------------- Building Final Headers ----------------
+	// ======================== BONUS METHODS ========================
+	// ======================== BUILDING FINAL HEADERS ========================
 
 	streamMasterHeader	<< Headers.statusLine
 						<< Headers.timeStamp
@@ -244,7 +280,7 @@ void	ResponseBuilder::buildHeaders(){
 
 void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
-	Logger::getInstance().log(DEBUG, "Response Builder Get Header", inputClient);
+	Logger::getInstance().log(DEBUG, "Response Builder GET Header", inputClient);
 		
 	_client = &inputClient; // init client
 	_config = &inputConfig; // init config
@@ -258,10 +294,10 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 		resolveURI();
 		validateURI();
 		
-		if (_isCGI and _errorType <= CODE_400_BAD_REQUEST) // or potentially another adress
-			launchCGI();
+		// if (_isCGI and _errorType <= CODE_400_BAD_REQUEST) // or potentially another adress
+		// 	launchCGI();
 		
-		checkNatureAndAuthoURI();
+		checkNatureAndAuthoURI(); // double check for this Nature, if the URi has been swapped for an error file
 		setContentLenght();
 
 	}
