@@ -96,7 +96,7 @@ void ResponseBuilder::resolveURI( void )
 	rootMapping();
 	
 	// ! STEP 3 : Trim all "../" from the URI for transversal path attacks
-	sanatizeURI(_realURI);
+	// sanatizeURI(_realURI);
 
 	if (_realURI.size() > 1)
 	{
