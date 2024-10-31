@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "
 *************************
 !!! adresse IP de ta machine doit etre a jour dans le fichier my_ip.txt !!! 
@@ -8,4 +10,24 @@ echo "
 python3 tests/scripts/update_ip.py
 
 #run tests
+echo "
+*************************
+***** Test de charge ****
+*************************
+"
+docker run --rm -t jstarcher/siege -c10 -r20  10.12.6.8:1512  | grep -v "HTTP"
+
+echo "
+*************************
+***Tests de Stress ******
+*************************
+"
+docker run --rm -t jstarcher/siege -c50 -r50  10.12.6.8:1512  | grep -v "HTTP"
+echo "
+*************************
+***Tests de Spike *******
+*************************
+"
+docker run --rm -t jstarcher/siege -c100 -t10s  10.12.6.8:1512  | grep -v "HTTP"
+
 docker run --rm -t -v $(pwd)/tests/siege/siege_urls.txt:/siege_urls.txt jstarcher/siege -f /siege_urls.txt -c2 -r5
