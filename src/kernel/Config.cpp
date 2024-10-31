@@ -12,7 +12,6 @@ Config::Config(char *path)
 	int i = 0;
 	for (i = 0; i < 8; i++)
 		initializeServer((uint16_t)std::atoi(_serverStruct[i].port.c_str()), sockAddress, i);
-	initializeServer(80, sockAddress, 42);
 	toto.printConfig(*this);
 }
 
