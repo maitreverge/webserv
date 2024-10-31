@@ -33,16 +33,6 @@ bool ResponseBuilder::redirectURI( void ){
 
 void ResponseBuilder::rootMapping( void ){
 
-	#ifdef UNIT_TEST
-	#else
-	_realURI = "/src/default_folder/coucou/image.jpeg";
-	_config->routeMapping.clear();
-
-	std::map<std::string, std::string> innerMap1;
-	innerMap1.insert(std::make_pair("/coucou/les/amis/mdr", "/hello/www"));
-	_config->routeMapping.insert(std::make_pair("/src/default_folder/temp", innerMap1));
-	#endif
-
 	string originalURI = _realURI;
 	string mainRoute = _realURI;
 
@@ -56,14 +46,14 @@ void ResponseBuilder::rootMapping( void ){
 		}
 		catch(const std::exception& e)
 		{
-			if (mainRoute == "/")
+			if (mainRoute == "/" or mainRoute.empty())
 				return; // MainRoute not found
 			// If the first "/" is also the last, we're left with the last "/" default path
 			else if (mainRoute.find_first_of('/') == mainRoute.find_last_of('/'))
 			{
 				// erasing keeping the "/"
-				// if (mainRoute.empty())
-				// 	return;
+				if (mainRoute[mainRoute.length() -1] == '/')
+					return;
 				mainRoute.erase(mainRoute.find_first_of('/') + 1);
 			}
 			else
