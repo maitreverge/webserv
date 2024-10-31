@@ -18,25 +18,26 @@ class Cgi
             else if (pid == 0)
             {
                 std::cout << "hello from child1" << std::endl;
-                close(fds[1]);
                 dup2(fds[0], STDIN_FILENO); // met le fd 0 a l aplace de in
                 dup2(fds[0], STDOUT_FILENO); // met le fd 0 a l aplace de out
-                std::cout << "hello from child2" << std::endl;
-                
                 close(fds[0]);
-                char buff[150];
-                read(STDIN_FILENO, &buff, sizeof(buff)); //lit ds le fd 0
-                for (unsigned long i = 0; i < sizeof(buff); i++)
-                    std::cout << "\n" << buff[i];
-                std::cout << std::endl;
+                close(fds[1]);
+                // int t[2] = {1,2, NULL}
+                char *args[] = {NULL};
+                char *envp[] = {NULL};
+                execve("./cgi/a.out", args, envp);
+                // execve("/cgi/a.out", (char * const  *){NULL}, (char * const  *){NULL});
+                std::cout << "execve fail" << std::endl;
             } 
             else
             {
                 std::cout << "hello from parent" << std::endl;
                 close(fds[0]);
                 char buff[150];
-                ssize_t ret = recv(fds[1], buff, sizeof(buff), 0);
-                for (ssize_t i = 0; i < ret; i++)
+                char buff2[5] = {'s','a','l','u','t'};
+                send(fds[1], buff2, sizeof(buff2), 0);
+                ssize_t retp = recv(fds[1], buff, sizeof(buff), 0);
+                for (ssize_t i = 0; i < retp; i++)
                     std::cout << "." << buff[i];
                 close(fds[1]);
                 wait(NULL);
