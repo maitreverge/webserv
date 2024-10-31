@@ -105,6 +105,8 @@ class ResponseBuilder
 	bool 	redirectURI( void );
 	void 	rootMapping( void );
 	bool	isErrorRedirect( void );
+	void	extractFileNature( string &target);
+
 
 	// generateListingHTML.cpp
 	/*

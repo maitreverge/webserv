@@ -81,8 +81,11 @@ void	ResponseBuilder::checkAutho( void ){
 
 void	ResponseBuilder::extractFileNature( string &target){
 
+	// TODO : Handle shitty names files and put default values
 
-}
+	_fileName = target.substr(target.find_last_of("/") + 1); // extract file name // DOUBT for POST
+	_fileExtension = _fileName.substr(_fileName.find_last_of(".") + 1); // extract file extension
+}				
 
 void	ResponseBuilder::checkNature( void ){
 
@@ -93,9 +96,12 @@ void	ResponseBuilder::checkNature( void ){
 		else if ((_fileInfo.st_mode & S_IFMT) == S_IFREG) // checks is the given path is a FILE
 		{
 			_isFile = true;
-			extractFileName( /* string to extract*/);
-			_fileName = _realURI.substr(_realURI.find_last_of("/") + 1); // extract file name
-			_fileExtension = _fileName.substr(_fileName.find_last_of(".") + 1); // extract file extension
+			if (_method == GET)
+				extractFileNature( _realURI );
+			else if (_method == POST)
+				extractFileNature( _config->errorPaths.at(_errorType) );
+			// _fileName = _realURI.substr(_realURI.find_last_of("/") + 1); // extract file name
+			// _fileExtension = _fileName.substr(_fileName.find_last_of(".") + 1); // extract file extension
 		}
 		else
 		{
@@ -124,15 +130,15 @@ void	ResponseBuilder::checkNatureAndAuthoURI( void ){
 
 void ResponseBuilder::setError(e_errorCodes code){
 
+	_errorType = code;
 	if (_method == GET)
 	{
-		_realURI = _config->errorPaths.at(code); // TODO : handle non existing 404.html
+		_realURI = _config->errorPaths.at(_errorType); // TODO : handle non existing 404.html
 	}
 	else if (_method == POST)
 	{
-		_fileExtension = 
+		extractFileNature(_config->errorPaths.at(_errorType));
 	}
-		_errorType = code;
 }
 
 void	ResponseBuilder::printAllHeaders( void ){

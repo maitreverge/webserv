@@ -197,23 +197,8 @@ void	ResponseBuilder::buildHeaders(){
 
 	
 	// --------------  Optionals Headers --------------  
-	// ✅ GET ONLY
+	// ✅ GET FRIENDLY ✅ POST FRIENDLY ⛔ DELETE FRIENDLY
 	if (Headers.bodyLenght > 0 and _method == GET)
-	{
-		stringstream streamContentType;
-		
-		// Content Type
-		string contentType = extractType(_fileExtension);
-		streamContentType	<< "Content-Type:"
-							<< SPACE 
-							<< contentType 
-							<< HTTP_HEADER_SEPARATOR;
-		
-		Headers.contentType = streamContentType.str();
-	}
-
-	// ✅ POST ONLY
-	if (Headers.bodyLenght > 0 and _method == POST)
 	{
 		stringstream streamContentType;
 		
