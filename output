@@ -1,0 +1,158 @@
+
+*************************
+!!! adresse IP de ta machine doit etre a jour dans le fichier my_ip.txt !!! 
+*************************
+
+L'adresse IP a été mise à jour dans tests/siege/siege_urls.txt avec 10.12.6.8.
+
+*************************
+***** Test de charge ****
+*************************
+
+New configuration template added to /root/.siege
+Run siege -C to view the current settings in that file
+** SIEGE 4.0.3rc3
+** Preparing 10 concurrent users for battle.
+The server is now under siege...
+
+Transactions:		         200 hits
+Availability:		      100.00 %
+Elapsed time:		        6.18 secs
+Data transferred:	        0.08 MB
+Response time:		        0.01 secs
+Transaction rate:	       32.36 trans/sec
+Throughput:		        0.01 MB/sec
+Concurrency:		        0.23
+Successful transactions:         200
+Failed transactions:	           0
+Longest transaction:	        0.07
+Shortest transaction:	        0.00
+ 
+
+*************************
+***Tests de Stress ******
+*************************
+
+New configuration template added to /root/.siege
+Run siege -C to view the current settings in that file
+** SIEGE 4.0.3rc3
+** Preparing 50 concurrent users for battle.
+The server is now under siege...
+
+Transactions:		        2500 hits
+Availability:		      100.00 %
+Elapsed time:		       24.14 secs
+Data transferred:	        0.97 MB
+Response time:		        0.21 secs
+Transaction rate:	      103.56 trans/sec
+Throughput:		        0.04 MB/sec
+Concurrency:		       21.62
+Successful transactions:        2500
+Failed transactions:	           0
+Longest transaction:	        0.36
+Shortest transaction:	        0.02
+ 
+
+*************************
+***Tests de Spike *******
+*************************
+
+New configuration template added to /root/.siege
+Run siege -C to view the current settings in that file
+** SIEGE 4.0.3rc3
+** Preparing 100 concurrent users for battle.
+The server is now under siege...
+
+Lifting the server siege...
+Transactions:		         965 hits
+Availability:		      100.00 %
+Elapsed time:		        9.27 secs
+Data transferred:	        0.37 MB
+Response time:		        0.68 secs
+Transaction rate:	      104.10 trans/sec
+Throughput:		        0.04 MB/sec
+Concurrency:		       71.01
+Successful transactions:         965
+Failed transactions:	           0
+Longest transaction:	        0.91
+Shortest transaction:	        0.02
+ 
+
+*************************
+*** charge keep-alive ***
+*************************
+
+siege: invalid option -- 'k'
+New configuration template added to /root/.siege
+Run siege -C to view the current settings in that file
+siege: invalid option -- 'k'
+** SIEGE 4.0.3rc3
+** Preparing 10 concurrent users for battle.
+The server is now under siege...
+
+Transactions:		         200 hits
+Availability:		      100.00 %
+Elapsed time:		        5.86 secs
+Data transferred:	        0.08 MB
+Response time:		        0.01 secs
+Transaction rate:	       34.13 trans/sec
+Throughput:		        0.01 MB/sec
+Concurrency:		        0.31
+Successful transactions:         200
+Failed transactions:	           0
+Longest transaction:	        0.09
+Shortest transaction:	        0.00
+ 
+
+*************************
+***Tests de Stress k-a***
+*************************
+
+siege: invalid option -- 'k'
+New configuration template added to /root/.siege
+Run siege -C to view the current settings in that file
+siege: invalid option -- 'k'
+** SIEGE 4.0.3rc3
+** Preparing 50 concurrent users for battle.
+The server is now under siege...
+
+Transactions:		        2500 hits
+Availability:		      100.00 %
+Elapsed time:		       24.99 secs
+Data transferred:	        0.97 MB
+Response time:		        0.23 secs
+Transaction rate:	      100.04 trans/sec
+Throughput:		        0.04 MB/sec
+Concurrency:		       22.86
+Successful transactions:        2500
+Failed transactions:	           0
+Longest transaction:	        0.47
+Shortest transaction:	        0.02
+ 
+
+*************************
+***Tests de Spike k-a****
+*************************
+
+siege: invalid option -- 'k'
+New configuration template added to /root/.siege
+Run siege -C to view the current settings in that file
+siege: invalid option -- 'k'
+** SIEGE 4.0.3rc3
+** Preparing 100 concurrent users for battle.
+The server is now under siege...
+
+Lifting the server siege...
+Transactions:		        1224 hits
+Availability:		      100.00 %
+Elapsed time:		        9.15 secs
+Data transferred:	        0.47 MB
+Response time:		        0.49 secs
+Transaction rate:	      133.77 trans/sec
+Throughput:		        0.05 MB/sec
+Concurrency:		       65.07
+Successful transactions:        1224
+Failed transactions:	           0
+Longest transaction:	        0.77
+Shortest transaction:	        0.01
+ 
