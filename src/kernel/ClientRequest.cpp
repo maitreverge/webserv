@@ -142,13 +142,10 @@ void Server::errorShortCircuit(e_errorCodes err, size_t i)
 	this->_clients[i].exitRequired = true;	
 }
 
-bool tog = true;
 bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
 {
-	// if (tog)
 	if (it - this->_clients[i].messageRecv.begin() > MAX_HDR_SIZE)
-	{
-		// tog = !tog;
+	{		
 		stringstream ss;
 		ss << "header size" << " Actual-Size: "
             << it - this->_clients[i].messageRecv.begin()
@@ -166,9 +163,8 @@ bool Server::isContentLengthValid(size_t i)
 {
 	if (this->_clients[i].headerRequest.getHeaders().ContentLength
 		> MAX_CNT_SIZE)
-	// if (tog)
 	{
-		// tog = !tog;
+	
 		Logger::getInstance().log(ERROR, "CONTENT YEAH", this->_clients[i]);
 		stringstream ss;
 		ss << "max content size reached" << " - Content-Lenght: "
@@ -184,11 +180,10 @@ bool Server::isContentLengthValid(size_t i)
 
 bool Server::isBodyTooLarge(size_t i)
 {
-	// if (this->_clients[i].bodySize >
-	// 	this->_clients[i].headerRequest.getHeaders().ContentLength)
-	if (tog)
+	if (this->_clients[i].bodySize >
+		this->_clients[i].headerRequest.getHeaders().ContentLength)
 	{
-		tog = !tog;
+	
 		stringstream ss;
 		ss << "content size" << " - Body-Size: "
 		    << this->_clients[i].bodySize << " Content-Lenght: "

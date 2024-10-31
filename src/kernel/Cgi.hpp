@@ -47,7 +47,7 @@ class Cgi
                 for (ssize_t i = 0; i < retp; i++)
                     std::cout << "." << buff[i];
                 close(fds[1]);
-                wait(NULL);
+                // wait(NULL);
             }    
         };
 };
