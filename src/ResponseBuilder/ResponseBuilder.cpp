@@ -198,7 +198,8 @@ void	ResponseBuilder::buildHeaders(){
 	
 	// --------------  Optionals Headers --------------  
 	// ✅ GET FRIENDLY ✅ POST FRIENDLY ⛔ DELETE FRIENDLY
-	if (Headers.bodyLenght > 0 and _method == GET)
+	// if (Headers.bodyLenght > 0 and _method == GET) //! ERROR
+	if (Headers.bodyLenght > 0)
 	{
 		stringstream streamContentType;
 		

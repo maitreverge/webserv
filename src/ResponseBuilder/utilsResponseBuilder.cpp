@@ -25,7 +25,7 @@ void	ResponseBuilder::extractMethod( void ){
 
 void	ResponseBuilder::setContentLenght(){
 
-	string targetedAnswer = (_method == GET) ? _realURI : _config->errorPaths.at(_errorType); // TODO : handle non existing 404.html
+	string targetedAnswer = (_method == GET) ? _realURI : _fileName; // TODO : handle non existing 404.html
 
 	if (stat(targetedAnswer.c_str(), &_fileInfo) == -1)
 	{
@@ -94,7 +94,7 @@ void	ResponseBuilder::extractFileNature( string &target){
 
 void	ResponseBuilder::checkNature( void ){
 
-	string targetedAnswer = (_method == GET) ? _realURI : _fileName; // TODO : handle non existing 404.html
+	string targetedAnswer = (_method == GET) ? _realURI : _config->errorPaths.at(_errorType); // TODO : handle non existing 404.html
 
 	if (stat(targetedAnswer.c_str(), &_fileInfo) == 0)
 	{
