@@ -98,7 +98,11 @@ void	ResponseBuilder::checkNature( void ){ // ✅ OKAY FUNCTION
 	if (stat(targetedAnswer.c_str(), &_fileInfo) == 0)
 	{
 		if ((_fileInfo.st_mode & S_IFMT) == S_IFDIR) // checks is the given path is a DIRECTORY
+		{
 			_isDirectory = true;
+			if (_method == DELETE) // ! I decided to not be able to delete a fonder.
+				setError(CODE_403_FORBIDDEN);
+		}
 		else if ((_fileInfo.st_mode & S_IFMT) == S_IFREG) // checks is the given path is a FILE
 		{
 			_isFile = true;
