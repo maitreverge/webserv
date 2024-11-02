@@ -55,7 +55,7 @@ void ResponseBuilder::resolveURI( void )
 
 }
 
-void	ResponseBuilder::validateURI( void ){
+void	ResponseBuilder::validateURI( Client & client ){
 
 	// ! STEP 1 = EDGE CASES FOR EMPTY PATH or PATH == "/"
 	if (_realURI.empty())
@@ -89,7 +89,7 @@ void	ResponseBuilder::validateURI( void ){
 	}
 
 	// TODO = Is URI a CGI ??
-	checkCGI();
+	checkCGI(client);
 
 	// TODO = Does the route accepts the METHOD ?
 	{
@@ -237,7 +237,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	{
 		
 		resolveURI();
-		validateURI();
+		validateURI(inputClient);
 		
 		if (_isCGI and _errorType <= CODE_400_BAD_REQUEST) // or potentially another adress
 			launchCGI();

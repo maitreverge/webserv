@@ -10,10 +10,10 @@ void Server::replyClients()
 		{
 			if (!this->_clients[i].pongHeader)
 			{				
-				// if (replyClient(i, this->_clients[i].headerRespons,
-				// 	static_cast<ssize_t>
-				// 	(this->_clients[i].headerRespons.size())))
-				// 	break ;				
+				if (replyClient(i, this->_clients[i].headerRespons,
+					static_cast<ssize_t>
+					(this->_clients[i].headerRespons.size())))
+					break ;				
 				this->_clients[i].pongHeader = true;				
 			}				
 			if (ssize_t ret = this->_clients[i].responseBuilder.

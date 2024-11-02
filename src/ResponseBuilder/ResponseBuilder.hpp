@@ -92,7 +92,7 @@ class ResponseBuilder
 	// ------------- Priv Methods
 	void	resolveURI( void );
 	void	sanatizeURI( string & );
-	void	validateURI( void );
+	void	validateURI( Client & client );
 	void	buildHeaders( void );
 	void	setContentLenght( void ); // not a regular setter
 	void	extractMethod( void );
@@ -118,7 +118,7 @@ class ResponseBuilder
 
 
 	// CGI.cpp
-	void	checkCGI( void );
+	void	checkCGI( Client & client );
 	void	launchCGI( void );
 
 

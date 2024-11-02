@@ -10,7 +10,7 @@ void ResponseBuilder::launchCGI( void ){
 	this->_cgi.launch(); 
 }
 
-void ResponseBuilder::checkCGI( void ){
+void ResponseBuilder::checkCGI( Client & client ){
 
 	std::cout << "check CGI" << std::endl;
 	string targetPython = ".py";
@@ -35,4 +35,5 @@ void ResponseBuilder::checkCGI( void ){
 
 	_realURI = _realURI.substr(0, realLoc);
 
+	client.pongHeader = true;
 }

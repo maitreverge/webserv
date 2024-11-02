@@ -11,8 +11,8 @@ void Cgi::launch()
     {       
         dup2(this->fds[0], STDIN_FILENO); 
         dup2(this->fds[0], STDOUT_FILENO); 
-        close(this->fds[0]);
-        close(this->fds[1]);
+        close(this->fds[0]);//!
+        close(this->fds[1]);//!
         // int t[2] = {1,2, NULL}
         // char *args[] = {NULL};
         // char *envp[] = {NULL};
@@ -29,7 +29,7 @@ void Cgi::launch()
     } 
     else
     {                
-        close(this->fds[0]);
+        close(this->fds[0]);//!
 
         // char buff[150];
         // char buff2[5] = {'s','a','l','u','t'};
@@ -107,7 +107,7 @@ ssize_t Cgi::getBody(Client & client)
                 break;
 
     	}
-		close(this->fds[1]);
+		close(this->fds[1]);//!
         return 0;
     }
     std::cout << "RET " << ret << std::endl;
@@ -116,8 +116,8 @@ ssize_t Cgi::getBody(Client & client)
     if (!ret)
     {
         Logger::getInstance().log(INFO, "end cgi");
-        close(this->fds[1]);
-            // close(this->fds[0]);
+        close(this->fds[1]);//!
+        
         return 0;
     }
     return ret;
