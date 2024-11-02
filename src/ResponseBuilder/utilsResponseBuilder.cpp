@@ -45,7 +45,7 @@ void	ResponseBuilder::setContentLenght(){
 }
 
 void	ResponseBuilder::checkAutho( void ){
-
+	
 	string targetedAnswer = (_method == GET) ? _realURI : _config->errorPaths.at(_errorType); // TODO : handle non existing 404.html
 
 	if (stat(targetedAnswer.c_str(), &_fileInfo) == 0)

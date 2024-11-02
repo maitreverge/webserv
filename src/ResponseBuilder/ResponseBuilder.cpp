@@ -5,6 +5,7 @@
 
 void ResponseBuilder::sanatizeURI( string &oldURI ){
 
+	// TODO : refactor this function to avoid trimming usefull "../", as long as we don't escape the root webserv
 	string needle = "../";
 
 	std::string::size_type found = oldURI.find(needle);
@@ -95,8 +96,8 @@ void ResponseBuilder::resolveURI( void )
 	// ! STEP 1 : Check the rootMapping
 	rootMapping();
 	
-	// ! STEP 3 : Trim all "../" from the URI for transversal path attacks
-	// sanatizeURI(_realURI);
+	// ! STEP 2 : Trim all "../" from the URI for transversal path attacks
+	// sanatizeURI(_realURI); // ! STAY COMMENTED until refactoring for better "../" erasing process
 
 	if (_realURI.size() > 1)
 	{
@@ -106,7 +107,6 @@ void ResponseBuilder::resolveURI( void )
 			_realURI.erase(_realURI.size() -1);
 		}
 	}
-
 }
 
 void	ResponseBuilder::validateURI( void ){
@@ -143,7 +143,8 @@ void	ResponseBuilder::validateURI( void ){
 	}
 
 	// TODO = Is URI a CGI ??
-	checkCGI();
+	if (_method != DELETE)
+		checkCGI();
 
 	// TODO = Does the route accepts the METHOD ?
 	{
@@ -159,113 +160,6 @@ void	ResponseBuilder::validateURI( void ){
 
 }
 
-
-void	ResponseBuilder::buildHeaders(){
-
-	errorCode codes;
-
-	stringstream	streamStatusLine,
-					streamTimeStamp,
-					streamContentLenght,
-					streamMasterHeader;
-
-	
-	// -------------- Madatory Headers --------------  
-
-	// ✅ GET FRIENDLY ✅ POST FRIENDLY ⛔ DELETE FRIENDLY
-	streamStatusLine	<< HTTP_PROTOCOL
-						<< SPACE
-						<< _errorType
-						<< SPACE 
-						<< codes.getCode(_errorType)
-						<< HTTP_HEADER_SEPARATOR;
-	Headers.statusLine = streamStatusLine.str();
-
-	// ✅ GET FRIENDLY ✅ POST FRIENDLY ⛔ DELETE FRIENDLY
-	streamTimeStamp		<< "Date:"
-						<< SPACE 
-						<< timeStamp::getTime()
-						<< HTTP_HEADER_SEPARATOR;
-	Headers.timeStamp = streamTimeStamp.str();
-	
-	// ✅ GET FRIENDLY ✅ POST FRIENDLY ⛔ DELETE FRIENDLY
-	streamContentLenght	<< "Content-Length:"
-						<< SPACE
-						<< Headers.bodyLenght // ! NEEDLE WORKING FOR POST
-						<< HTTP_HEADER_SEPARATOR;
-	Headers.contentLenght = streamContentLenght.str();
-
-	
-	// --------------  Optionals Headers --------------  
-	// ✅ GET FRIENDLY ✅ POST FRIENDLY ⛔ DELETE FRIENDLY
-	// if (Headers.bodyLenght > 0 and _method == GET) //! ERROR
-	if (Headers.bodyLenght > 0)
-	{
-		stringstream streamContentType;
-		
-		// Content Type
-		string contentType = extractType(_fileExtension);
-		streamContentType	<< "Content-Type:"
-							<< SPACE 
-							<< contentType 
-							<< HTTP_HEADER_SEPARATOR;
-		
-		Headers.contentType = streamContentType.str();
-	}
-
-	// ✅ REDIRECTION ONLY
-	if (isErrorRedirect())
-	{
-		stringstream streamLocation;
-		streamLocation	<< "Location:"
-						<< SPACE
-						<< _config->redirection.at(_realURI)
-						// << "http://www.github.com/maitreverge"
-						<< HTTP_HEADER_SEPARATOR;
-		Headers.location = streamLocation.str();
-	}
-
-	// ======================== POST HEADERS ========================
-	// TODO : Implement a redirection logic for a POST request, for avoiding getting stuck
-	// if (_method == POST and _errorType == CODE_201_CREATED)
-	// {
-	// 	stringstream streamLocation;
-	// 	streamLocation	<< "Location:"
-	// 					<< SPACE
-	// 					<< // ! NEEDLE WORK
-	// 					<< HTTP_HEADER_SEPARATOR;
-	// 	Headers.location = streamLocation.str();
-	// }
-
-
-	// ======================== POST HEADERS ========================
-
-
-	// ======================== BONUS METHODS ========================
-	// TODO : Coockie and session generator
-	{
-
-	}
-	// ======================== BONUS METHODS ========================
-
-	
-	// ======================== BUILDING FINAL HEADERS ========================
-
-	streamMasterHeader	<< Headers.statusLine
-						<< Headers.timeStamp
-						<< Headers.contentType 
-						// Optionals
-						<< Headers.location
-						// << (Headers.bodyLenght ? Headers.contentLenght : Headers.transfertEncoding)
-						<< Headers.contentLenght
-						<< HTTP_HEADER_SEPARATOR; // HEADER / BODY SEPARATOR
-	
-	string tempAllHeaders = streamMasterHeader.str();
-
-	// Insert all headers in a vector char
-	Headers.masterHeader.insert(Headers.masterHeader.end(), tempAllHeaders.begin(), tempAllHeaders.end());
-}
-
 void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
 	Logger::getInstance().log(DEBUG, "Response Builder GET Header", inputClient);
@@ -278,7 +172,6 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	extractMethod();
 	if ( not redirectURI())
 	{
-		
 		resolveURI();
 		validateURI();
 		
@@ -287,7 +180,6 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 		
 		checkNatureAndAuthoURI(); // double check for this Nature, if the URi has been swapped for an error file
 		setContentLenght();
-
 	}
 	
 	buildHeaders();
