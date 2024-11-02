@@ -56,5 +56,6 @@ Content-Length: ";
     printf("%s", end);
     printf("%s", body);
     fflush(stdout);
+    usleep(5);
     return (0);
 }

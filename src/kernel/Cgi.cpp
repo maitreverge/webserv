@@ -12,7 +12,7 @@ void Cgi::launch()
        
         dup2(this->fds[0], STDIN_FILENO); 
         dup2(this->fds[0], STDOUT_FILENO); 
-        // close(this->fds[0]);
+        close(this->fds[0]);
         close(this->fds[1]);
         // int t[2] = {1,2, NULL}
         // char *args[] = {NULL};
@@ -66,17 +66,10 @@ ssize_t Cgi::getBody(Client & client)
     if (ret < 0)
     {
         Logger::getInstance().log(ERROR, "recv cgi");
-		#include <stdio.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <errno.h>
 
-ssize_t receive_data(int socket, char *buffer, size_t len) {
-    ssize_t bytes_received = recv(socket, buffer, len, 0);
-
-    if (bytes_received == -1) {
+   
         switch (errno) {
-            case EAGAIN:
+         
             case EWOULDBLOCK:
                 printf("Pas de données disponibles pour le moment (socket en mode non bloquant).\n");
                 break;
@@ -108,8 +101,11 @@ ssize_t receive_data(int socket, char *buffer, size_t len) {
                 printf("Arguments invalides ou socket fermée.\n");
                 break;
             case ENOBUFS:
-                printf("P
+                printf("Pas assez de memoire");
+            default:
+                printf("inconnue");
 
+    }
         return 0;
     }
     std::cout << "RET " << ret;
