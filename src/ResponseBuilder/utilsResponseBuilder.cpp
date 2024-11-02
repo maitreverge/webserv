@@ -106,6 +106,8 @@ void	ResponseBuilder::checkNature( void ){ // ✅ OKAY FUNCTION
 		else if ((_fileInfo.st_mode & S_IFMT) == S_IFREG) // checks is the given path is a FILE
 		{
 			_isFile = true;
+			if (_method == POST and not _isCGI)
+				setError(CODE_405_METHOD_NOT_ALLOWED); // A POST Method being NOT CGI might overwrite a file, then I reject it.
 			if (_method == GET)
 				extractFileNature( _realURI );
 			else // POST AND DELETE
