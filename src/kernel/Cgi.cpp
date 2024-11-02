@@ -66,7 +66,7 @@ ssize_t Cgi::getBody(Client & client)
     if (ret < 0)
     {
         Logger::getInstance().log(ERROR, "recv cgi");
-        
+        return 0;
     }
     std::cout << "RET " << ret;
     // for (ssize_t i = 0; i < ret; i++)
@@ -75,6 +75,7 @@ ssize_t Cgi::getBody(Client & client)
     {
         Logger::getInstance().log(INFO, "end cgi");
         close(this->fds[1]);
+            // close(this->fds[0]);
         return 0;
     }
     return ret;
