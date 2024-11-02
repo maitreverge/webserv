@@ -38,9 +38,9 @@ void Cgi::launch()
         // for (ssize_t i = 0; i < retp; i++)
             // std::cout << "." << buff[i];   
     }    
-};
+}
 
-void Cgi::getBody(Client & client)
+ssize_t Cgi::getBody(Client & client)
 {
     Logger::getInstance().log(INFO, "hello from parent");
     
@@ -50,10 +50,32 @@ void Cgi::getBody(Client & client)
     // send(this->fds[1], buff2, sizeof(buff2), 0);
     client.messageSend.clear();
     client.messageSend.resize(SEND_BUFF_SIZE);//!
-    ssize_t ret = recv(this->fds[1], client.messageSend.data(),
-        client.messageSend.size(), 0);
+    ssize_t ret; 
+
+    try
+    {
+        ret = recv(this->fds[1], client.messageSend.data(),
+            client.messageSend.size(), 0);
+        /* code */
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << "CATCH" << e.what() << '\n';
+    }
+    
+    if (ret < 0)
+    {
+        Logger::getInstance().log(ERROR, "recv cgi");
+        
+    }
+    std::cout << "RET " << ret;
     // for (ssize_t i = 0; i < ret; i++)
     //     std::cout << "." << buff[i];
     if (!ret)
+    {
+        Logger::getInstance().log(INFO, "end cgi");
         close(this->fds[1]);
-};
+        return 0;
+    }
+    return ret;
+}
