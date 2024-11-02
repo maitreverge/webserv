@@ -4,6 +4,7 @@
 #include "errorCode.hpp"
 #include "timeStamp.hpp"
 #include "Config.hpp"
+#include "Cgi.hpp"
 
 #define HTTP_PROTOCOL "HTTP/1.1"
 #define SPACE " "
@@ -85,7 +86,7 @@ class ResponseBuilder
 	Config* _config;
 
 	ResponseHeaders Headers;
-
+	Cgi 			_cgi;
 	// bool test;
 
 	// ------------- Priv Methods
