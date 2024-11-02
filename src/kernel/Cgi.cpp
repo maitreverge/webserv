@@ -8,8 +8,7 @@ void Cgi::launch()
     if (pid < 0)
         Logger::getInstance().log(ERROR, "fork failed");
     else if (pid == 0)
-    {
-       
+    {       
         dup2(this->fds[0], STDIN_FILENO); 
         dup2(this->fds[0], STDOUT_FILENO); 
         close(this->fds[0]);
@@ -24,7 +23,8 @@ void Cgi::launch()
         {
             const_cast<char *>(str.c_str()), NULL
         };
-        execve("a.out", (char *[]){NULL}, env);       
+		char *argv[] = {NULL};
+        execve("a.out", argv, env);       
         std::cout << "execve fail" << std::endl;
     } 
     else
@@ -67,9 +67,8 @@ ssize_t Cgi::getBody(Client & client)
     {
         Logger::getInstance().log(ERROR, "recv cgi");
 
-   
-        switch (errno) {
-         
+        switch (errno) 
+		{        
             case EWOULDBLOCK:
                 printf("Pas de données disponibles pour le moment (socket en mode non bloquant).\n");
                 break;
@@ -101,14 +100,17 @@ ssize_t Cgi::getBody(Client & client)
                 printf("Arguments invalides ou socket fermée.\n");
                 break;
             case ENOBUFS:
-                printf("Pas assez de memoire");
+                printf("Pas assez de mémoire pour traiter la demande.\n");
+                break;
             default:
-                printf("inconnue");
+                printf("Erreur inconnue : %d\n", errno);
+                break;
 
-    }
+    	}
+		close(this->fds[1]);
         return 0;
     }
-    std::cout << "RET " << ret;
+    std::cout << "RET " << ret << std::endl;
     // for (ssize_t i = 0; i < ret; i++)
     //     std::cout << "." << buff[i];
     if (!ret)

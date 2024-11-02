@@ -99,7 +99,7 @@ ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 	// ! DO NOT FUCKING TOUCH (Kernel copy stuff)
 	this->_streamHead = rhs._streamHead;
 	this->_ifs.close();
-
+	this->_cgi = rhs._cgi;
 	return *this;
 };
 

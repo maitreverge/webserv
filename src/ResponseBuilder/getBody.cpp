@@ -119,5 +119,6 @@ ssize_t	ResponseBuilder::getBody( Client &inputClient ){
 	// if (this->_cgi.getBody(inputClient))
 	// 	return 0;
 	// else
+	// if (this-is)
 	return this->_cgi.getBody(inputClient);
 }
