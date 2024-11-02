@@ -66,6 +66,50 @@ ssize_t Cgi::getBody(Client & client)
     if (ret < 0)
     {
         Logger::getInstance().log(ERROR, "recv cgi");
+		#include <stdio.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <errno.h>
+
+ssize_t receive_data(int socket, char *buffer, size_t len) {
+    ssize_t bytes_received = recv(socket, buffer, len, 0);
+
+    if (bytes_received == -1) {
+        switch (errno) {
+            case EAGAIN:
+            case EWOULDBLOCK:
+                printf("Pas de données disponibles pour le moment (socket en mode non bloquant).\n");
+                break;
+            case EINTR:
+                printf("recv a été interrompu par un signal, réessayez.\n");
+                break;
+            case ECONNRESET:
+                printf("Connexion réinitialisée par le pair.\n");
+                break;
+            case ETIMEDOUT:
+                printf("Délai de connexion dépassé.\n");
+                break;
+            case ENOTCONN:
+                printf("La socket n'est pas connectée.\n");
+                break;
+            case EHOSTUNREACH:
+                printf("Hôte distant injoignable.\n");
+                break;
+            case ENETDOWN:
+                printf("Réseau local non disponible.\n");
+                break;
+            case EMSGSIZE:
+                printf("Le message est trop grand pour le tampon de réception.\n");
+                break;
+            case EBADF:
+                printf("Descripteur de fichier invalide.\n");
+                break;
+            case EINVAL:
+                printf("Arguments invalides ou socket fermée.\n");
+                break;
+            case ENOBUFS:
+                printf("P
+
         return 0;
     }
     std::cout << "RET " << ret;
