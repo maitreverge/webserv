@@ -47,6 +47,7 @@ Config::Config()
 
 	// Error paths files
 	errorPaths.insert(std::make_pair(CODE_201_CREATED, "errorPages/201.html"));
+	errorPaths.insert(std::make_pair(CODE_204_NO_CONTENT, "errorPages/204.html"));
 	errorPaths.insert(std::make_pair(CODE_400_BAD_REQUEST, "errorPages/400.html"));
 	errorPaths.insert(std::make_pair(CODE_401_UNAUTHORIZED, "errorPages/401.html"));
 	errorPaths.insert(std::make_pair(CODE_403_FORBIDDEN, "errorPages/403.html"));

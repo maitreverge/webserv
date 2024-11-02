@@ -13,7 +13,7 @@ void	ResponseBuilder::buildHeaders(){
 	
 	// -------------- Madatory Headers --------------  
 
-	// ✅ GET FRIENDLY ✅ POST FRIENDLY ⛔ DELETE FRIENDLY
+	// ✅ GET FRIENDLY ✅ POST FRIENDLY ✅ DELETE FRIENDLY
 	streamStatusLine	<< HTTP_PROTOCOL
 						<< SPACE
 						<< _errorType
@@ -22,17 +22,18 @@ void	ResponseBuilder::buildHeaders(){
 						<< HTTP_HEADER_SEPARATOR;
 	Headers.statusLine = streamStatusLine.str();
 
-	// ✅ GET FRIENDLY ✅ POST FRIENDLY ⛔ DELETE FRIENDLY
+	// ✅ GET FRIENDLY ✅ POST FRIENDLY ✅ DELETE FRIENDLY
 	streamTimeStamp		<< "Date:"
 						<< SPACE 
 						<< timeStamp::getTime()
 						<< HTTP_HEADER_SEPARATOR;
 	Headers.timeStamp = streamTimeStamp.str();
 	
-	// ✅ GET FRIENDLY ✅ POST FRIENDLY ⛔ DELETE FRIENDLY
+	// ✅ GET FRIENDLY ✅ POST FRIENDLY ✅ DELETE FRIENDLY
+	uint64_t result = (_errorType == CODE_204_NO_CONTENT) ? 0 : Headers.bodyLenght;
 	streamContentLenght	<< "Content-Length:"
 						<< SPACE
-						<< Headers.bodyLenght // ! NEEDLE WORKING FOR POST
+						<< result
 						<< HTTP_HEADER_SEPARATOR;
 	Headers.contentLenght = streamContentLenght.str();
 

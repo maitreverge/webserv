@@ -171,7 +171,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	extractMethod();
 
 	if(_method == DELETE)
-		_errorType = CODE_204_NO_CONTENT;
+		setError(CODE_204_NO_CONTENT);
 
 	if ( not redirectURI())
 	{
