@@ -52,6 +52,8 @@ ResponseBuilder::ResponseBuilder( void ){
 	_isWOK = false;
 	_isXOK = false;
 
+	_errorNotFound = false;
+
 	this->_ifsStreamHead = 0; // ! NE PAS TOUCHER	
 	this->_ofsStreamHead = 0; // ! NE PAS TOUCHER	
 }
@@ -77,6 +79,9 @@ ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 	_isROK = rhs._isROK;
 	_isWOK = rhs._isWOK;
 	_isXOK = rhs._isXOK;
+
+	_errorNotFound = rhs._errorNotFound;
+
 
 	// PRIV
 	this->_mimeTypes = rhs._mimeTypes;

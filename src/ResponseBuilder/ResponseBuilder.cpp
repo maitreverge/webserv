@@ -3,7 +3,7 @@
 
 // ------------------------- METHODS ---------------------------------
 
-void ResponseBuilder::sanatizeURI( string &oldURI ){
+void ResponseBuilder::sanatizeURI( string &oldURI ){ // ⛔ NOT OKAY FUNCTION
 
 	// TODO : refactor this function to avoid trimming usefull "../", as long as we don't escape the root webserv
 	string needle = "../";
@@ -17,7 +17,7 @@ void ResponseBuilder::sanatizeURI( string &oldURI ){
 	}
 }
 
-bool ResponseBuilder::redirectURI( void ){
+bool ResponseBuilder::redirectURI( void ){ // ✅ OKAY FUNCTION
 
 	try
 	{
@@ -32,7 +32,7 @@ bool ResponseBuilder::redirectURI( void ){
 	return true;
 }
 
-void ResponseBuilder::rootMapping( void ){
+void ResponseBuilder::rootMapping( void ){ // ✅ OKAY FUNCTION
 
 	string originalURI = _realURI;
 	string mainRoute = _realURI;
@@ -91,8 +91,7 @@ void ResponseBuilder::rootMapping( void ){
 	_realURI = originalURI;
 }
 
-void ResponseBuilder::resolveURI( void )
-{
+void ResponseBuilder::resolveURI( void ) {// ⛔ NOT OKAY FUNCTION
 	// ! STEP 1 : Check the rootMapping
 	rootMapping();
 	
@@ -170,6 +169,10 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	_realURI = _client->headerRequest.getURI();
 
 	extractMethod();
+
+	if(_method == DELETE)
+		_errorType = CODE_204_NO_CONTENT;
+
 	if ( not redirectURI())
 	{
 		resolveURI();
@@ -184,10 +187,11 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	
 	buildHeaders();
 
-
 	// Copying the build Headers in headerRespons
 	inputClient.headerRespons = Headers.masterHeader;
-	
+
+	if (_method == DELETE)
+		deleteEngine();	
 	// Headers.masterHeader.clear();//!
 
 	// printAllHeaders();

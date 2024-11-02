@@ -84,9 +84,9 @@ void Server::getRespHeader(size_t i)
 	else if (this->_clients[i].headerRequest.getMethod() == "POST")		
 		this->_clients[i].responseBuilder.getHeaderPost(this->_clients[i],
 			this->_conf);
-	// else if (this->_clients[i].headerRequest.getMethod() == "DEL")		
-	// 	this->_clients[i].responseBuilder.getHeader(this->_clients[i],
-	// 	this->_conf);
+	else if (this->_clients[i].headerRequest.getMethod() == "DELETE")		
+		this->_clients[i].responseBuilder.getHeader(this->_clients[i],
+		this->_conf);
 }
 
 // void floSimulatorPut(std::vector<char> part)

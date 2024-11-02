@@ -1,7 +1,7 @@
 #include "ResponseBuilder.hpp"
 #include "Logger.hpp"
 
-string ResponseBuilder::extractType( const string& extension ) const {
+string ResponseBuilder::extractType( const string& extension ) const { // ✅ OKAY FUNCTION
     
     map<string, string>::const_iterator it = _mimeTypes.find(extension);
     if (it != _mimeTypes.end())
@@ -10,7 +10,7 @@ string ResponseBuilder::extractType( const string& extension ) const {
         return "application/octet-stream"; // Default MIME type
 }
 
-void	ResponseBuilder::extractMethod( void ){
+void	ResponseBuilder::extractMethod( void ){ // ✅ OKAY FUNCTION
 
 	string tempMethod = _client->headerRequest.getMethod();
 
@@ -23,7 +23,7 @@ void	ResponseBuilder::extractMethod( void ){
 		_method = DELETE;
 }
 
-void	ResponseBuilder::setContentLenght(){
+void	ResponseBuilder::setContentLenght(){ // ✅ OKAY FUNCTION
 
 	string targetedAnswer = (_method == GET) ? _realURI : _fileName; // TODO : handle non existing 404.html
 
@@ -38,15 +38,14 @@ void	ResponseBuilder::setContentLenght(){
 	{
 		Headers.bodyLenght = static_cast<uint64_t>(_fileInfo.st_size); //! the targeted file in a GET requests
 	}
-	else if (_method == POST) // the body becomes the HTML defaut answer
-	{
-		Headers.bodyLenght = static_cast<uint64_t>(_fileInfo.st_size); // bodylenght == 201 HTML
-	} 
+	else
+		Headers.bodyLenght = static_cast<uint64_t>(_fileInfo.st_size); //! the targeted file in a GET requests
+	// ! BOILERPLATE CODE
 }
 
-void	ResponseBuilder::checkAutho( void ){
+void	ResponseBuilder::checkAutho( void ){ // ✅ OKAY FUNCTION
 	
-	string targetedAnswer = (_method == GET) ? _realURI : _config->errorPaths.at(_errorType); // TODO : handle non existing 404.html
+	string targetedAnswer = (_method == POST) ? _config->errorPaths.at(_errorType) : _realURI; // TODO : handle non existing 404.html
 
 	if (stat(targetedAnswer.c_str(), &_fileInfo) == 0)
 	{
@@ -81,20 +80,20 @@ void	ResponseBuilder::checkAutho( void ){
 		setError(CODE_404_NOT_FOUND);
 }
 
-void	ResponseBuilder::extractFileNature( string &target){
+void	ResponseBuilder::extractFileNature( string &target){ // ✅ OKAY FUNCTION
 
 	// TODO : Handle shitty names files and put default values
-	if (_method == GET)
-		_fileName = target.substr(target.find_last_of("/") + 1); // extract file name // DOUBT for POST
-	else if (_method == POST)
+	if (_method == POST)
 		_fileName = target;
+	else
+		_fileName = target.substr(target.find_last_of("/") + 1); // extract file name // DOUBT for POST
 
 	_fileExtension = _fileName.substr(_fileName.find_last_of(".") + 1); // extract file extension
 }				
 
-void	ResponseBuilder::checkNature( void ){
+void	ResponseBuilder::checkNature( void ){ // ✅ OKAY FUNCTION
 
-	string targetedAnswer = (_method == GET) ? _realURI : _config->errorPaths.at(_errorType); // TODO : handle non existing 404.html
+	string targetedAnswer = (_method == POST) ? _config->errorPaths.at(_errorType) : _realURI; // TODO : handle non existing 404.html
 
 	if (stat(targetedAnswer.c_str(), &_fileInfo) == 0)
 	{
@@ -105,7 +104,7 @@ void	ResponseBuilder::checkNature( void ){
 			_isFile = true;
 			if (_method == GET)
 				extractFileNature( _realURI );
-			else if (_method == POST)
+			else // POST AND DELETE
 				extractFileNature( _config->errorPaths.at(_errorType) );
 			// _fileName = _realURI.substr(_realURI.find_last_of("/") + 1); // extract file name
 			// _fileExtension = _fileName.substr(_fileName.find_last_of(".") + 1); // extract file extension
@@ -129,26 +128,25 @@ void	ResponseBuilder::checkNature( void ){
 	}
 }
 
-void	ResponseBuilder::checkNatureAndAuthoURI( void ){
+void	ResponseBuilder::checkNatureAndAuthoURI( void ){ // ✅ OKAY FUNCTION
 
 	checkAutho();
 	checkNature();
 }
 
-void ResponseBuilder::setError(e_errorCodes code){
+void ResponseBuilder::setError(e_errorCodes code){ // ✅ OKAY FUNCTION
 
 	_errorType = code;
-	if (_method == GET)
-	{
-		_realURI = _config->errorPaths.at(_errorType); // TODO : handle non existing 404.html
-	}
-	else if (_method == POST)
+	
+	if (_method == POST)
 	{
 		extractFileNature(_config->errorPaths.at(_errorType));
 	}
+	else
+		_realURI = _config->errorPaths.at(_errorType); // TODO : handle non existing 404.html
 }
 
-void	ResponseBuilder::printAllHeaders( void ) const{
+void	ResponseBuilder::printAllHeaders( void ) const{ // ⛔ NOT OKAY FUNCTION (need refactoring and polish)
 
 	print("=========== printAllHeaders ========");
 
@@ -177,7 +175,7 @@ void	ResponseBuilder::printAllHeaders( void ) const{
 	print("=========== printAllHeaders ========");
 }
 
-bool ResponseBuilder::isErrorRedirect( void ){
+bool ResponseBuilder::isErrorRedirect( void ){ // ✅ OKAY FUNCTION
 
 	if (this->_errorType >= CODE_300_MULTIPLE_CHOICES and this->_errorType < CODE_400_BAD_REQUEST)
 		return true;

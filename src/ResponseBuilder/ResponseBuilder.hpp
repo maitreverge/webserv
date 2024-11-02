@@ -67,6 +67,8 @@ class ResponseBuilder
 	bool _isDirectory;
 	bool _isFile;
 
+	bool _errorNotFound;
+
 	// CGI Stuff
 	bool _isCGI;
 	e_errorCodes _errorType;
@@ -124,6 +126,10 @@ class ResponseBuilder
 	void	launchCGI( void );
 
 	// POST
+
+	// DELETE
+	void	deleteEngine( void );
+
 
 
 
