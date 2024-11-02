@@ -25,7 +25,7 @@ void	ResponseBuilder::extractMethod( void ){ // ✅ OKAY FUNCTION
 
 void	ResponseBuilder::setContentLenght(){ // ✅ OKAY FUNCTION
 
-	string targetedAnswer = (_method == GET) ? _realURI : (_method == POST) ? _fileName : /*DELETE CASE*/_config->errorPaths.at(_errorType) ; // TODO : handle non existing 404.html
+	string targetedAnswer = (_method == POST) ? _fileName : _realURI ; // TODO : handle non existing 404.html
 
 	if (stat(targetedAnswer.c_str(), &_fileInfo) == -1)
 	{

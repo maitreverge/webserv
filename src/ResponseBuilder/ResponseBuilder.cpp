@@ -190,7 +190,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	// Copying the build Headers in headerRespons
 	inputClient.headerRespons = Headers.masterHeader;
 
-	if (_method == DELETE)
+	if (_method == DELETE and _errorType < CODE_400_BAD_REQUEST)
 		deleteEngine();	
 	// Headers.masterHeader.clear();//!
 
