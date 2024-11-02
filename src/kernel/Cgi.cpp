@@ -1,7 +1,7 @@
 #include "Cgi.hpp"
 #include "Logger.hpp"
 
-void Cgi::launch()
+void Cgi::launch() //!WARNING select
 {           
     socketpair(AF_UNIX, SOCK_STREAM, 0, this->fds);
     pid_t pid = fork();
@@ -122,3 +122,65 @@ ssize_t Cgi::getBody(Client & client)
     }
     return ret;
 }
+
+void Cgi::setBody(Client & client)
+{
+ 	ssize_t ret = send(this->fds[1], client.messageRecv.data(),
+        client.messageRecv.size(), 0);
+	  if (ret < 0)
+    {
+        Logger::getInstance().log(ERROR, "recv cgi");
+
+        switch (errno) 
+		{        
+            case EWOULDBLOCK:
+                printf("Pas de données disponibles pour le moment (socket en mode non bloquant).\n");
+                break;
+            case EINTR:
+                printf("recv a été interrompu par un signal, réessayez.\n");
+                break;
+            case ECONNRESET:
+                printf("Connexion réinitialisée par le pair.\n");
+                break;
+            case ETIMEDOUT:
+                printf("Délai de connexion dépassé.\n");
+                break;
+            case ENOTCONN:
+                printf("La socket n'est pas connectée.\n");
+                break;
+            case EHOSTUNREACH:
+                printf("Hôte distant injoignable.\n");
+                break;
+            case ENETDOWN:
+                printf("Réseau local non disponible.\n");
+                break;
+            case EMSGSIZE:
+                printf("Le message est trop grand pour le tampon de réception.\n");
+                break;
+            case EBADF:
+                printf("Descripteur de fichier invalide.\n");
+                break;
+            case EINVAL:
+                printf("Arguments invalides ou socket fermée.\n");
+                break;
+            case ENOBUFS:
+                printf("Pas assez de mémoire pour traiter la demande.\n");
+                break;
+            default:
+                printf("Erreur inconnue : %d\n", errno);
+                break;
+
+    	}
+		close(this->fds[1]);//!
+        return 0;
+    }
+	if (!ret) //?????
+    {
+        Logger::getInstance().log(INFO, "end cgi");
+        close(this->fds[1]);//!
+        
+        return 0;
+    }
+	//! system de recup send
+}
+

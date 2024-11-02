@@ -11,5 +11,6 @@ class Cgi
     public:
              
         void    launch();  
-        ssize_t  getBody(Client & client);   
+        ssize_t getBody(Client & client);
+		void 	setBody(Client & client);
 };
