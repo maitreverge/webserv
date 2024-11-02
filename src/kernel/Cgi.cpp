@@ -12,7 +12,7 @@ void Cgi::launch()
        
         dup2(this->fds[0], STDIN_FILENO); 
         dup2(this->fds[0], STDOUT_FILENO); 
-        close(this->fds[0]);
+        // close(this->fds[0]);
         close(this->fds[1]);
         // int t[2] = {1,2, NULL}
         // char *args[] = {NULL};
