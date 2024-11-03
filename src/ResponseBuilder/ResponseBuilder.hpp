@@ -108,6 +108,7 @@ class ResponseBuilder
 	void 	rootMapping( void );
 	bool	isErrorRedirect( void );
 	void	extractFileNature( string &target);
+	void	checkMethod( void );
 
 
 	// generateListingHTML.cpp

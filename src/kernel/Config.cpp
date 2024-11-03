@@ -18,6 +18,19 @@ Config::Config(char *path)
 	toto.printConfig(*this);
 }
 
+void	Config::buildKeys( string& route, string& subKey, vector<string>& innerVector, map<string, map< string, vector<string> > >&target ){
+
+	map<string, vector<string>> innerMap;
+
+	// Link the first sub_map
+	innerMap.insert(std::make_pair( subKey, innerVector ));
+
+	// Link the global Map
+	target.insert( std::make_pair (route, innerMap));
+
+	innerVector.clear();
+}
+
 Config::Config()
 {
 	// var serverName a passer a la structure Client
@@ -59,6 +72,40 @@ Config::Config()
 	errorPaths.insert(std::make_pair(CODE_502_BAD_GATEWAY, "errorPages/502.html"));
 	errorPaths.insert(std::make_pair(CODE_503_SERVICE_UNAVAILABLE, "errorPages/503.html"));
 	errorPaths.insert(std::make_pair(CODE_504_GATEWAY_TIMEOUT, "errorPages/504.html"));
+
+	// ! ================ ROUTE SETTINGS ================
+	/*
+		I tried to replicate the  map<  string,   map<  string,   vector<  string> > > Data; structure
+		by initializing it by hand.
+
+		Each sub config will be under a different name, but still remain for the same original structure
+		I need explicit names from now, but my methods will only need a name change once we'll rely on the _data structure
+	*/
+	// Route names (main keys)
+	
+	string route0 = "/";
+	string route1 = "/route1";
+	string route2 = "/route2";
+
+	// Sub Keys
+	string subkey_allowedmethods = "allowedMethods";
+	string subkey_routemapping = "routeMapping";
+	
+	// Inner Vector
+	vector<string> innerVector;
+
+	// Allowed Methods
+	{
+		innerVector.push_back("GET");
+		buildKeys(route0, subkey_allowedmethods, innerVector, this->allowedMethods);
+		innerVector.push_back("POST");
+		innerVector.push_back("DELETE");
+		buildKeys(route1, subkey_allowedmethods, innerVector, this->allowedMethods);
+	}
+
+	// ! ================ ROUTE SETTINGS ================
+
+
 	ConfigFileParser toto;
 	toto.printConfig(*this);
 

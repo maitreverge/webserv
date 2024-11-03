@@ -24,8 +24,11 @@ struct Config
 	map<e_errorCodes, string>		errorPaths;	
 	map<string, string>				redirection;
 	map<string, map<string, string> > routeMapping; // Associate a Route = One mapping
+	map<string, map<string, vector<string> > > allowedMethods; // Associate a Route = Different allowed methods
 	Config();
 	Config(char* path);
 	void	initializeServer(server _serverStruct, std::vector<sockaddr_in>& sockAddress);
 	void	initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddress);
+
+	void	buildKeys( string&, string&, vector<string>&, map<string, map< string, vector<string> > >& );
 };
