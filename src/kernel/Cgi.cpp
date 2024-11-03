@@ -184,3 +184,30 @@ void Cgi::setBody(Client & client)
 	//! system de recup send
 }
 
+ssize_t advCircle(ssize_t head, ssize_t stop, ssize_t adv, ssize_t buffSize)
+{
+	ssize_t tmp;
+	tmp = (head + adv) % buffSize;
+	if (tmp > stop) 
+}
+
+void circularBuffer()
+{
+	ssize_t readHead = 0, writeHead = 0;
+	char buff[42];
+	ssize_t len = sizeof(buff) - readHead;
+	while (true)
+	{
+		ssize_t retr = getBody(readHead, sizeof(buff) - readHead);
+		writeHead = advCircle(writeHead, readHead, retr, sizeof(buff));
+		ssize_t rets = send(this->fds[1], readHead, sizeof(buff) - writeHead, 0);		
+		readHead = advCircle(readHead, writeHead, rets, sizeof(buff));
+
+
+
+	}
+		
+
+	 
+}
+
