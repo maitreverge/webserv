@@ -158,7 +158,7 @@ void	ResponseBuilder::checkMethod( void ){
 
 	#ifdef UNIT_TEST
 	#else
-	_realURI = "/";
+	// _realURI = "/";
 	// vector<string> innerVector;
 	// innerVector.push_back("GET");
 

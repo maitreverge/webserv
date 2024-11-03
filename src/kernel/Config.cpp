@@ -51,10 +51,11 @@ Config::Config()
 	initializeServer((uint16_t)std::atoi(_serverStruct[2].port.c_str()), sockAddress);
 	initializeServer(80, sockAddress);
 	
+	// ! Outdated code, index files needs to be configured at a route level, not global level
 	// Default files to look for if the URI is "/"
-	indexFiles.push_back("index.html");
-	indexFiles.push_back("index.htm");
-	indexFiles.push_back("default.html");
+	// indexFiles.push_back("index.html");
+	// indexFiles.push_back("index.htm");
+	// indexFiles.push_back("default.html");
 
 	listingDirectories = true;
 
@@ -89,7 +90,7 @@ Config::Config()
 
 	// Sub Keys
 	string subkey_allowedmethods = "allowedMethods";
-	string subkey_routemapping = "routeMapping";
+	string subkey_defaultpath = "defaultPath";
 	
 	// Inner Vector
 	vector<string> innerVector;
@@ -101,6 +102,19 @@ Config::Config()
 		innerVector.push_back("POST");
 		innerVector.push_back("DELETE");
 		buildKeys(route1, subkey_allowedmethods, innerVector, this->allowedMethods);
+	}
+
+	// Redirection
+	{
+		innerVector.push_back("/cyborg_gaming");
+		buildKeys(route0, subkey_allowedmethods, innerVector, this->allowedMethods);
+
+	}
+
+	// Default Path
+	{
+		innerVector.push_back("index.html");
+		buildKeys(route0, subkey_defaultpath, innerVector, this->defaultPath);
 	}
 
 	// ! ================ ROUTE SETTINGS ================

@@ -15,16 +15,23 @@ struct server
 
 struct Config
 {
+	// ! ======= GLOBAL SETTINGS ==========
 	struct server					_serverStruct[8];
 	short int						maxClient;
 	std::vector<struct sockaddr_in> sockAddress;
 	std::vector<std::string>		serverName; //inserer ici au meme indice que le server son servername
-	std::vector<std::string>				indexFiles;			// default files names if the URI == "/"
-	bool							listingDirectories; // activer ou non le listing des repertoires
 	map<e_errorCodes, string>		errorPaths;	
-	map<string, string>				redirection;
-	map<string, map<string, string> > routeMapping; // Associate a Route = One mapping
-	map<string, map<string, vector<string> > > allowedMethods; // Associate a Route = Different allowed methods
+
+	// ! ======= ROUTE SETTINGS ==========
+	map<string, map<string, vector<string> > > allowedMethods;
+	map<string, map<string, vector<string> > > redirection;
+	map<string, map<string, vector<string> > > routeMapping;
+	map<string, map<string, vector<string> > > listingDirectory;
+	map<string, map<string, vector<string> > > defaultPath;
+	map<string, map<string, vector<string> > > cgiAllowed;
+	map<string, map<string, vector<string> > > uploadAllowed;
+	map<string, map<string, vector<string> > > uploadDirectory;
+
 	Config();
 	Config(char* path);
 	void	initializeServer(server _serverStruct, std::vector<sockaddr_in>& sockAddress);
