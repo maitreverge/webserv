@@ -180,19 +180,14 @@ void	ResponseBuilder::checkMethod( void ){
 	
 	for (std::vector<string>::iterator it = methods.begin(); it < methods.end(); ++it)
 	{
-		if (*(it) == "GET")
-		{
-			if (_method != GET)
-				setError(CODE_405_METHOD_NOT_ALLOWED);
-		}
-		else if (*(it) == "POST")
-		{
-			if (_method != POST)
-				setError(CODE_405_METHOD_NOT_ALLOWED);
-		}
-		else if (_method != DELETE)
-			setError(CODE_405_METHOD_NOT_ALLOWED);
+		if (*(it) == "GET" and _method == GET)
+			return;
+		else if (*(it) == "POST" and _method == POST)
+			return;
+		else if (*(it) == "DELETE" and _method == DELETE)
+			return;
 	}
+	setError(CODE_405_METHOD_NOT_ALLOWED);
 }
 
 void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
