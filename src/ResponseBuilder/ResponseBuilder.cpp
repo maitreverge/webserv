@@ -156,30 +156,43 @@ void	ResponseBuilder::validateURI( void ){
 
 void	ResponseBuilder::checkMethod( void ){
 
-	/*
-	  map<  string,   map<  string,   vector<  string> > > Data;
-	*/
-	// TODO : LINK CONFIG
 	try
 	{
-		
+		_config->allowedMethods.at(_realURI); // look up for the route
 	}
 	catch(const std::exception& e)
 	{
-		std::cerr << e.what() << '\n';
+		return; // Route not found == FULL AUTHO
 	}
 
-	// for (size_t i = 0; i <  j; i++)
+	vector<string> methods;
+	try
 	{
-		// Loop throught the config sub-path
-
-		// if found, return;
-
-		// if not found
-		// setError(METHOD NOT ALLOWED)
+		methods = _config->allowedMethods.at(_realURI).at("allowedMethods");
 	}
+	catch(const std::exception& e)
+	{
+		return; // allowedMethod not found within the route == FULL AUTHO
+	}
+
+	if (methods.empty())
+		return;
 	
-	
+	for (std::vector<string>::iterator it = methods.begin(); it < methods.end(); ++it)
+	{
+		if (*(it) == "GET")
+		{
+			if (_method != GET)
+				setError(CODE_405_METHOD_NOT_ALLOWED);
+		}
+		else if (*(it) == "POST")
+		{
+			if (_method != POST)
+				setError(CODE_405_METHOD_NOT_ALLOWED);
+		}
+		else if (_method != DELETE)
+			setError(CODE_405_METHOD_NOT_ALLOWED);
+	}
 }
 
 void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
