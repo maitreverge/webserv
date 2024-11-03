@@ -54,3 +54,9 @@
 Retour de page IMAGES foireux ✅ => image_chat.jpeg was an empty file
 
 Refactorer le timestamp path access to a higher scope, accessible to all clients (needs a generic function for CGI as well)
+
+#ifdef UNIT_TEST
+	public:
+	#else
+	private:
+	#endif

@@ -2,9 +2,19 @@
 #include "ResponseBuilder.hpp" // Inclure le fichier de la classe à tester
 #include "Server.hpp"
 #include "Client.hpp"
+
+typedef enum
+	{
+		GET,
+		POST,
+		DELETE
+	} e_method;
+
+
 class ResponseBuilderTest : public ::testing::Test {
 protected:
-    // Objets utilisés pour les tests
+    
+	// Objets utilisés pour les tests
     Client* client;
     Config* config;
     ResponseBuilder* responseBuilder;

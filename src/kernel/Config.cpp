@@ -20,7 +20,7 @@ Config::Config(char *path)
 
 void	Config::buildKeys( string& route, string& subKey, vector<string>& innerVector, map<string, map< string, vector<string> > >&target ){
 
-	map<string, vector<string>> innerMap;
+	map<string, vector<string> > innerMap;
 
 	// Link the first sub_map
 	innerMap.insert(std::make_pair( subKey, innerVector ));
@@ -105,9 +105,11 @@ Config::Config()
 
 	// ! ================ ROUTE SETTINGS ================
 
-
+	#ifdef UNIT_TEST
+	#else
 	ConfigFileParser toto;
 	toto.printConfig(*this);
+	#endif
 
 }
 
