@@ -47,6 +47,7 @@ class Server
 	void printResponse(const std::vector<char> & response);
 	bool replyClient(size_t i, std::vector<char> & response,
 		ssize_t repSize);
+	bool fillMessageSend(size_t i);
 	bool endReply(size_t i);
 	void exitClient(size_t index);
 	void exitClients();

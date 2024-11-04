@@ -7,26 +7,36 @@ void Server::replyClients()
 	{		
 		if (!this->_clients[i].ping
 			&& FD_ISSET(this->_clients[i].fd, &this->_writeSet))
-		{
-			if (!this->_clients[i].pongHeader)
-			{				
+		{		
+			if (!this->_clients[i].headerRespons.empty())			
 				if (replyClient(i, this->_clients[i].headerRespons,
 					static_cast<ssize_t>
 					(this->_clients[i].headerRespons.size())))
-					break ;				
-				this->_clients[i].pongHeader = true;				
-			}				
-			if (ssize_t ret = this->_clients[i].responseBuilder.
-				getBody(this->_clients[i]))
-			{							
-				if (replyClient(i, this->_clients[i].messageSend, ret))
-					break ;								
-				usleep(5000);
+					break ;	
+			if (this->_clients[i].messageSend.empty())
+			{
+				if (fillMessageSend(i))
+					break ;
 			}
-			else if (endReply(i))
-				break;
+			else if (replyClient(i, this->_clients[i].messageSend,
+				static_cast<ssize_t>(this->_clients[i].messageSend.size())))
+				break ;				
 		}	
 	}
+}
+
+bool Server::fillMessageSend(size_t i)
+{
+	if (ssize_t ret = this->_clients[i].responseBuilder.
+				getBody(this->_clients[i]))
+	{							
+		if (replyClient(i, this->_clients[i].messageSend, ret))
+			return true;								
+		usleep(500);
+	}
+	else if (endReply(i))
+		return true;
+	return false;
 }
 
 bool Server::endReply(size_t i)
@@ -39,8 +49,8 @@ bool Server::endReply(size_t i)
 		return true;	
 	}					
 	this->_clients[i].responseBuilder = ResponseBuilder();
-	this->_clients[i].ping = true;			
-	this->_clients[i].pongHeader = false;
+	this->_clients[i].ping = true;		
+	this->_clients[i].messageSend.clear();
 	return false;
 }
 
@@ -59,23 +69,19 @@ bool Server::replyClient(size_t i, std::vector<char> & response,
 	Logger::getInstance().log(INFO, "reply client", this->_clients[i]);
 	printResponse(response);
 
-	this->_writeBuffer.assign(response.begin(), response.begin() + repSize);	
+	response.erase(response.begin() + repSize, response.end());
 	ssize_t ret;
-	char * writeHead = this->_writeBuffer.data();
-	size_t writeSize = this->_writeBuffer.size();
-	while (writeSize > 0)
-	{			
-		if ((ret = send(this->_clients[i].fd, writeHead, writeSize,
-			MSG_NOSIGNAL)) < 0)
-		return Logger::getInstance().log(ERROR, "send", this->_clients[i]),
-			this->exitClient(i), true;		
+		
+	if ((ret = send(this->_clients[i].fd, response.data(), response.size(),
+		MSG_NOSIGNAL)) < 0)
+	return Logger::getInstance().log(ERROR, "send", this->_clients[i]),
+		this->exitClient(i), true;		
 
-		std::string str(writeHead, writeHead + static_cast<size_t>(ret));      
-		std::stringstream ss; ss << "data sent to client: -" << str << "-";	
-		Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]); 	
+	std::string str(response.data(), response.data()
+		+ static_cast<size_t>(ret));      
+	std::stringstream ss; ss << "data sent to client: -" << str << "-";	
+	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]); 
 
-		writeHead += ret;
-		writeSize -= static_cast<size_t>(ret);
-	}
+	response.erase(response.begin(), response.begin() + ret);	
 	return false;
 }
