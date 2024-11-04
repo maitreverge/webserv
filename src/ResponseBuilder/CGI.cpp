@@ -35,5 +35,5 @@ void ResponseBuilder::checkCGI( Client & client ){
 
 	_realURI = _realURI.substr(0, realLoc);
 
-	client.pongHeader = true;
+	client.headerRespons.clear();
 }

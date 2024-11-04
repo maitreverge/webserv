@@ -251,7 +251,8 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
 
 	// Copying the build Headers in headerRespons
-	inputClient.headerRespons = Headers.masterHeader;
+	if (!_isCGI)
+		inputClient.headerRespons = Headers.masterHeader;
 	
 	// Headers.masterHeader.clear();//!
 

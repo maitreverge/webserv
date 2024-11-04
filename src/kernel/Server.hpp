@@ -14,7 +14,7 @@
 
 #define RECV_BUFF_SIZE 4096
 // #define SEND_BUFF_SIZE 8
-#define SEND_BUFF_SIZE 3
+#define SEND_BUFF_SIZE 50
 
 #define MAX_HDR_SIZE 8192
 #define MAX_CNT_SIZE 30000000

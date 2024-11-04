@@ -52,6 +52,7 @@ Content-Length: ";
     int len = strlen(body);
     char * end = "\r\n\r\n";
     printf("%s", header);
+    while(1);
     printf("%d", len);
     printf("%s", end);
     printf("%s", body);

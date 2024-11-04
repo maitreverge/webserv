@@ -107,7 +107,7 @@ ssize_t Cgi::getBody(Client & client)
                 break;
 
     	}
-		close(this->fds[1]);//!
+		close(this->fds[1]);//! delete from FD
         return 0;
     }
     std::cout << "RET " << ret << std::endl;
