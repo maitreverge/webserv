@@ -1,14 +1,24 @@
 #include "ConfigFileParser.hpp"
 
-
+ConfigFileParser::ConfigFileParser()
+{
+	routeKey.push_back("allowedMethods");
+	routeKey.push_back("redirection");
+	routeKey.push_back("routeMapping");
+	routeKey.push_back("listingDirectory");
+	routeKey.push_back("defaultPath");
+	routeKey.push_back("cgiAllowed");
+	routeKey.push_back("uploadAllowed");
+	routeKey.push_back("uploadDirectory");
+}
 
 /**========================================================================
  *                             WIP
  *?  il faut brancher la classe au reste du projet!
- *?  Il devrait etre possible d'initialiser cette structure dans Kernel,
- *?  et linker la structure de config dans les servers
- *?  => tests a faire!
- *========================================================================**/
+*?  Il devrait etre possible d'initialiser cette structure dans Kernel,
+*?  et linker la structure de config dans les servers
+*?  => tests a faire!
+*========================================================================**/
 
 void ConfigFileParser::parseConfigFile(Config& configStruct, char* path)
 {
@@ -44,9 +54,12 @@ void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
 				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].host, "host");
 				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].port, "port");
 				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].serverName, "serverName");
+				// category routes (inner loop)
+				setConfigValue(catIt, itemIt, valIt, configStruct);
 			}
 		}
 	}
+	// printRoutesData(configStruct.routes);
 }
 
 void	ConfigFileParser::initializeServers(Config& configStruct, int& i)
@@ -66,24 +79,31 @@ void	ConfigFileParser::initializeServers(Config& configStruct, int& i)
 /**========================================================================
  *                           SETCONFIGVALUE OVERLOADS
  *========================================================================**/
+//? routes data
+void	ConfigFileParser::setConfigValue(catIt catIt, itemIt itemIt, valIt valIt, Config& configStruct)
+{
+	for (size_t i = 0; i < routeKey.size(); i++)
+	{
+		if (isRouteData(catIt->first) && itemIt->first == routeKey[i])
+			if (!(*valIt).empty())
+				configStruct.routes[catIt->first][routeKey[i]] = itemIt->second;
+	}
+}
+
 //? error pages paths
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, Config& configStruct, const char str[], e_errorCodes e)
 {
 	if (catIt->first == "errorPages" && itemIt->first == str)
 		if (!(*valIt).empty())
-			configStruct.errorPaths[e] = *valIt;
+			configStruct.errorPaths[e] = configStruct.errorPagesPath + *valIt;
 }
 
-//! struct server
+//? struct server
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::string& field, const char str[])
 {
 	if (isServerData(catIt->first) && itemIt->first == str)
 		if (!(*valIt).empty())
-		{
-			field = itemIt->second[0];
-			// printColor(GREEN, field);
-		}
-		
+			field = itemIt->second[0];		
 }
 
 //? maxClient
@@ -157,7 +177,7 @@ int	ConfigFileParser::extractDataFromConfigFile(const std::string& path)
 	file.close();
 	return (0);
 }
- 
+
 /**========================================================================
  *                           UTILS
  *========================================================================**/
@@ -205,6 +225,11 @@ bool ConfigFileParser::isServerData(const std::string& category)
 	return category.size() >= prefix.size() && category.find(prefix) == 0;
 }
 
+bool ConfigFileParser::isRouteData(const std::string& category)
+{
+	const std::string prefix = "route";
+	return category.size() >= prefix.size() && category.find(prefix) == 0;
+}
 
 void	ConfigFileParser::print(std::string str)
 {
@@ -248,23 +273,43 @@ void ConfigFileParser::printServerData(const server _serverStruct[], size_t size
 }
 
 void ConfigFileParser::printConfig(const Config& config) {
-    std::cout << "maxClient: " << config.maxClient << std::endl;
+	std::cout << "maxClient: " << config.maxClient << std::endl;
 
-    std::cout << "sockAddress:" << std::endl;
-    for (std::vector<struct sockaddr_in>::const_iterator it = config.sockAddress.begin(); it != config.sockAddress.end(); ++it) {
-        std::cout << "  - IP: " << inet_ntoa(it->sin_addr) << ", Port: " << ntohs(it->sin_port) << std::endl;
-    }
+	std::cout << "sockAddress:" << std::endl;
+	for (std::vector<struct sockaddr_in>::const_iterator it = config.sockAddress.begin(); it != config.sockAddress.end(); ++it) {
+		std::cout << "  - IP: " << inet_ntoa(it->sin_addr) << ", Port: " << ntohs(it->sin_port) << std::endl;
+	}
 
-    std::cout << "indexFiles: ";
-    for (std::vector<std::string>::const_iterator it = config.indexFiles.begin(); it != config.indexFiles.end(); ++it) {
-        std::cout << *it << " ";
-    }
-    std::cout << std::endl;
+	std::cout << "indexFiles: ";
+	for (std::vector<std::string>::const_iterator it = config.indexFiles.begin(); it != config.indexFiles.end(); ++it) {
+		std::cout << *it << " ";
+	}
+	std::cout << std::endl;
 
-    std::cout << "listingDirectories: " << (config.listingDirectories ? "true" : "false") << std::endl;
+	std::cout << "listingDirectories: " << (config.listingDirectories ? "true" : "false") << std::endl;
 
-    std::cout << "errorPaths:" << std::endl;
-    for (std::map<e_errorCodes, std::string>::const_iterator it = config.errorPaths.begin(); it != config.errorPaths.end(); ++it) {
-        std::cout << "  Code: " << it->first << " -> Path: " << it->second << std::endl;
-    }
+	std::cout << "errorPaths:" << std::endl;
+	for (std::map<e_errorCodes, std::string>::const_iterator it = config.errorPaths.begin(); it != config.errorPaths.end(); ++it) {
+		std::cout << "  Code: " << it->first << " -> Path: " << it->second << std::endl;
+	}
+}
+
+void ConfigFileParser::printRoutesData(const RoutesData& routesData)
+{
+	std::cout << "ROUTES:" << std::endl;
+	for (RoutesData::const_iterator routeIt = routesData.begin(); routeIt != routesData.end(); ++routeIt) {
+		std::cout << "Route: " << routeIt->first << std::endl;
+		for (std::map<std::string, std::vector<std::string> >::const_iterator methodIt = routeIt->second.begin(); 
+			methodIt != routeIt->second.end(); ++methodIt)
+			{
+			std::cout << "  Key: " << methodIt->first << std::endl;
+			std::cout << "    Value/Values: ";
+			for (std::vector<std::string>::const_iterator paramIt = methodIt->second.begin(); 
+				paramIt != methodIt->second.end(); ++paramIt)
+				{
+				std::cout << *paramIt << " ";
+			}
+			std::cout << std::endl;
+		}
+	}
 }
