@@ -13,6 +13,7 @@ struct server
 	std::string	serverName;
 };
 
+typedef map<std::string, map<std::string, std::vector<std::string> > > RoutesData;
 /**========================================================================
  *                             CONFIG
  *?  modifs done:
@@ -31,6 +32,7 @@ struct Config
 	map<e_errorCodes, string>		errorPaths;	
 	map<string, string>				redirection;
 	std::string						errorPagesPath;
+	RoutesData						routes;
 
 	Config();
 	Config(char* path);
