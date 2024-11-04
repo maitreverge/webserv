@@ -11,8 +11,8 @@ Logger::Logger() : logToStdOut(1)
 	_logLevel[DEBUG] = 		1;
 	_logLevel[WARNING] = 	1;
 	_logLevel[ERROR] = 		1;
-	_accessFile.open("access.log", std::ios::app);
-	_errorFile.open("error.log", std::ios::app);
+	_accessFile.open("access.log", std::ios::out);
+	_errorFile.open("error.log", std::ios::out);
 	if (!_accessFile.is_open() || !_errorFile.is_open())
 		Logger::getInstance().log(ERROR, "Erreur : Impossible d'ouvrir le fichier de log.");
 }	
