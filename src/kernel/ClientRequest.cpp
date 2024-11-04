@@ -4,7 +4,13 @@
 void Server::listenClients()
 {	
 	for (size_t i = 0; i < this->_clients.size(); i++)
-	{	
+	{
+		if (this->_clients[i].ping && this->_clients[i].bodySize
+			&& !this->_clients[i].messageRecv.empty())
+		{
+			this->_clients[i].responseBuilder._cgi.setBody(this->_clients[i]);
+			continue;	
+		}
 		if (this->_clients[i].ping
 			&& FD_ISSET(this->_clients[i].fd, &this->_readSet))
 		{
@@ -209,8 +215,9 @@ bool Server::isBodyTerminated(size_t i)
 		this->_clients[i].bodySize = 0;
 		if (this->_clients[i].headerRequest.getMethod() == "POST")
 			floSimulatorPut(this->_clients[i].messageRecv);
-		this->_clients[i].messageRecv.clear();
-		this->_clients[i].ping = false;		
+		// this->_clients[i].messageRecv.clear();//! clear dans le post normal
+		this->_clients[i].ping = false;	//! si le message nest pas send en entier
+		//! il vas etre en pong mais peut etre que il ny aura rien a repondre ou plantage	
 		return true;
 	}
 	return false;

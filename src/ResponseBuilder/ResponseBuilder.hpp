@@ -86,7 +86,6 @@ class ResponseBuilder
 	Config* _config;
 
 	ResponseHeaders Headers;
-	Cgi 			_cgi;
 	// bool test;
 
 	// ------------- Priv Methods
@@ -134,6 +133,7 @@ public:
 
 	void	getHeader( Client &, Config& );
 	ssize_t	getBody( Client &inputClient );
+	Cgi		_cgi;//! provisoire sinon private
 
 	// For testing
 	void	setMethod( const e_method& method );

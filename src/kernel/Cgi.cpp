@@ -119,6 +119,7 @@ ssize_t Cgi::getBody(Client & client)
 		FD_CLR(this->_fds[1], &Kernel::_actualSet);
         close(this->_fds[1]);//! delete from FD
         this->_fds[1] = -1;
+        //!exitclient
         return 0;
     }
     std::cout << "RET " << ret << std::endl;
@@ -130,6 +131,7 @@ ssize_t Cgi::getBody(Client & client)
         FD_CLR(this->_fds[1], &Kernel::_actualSet);
         close(this->_fds[1]);//!
         this->_fds[1] = -1;
+        //!exitclient
         return 0;
     }
     return ret;
@@ -144,9 +146,11 @@ Cgi::~Cgi()
 
 void Cgi::setBody(Client & client)
 {
+    if (!FD_ISSET(this->_fds[1], &Kernel::_writeSet))
+        return;
  	ssize_t ret = send(this->_fds[1], client.messageRecv.data(),
         client.messageRecv.size(), 0);
-	  if (ret < 0)
+	if (ret < 0)
     {
         Logger::getInstance().log(ERROR, "recv cgi");
 
@@ -191,16 +195,48 @@ void Cgi::setBody(Client & client)
 
     	}
 		close(this->_fds[1]);//!
-        return 0;
+        this->_fds[1] = -1;
+        //!exitclient
+        return ;
     }
 	if (!ret) //?????
     {
         Logger::getInstance().log(INFO, "end cgi");
         close(this->_fds[1]);//!
-        
-        return 0;
+        this->_fds[1] = -1;
+        //!exitclient
+        return ;
     }
-	//! system de recup send
+    std::string str(client.messageRecv.data(), client.messageRecv.data()
+		+ static_cast<size_t>(ret));      
+	std::stringstream ss; ss << "data sent to cgi: -" << str << "-";	
+	Logger::getInstance().log(DEBUG, ss.str(), client);
+
+	client.messageRecv.erase(client.messageRecv.begin(),
+        client.messageRecv.begin() + ret);
+}
+
+bool Server::replyClient(size_t i, std::vector<char> & response,
+	ssize_t repSize)
+{	
+	Logger::getInstance().log(INFO, "reply client", this->_clients[i]);
+	printResponse(response);
+
+	response.erase(response.begin() + repSize, response.end());
+	ssize_t ret;
+		
+	if ((ret = send(this->_clients[i].fd, response.data(), response.size(),
+		MSG_NOSIGNAL)) < 0)
+	return Logger::getInstance().log(ERROR, "send", this->_clients[i]),
+		this->exitClient(i), true;		
+
+	std::string str(response.data(), response.data()
+		+ static_cast<size_t>(ret));      
+	std::stringstream ss; ss << "data sent to client: -" << str << "-";	
+	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]); 
+
+	response.erase(response.begin(), response.begin() + ret);	
+	return false;
 }
 
 // ssize_t advCircle(ssize_t head, ssize_t stop, ssize_t adv, ssize_t buffSize)
