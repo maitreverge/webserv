@@ -93,7 +93,7 @@ void ResponseBuilder::rootMapping( void ){ // ✅ OKAY FUNCTION
 
 void ResponseBuilder::resolveURI( void ) {// ⛔ NOT OKAY FUNCTION
 	// ! STEP 1 : Check the rootMapping
-	rootMapping();
+	// rootMapping();
 	
 	// ! STEP 2 : Trim all "../" from the URI for transversal path attacks
 	// sanatizeURI(_realURI); // ! STAY COMMENTED until refactoring for better "../" erasing process
