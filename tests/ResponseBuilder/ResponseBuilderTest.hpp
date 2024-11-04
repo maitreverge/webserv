@@ -1,4 +1,6 @@
-#include <gtest/gtest.h>
+#pragma once
+
+#include "gtest/gtest.h"
 #include "ResponseBuilder.hpp" // Inclure le fichier de la classe à tester
 #include "Server.hpp"
 #include "Client.hpp"
@@ -26,7 +28,7 @@ protected:
 		responseBuilder = new ResponseBuilder();
         client = new Client();
         config = new Config();
-		responseBuilder->_config = config;
+		// responseBuilder->_config = config;
 		// std::freopen("/dev/null", "w", stdout);
     }
 
