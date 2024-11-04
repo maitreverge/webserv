@@ -3,8 +3,9 @@
 
 // ------------------------- METHODS ---------------------------------
 
-void ResponseBuilder::sanatizeURI( string &oldURI ){
+void ResponseBuilder::sanatizeURI( string &oldURI ){ // ⛔ NOT OKAY FUNCTION
 
+	// TODO : refactor this function to avoid trimming usefull "../", as long as we don't escape the root webserv
 	string needle = "../";
 
 	std::string::size_type found = oldURI.find(needle);
@@ -16,7 +17,7 @@ void ResponseBuilder::sanatizeURI( string &oldURI ){
 	}
 }
 
-bool ResponseBuilder::redirectURI( void ){
+bool ResponseBuilder::redirectURI( void ){ // ✅ OKAY FUNCTION
 
 	try
 	{
@@ -31,18 +32,71 @@ bool ResponseBuilder::redirectURI( void ){
 	return true;
 }
 
-void ResponseBuilder::swapForRoot( void ){
+void ResponseBuilder::rootMapping( void ){ // ✅ OKAY FUNCTION
 
+	string originalURI = _realURI;
+	string mainRoute = _realURI;
 
+	// ! STEP 1 : Try every MainRoute in reverse order. If not found, then trim the URI from the end.
+	while (not mainRoute.empty())
+	{
+		try
+		{
+			_config->routeMapping.at(mainRoute);
+			break;
+		}
+		catch(const std::exception& e)
+		{
+			if (mainRoute == "/" or mainRoute.empty())
+				return; // MainRoute not found
+			// If the first "/" is also the last, we're left with the last "/" default path
+			else if (mainRoute.find_first_of('/') == mainRoute.find_last_of('/'))
+			{
+				// erasing keeping the "/"
+				if (mainRoute[mainRoute.length() -1] == '/')
+					return;
+				mainRoute.erase(mainRoute.find_first_of('/') + 1);
+			}
+			else
+			{
+				mainRoute.erase(mainRoute.find_last_of('/'));
+			}
+		}
+	}
+
+	// From this Point, a route has been found
+	string target = originalURI.substr(mainRoute.size());
+
+	string needle;
+	string reroute;
+	try
+	{
+		needle = _config->routeMapping.at(mainRoute).begin()->first;
+		reroute = _config->routeMapping.at(mainRoute).begin()->second;
+	}
+	catch(const std::exception& e)
+	{
+		// Map needle or reroute has not been found.
+		return;
+	}
+
+	// From this Point, a needle and a reroute has been found, we need to find them, hotshap them and return
+	if (target.compare(0, needle.size(), needle) == 0)
+	{
+		target.erase(0, needle.size());
+		
+		originalURI = reroute + target;
+	}
+
+	_realURI = originalURI;
 }
 
-void ResponseBuilder::resolveURI( void )
-{
-	// TODO STEP 2 : Resolve URI with rooted path from config file
-	swapForRoot();
+void ResponseBuilder::resolveURI( void ) {// ⛔ NOT OKAY FUNCTION
+	// ! STEP 1 : Check the rootMapping
+	rootMapping();
 	
-	// ! STEP 3 : Trim all "../" from the URI for transversal path attacks
-	sanatizeURI(_realURI);
+	// ! STEP 2 : Trim all "../" from the URI for transversal path attacks
+	// sanatizeURI(_realURI); // ! STAY COMMENTED until refactoring for better "../" erasing process
 
 	if (_realURI.size() > 1)
 	{
@@ -52,7 +106,6 @@ void ResponseBuilder::resolveURI( void )
 			_realURI.erase(_realURI.size() -1);
 		}
 	}
-
 }
 
 void	ResponseBuilder::validateURI( void ){
@@ -62,7 +115,7 @@ void	ResponseBuilder::validateURI( void ){
 	{
 		setError(CODE_404_NOT_FOUND); return;
 	}
-	else if (_realURI == "/") // What if the resolved URI is a directory and not just "/"
+	else if (_realURI == "/" and _method == GET) // What if the resolved URI is a directory and not just "/"
 	{
 		// string originalURI = "/";
 		vector<string>::iterator it;
@@ -89,13 +142,9 @@ void	ResponseBuilder::validateURI( void ){
 	}
 
 	// TODO = Is URI a CGI ??
-	checkCGI();
+	if (_method != DELETE)
+		checkCGI();
 
-	// TODO = Does the route accepts the METHOD ?
-	{
-		// Set un fichier par défaut comme réponse si la requête est un répertoire.
-	}
-	
 	checkNatureAndAuthoURI();
 
 	if (_isDirectory and (_method == GET) and (not _isCGI))
@@ -105,92 +154,62 @@ void	ResponseBuilder::validateURI( void ){
 
 }
 
+void	ResponseBuilder::checkMethod( void ){
 
-void	ResponseBuilder::buildHeaders(){
+	#ifdef UNIT_TEST
+	#else
+	_realURI = "/";
+	// vector<string> innerVector;
+	// innerVector.push_back("GET");
 
-	errorCode codes;
+	// _config->allowedMethods.erase("/");
+	// map<string, vector<string> > innerMap;
+	// innerMap.insert(std::make_pair("wvbgfjerbgvhjer", innerVector));
+	// _config->allowedMethods.insert(std::make_pair("/", innerMap));
+	#endif
 
-	stringstream	streamStatusLine,
-					streamTimeStamp,
-					streamContentLenght,
-					streamMasterHeader;
-
-	
-	// -------------- Madatory Headers --------------  
-
-	streamStatusLine	<< HTTP_PROTOCOL
-						<< SPACE
-						<< _errorType
-						<< SPACE 
-						<< codes.getCode(_errorType)
-						<< HTTP_HEADER_SEPARATOR;
-	Headers.statusLine = streamStatusLine.str();
-
-	streamTimeStamp		<< "Date:"
-						<< SPACE 
-						<< timeStamp::getTime()
-						<< HTTP_HEADER_SEPARATOR;
-	Headers.timeStamp = streamTimeStamp.str();
-	
-	// Content Lenght
-	streamContentLenght	<< "Content-Length:"
-						<< SPACE
-						<< Headers.bodyLenght
-						<< HTTP_HEADER_SEPARATOR;
-	Headers.contentLenght = streamContentLenght.str();
-
-	
-	// --------------  Optionals Headers --------------  
-
-	if (Headers.bodyLenght > 0)
+	try
 	{
-		stringstream streamContentType;
-		
-		// Content Type
-		string contentType = extractType(_fileExtension);
-		streamContentType	<< "Content-Type:"
-							<< SPACE 
-							<< contentType 
-							<< HTTP_HEADER_SEPARATOR;
-		
-		Headers.contentType = streamContentType.str();
+		_config->allowedMethods.at(_realURI); // look up for the route
+	}
+	catch(const std::exception& e)
+	{
+		return; // Route not found == FULL AUTHO
 	}
 
-	if (isErrorRedirect())
+	vector<string> methods;
+	try
 	{
-		stringstream streamLocation;
-		streamLocation	<< "Location:"
-						<< SPACE
-						<< _config->redirection.at(_realURI)
-						// << "http://www.github.com/maitreverge"
-						<< HTTP_HEADER_SEPARATOR;
-		Headers.location = streamLocation.str();
+		methods = _config->allowedMethods.at(_realURI).at("allowedMethods");
+	}
+	catch(const std::exception& e)
+	{
+		return; // allowedMethod not found within the route == FULL AUTHO
 	}
 
-	// TODO : Coockie and session generator
-	{
-		
-	}
-	// ----------------- Building Final Headers ----------------
-
-	streamMasterHeader	<< Headers.statusLine
-						<< Headers.timeStamp
-						<< Headers.contentType 
-						// Optionals
-						<< Headers.location
-						// << (Headers.bodyLenght ? Headers.contentLenght : Headers.transfertEncoding)
-						<< Headers.contentLenght
-						<< HTTP_HEADER_SEPARATOR; // HEADER / BODY SEPARATOR
+	if (methods.empty())
+		return;
 	
-	string tempAllHeaders = streamMasterHeader.str();
-
-	// Insert all headers in a vector char
-	Headers.masterHeader.insert(Headers.masterHeader.end(), tempAllHeaders.begin(), tempAllHeaders.end());
+	for (std::vector<string>::iterator it = methods.begin(); it < methods.end(); ++it)
+	{
+		if (*(it) == "GET" and _method == GET)
+			return;
+		else if (*(it) == "POST" and _method == POST)
+			return;
+		else if (*(it) == "DELETE" and _method == DELETE)
+			return;
+	}
+	
+	#ifdef UNIT_TEST
+	_errorType = CODE_405_METHOD_NOT_ALLOWED;
+	#else
+	setError(CODE_405_METHOD_NOT_ALLOWED);
+	#endif
 }
 
 void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
-	Logger::getInstance().log(DEBUG, "Response Builder Get Header", inputClient);
+	Logger::getInstance().log(DEBUG, "Response Builder GET Header", inputClient);
 		
 	_client = &inputClient; // init client
 	_config = &inputConfig; // init config
@@ -198,26 +217,30 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	_realURI = _client->headerRequest.getURI();
 
 	extractMethod();
+	checkMethod();
+
+	if(_method == DELETE)
+		setError(CODE_204_NO_CONTENT);
+
 	if ( not redirectURI())
 	{
-		
 		resolveURI();
 		validateURI();
 		
-		if (_isCGI and _errorType <= CODE_400_BAD_REQUEST) // or potentially another adress
-			launchCGI();
+		// if (_isCGI and _errorType <= CODE_400_BAD_REQUEST) // or potentially another adress
+		// 	launchCGI();
 		
-		checkNatureAndAuthoURI();
+		checkNatureAndAuthoURI(); // double check for this Nature, if the URi has been swapped for an error file
 		setContentLenght();
-
 	}
 	
 	buildHeaders();
 
-
 	// Copying the build Headers in headerRespons
 	inputClient.headerRespons = Headers.masterHeader;
-	
+
+	if (_method == DELETE and _errorType < CODE_400_BAD_REQUEST)
+		deleteEngine();	
 	// Headers.masterHeader.clear();//!
 
 	// printAllHeaders();

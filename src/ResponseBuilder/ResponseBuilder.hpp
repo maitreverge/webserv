@@ -11,6 +11,7 @@
 
 struct Client;
 struct Config;
+class MockConfig;
 
 struct ResponseHeaders
 {
@@ -36,6 +37,19 @@ struct ResponseHeaders
 		masterHeader.clear();
 		bodyLenght = 0;
 	}
+};
+
+struct RouteConfig
+{
+	vector< string > allowedMethods;
+	vector< string > redirection;
+	vector< string > rootSearch;
+	vector< string > path;
+	vector< string > cgiExtensions;
+	vector< string > listingDirectories;
+	vector< string > uploadDirectory;
+	vector< string > uploadDirectory;
+	vector< string > routeMapping;
 };
 
 class ResponseBuilder
@@ -65,6 +79,8 @@ class ResponseBuilder
 	// Nature File
 	bool _isDirectory;
 	bool _isFile;
+
+	bool _errorNotFound;
 
 	// CGI Stuff
 	bool _isCGI;
@@ -102,8 +118,13 @@ class ResponseBuilder
 	void	checkAutho( void );
 	void	checkNature( void );
 	bool 	redirectURI( void );
-	void 	swapForRoot( void );
+	void 	rootMapping( void );
 	bool	isErrorRedirect( void );
+	void	extractFileNature( string &target);
+	void	checkMethod( void );
+	void	extractRouteConfig( void );
+
+
 
 	// generateListingHTML.cpp
 	/*
@@ -120,22 +141,37 @@ class ResponseBuilder
 	void	checkCGI( void );
 	void	launchCGI( void );
 
+	// POST
+
+	// DELETE
+	void	deleteEngine( void );
+
+
 
 
 public:
 
-	std::streampos	_streamHead; // ! ABSOLUMENT METTRE DANS LES CONSTRUCTEURS
 	std::ifstream 	_ifs; // ! PAS DANS LES CONSTRUCTEURS
+	std::streampos	_ifsStreamHead; // ! ABSOLUMENT METTRE DANS LES CONSTRUCTEURS
+    std::ofstream	_ofs;
+	std::streampos	_ofsStreamHead; // ! ABSOLUMENT METTRE DANS LES CONSTRUCTEURS
+
 	ResponseBuilder( void );
 	~ResponseBuilder( void );
 	ResponseBuilder( const ResponseBuilder & );
-	ResponseBuilder & operator=( const ResponseBuilder & rhs);	
+	ResponseBuilder & operator=( const ResponseBuilder & rhs);
 
+	// ✅ GET ONLY
 	void	getHeader( Client &, Config& );
 	ssize_t	getBody( Client &inputClient );
+
+	// ✅ POST ONLY
+	void	getHeaderPost( Client &inputClient, Config &inputConfig );
+	void	setBodyPost( std::vector<char> bodyParts );
+
 
 	// For testing
 	void	setMethod( const e_method& method );
 
-	void	printAllHeaders( void );
+	void	printAllHeaders( void )const;
 };

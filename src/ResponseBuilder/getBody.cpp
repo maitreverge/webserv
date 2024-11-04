@@ -11,22 +11,26 @@ ssize_t	ResponseBuilder::getBody( Client &inputClient ){
 		Logger::getInstance().log(INFO, "Redirect Non Body Response", inputClient);
 		return 0;
 	}
+
 	if (!this->_ifs.is_open())
 	{	
 		Logger::getInstance().log(INFO, _realURI.c_str(), inputClient);	
-	
-		this->_ifs.open(_realURI.c_str(), std::ios::binary);	
+
+		if (_method == POST)
+			this->_ifs.open(_fileName.c_str(), std::ios::binary);	
+		else
+			this->_ifs.open(_realURI.c_str(), std::ios::binary);	
 	}
 
 	// ! ADVANCED TEST : keskis passe si le stream fail malgre l'URI correcte 
 	if (this->_ifs.is_open())
 	{
-		this->_ifs.seekg(this->_streamHead);
+		this->_ifs.seekg(this->_ifsStreamHead);
 		inputClient.messageSend.clear();
 		inputClient.messageSend.resize(SEND_BUFF_SIZE);//!
 		// ! ADVANCED TEST : keskis passe si READ se passe mal 
 		this->_ifs.read(inputClient.messageSend.data(), static_cast<std::streamsize>(inputClient.messageSend.size()));	
-		this->_streamHead = this->_ifs.tellg();
+		this->_ifsStreamHead = this->_ifs.tellg();
 		
 		std::streamsize gcount = this->_ifs.gcount();
 		if (this->_ifs.eof()) 
