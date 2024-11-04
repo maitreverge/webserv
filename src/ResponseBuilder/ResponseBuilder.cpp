@@ -142,7 +142,7 @@ void	ResponseBuilder::validateURI( void ){
 	}
 
 	// TODO = Is URI a CGI ??
-	if (_method != DELETE)
+	if (_method != DELETE) 
 		checkCGI();
 
 	// TODO = Does the route accepts the METHOD ?
