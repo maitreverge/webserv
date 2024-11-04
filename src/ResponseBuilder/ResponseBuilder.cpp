@@ -142,14 +142,9 @@ void	ResponseBuilder::validateURI( void ){
 	}
 
 	// TODO = Is URI a CGI ??
-	if (_method != DELETE) 
+	if (_method != DELETE)
 		checkCGI();
 
-	// TODO = Does the route accepts the METHOD ?
-	{
-		// Set un fichier par défaut comme réponse si la requête est un répertoire.
-	}
-	
 	checkNatureAndAuthoURI();
 
 	if (_isDirectory and (_method == GET) and (not _isCGI))
@@ -157,6 +152,34 @@ void	ResponseBuilder::validateURI( void ){
 		generateListingHTML();
 	}
 
+}
+
+void	ResponseBuilder::checkMethod( void ){
+
+	/*
+	  map<  string,   map<  string,   vector<  string> > > Data;
+	*/
+	// TODO : LINK CONFIG
+	try
+	{
+		
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+
+	// for (size_t i = 0; i <  j; i++)
+	{
+		// Loop throught the config sub-path
+
+		// if found, return;
+
+		// if not found
+		// setError(METHOD NOT ALLOWED)
+	}
+	
+	
 }
 
 void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
@@ -169,6 +192,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	_realURI = _client->headerRequest.getURI();
 
 	extractMethod();
+	checkMethod();
 
 	if(_method == DELETE)
 		setError(CODE_204_NO_CONTENT);
