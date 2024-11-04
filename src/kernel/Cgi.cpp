@@ -3,16 +3,20 @@
 
 void Cgi::launch() //!WARNING select
 {           
-    socketpair(AF_UNIX, SOCK_STREAM, 0, this->fds);
+    socketpair(AF_UNIX, SOCK_STREAM, 0, this->_fds);  
+    Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fds[1]);
+    // Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fds[0]);
+    FD_SET(this->_fds[1], &Kernel::_actualSet);
+    // Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fds[1]);
     pid_t pid = fork();
     if (pid < 0)
         Logger::getInstance().log(ERROR, "fork failed");
     else if (pid == 0)
     {       
-        dup2(this->fds[0], STDIN_FILENO); 
-        dup2(this->fds[0], STDOUT_FILENO); 
-        close(this->fds[0]);//!
-        close(this->fds[1]);//!
+        dup2(this->_fds[0], STDIN_FILENO); 
+        dup2(this->_fds[0], STDOUT_FILENO); 
+        close(this->_fds[0]);//!
+        close(this->_fds[1]);//!
         // int t[2] = {1,2, NULL}
         // char *args[] = {NULL};
         // char *envp[] = {NULL};
@@ -29,12 +33,12 @@ void Cgi::launch() //!WARNING select
     } 
     else
     {                
-        close(this->fds[0]);//!
+        close(this->_fds[0]);//!
 
         // char buff[150];
         // char buff2[5] = {'s','a','l','u','t'};
-        // send(this->fds[1], buff2, sizeof(buff2), 0);
-        // ssize_t retp = recv(this->fds[1], buff, sizeof(buff), 0);
+        // send(this->_fds[1], buff2, sizeof(buff2), 0);
+        // ssize_t retp = recv(this->_fds[1], buff, sizeof(buff), 0);
         // for (ssize_t i = 0; i < retp; i++)
             // std::cout << "." << buff[i];   
     }    
@@ -47,21 +51,18 @@ ssize_t Cgi::getBody(Client & client)
     
     // char buff[150];
     // char buff2[5] = {'s','a','l','u','t'};
-    // send(this->fds[1], buff2, sizeof(buff2), 0);
+    // send(this->_fds[1], buff2, sizeof(buff2), 0);
+    if (!FD_ISSET(this->_fds[1], &Kernel::_readSet))
+        return 0;
+    Logger::getInstance().log(INFO, "ive not been retarded");
     client.messageSend.clear();
     client.messageSend.resize(SEND_BUFF_SIZE);//!
     ssize_t ret; 
 
-    try
-    {
-        ret = recv(this->fds[1], client.messageSend.data(),
-            client.messageSend.size(), 0);
-        /* code */
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << "CATCH" << e.what() << '\n';
-    }
+    ret = recv(this->_fds[1], client.messageSend.data(),
+        client.messageSend.size(), 0);
+        /* code */    
+  
     
     if (ret < 0)
     {
@@ -107,7 +108,8 @@ ssize_t Cgi::getBody(Client & client)
                 break;
 
     	}
-		close(this->fds[1]);//! delete from FD
+		FD_CLR(this->_fds[1], &Kernel::_actualSet);
+        close(this->_fds[1]);//! delete from FD
         return 0;
     }
     std::cout << "RET " << ret << std::endl;
@@ -116,8 +118,8 @@ ssize_t Cgi::getBody(Client & client)
     if (!ret)
     {
         Logger::getInstance().log(INFO, "end cgi");
-        close(this->fds[1]);//!
-        
+        FD_CLR(this->_fds[1], &Kernel::_actualSet);
+        close(this->_fds[1]);//!
         return 0;
     }
     return ret;
@@ -125,7 +127,7 @@ ssize_t Cgi::getBody(Client & client)
 
 // void Cgi::setBody(Client & client)
 // {
-//  	ssize_t ret = send(this->fds[1], client.messageRecv.data(),
+//  	ssize_t ret = send(this->_fds[1], client.messageRecv.data(),
 //         client.messageRecv.size(), 0);
 // 	  if (ret < 0)
 //     {
@@ -171,13 +173,13 @@ ssize_t Cgi::getBody(Client & client)
 //                 break;
 
 //     	}
-// 		close(this->fds[1]);//!
+// 		close(this->_fds[1]);//!
 //         return 0;
 //     }
 // 	if (!ret) //?????
 //     {
 //         Logger::getInstance().log(INFO, "end cgi");
-//         close(this->fds[1]);//!
+//         close(this->_fds[1]);//!
         
 //         return 0;
 //     }
@@ -200,7 +202,7 @@ ssize_t Cgi::getBody(Client & client)
 // 	{
 // 		ssize_t retr = getBody(readHead, sizeof(buff) - readHead);
 // 		writeHead = advCircle(writeHead, readHead, retr, sizeof(buff));
-// 		ssize_t rets = send(this->fds[1], readHead, sizeof(buff) - writeHead, 0);		
+// 		ssize_t rets = send(this->_fds[1], readHead, sizeof(buff) - writeHead, 0);		
 // 		readHead = advCircle(readHead, writeHead, rets, sizeof(buff));
 
 

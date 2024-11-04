@@ -28,7 +28,7 @@ void Server::replyClients()
 bool Server::fillMessageSend(size_t i)
 {
 	if (ssize_t ret = this->_clients[i].responseBuilder.
-				getBody(this->_clients[i]))
+		getBody(this->_clients[i]))
 	{							
 		if (replyClient(i, this->_clients[i].messageSend, ret))
 			return true;								

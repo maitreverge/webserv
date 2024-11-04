@@ -1,7 +1,10 @@
 #include "Kernel.hpp"
 
 bool Kernel::_exit = false;
-
+int Kernel::_maxFd = 0;
+fd_set Kernel::_actualSet;
+fd_set Kernel::_readSet;
+fd_set Kernel::_writeSet;
 Kernel::Kernel(void) : _conf()
 {
 	this->_servers.reserve(300);//!

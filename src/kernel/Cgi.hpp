@@ -6,10 +6,10 @@ struct Client;
 
 class Cgi
 {
-    int fds[2];
 
     public:
              
+        int _fds[2];
         void    launch();  
         ssize_t getBody(Client & client);
 		void 	setBody(Client & client);
