@@ -12,7 +12,7 @@ Config::Config(char *path)
 	int i = 0;
 	for (i = 0; i < 8; i++)
 		initializeServer((uint16_t)std::atoi(_serverStruct[i].port.c_str()), sockAddress, i);
-	toto.printConfig(*this);
+	// toto.printConfig(*this);
 }
 
 Config::Config()
@@ -22,7 +22,7 @@ Config::Config()
 	intitializeVars(0);
 
 	ConfigFileParser toto;
-	toto.printConfig(*this);
+	// toto.printConfig(*this);
 }
 
 void	Config::intitializeVars(bool withConfigFile)
@@ -78,9 +78,9 @@ void	Config::initializeServers()
 void	Config::initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddress, int i)
 {
 
-	if (!this->_serverStruct[i].host.empty() && i != 42)
-		print("SERVER NAME: " + this->_serverStruct[i].serverName);
-
+	// if (!this->_serverStruct[i].host.empty() && i != 42)
+	// 	print("SERVER NAME: " + this->_serverStruct[i].serverName);
+	(void)i;
 	if (port)
 	{
 		struct sockaddr_in server;	
