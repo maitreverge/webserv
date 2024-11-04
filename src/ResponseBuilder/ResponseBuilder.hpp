@@ -39,17 +39,30 @@ struct ResponseHeaders
 	}
 };
 
-struct RouteConfig
+struct myConfig
 {
-	// _config->routes.find(URI);
-	vector< string > allowedMethods;
-	vector< string > redirection;
-	vector< string > rootSearch;
-	vector< string > path;
-	vector< string > cgiExtensions;
-	vector< string > listingDirectories;
-	vector< string > uploadDirectory;
-	vector< string > routeMapping;
+	vector< string >	allowedMethods;
+	string				redirection;
+	string				uri;
+	string				root;
+	bool				listingDirectories;
+	string				index;
+	vector< string >	cgiAllowed;
+	bool				uploadAllowed;
+	string				uploadDirectory;
+
+	RouteConfig()
+	{
+		allowedMethods.clear();
+		redirection.clear();
+		uri.clear();
+		root.clear();
+		listingDirectories = false;
+		index.clear();
+		cgiAllowed.clear();
+		uploadAllowed = false;
+		uploadDirectory.clear();
+	}
 };
 
 class ResponseBuilder
