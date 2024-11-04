@@ -1,6 +1,12 @@
 #include "Cgi.hpp"
 #include "Logger.hpp"
 
+Cgi::Cgi()
+{
+    this->_fds[0] = -1;
+    this->_fds[1] = -1;
+}
+
 void Cgi::launch() //!WARNING select
 {           
     socketpair(AF_UNIX, SOCK_STREAM, 0, this->_fds);  
@@ -21,14 +27,16 @@ void Cgi::launch() //!WARNING select
         // char *args[] = {NULL};
         // char *envp[] = {NULL};
         // execve("./cgi/a.out", args, envp);
-        chdir("./cgi");
+        // chdir("./cgi");//!
         std::string str("PATH_INFO=coucoucpathinfo");
         char *env[] = 
         {
             const_cast<char *>(str.c_str()), NULL
         };
 		char *argv[] = {NULL};
-        execve("a.out", argv, env);       
+        //!FLAG ANTI HERITAGE FD OU CLOSE
+        // execve("a.out", argv, env);  //!     
+        execve("/home/svidot/42_am/webserv/cgi/a.out", argv, env);       
         std::cout << "execve fail" << std::endl;
     } 
     else
@@ -46,14 +54,14 @@ void Cgi::launch() //!WARNING select
 
 ssize_t Cgi::getBody(Client & client)
 {
-    Logger::getInstance().log(INFO, "hello from parent");
+    // Logger::getInstance().log(INFO, "hello from parent");
     
     
     // char buff[150];
     // char buff2[5] = {'s','a','l','u','t'};
     // send(this->_fds[1], buff2, sizeof(buff2), 0);
     if (!FD_ISSET(this->_fds[1], &Kernel::_readSet))
-        return 0;
+        return 73;
     Logger::getInstance().log(INFO, "ive not been retarded");
     client.messageSend.clear();
     client.messageSend.resize(SEND_BUFF_SIZE);//!
@@ -110,6 +118,7 @@ ssize_t Cgi::getBody(Client & client)
     	}
 		FD_CLR(this->_fds[1], &Kernel::_actualSet);
         close(this->_fds[1]);//! delete from FD
+        this->_fds[1] = -1;
         return 0;
     }
     std::cout << "RET " << ret << std::endl;
@@ -120,71 +129,79 @@ ssize_t Cgi::getBody(Client & client)
         Logger::getInstance().log(INFO, "end cgi");
         FD_CLR(this->_fds[1], &Kernel::_actualSet);
         close(this->_fds[1]);//!
+        this->_fds[1] = -1;
         return 0;
     }
     return ret;
 }
 
-// void Cgi::setBody(Client & client)
-// {
-//  	ssize_t ret = send(this->_fds[1], client.messageRecv.data(),
-//         client.messageRecv.size(), 0);
-// 	  if (ret < 0)
-//     {
-//         Logger::getInstance().log(ERROR, "recv cgi");
+Cgi::~Cgi()
+{
+    FD_CLR(this->_fds[1], &Kernel::_actualSet);
+    if (this->_fds[1] > 0)
+        close(this->_fds[1]);//!
+}
 
-//         switch (errno) 
-// 		{        
-//             case EWOULDBLOCK:
-//                 printf("Pas de données disponibles pour le moment (socket en mode non bloquant).\n");
-//                 break;
-//             case EINTR:
-//                 printf("recv a été interrompu par un signal, réessayez.\n");
-//                 break;
-//             case ECONNRESET:
-//                 printf("Connexion réinitialisée par le pair.\n");
-//                 break;
-//             case ETIMEDOUT:
-//                 printf("Délai de connexion dépassé.\n");
-//                 break;
-//             case ENOTCONN:
-//                 printf("La socket n'est pas connectée.\n");
-//                 break;
-//             case EHOSTUNREACH:
-//                 printf("Hôte distant injoignable.\n");
-//                 break;
-//             case ENETDOWN:
-//                 printf("Réseau local non disponible.\n");
-//                 break;
-//             case EMSGSIZE:
-//                 printf("Le message est trop grand pour le tampon de réception.\n");
-//                 break;
-//             case EBADF:
-//                 printf("Descripteur de fichier invalide.\n");
-//                 break;
-//             case EINVAL:
-//                 printf("Arguments invalides ou socket fermée.\n");
-//                 break;
-//             case ENOBUFS:
-//                 printf("Pas assez de mémoire pour traiter la demande.\n");
-//                 break;
-//             default:
-//                 printf("Erreur inconnue : %d\n", errno);
-//                 break;
+void Cgi::setBody(Client & client)
+{
+ 	ssize_t ret = send(this->_fds[1], client.messageRecv.data(),
+        client.messageRecv.size(), 0);
+	  if (ret < 0)
+    {
+        Logger::getInstance().log(ERROR, "recv cgi");
 
-//     	}
-// 		close(this->_fds[1]);//!
-//         return 0;
-//     }
-// 	if (!ret) //?????
-//     {
-//         Logger::getInstance().log(INFO, "end cgi");
-//         close(this->_fds[1]);//!
+        switch (errno) 
+		{        
+            case EWOULDBLOCK:
+                printf("Pas de données disponibles pour le moment (socket en mode non bloquant).\n");
+                break;
+            case EINTR:
+                printf("recv a été interrompu par un signal, réessayez.\n");
+                break;
+            case ECONNRESET:
+                printf("Connexion réinitialisée par le pair.\n");
+                break;
+            case ETIMEDOUT:
+                printf("Délai de connexion dépassé.\n");
+                break;
+            case ENOTCONN:
+                printf("La socket n'est pas connectée.\n");
+                break;
+            case EHOSTUNREACH:
+                printf("Hôte distant injoignable.\n");
+                break;
+            case ENETDOWN:
+                printf("Réseau local non disponible.\n");
+                break;
+            case EMSGSIZE:
+                printf("Le message est trop grand pour le tampon de réception.\n");
+                break;
+            case EBADF:
+                printf("Descripteur de fichier invalide.\n");
+                break;
+            case EINVAL:
+                printf("Arguments invalides ou socket fermée.\n");
+                break;
+            case ENOBUFS:
+                printf("Pas assez de mémoire pour traiter la demande.\n");
+                break;
+            default:
+                printf("Erreur inconnue : %d\n", errno);
+                break;
+
+    	}
+		close(this->_fds[1]);//!
+        return 0;
+    }
+	if (!ret) //?????
+    {
+        Logger::getInstance().log(INFO, "end cgi");
+        close(this->_fds[1]);//!
         
-//         return 0;
-//     }
-// 	//! system de recup send
-// }
+        return 0;
+    }
+	//! system de recup send
+}
 
 // ssize_t advCircle(ssize_t head, ssize_t stop, ssize_t adv, ssize_t buffSize)
 // {

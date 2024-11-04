@@ -62,7 +62,7 @@
 
 ssize_t	ResponseBuilder::getBody( Client &inputClient ){
 
-	Logger::getInstance().log(INFO, "Response Builder Get Body", inputClient);
+	// Logger::getInstance().log(INFO, "Response Builder Get Body", inputClient);
 	if (this->_isCGI)	
 		return this->_cgi.getBody(inputClient);
 	

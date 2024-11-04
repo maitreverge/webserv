@@ -29,7 +29,9 @@ bool Server::fillMessageSend(size_t i)
 {
 	if (ssize_t ret = this->_clients[i].responseBuilder.
 		getBody(this->_clients[i]))
-	{							
+	{
+		if (ret == 73)
+			return false;							
 		if (replyClient(i, this->_clients[i].messageSend, ret))
 			return true;								
 		usleep(500);
