@@ -42,7 +42,7 @@ void ResponseBuilder::rootMapping( void ){ // ✅ OKAY FUNCTION
 	{
 		try
 		{
-			_config->routeMapping.at(mainRoute);
+			// _config->routeMapping.at(mainRoute);
 			break;
 		}
 		catch(const std::exception& e)
@@ -71,8 +71,8 @@ void ResponseBuilder::rootMapping( void ){ // ✅ OKAY FUNCTION
 	string reroute;
 	try
 	{
-		needle = _config->routeMapping.at(mainRoute).begin()->first;
-		reroute = _config->routeMapping.at(mainRoute).begin()->second;
+		// needle = _config->routeMapping.at(mainRoute).begin()->first;
+		// reroute = _config->routeMapping.at(mainRoute).begin()->second;
 	}
 	catch(const std::exception& e)
 	{
@@ -170,7 +170,7 @@ void	ResponseBuilder::checkMethod( void ){
 
 	try
 	{
-		_config->allowedMethods.at(_realURI); // look up for the route
+		// _config->allowedMethods.at(_realURI); // look up for the route
 	}
 	catch(const std::exception& e)
 	{
@@ -180,7 +180,7 @@ void	ResponseBuilder::checkMethod( void ){
 	vector<string> methods;
 	try
 	{
-		methods = _config->allowedMethods.at(_realURI).at("allowedMethods");
+		methods = _config->routes.at("route1").at("allowedMethods");
 	}
 	catch(const std::exception& e)
 	{

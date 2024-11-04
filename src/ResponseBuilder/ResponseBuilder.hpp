@@ -41,13 +41,13 @@ struct ResponseHeaders
 
 struct RouteConfig
 {
+	// _config->routes.find(URI);
 	vector< string > allowedMethods;
 	vector< string > redirection;
 	vector< string > rootSearch;
 	vector< string > path;
 	vector< string > cgiExtensions;
 	vector< string > listingDirectories;
-	vector< string > uploadDirectory;
 	vector< string > uploadDirectory;
 	vector< string > routeMapping;
 };
