@@ -28,6 +28,7 @@ class ConfigFileParser
 	#endif
 		struct server	_serverStruct[4];
 		Data			_data;
+		std::vector<std::string> routeKey;
 
 		void	print(std::string str);
 		void	trim(std::string& str);
@@ -41,14 +42,17 @@ class ConfigFileParser
 		void	setConfigValue(catIt& catIt, itemIt& itemIt, short& field, const char str[]);
 		void	setConfigValue(catIt& catIt, itemIt& itemIt, bool& field, const char str[]);
 		void	setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::vector<std::string>& vec, const char str[]);
+		void	setConfigValue(catIt catIt, itemIt itemIt, valIt valIt, Config& configStruct);
 		void	initializeServers(Config& configStruct, int& i);
 		bool	isServerData(const std::string& category);
+		bool	isRouteData(const std::string& category);
 
 	public:
+		ConfigFileParser();
 		static void 	printServerData(const server _serverStruct[], size_t size);
 		void	intializeConfigStruct(Config& configStruct);
 		int		extractDataFromConfigFile(const std::string& path);
 		void	parseConfigFile(Config& configStruct, char* path);
 		static void 	printConfig(const Config& config);
-
+		static void	printRoutesData(const RoutesData& routesData);
 };
