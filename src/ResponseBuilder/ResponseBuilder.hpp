@@ -39,6 +39,19 @@ struct ResponseHeaders
 	}
 };
 
+struct RouteConfig
+{
+	vector< string > allowedMethods;
+	vector< string > redirection;
+	vector< string > rootSearch;
+	vector< string > path;
+	vector< string > cgiExtensions;
+	vector< string > listingDirectories;
+	vector< string > uploadDirectory;
+	vector< string > uploadDirectory;
+	vector< string > routeMapping;
+};
+
 class ResponseBuilder
 {
 
@@ -109,6 +122,8 @@ class ResponseBuilder
 	bool	isErrorRedirect( void );
 	void	extractFileNature( string &target);
 	void	checkMethod( void );
+	void	extractRouteConfig( void );
+
 
 
 	// generateListingHTML.cpp
