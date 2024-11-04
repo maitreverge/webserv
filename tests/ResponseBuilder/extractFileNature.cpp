@@ -4,6 +4,7 @@ TEST_F(ResponseBuilderTest, extractFileNature_Test1) {
     
 	string target = "/dir1/dir2/image.jpeg";
 
+	responseBuilder->_method = static_cast<ResponseBuilder::e_method>(GET); // TODO : write more tests
 	responseBuilder->extractFileNature(target);
     
 	EXPECT_EQ(responseBuilder->_fileName, "image.jpeg");

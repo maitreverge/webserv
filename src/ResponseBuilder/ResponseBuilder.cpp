@@ -156,30 +156,55 @@ void	ResponseBuilder::validateURI( void ){
 
 void	ResponseBuilder::checkMethod( void ){
 
-	/*
-	  map<  string,   map<  string,   vector<  string> > > Data;
-	*/
-	// TODO : LINK CONFIG
+	#ifdef UNIT_TEST
+	#else
+	_realURI = "/";
+	// vector<string> innerVector;
+	// innerVector.push_back("GET");
+
+	// _config->allowedMethods.erase("/");
+	// map<string, vector<string> > innerMap;
+	// innerMap.insert(std::make_pair("wvbgfjerbgvhjer", innerVector));
+	// _config->allowedMethods.insert(std::make_pair("/", innerMap));
+	#endif
+
 	try
 	{
-		
+		_config->allowedMethods.at(_realURI); // look up for the route
 	}
 	catch(const std::exception& e)
 	{
-		std::cerr << e.what() << '\n';
+		return; // Route not found == FULL AUTHO
 	}
 
-	// for (size_t i = 0; i <  j; i++)
+	vector<string> methods;
+	try
 	{
-		// Loop throught the config sub-path
+		methods = _config->allowedMethods.at(_realURI).at("allowedMethods");
+	}
+	catch(const std::exception& e)
+	{
+		return; // allowedMethod not found within the route == FULL AUTHO
+	}
 
-		// if found, return;
-
-		// if not found
-		// setError(METHOD NOT ALLOWED)
+	if (methods.empty())
+		return;
+	
+	for (std::vector<string>::iterator it = methods.begin(); it < methods.end(); ++it)
+	{
+		if (*(it) == "GET" and _method == GET)
+			return;
+		else if (*(it) == "POST" and _method == POST)
+			return;
+		else if (*(it) == "DELETE" and _method == DELETE)
+			return;
 	}
 	
-	
+	#ifdef UNIT_TEST
+	_errorType = CODE_405_METHOD_NOT_ALLOWED;
+	#else
+	setError(CODE_405_METHOD_NOT_ALLOWED);
+	#endif
 }
 
 void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
