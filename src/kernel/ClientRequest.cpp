@@ -113,6 +113,8 @@ void floSimulatorPut(std::vector<char> part)
     } else {
         std::cout << "Erreur : impossible d'ouvrir le fichier." << std::endl;
     }
+	this->_clients[i].messageRecv.clear();
+	//! 
 }
 
 void Server::handleClientBody(size_t i, ssize_t ret)
