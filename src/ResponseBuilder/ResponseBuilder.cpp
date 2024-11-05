@@ -217,31 +217,34 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	_realURI = _client->headerRequest.getURI();
 
 	extractRouteConfig();
-	extractMethod();
-	checkMethod();
+	printMyConfig();
 
-	if(_method == DELETE)
-		setError(CODE_204_NO_CONTENT);
+	sleep(1000000);
+	// extractMethod();
+	// checkMethod();
 
-	if ( not redirectURI())
-	{
-		resolveURI();
-		validateURI();
+	// if(_method == DELETE)
+	// 	setError(CODE_204_NO_CONTENT);
+
+	// if ( not redirectURI())
+	// {
+	// 	resolveURI();
+	// 	validateURI();
 		
-		// if (_isCGI and _errorType <= CODE_400_BAD_REQUEST) // or potentially another adress
-		// 	launchCGI();
+	// 	// if (_isCGI and _errorType <= CODE_400_BAD_REQUEST) // or potentially another adress
+	// 	// 	launchCGI();
 		
-		checkNatureAndAuthoURI(); // double check for this Nature, if the URi has been swapped for an error file
-		setContentLenght();
-	}
+	// 	checkNatureAndAuthoURI(); // double check for this Nature, if the URi has been swapped for an error file
+	// 	setContentLenght();
+	// }
 	
-	buildHeaders();
+	// buildHeaders();
 
-	// Copying the build Headers in headerRespons
-	inputClient.headerRespons = Headers.masterHeader;
+	// // Copying the build Headers in headerRespons
+	// inputClient.headerRespons = Headers.masterHeader;
 
-	if (_method == DELETE and _errorType < CODE_400_BAD_REQUEST)
-		deleteEngine();	
+	// if (_method == DELETE and _errorType < CODE_400_BAD_REQUEST)
+	// 	deleteEngine();	
 	// Headers.masterHeader.clear();//!
 
 	// printAllHeaders();

@@ -54,14 +54,16 @@ struct MyConfig
 
 	MyConfig()
 	{
-		allowedMethods.clear();
+		allowedMethods.push_back("GET");
+		allowedMethods.push_back("POST");
+		allowedMethods.push_back("DELETE");
 		redirection.clear();
 		uri.clear();
 		root.clear();
 		listingDirectory = false;
 		index.clear();
 		cgiAllowed.clear();
-		uploadAllowed = false;
+		uploadAllowed = true;
 		uploadDirectory.clear();
 	}
 };
@@ -143,7 +145,8 @@ class ResponseBuilder
 	void	extractRouteConfig( void );
 	void	clearingRoutes( vector< string >&routeNames, vector< string >&routeURIS );
 	void	buildRouteConfig( string path );
-	void	defaultConfig( void );
+	void	printMyConfig( void );
+	
 
 
 

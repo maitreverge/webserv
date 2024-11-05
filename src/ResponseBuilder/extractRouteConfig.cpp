@@ -102,10 +102,6 @@ void	ResponseBuilder::buildRouteConfig( string path ){
 	{
 		// log something here
 	}
-	/*
-		bool				uploadAllowed;
-		string				uploadDirectory;
-	*/
 
 	// ! cgiAllowed
 	try
@@ -127,21 +123,16 @@ void	ResponseBuilder::buildRouteConfig( string path ){
 	{
 		// log something here
 	}
+
+	// ! uploadDirectory
 	try
 	{
-		_myconfig.allowedMethods = _config->routes.at(path).at("allowedMethods");
+		_myconfig.uploadDirectory = *_config->routes.at(path).at("uploadDirectory").begin();
 	}
 	catch(const std::exception& e)
 	{
 		// log something here
 	}
-
-	
-}
-
-void	ResponseBuilder::defaultConfig( void ){
-
-
 }
 
 void	ResponseBuilder::extractRouteConfig( void ){
@@ -190,6 +181,40 @@ void	ResponseBuilder::extractRouteConfig( void ){
 
 	if (found)
 		buildRouteConfig(routeNames[pos]);
-	else
-		defaultConfig();
+}
+
+void	ResponseBuilder::printMyConfig( void ){
+
+	printColor(CYAN, "================= PRINT MY CONFIG =============\n");
+	
+	print("ALLOWED METHODS =");
+	for (vectorIterator it = _myconfig.allowedMethods.begin(); it != _myconfig.allowedMethods.end(); ++it)
+	{
+		printColor(BOLD_RED, *it);
+	}
+
+	print("REDIRECTION =");
+	printColor(BOLD_RED, _myconfig.redirection);
+	print("ROOT =");
+	printColor(BOLD_RED, _myconfig.root);
+
+	print("LISTING-DIRECTORY =");
+	printColor(BOLD_RED, _myconfig.listingDirectory ? "true" : "false");
+	
+	print("INDEX =");
+	printColor(BOLD_RED, _myconfig.index);
+
+	print("CGI ALLOWED =");
+	for (vectorIterator it = _myconfig.cgiAllowed.begin(); it != _myconfig.cgiAllowed.end(); ++it)
+	{
+		printColor(BOLD_RED, *it);
+	}
+
+	print("UPLOAD ALLOWED =");
+	printColor(BOLD_RED, _myconfig.uploadAllowed ? "true" : "false");
+
+	print("UPLOAD DIRECTORY =");
+	printColor(BOLD_RED, _myconfig.uploadDirectory);
+
+	printColor(CYAN, "================= PRINT MY CONFIG =============");
 }

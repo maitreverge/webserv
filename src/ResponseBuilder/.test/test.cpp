@@ -1,19 +1,19 @@
-#include <dirent.h>
-#include <iostream>
-#include <cstring>
+// #include <dirent.h>
+// #include <iostream>
+// #include <cstring>
 
-using namespace std;
+// using namespace std;
 
 
-int main() {
+// int main() {
 
-	int j = 0;
-	for (size_t i = 0; i < 10; i++, j++)
-	{
-		std::cout << "i =" << i << endl;
-		std::cout << "j =" << j << endl;
-	}
+// 	int j = 0;
+// 	for (size_t i = 0; i < 10; i++, j++)
+// 	{
+// 		std::cout << "i =" << i << endl;
+// 		std::cout << "j =" << j << endl;
+// 	}
 	
 
-	return 0;
-}
+// 	return 0;
+// }
