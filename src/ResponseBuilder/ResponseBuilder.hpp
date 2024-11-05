@@ -172,6 +172,12 @@ class ResponseBuilder
 	// DELETE
 	void	deleteEngine( void );
 
+	class CodeErrorRaised : public exception
+	{
+		public:
+			virtual const char* what( void ) const throw();
+	};
+
 
 
 
