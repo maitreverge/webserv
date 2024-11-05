@@ -27,14 +27,14 @@
 // 		}	
 // 	}
 // }
-
+bool tog = false;
 void Server::listenClients()
 {	
 	for (size_t i = 0; i < this->_clients.size(); i++)
 	{
 		if (this->_clients[i].ping >= 2)
 			continue;
-		if (this->_clients[i].headerRequest.getHeaders().ContentLength
+		if (tog && this->_clients[i].headerRequest.getHeaders().ContentLength
 			&& !this->_clients[i].messageRecv.empty())
 			reSend(i);
 		else if (FD_ISSET(this->_clients[i].fd, &this->_readSet))
@@ -55,6 +55,9 @@ void Server::listenClients()
 
 void Server::reSend(size_t i)
 {
+	Logger::getInstance().log(INFO, "Re Send", this->_clients[i]);
+	std::cout << this->_clients[i].headerRequest.getHeaders().ContentLength << " " <<
+			this->_clients[i].messageRecv.size() << std::endl;
 	if (this->_clients[i].headerRequest.getMethod() != "POST")
 		return;
 	if (this->_clients[i].ping >= 1)
@@ -79,7 +82,7 @@ void Server::clientMessage(size_t i, ssize_t ret)
 		this->handleClientBody(i, ret);
 	else
 		Logger::getInstance().log(ERROR, "client message unhandle case",
-			this->_clients[i]);
+			this->_clients[i]);	
 }
 
 // void Server::clientMessage(size_t i, ssize_t ret)
@@ -184,6 +187,7 @@ void floSimulatorPut(std::vector<char> part)
 
 void Server::handleClientBody(size_t i, ssize_t ret)
 {
+	tog = true;
 	stringstream ss;
 	ss << "receive client body" << " " << ret << " bytes";
 	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
@@ -280,7 +284,7 @@ bool Server::isBodyTerminated(size_t i)
 		<< this->_clients[i].bodySize << " Content-Lenght: "
 		<< this->_clients[i].headerRequest.getHeaders().ContentLength;
 		Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
-		
+		this->_clients[i].bodySize = 0;//!
 		if (this->_clients[i].headerRequest.getMethod() == "POST")
 			this->_clients[i].responseBuilder._cgi.
 				setBody(this->_clients[i], true);
