@@ -154,7 +154,7 @@ Cgi::~Cgi()
         close(this->_fds[1]);//!
 }
 
-void Cgi::setBody(Client & client)
+void Cgi::setBody(Client & client, bool eof)
 {
     Logger::getInstance().log(INFO, "Set Body");
     if (!FD_ISSET(this->_fds[1], &Kernel::_writeSet))
@@ -229,6 +229,12 @@ void Cgi::setBody(Client & client)
 
 	client.messageRecv.erase(client.messageRecv.begin(),
         client.messageRecv.begin() + ret);
+		std::cout << "FF " << eof << " FF " << client.messageRecv.size() << std::endl;
+	if (eof && client.messageRecv.empty())
+	{
+		std::cout << "EOOOOOOOOOOOOOOOOOOOOOOFFF" << std::endl;
+		shutdown(_fds[1], SHUT_WR);
+	}
 }
 
 // bool Server::replyClient(size_t i, std::vector<char> & response,

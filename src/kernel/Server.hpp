@@ -12,8 +12,7 @@
 #include "errorCode.hpp"
 #include "ResponseBuilder.hpp"
 
-#define RECV_BUFF_SIZE 5
-// #define SEND_BUFF_SIZE 8
+#define RECV_BUFF_SIZE 20
 #define SEND_BUFF_SIZE 20
 
 #define MAX_HDR_SIZE 8192

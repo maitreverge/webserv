@@ -57,7 +57,12 @@ void Server::reSend(size_t i)
 {
 	if (this->_clients[i].headerRequest.getMethod() != "POST")
 		return;
-	this->_clients[i].responseBuilder._cgi.setBody(this->_clients[i]);
+	if (this->_clients[i].ping >= 1)
+		this->_clients[i].responseBuilder._cgi.
+			setBody(this->_clients[i], true);
+	else
+		this->_clients[i].responseBuilder._cgi.
+			setBody(this->_clients[i], false);
 	if (this->_clients[i].messageRecv.empty() && this->_clients[i].ping >= 1)
 		this->_clients[i].ping++; 
 }
@@ -110,14 +115,7 @@ bool Server::isDelimiterFind(size_t i, std::vector<char>::iterator & it)
 		delimiter.end());
 	return (it != this->_clients[i].messageRecv.end());	
 }
-void printResponse2(const std::vector<char> & response)
-{
-	std::cout << std::endl << "\e[34mPrint Vector: \e[31m" << std::endl;
-	std::cout << "-";		
-	for (size_t i = 0; i < response.size(); i++)				
-		std::cout << response[i];
-	std::cout << "-\e[0m" << std::endl << std::endl;
-}
+
 void Server::handleClientHeader(size_t i, ssize_t ret)
 {
 	stringstream ss;
@@ -135,11 +133,8 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 		this->_clients[i].headerRequest.parse(this->_clients[i]);								
 		this->_clients[i].headerRequest.displayParsingResult();
 		getRespHeader(i);
-		printResponse2(this->_clients[i].messageRecv);
-		std::cout << "voila" << *(it - 1) << *(it) << *(it + 1) << *(it + 2) << std::endl;
 		this->_clients[i].messageRecv.
-            erase(this->_clients[i].messageRecv.begin(), it + 4);
-		printResponse2(this->_clients[i].messageRecv);
+            erase(this->_clients[i].messageRecv.begin(), it + 4);	
 		this->_clients[i].bodySize += this->_clients[i].messageRecv.size();
 		if (!this->_clients[i].headerRequest.getHeaders().ContentLength) //!new
 			this->_clients[i].ping = 2; //!pong
@@ -197,7 +192,8 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 	if (this->isBodyTooLarge(i) || this->isBodyTerminated(i))
 		return ;
 	if (this->_clients[i].headerRequest.getMethod() == "POST")
-		this->_clients[i].responseBuilder._cgi.setBody(this->_clients[i]);
+		this->_clients[i].responseBuilder._cgi.
+			setBody(this->_clients[i], false);
 	
 		// floSimulatorPut(this->_clients[i].messageRecv);
 	// this->_clients[i].messageRecv.clear();//!del	
@@ -243,8 +239,7 @@ bool Server::isContentLengthValid(size_t i)
 {
 	if (this->_clients[i].headerRequest.getHeaders().ContentLength
 		> MAX_CNT_SIZE)
-	{	
-		Logger::getInstance().log(ERROR, "CONTENT YEAH", this->_clients[i]);
+	{			
 		stringstream ss;
 		ss << "max content size reached" << " - Content-Lenght: "
 			<< this->_clients[i].headerRequest.getHeaders().ContentLength
@@ -287,7 +282,8 @@ bool Server::isBodyTerminated(size_t i)
 		Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
 		
 		if (this->_clients[i].headerRequest.getMethod() == "POST")
-			this->_clients[i].responseBuilder._cgi.setBody(this->_clients[i]);
+			this->_clients[i].responseBuilder._cgi.
+				setBody(this->_clients[i], true);
 			// floSimulatorPut(this->_clients[i].messageRecv);
 		else
 		{
