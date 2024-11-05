@@ -58,41 +58,35 @@ void ResponseBuilder::resolveURI( void ) {// ⛔ NOT OKAY FUNCTION
 void	ResponseBuilder::validateURI( void ){
 
 	// ! STEP 1 = EDGE CASES FOR EMPTY PATH or PATH == "/"
-	if (_realURI.empty())
-	{
-		setError(CODE_404_NOT_FOUND); return;
-	}
-	else if (_realURI == "/" and _method == GET) // What if the resolved URI is a directory and not just "/"
-	{
-		// string originalURI = "/";
-		vector<string>::iterator it;
-		for (it = _config->indexFiles.begin(); it < _config->indexFiles.end(); ++it)
-		{
-			_realURI = *it;
+	// if (_realURI == "/" and _method == GET) // What if the resolved URI is a directory and not just "/"
+	// {
+	// 	// string originalURI = "/";
+	// 	vector<string>::iterator it;
+	// 	for (it = _config->indexFiles.begin(); it < _config->indexFiles.end(); ++it)
+	// 	{
+	// 		_realURI = *it;
 			
-			// Check permissions with stat
-			if (stat(_realURI.c_str(), &_fileInfo) == 0)
-				break ;
-		}
+	// 		// Check permissions with stat
+	// 		if (stat(_realURI.c_str(), &_fileInfo) == 0)
+	// 			break ;
+	// 	}
 
-		if (it == _config->indexFiles.end())
-		{
-			if (errno == EACCES) // The process does not have execute permissions on one or more directories in the path.
-			{
-				setError(CODE_401_UNAUTHORIZED); return;
-			}
-			else if (errno == ENOENT) // The file or directory does not exist.
-			{
-				setError(CODE_404_NOT_FOUND); return;
-			}
-		}
-	}
+	// 	if (it == _config->indexFiles.end())
+	// 	{
+	// 		if (errno == EACCES) // The process does not have execute permissions on one or more directories in the path.
+	// 		{
+	// 			setError(CODE_401_UNAUTHORIZED); return;
+	// 		}
+	// 		else if (errno == ENOENT) // The file or directory does not exist.
+	// 		{
+	// 			setError(CODE_404_NOT_FOUND); return;
+	// 		}
+	// 	}
+	// }
 
 	// TODO = Is URI a CGI ??
-	if (_method != DELETE)
-		checkCGI();
+	
 
-	checkNatureAndAuthoURI();
 
 	if (_isDirectory and (_method == GET) and (not _isCGI))
 	{
@@ -144,6 +138,15 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 			
 			resolveURI();
 
+			if (_method != DELETE)
+				checkCGI();
+			
+			checkAutho();
+			checkNature();
+			
+			// ! WORK NEEDLE
+			validateURI();
+
 
 		}
 	}
@@ -158,7 +161,6 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
 
 	// {
-	// 	validateURI();
 		
 	// 	// if (_isCGI and _errorType <= CODE_400_BAD_REQUEST) // or potentially another adress
 	// 	// 	launchCGI();

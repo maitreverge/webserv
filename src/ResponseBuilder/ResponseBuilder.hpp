@@ -132,7 +132,6 @@ class ResponseBuilder
 	void	setError( e_errorCodes );
 	string	extractType( const string& extension ) const;
 	void	initMimes( void );
-	void	checkNatureAndAuthoURI( void );
 	void	checkAutho( void );
 	void	checkNature( void );
 	bool 	redirectURI( void );

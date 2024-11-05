@@ -134,12 +134,6 @@ void	ResponseBuilder::checkNature( void ){ // ⛔ NOT OKAY FUNCTION
 	}
 }
 
-void	ResponseBuilder::checkNatureAndAuthoURI( void ){ // ⛔ NOT OKAY FUNCTION
-
-	checkAutho();
-	checkNature();
-}
-
 void ResponseBuilder::setError(e_errorCodes code){ // 🟠 FUNCTION IN PROCESS
 
 	_errorType = code;

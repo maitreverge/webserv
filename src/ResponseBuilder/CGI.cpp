@@ -10,26 +10,30 @@ void ResponseBuilder::launchCGI( void ){
 
 void ResponseBuilder::checkCGI( void ){
 
-	string targetPython = ".py";
-	string targetPHP = ".php";
+    // Define the file extensions for Python and PHP scripts
+    string targetPython = ".py";
+    string targetPHP = ".php";
 
-	std::string::size_type phpLoc = _realURI.find(targetPHP);
-	std::string::size_type pythonLoc = _realURI.find(targetPython);
+    // Find the positions of the Python and PHP extensions in the URI
+    std::string::size_type phpLoc = _realURI.find(targetPHP);
+    std::string::size_type pythonLoc = _realURI.find(targetPython);
 
-	if (phpLoc == std::string::npos and pythonLoc == std::string::npos )
-	{
-		_isCGI = false;
-		return;
-	}
+    // If neither Python nor PHP extensions are found, set _isCGI to false and return
+    if (phpLoc == std::string::npos and pythonLoc == std::string::npos )
+        return;
 
-	_isCGI = true;
-	
-	std::string::size_type realLoc = ( phpLoc == std::string::npos ) ? pythonLoc : phpLoc;
+    // If either extension is found, set _isCGI to true
+    _isCGI = true;
+    
+    // Determine the position of the found extension
+    std::string::size_type realLoc = ( phpLoc == std::string::npos ) ? pythonLoc : phpLoc;
 
-	realLoc += (phpLoc == std::string::npos) ? targetPython.length() : targetPHP.length();
+    // Adjust the position to the end of the extension
+    realLoc += (phpLoc == std::string::npos) ? targetPython.length() : targetPHP.length();
 
-	_pathInfo = _realURI.substr(realLoc);
+    // Extract the path info after the script extension
+    _pathInfo = _realURI.substr(realLoc);
 
-	_realURI = _realURI.substr(0, realLoc);
-
+    // Update _realURI to only include the part up to and including the script extension
+    _realURI = _realURI.substr(0, realLoc);
 }
