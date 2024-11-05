@@ -156,41 +156,10 @@ void	ResponseBuilder::validateURI( void ){
 
 void	ResponseBuilder::checkMethod( void ){
 
-	#ifdef UNIT_TEST
-	#else
-	_realURI = "/";
-	// vector<string> innerVector;
-	// innerVector.push_back("GET");
-
-	// _config->allowedMethods.erase("/");
-	// map<string, vector<string> > innerMap;
-	// innerMap.insert(std::make_pair("wvbgfjerbgvhjer", innerVector));
-	// _config->allowedMethods.insert(std::make_pair("/", innerMap));
-	#endif
-
-	try
-	{
-		// _config->allowedMethods.at(_realURI); // look up for the route
-	}
-	catch(const std::exception& e)
-	{
-		return; // Route not found == FULL AUTHO
-	}
-
-	vector<string> methods;
-	try
-	{
-		methods = _config->routes.at("route1").at("allowedMethods");
-	}
-	catch(const std::exception& e)
-	{
-		return; // allowedMethod not found within the route == FULL AUTHO
-	}
-
-	if (methods.empty())
+	if (_myconfig.allowedMethods.empty())
 		return;
 	
-	for (std::vector<string>::iterator it = methods.begin(); it < methods.end(); ++it)
+	for (std::vector<string>::iterator it = _myconfig.allowedMethods.begin(); it < _myconfig.allowedMethods.end(); ++it)
 	{
 		if (*(it) == "GET" and _method == GET)
 			return;
@@ -200,11 +169,7 @@ void	ResponseBuilder::checkMethod( void ){
 			return;
 	}
 	
-	#ifdef UNIT_TEST
-	_errorType = CODE_405_METHOD_NOT_ALLOWED;
-	#else
 	setError(CODE_405_METHOD_NOT_ALLOWED);
-	#endif
 }
 
 void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
@@ -219,9 +184,8 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	extractRouteConfig();
 	printMyConfig();
 
-	sleep(1000000);
-	// extractMethod();
-	// checkMethod();
+	extractMethod();
+	checkMethod();
 
 	// if(_method == DELETE)
 	// 	setError(CODE_204_NO_CONTENT);
