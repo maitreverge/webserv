@@ -146,8 +146,13 @@ Cgi::~Cgi()
 
 void Cgi::setBody(Client & client)
 {
+    Logger::getInstance().log(INFO, "Set Body");
     if (!FD_ISSET(this->_fds[1], &Kernel::_writeSet))
+    {
+        Logger::getInstance().log(DEBUG, "not ready to write");
         return;
+    }
+    Logger::getInstance().log(DEBUG, "ready to send");
  	ssize_t ret = send(this->_fds[1], client.messageRecv.data(),
         client.messageRecv.size(), 0);
 	if (ret < 0)
@@ -216,28 +221,28 @@ void Cgi::setBody(Client & client)
         client.messageRecv.begin() + ret);
 }
 
-bool Server::replyClient(size_t i, std::vector<char> & response,
-	ssize_t repSize)
-{	
-	Logger::getInstance().log(INFO, "reply client", this->_clients[i]);
-	printResponse(response);
+// bool Server::replyClient(size_t i, std::vector<char> & response,
+// 	ssize_t repSize)
+// {	
+// 	Logger::getInstance().log(INFO, "reply client", this->_clients[i]);
+// 	printResponse(response);
 
-	response.erase(response.begin() + repSize, response.end());
-	ssize_t ret;
+// 	response.erase(response.begin() + repSize, response.end());
+// 	ssize_t ret;
 		
-	if ((ret = send(this->_clients[i].fd, response.data(), response.size(),
-		MSG_NOSIGNAL)) < 0)
-	return Logger::getInstance().log(ERROR, "send", this->_clients[i]),
-		this->exitClient(i), true;		
+// 	if ((ret = send(this->_clients[i].fd, response.data(), response.size(),
+// 		MSG_NOSIGNAL)) < 0)
+// 	return Logger::getInstance().log(ERROR, "send", this->_clients[i]),
+// 		this->exitClient(i), true;		
 
-	std::string str(response.data(), response.data()
-		+ static_cast<size_t>(ret));      
-	std::stringstream ss; ss << "data sent to client: -" << str << "-";	
-	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]); 
+// 	std::string str(response.data(), response.data()
+// 		+ static_cast<size_t>(ret));      
+// 	std::stringstream ss; ss << "data sent to client: -" << str << "-";	
+// 	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]); 
 
-	response.erase(response.begin(), response.begin() + ret);	
-	return false;
-}
+// 	response.erase(response.begin(), response.begin() + ret);	
+// 	return false;
+// }
 
 // ssize_t advCircle(ssize_t head, ssize_t stop, ssize_t adv, ssize_t buffSize)
 // {

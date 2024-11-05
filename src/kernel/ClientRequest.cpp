@@ -87,9 +87,9 @@ void Server::getRespHeader(size_t i)
 	if (this->_clients[i].headerRequest.getMethod() == "GET")		
 		this->_clients[i].responseBuilder.getHeader(this->_clients[i],
 		this->_conf);
-	// else if (this->_clients[i].headerRequest.getMethod() == "POST")		
-	// 	this->_clients[i].responseBuilder.getHeader(this->_clients[i],
-	// 	this->_conf);
+	else if (this->_clients[i].headerRequest.getMethod() == "POST")		
+		this->_clients[i].responseBuilder.getHeader(this->_clients[i],
+		this->_conf);
 	// else if (this->_clients[i].headerRequest.getMethod() == "DEL")		
 	// 	this->_clients[i].responseBuilder.getHeader(this->_clients[i],
 	// 	this->_conf);
@@ -113,7 +113,7 @@ void floSimulatorPut(std::vector<char> part)
     } else {
         std::cout << "Erreur : impossible d'ouvrir le fichier." << std::endl;
     }
-	this->_clients[i].messageRecv.clear();
+	// this->_clients[i].messageRecv.clear();//!
 	//! 
 }
 
@@ -127,7 +127,8 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 	if (this->isBodyTooLarge(i) || this->isBodyTerminated(i))
 		return ;
 	if (this->_clients[i].headerRequest.getMethod() == "POST")
-		floSimulatorPut(this->_clients[i].messageRecv);
+		this->_clients[i].responseBuilder._cgi.setBody(this->_clients[i]);
+		// floSimulatorPut(this->_clients[i].messageRecv);
 	this->_clients[i].messageRecv.clear();	
 }
 
@@ -216,9 +217,14 @@ bool Server::isBodyTerminated(size_t i)
 
 		this->_clients[i].bodySize = 0;
 		if (this->_clients[i].headerRequest.getMethod() == "POST")
-			floSimulatorPut(this->_clients[i].messageRecv);
-		// this->_clients[i].messageRecv.clear();//! clear dans le post normal
-		this->_clients[i].ping = false;	//! si le message nest pas send en entier
+			this->_clients[i].responseBuilder._cgi.setBody(this->_clients[i]);
+			// floSimulatorPut(this->_clients[i].messageRecv);
+		else
+		{
+			this->_clients[i].messageRecv.clear();//! clear dans le post normal
+		}
+		if (this->_clients[i].messageRecv.empty())
+			this->_clients[i].ping = false;	//! si le message nest pas send en entier
 		//! il vas etre en pong mais peut etre que il ny aura rien a repondre ou plantage	
 		return true;
 	}
