@@ -2,11 +2,12 @@
 
 ConfigFileParser::ConfigFileParser()
 {
-	routeKey.push_back("allowedMethods");
+	routeKey.push_back("allowedMethods"); 
 	routeKey.push_back("redirection");
-	routeKey.push_back("routeMapping");
+	routeKey.push_back("uri");
+	routeKey.push_back("root");
 	routeKey.push_back("listingDirectory");
-	routeKey.push_back("defaultPath");
+	routeKey.push_back("index");
 	routeKey.push_back("cgiAllowed");
 	routeKey.push_back("uploadAllowed");
 	routeKey.push_back("uploadDirectory");
