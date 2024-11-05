@@ -41,23 +41,24 @@ struct ResponseHeaders
 
 struct myConfig
 {
+	string				uri; // main key
+
 	vector< string >	allowedMethods;
 	string				redirection;
-	string				uri;
 	string				root;
-	bool				listingDirectories;
+	bool				listingDirectory;
 	string				index;
 	vector< string >	cgiAllowed;
 	bool				uploadAllowed;
 	string				uploadDirectory;
 
-	RouteConfig()
+	myConfig()
 	{
 		allowedMethods.clear();
 		redirection.clear();
 		uri.clear();
 		root.clear();
-		listingDirectories = false;
+		listingDirectory = false;
 		index.clear();
 		cgiAllowed.clear();
 		uploadAllowed = false;

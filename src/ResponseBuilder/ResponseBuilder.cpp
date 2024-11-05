@@ -216,6 +216,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	
 	_realURI = _client->headerRequest.getURI();
 
+	extractRouteConfig();
 	extractMethod();
 	checkMethod();
 
