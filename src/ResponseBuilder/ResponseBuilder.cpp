@@ -35,6 +35,7 @@ void ResponseBuilder::rootMapping( void ){ // ✅ OKAY FUNCTION
 }
 
 void ResponseBuilder::resolveURI( void ) {// ⛔ NOT OKAY FUNCTION
+	
 	// ! STEP 1 : Check the rootMapping
 	rootMapping();
 	
@@ -133,22 +134,20 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
 			checkMethod();
 
-			if (_method != DELETE)
+			if (_method == DELETE)
+				setError(CODE_204_NO_CONTENT); // does not throw exception
+			else // if (_method != DELETE)
 				checkCGI();
-			
-			if (_method == POST)
-				postCheck();
-				
-			if(_method == DELETE)
-				setError(CODE_204_NO_CONTENT);
+			if (_method == POST and !_isCGI)
+				uploadCheck();
 			
 			resolveURI();
 
 			
 			checkAutho();
+			// ! WORK NEEDLE
 			checkNature();
 			
-			// ! WORK NEEDLE
 			validateURI();
 
 

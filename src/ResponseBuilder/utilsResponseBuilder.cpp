@@ -43,24 +43,24 @@ void	ResponseBuilder::setContentLenght(){ // ⛔ NOT OKAY FUNCTION
 	// ! BOILERPLATE CODE
 }
 
-void	ResponseBuilder::postCheck( void ){
+void	ResponseBuilder::uploadCheck( void ){
 
-	if (!_isCGI)
+	if (!_myconfig.uploadAllowed)
+		setError(CODE_403_FORBIDDEN);
+	if (_myconfig.uploadDirectory.empty())
 	{
-		if (!_myconfig.uploadAllowed)
-			setError(CODE_403_FORBIDDEN);
-		else if ( access(_myconfig.uploadDirectory.c_str(), W_OK) == -1) // we can't write on the destination 
-			setError(CODE_401_UNAUTHORIZED);
+		_myconfig.samePathWrite = false;
+		return;
 	}
+	else if ( access(_myconfig.uploadDirectory.c_str(), W_OK) == -1 ) // we can't write on the destination 
+		setError(CODE_401_UNAUTHORIZED);
 }
 
 void	ResponseBuilder::checkAutho( void ){ // ⛔ NOT OKAY FUNCTION
 	
 	// string targetedAnswer = (_method == POST) ? _config->errorPaths.at(_errorType) : _realURI; // TODO : handle non existing 404.html
 
-	// string targetedAnswer = 
-
-	if (stat(targetedAnswer.c_str(), &_fileInfo) == 0)
+	if (stat(_realURI.c_str(), &_fileInfo) == 0)
 	{
 		_isROK = _fileInfo.st_mode & S_IRUSR;
 		_isWOK = _fileInfo.st_mode & S_IWUSR;
@@ -76,8 +76,6 @@ void	ResponseBuilder::checkAutho( void ){ // ⛔ NOT OKAY FUNCTION
 				break;
 			case POST:
 				if (_isCGI and not _isXOK)
-					setError(CODE_401_UNAUTHORIZED);
-				else if (not _isWOK)
 					setError(CODE_401_UNAUTHORIZED);
 				break;
 			case DELETE:
@@ -161,7 +159,8 @@ void ResponseBuilder::setError(e_errorCodes code){ // 🟠 FUNCTION IN PROCESS
 	// }
 	// else
 	// 	_realURI = _config->errorPaths.at(_errorType); // TODO : handle non existing 404.html
-	throw CodeErrorRaised();
+	if (_errorType != CODE_204_NO_CONTENT)
+		throw CodeErrorRaised();
 }
 
 void	ResponseBuilder::printAllHeaders( void ) const{ // ⛔ NOT OKAY FUNCTION (need refactoring and polish)

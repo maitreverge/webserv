@@ -52,6 +52,9 @@ struct MyConfig
 	bool				uploadAllowed; // exploited ✅
 	string				uploadDirectory; // checked access ✅
 
+	// ========== my stuff ==========
+	bool				samePathWrite;
+
 	MyConfig()
 	{
 		allowedMethods.push_back("GET");
@@ -65,6 +68,9 @@ struct MyConfig
 		cgiAllowed.clear();
 		uploadAllowed = true;
 		uploadDirectory.clear();
+
+	// ========== my stuff ==========
+		samePathWrite = true;
 	}
 };
 
@@ -139,7 +145,7 @@ class ResponseBuilder
 	bool	isErrorRedirect( void );
 	void	extractFileNature( string &target);
 	void	checkMethod( void );
-	void	postCheck( void );
+	void	uploadCheck( void );
 
 
 	// extractRouteConfig
