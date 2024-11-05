@@ -136,7 +136,11 @@ class ResponseBuilder
 	bool	isErrorRedirect( void );
 	void	extractFileNature( string &target);
 	void	checkMethod( void );
+
+	// extractRouteConfig
 	void	extractRouteConfig( void );
+	void	clearingRoutes( vector< string >&routeNames, vector< string >&routeURIS );
+
 
 
 
