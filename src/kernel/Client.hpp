@@ -19,7 +19,7 @@ struct Client
 	std::vector<char>	headerRespons;
 	std::vector<char>	messageSend;
 	
-	bool				ping;
+	short int			ping;
 	bool 				pongHeader;
 	bool				exitRequired;
 	
