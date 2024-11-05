@@ -5,23 +5,22 @@ void Server::replyClients()
 {
 	for (size_t i = 0; i < this->_clients.size(); i++)
 	{		
-		if (this->_clients[i].ping >= 2 
-			&& FD_ISSET(this->_clients[i].fd, &this->_writeSet))
-		{		
-			if (!this->_clients[i].headerRespons.empty())			
-				if (replyClient(i, this->_clients[i].headerRespons,
-					static_cast<ssize_t>
-					(this->_clients[i].headerRespons.size())))
-					break ;	
-			if (this->_clients[i].messageSend.empty())
-			{
-				if (fillMessageSend(i))
-					break ;
-			}
-			else if (replyClient(i, this->_clients[i].messageSend,
-				static_cast<ssize_t>(this->_clients[i].messageSend.size())))
-				break ;				
-		}	
+		if (this->_clients[i].ping < 2 
+			|| !FD_ISSET(this->_clients[i].fd, &this->_writeSet))
+				continue;				
+		if (!this->_clients[i].headerRespons.empty())			
+			if (replyClient(i, this->_clients[i].headerRespons,
+				static_cast<ssize_t>
+				(this->_clients[i].headerRespons.size())))
+				break ;	
+		if (this->_clients[i].messageSend.empty())
+		{
+			if (fillMessageSend(i))
+				break ;
+		}
+		else if (replyClient(i, this->_clients[i].messageSend,
+			static_cast<ssize_t>(this->_clients[i].messageSend.size())))
+			break ;
 	}
 }
 

@@ -32,7 +32,7 @@ void Server::listenClients()
 {	
 	for (size_t i = 0; i < this->_clients.size(); i++)
 	{
-		if (this->_clients[i].ping < 2)
+		if (this->_clients[i].ping >= 2)
 			continue;
 		if (this->_clients[i].headerRequest.getHeaders().ContentLength
 			&& !this->_clients[i].messageRecv.empty())
@@ -49,10 +49,7 @@ void Server::listenClients()
 				this->exitClient(i);		
 			else
 				clientMessage(i, ret);			
-		}
-		else
-			Logger::getInstance().log(ERROR, "listen unhandle case",
-				this->_clients[i]);	
+		}	
 	}
 }
 

@@ -60,8 +60,8 @@ ssize_t Cgi::getBody(Client & client)
     // char buff[150];
     // char buff2[5] = {'s','a','l','u','t'};
     // send(this->_fds[1], buff2, sizeof(buff2), 0);
-    if (!FD_ISSET(this->_fds[1], &Kernel::_readSet))
-        return 73;
+    // if (!FD_ISSET(this->_fds[1], &Kernel::_readSet))
+    //     return 73;
     Logger::getInstance().log(INFO, "ive not been retarded");
     client.messageSend.clear();
     client.messageSend.resize(SEND_BUFF_SIZE);//!
