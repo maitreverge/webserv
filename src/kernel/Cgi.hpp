@@ -10,6 +10,7 @@ class Cgi
     public:
     
         Cgi();
+		Cgi & operator=(const Cgi &);
         ~Cgi();  
         int _fds[2];
         void    launch();  

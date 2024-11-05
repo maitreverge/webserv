@@ -78,8 +78,8 @@ ssize_t	ResponseBuilder::getBody( Client &inputClient ){
 		Logger::getInstance().log(INFO, _realURI.c_str(), inputClient);	
 	
 		this->_ifs.open(_realURI.c_str(), std::ios::binary);	
+	//! FAIRE CTRL C PNDT UN TRANSFERT ET VALGRINDS
 	}
-
 	// ! ADVANCED TEST : keskis passe si le stream fail malgre l'URI correcte 
 	if (this->_ifs.is_open())
 	{

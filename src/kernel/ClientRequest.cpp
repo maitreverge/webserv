@@ -88,7 +88,18 @@ void Server::clientMessage(size_t i, ssize_t ret)
 // 	else
 // 		this->handleClientBody(i, ret);
 // }
-
+// bool Server::isDelimiterFind(size_t i, std::vector<char>::iterator & it)
+// {
+// 	std::string delimiter = "\r\n\r\n";
+// 	it = std::search
+// 		(this->_clients[i].messageRecv.begin(),
+// 		this->_clients[i].messageRecv.end(),
+// 		delimiter.begin(),
+// 		delimiter.end() - 1);
+// 	if (it != this->_clients[i].messageRecv.end())
+// 		return true;
+// 	return false;
+// }
 bool Server::isDelimiterFind(size_t i, std::vector<char>::iterator & it)
 {
 	std::string delimiter = "\r\n\r\n";
@@ -96,10 +107,17 @@ bool Server::isDelimiterFind(size_t i, std::vector<char>::iterator & it)
 		(this->_clients[i].messageRecv.begin(),
 		this->_clients[i].messageRecv.end(),
 		delimiter.begin(),
-		delimiter.end() - 1);
+		delimiter.end());
 	return (it != this->_clients[i].messageRecv.end());	
 }
-
+void printResponse2(const std::vector<char> & response)
+{
+	std::cout << std::endl << "\e[34mPrint Vector: \e[31m" << std::endl;
+	std::cout << "-";		
+	for (size_t i = 0; i < response.size(); i++)				
+		std::cout << response[i];
+	std::cout << "-\e[0m" << std::endl << std::endl;
+}
 void Server::handleClientHeader(size_t i, ssize_t ret)
 {
 	stringstream ss;
@@ -117,8 +135,11 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 		this->_clients[i].headerRequest.parse(this->_clients[i]);								
 		this->_clients[i].headerRequest.displayParsingResult();
 		getRespHeader(i);
+		printResponse2(this->_clients[i].messageRecv);
+		std::cout << "voila" << *(it - 1) << *(it) << *(it + 1) << *(it + 2) << std::endl;
 		this->_clients[i].messageRecv.
             erase(this->_clients[i].messageRecv.begin(), it + 4);
+		printResponse2(this->_clients[i].messageRecv);
 		this->_clients[i].bodySize += this->_clients[i].messageRecv.size();
 		if (!this->_clients[i].headerRequest.getHeaders().ContentLength) //!new
 			this->_clients[i].ping = 2; //!pong

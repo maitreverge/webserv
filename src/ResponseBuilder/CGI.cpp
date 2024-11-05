@@ -22,6 +22,7 @@ void ResponseBuilder::checkCGI( Client & client ){
 	if (phpLoc == std::string::npos and pythonLoc == std::string::npos )
 	{
 		_isCGI = false;
+		std::cout << "check CGI fin 2" << std::endl;
 		return;
 	}
 
@@ -34,6 +35,6 @@ void ResponseBuilder::checkCGI( Client & client ){
 	_pathInfo = _realURI.substr(realLoc);
 
 	_realURI = _realURI.substr(0, realLoc);
-
+	std::cout << "check CGI fin" << std::endl;
 	client.headerRespons.clear();
 }

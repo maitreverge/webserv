@@ -27,7 +27,7 @@ void Cgi::launch() //!WARNING select
         // char *args[] = {NULL};
         // char *envp[] = {NULL};
         // execve("./cgi/a.out", args, envp);
-        chdir("./cgi");//!
+        // chdir("./cgi");//!
         std::string str("PATH_INFO=coucoucpathinfo");
         char *env[] = 
         {
@@ -35,7 +35,7 @@ void Cgi::launch() //!WARNING select
         };
 		char *argv[] = {NULL};
         //!FLAG ANTI HERITAGE FD OU CLOSE
-        execve("a.out", argv, env);  //!     
+        execve("./cgi/a.out", argv, env);  //!     
         // execve("/home/svidot/42_am/webserv/cgi/a.out", argv, env);       
       	Logger::getInstance().log(ERROR, "execve failed");
 	    //! LEAKS 
@@ -73,7 +73,7 @@ ssize_t Cgi::getBody(Client & client)
         client.messageSend.size(), 0);
         /* code */    
   
-    
+    sleep(1);
     if (ret < 0)
     {
         Logger::getInstance().log(ERROR, "recv cgi");
@@ -138,12 +138,20 @@ ssize_t Cgi::getBody(Client & client)
     }
     return ret;
 }
+Cgi & Cgi::operator=(const Cgi & rhs)
+{
+	this->_fds[0] = rhs._fds[0];
+	this->_fds[1] = dup(rhs._fds[1]);
+	Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fds[1]);
+	FD_SET(this->_fds[1], &Kernel::_actualSet);
+	return *this;
+}
 
 Cgi::~Cgi()
 {
-    // FD_CLR(this->_fds[1], &Kernel::_actualSet);
-    // if (this->_fds[1] > 0)
-    //     close(this->_fds[1]);//!
+    FD_CLR(this->_fds[1], &Kernel::_actualSet);
+    if (this->_fds[1] > 0)
+        close(this->_fds[1]);//!
 }
 
 void Cgi::setBody(Client & client)
