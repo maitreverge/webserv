@@ -7,18 +7,16 @@ using namespace std;
 
 int main() {
 
-	string clientURI = "/dir111/dir2/dir3";
+	string clientURI = "/dir1/script.py/hehehe/script/kakakkaka/script.py";
 	
-	std::cout << "clientURI = " << clientURI << std::endl;
+	string targetPHP = ".php";
+    string targetPython = ".py";
 
-	string racine = "/dir1";
+    // Find the first positions of the Python and PHP extensions in the URI
+    std::string::size_type pythonLoc = clientURI.find(targetPython);
+    std::string::size_type phpLoc = clientURI.find(targetPHP);
 
-	string root = "/salut/bande/de/salopes/hehehehhehehehehehheheheheheheh";
-
-	clientURI.replace(0, racine.size(), root);
-
-	std::cout << "racine = " << racine << std::endl;
-
-	std::cout << "clientURI after modification = " << clientURI << std::endl;
+	cout << pythonLoc << endl;
+	cout << phpLoc << endl;
 
 }
