@@ -19,92 +19,39 @@ void ResponseBuilder::sanatizeURI( string &oldURI ){ // ⛔ NOT OKAY FUNCTION
 
 bool ResponseBuilder::redirectURI( void ){ // ✅ OKAY FUNCTION
 
-	try
-	{
-		_config->redirection.at(_realURI);
-	}
-	catch(const std::exception& e)
-	{
+	if (_myconfig.redirection.empty())
 		return false;
-	}
 	
-	_errorType = CODE_307_TEMPORARY_REDIRECT;
+	setError(CODE_307_TEMPORARY_REDIRECT);
 	return true;
 }
 
 void ResponseBuilder::rootMapping( void ){ // ✅ OKAY FUNCTION
 
-	string originalURI = _realURI;
-	string mainRoute = _realURI;
-
-	// ! STEP 1 : Try every MainRoute in reverse order. If not found, then trim the URI from the end.
-	while (not mainRoute.empty())
-	{
-		try
-		{
-			// _config->routeMapping.at(mainRoute);
-			break;
-		}
-		catch(const std::exception& e)
-		{
-			if (mainRoute == "/" or mainRoute.empty())
-				return; // MainRoute not found
-			// If the first "/" is also the last, we're left with the last "/" default path
-			else if (mainRoute.find_first_of('/') == mainRoute.find_last_of('/'))
-			{
-				// erasing keeping the "/"
-				if (mainRoute[mainRoute.length() -1] == '/')
-					return;
-				mainRoute.erase(mainRoute.find_first_of('/') + 1);
-			}
-			else
-			{
-				mainRoute.erase(mainRoute.find_last_of('/'));
-			}
-		}
-	}
-
-	// From this Point, a route has been found
-	string target = originalURI.substr(mainRoute.size());
-
-	string needle;
-	string reroute;
-	try
-	{
-		// needle = _config->routeMapping.at(mainRoute).begin()->first;
-		// reroute = _config->routeMapping.at(mainRoute).begin()->second;
-	}
-	catch(const std::exception& e)
-	{
-		// Map needle or reroute has not been found.
+	if (_myconfig.root.empty())
 		return;
-	}
-
-	// From this Point, a needle and a reroute has been found, we need to find them, hotshap them and return
-	if (target.compare(0, needle.size(), needle) == 0)
-	{
-		target.erase(0, needle.size());
-		
-		originalURI = reroute + target;
-	}
-
-	_realURI = originalURI;
+	
+	_realURI.replace(0, _myconfig.uri.size(), _myconfig.root);
 }
 
 void ResponseBuilder::resolveURI( void ) {// ⛔ NOT OKAY FUNCTION
 	// ! STEP 1 : Check the rootMapping
-	// rootMapping();
+	rootMapping();
 	
 	// ! STEP 2 : Trim all "../" from the URI for transversal path attacks
 	// sanatizeURI(_realURI); // ! STAY COMMENTED until refactoring for better "../" erasing process
 
+	// ! STEP 3  : Deleting URI first 
 	if (_realURI.size() > 1)
 	{
 		_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
-		if ( *_realURI.rbegin() == '/' ) // Removing all ending '/' URIs
-		{
-			_realURI.erase(_realURI.size() -1);
-		}
+		
+		// Removing all ending '/' URIs //! maybe useless to delete last "/" char
+		
+		// if ( *_realURI.rbegin() == '/' )
+		// {
+		// 	_realURI.erase(_realURI.size() -1);
+		// }
 	}
 }
 
@@ -182,17 +129,35 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	_realURI = _client->headerRequest.getURI();
 
 	extractRouteConfig();
-	printMyConfig();
+	// printMyConfig();
 
-	extractMethod();
-	checkMethod();
+	try
+	{
+		if ( not redirectURI())
+		{
+			extractMethod();
 
-	// if(_method == DELETE)
-	// 	setError(CODE_204_NO_CONTENT);
+			checkMethod();
 
-	// if ( not redirectURI())
+			if(_method == DELETE)
+				setError(CODE_204_NO_CONTENT);
+			
+			resolveURI();
+
+
+		}
+	}
+	catch(const CodeErrorRaised& e)
+	{
+		Logger::getInstance().log(INFO, "Code Error Raised in the getHeader building process", inputClient);
+	}
+	catch(const std::exception& e)
+	{
+
+	}
+
+
 	// {
-	// 	resolveURI();
 	// 	validateURI();
 		
 	// 	// if (_isCGI and _errorType <= CODE_400_BAD_REQUEST) // or potentially another adress
@@ -202,7 +167,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	// 	setContentLenght();
 	// }
 	
-	// buildHeaders();
+	buildHeaders();
 
 	// // Copying the build Headers in headerRespons
 	// inputClient.headerRespons = Headers.masterHeader;

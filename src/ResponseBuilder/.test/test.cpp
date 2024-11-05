@@ -1,19 +1,24 @@
-// #include <dirent.h>
-// #include <iostream>
-// #include <cstring>
+#include <dirent.h>
+#include <iostream>
+#include <cstring>
 
-// using namespace std;
+using namespace std;
 
 
-// int main() {
+int main() {
 
-// 	int j = 0;
-// 	for (size_t i = 0; i < 10; i++, j++)
-// 	{
-// 		std::cout << "i =" << i << endl;
-// 		std::cout << "j =" << j << endl;
-// 	}
+	string clientURI = "/dir111/dir2/dir3";
 	
+	std::cout << "clientURI = " << clientURI << std::endl;
 
-// 	return 0;
-// }
+	string racine = "/dir1";
+
+	string root = "/salut/bande/de/salopes/hehehehhehehehehehheheheheheheh";
+
+	clientURI.replace(0, racine.size(), root);
+
+	std::cout << "racine = " << racine << std::endl;
+
+	std::cout << "clientURI after modification = " << clientURI << std::endl;
+
+}

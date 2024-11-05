@@ -34,7 +34,7 @@ void ResponseBuilder::clearingRoutes( vector< string >&routeNames, vector< strin
 		_config->routes.erase(*it); // erase only in ResponseBuilder scope
 	}
 
-	// TODO : Delete duplicates nodes
+	// TODO : Delete duplicates nodes with the same URI
 	{
 		// don't forget to update routeURIS and routeNames accordingly
 	}
