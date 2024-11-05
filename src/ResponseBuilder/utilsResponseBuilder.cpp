@@ -77,6 +77,8 @@ void	ResponseBuilder::checkAutho( void ){ // ⛔ NOT OKAY FUNCTION
 			case POST:
 				if (_isCGI and not _isXOK)
 					setError(CODE_401_UNAUTHORIZED);
+				else if (_myconfig.samePathWrite and not _isWOK)
+					setError(CODE_401_UNAUTHORIZED);
 				break;
 			case DELETE:
 				if (not _isWOK)
@@ -104,14 +106,14 @@ void	ResponseBuilder::extractFileNature( string &target){ // ⛔ NOT OKAY FUNCTI
 
 void	ResponseBuilder::checkNature( void ){ // ⛔ NOT OKAY FUNCTION
 
-	string targetedAnswer = (_method == POST) ? _config->errorPaths.at(_errorType) : _realURI; // TODO : handle non existing 404.html
+	// string targetedAnswer = (_method == POST) ? _config->errorPaths.at(_errorType) : _realURI; // TODO : handle non existing 404.html
 
-	if (stat(targetedAnswer.c_str(), &_fileInfo) == 0)
+	if (stat(_realURI.c_str(), &_fileInfo) == 0)
 	{
 		if ((_fileInfo.st_mode & S_IFMT) == S_IFDIR) // checks is the given path is a DIRECTORY
 		{
 			_isDirectory = true;
-			if (_method == DELETE) // ! I decided to not be able to delete a fonder.
+			if (_method == DELETE) // ! I decided to reject DELETE methods on folders.
 				setError(CODE_403_FORBIDDEN);
 		}
 		else if ((_fileInfo.st_mode & S_IFMT) == S_IFREG) // checks is the given path is a FILE
@@ -119,6 +121,7 @@ void	ResponseBuilder::checkNature( void ){ // ⛔ NOT OKAY FUNCTION
 			_isFile = true;
 			if (_method == POST and not _isCGI)
 				setError(CODE_405_METHOD_NOT_ALLOWED); // A POST Method being NOT CGI might overwrite a file, then I reject it.
+			// ! WoRK NEEDLE
 			if (_method == GET)
 				extractFileNature( _realURI );
 			else // POST AND DELETE
