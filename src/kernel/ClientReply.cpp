@@ -7,7 +7,9 @@ void Server::replyClients()
 	{		
 		if (this->_clients[i].ping < 2 
 			|| !FD_ISSET(this->_clients[i].fd, &this->_writeSet))
-				continue;				
+				continue;		
+		// if (this->_clients[i].ping >= 2 && FD_ISSET(this->_clients[i].fd, &this->_writeSet))	
+		// {}	
 		if (!this->_clients[i].headerRespons.empty())			
 			if (replyClient(i, this->_clients[i].headerRespons,
 				static_cast<ssize_t>
@@ -44,15 +46,13 @@ bool Server::endReply(size_t i)
 {
 	Logger::getInstance().log(DEBUG, "reinit response Builder",
 		this->_clients[i]);
-	if (this->_clients[i].exitRequired)
-	{
-		this->exitClient(i);
-		return true;	
-	}					
+	if (this->_clients[i].exitRequired)	
+		return this->exitClient(i), true;						
 	this->_clients[i].responseBuilder = ResponseBuilder();
 	this->_clients[i].bodySize = 0;
 	this->_clients[i].ping = 0;		
 	this->_clients[i].messageSend.clear();
+	this->_clients[i].headerRequest = RequestParser();//!new
 	return false;
 }
 

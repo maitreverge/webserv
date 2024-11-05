@@ -13,7 +13,7 @@ void Cgi::launch() //!WARNING select
     Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fds[1]);
     // Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fds[0]);
     FD_SET(this->_fds[1], &Kernel::_actualSet);
-    // Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fds[1]);
+    
     pid_t pid = fork();
     if (pid < 0)
         Logger::getInstance().log(ERROR, "fork failed");
@@ -27,7 +27,7 @@ void Cgi::launch() //!WARNING select
         // char *args[] = {NULL};
         // char *envp[] = {NULL};
         // execve("./cgi/a.out", args, envp);
-        // chdir("./cgi");//!
+        chdir("./cgi");//!
         std::string str("PATH_INFO=coucoucpathinfo");
         char *env[] = 
         {
@@ -35,9 +35,11 @@ void Cgi::launch() //!WARNING select
         };
 		char *argv[] = {NULL};
         //!FLAG ANTI HERITAGE FD OU CLOSE
-        // execve("a.out", argv, env);  //!     
-        execve("/home/svidot/42_am/webserv/cgi/a.out", argv, env);       
-        std::cout << "execve fail" << std::endl;
+        execve("a.out", argv, env);  //!     
+        // execve("/home/svidot/42_am/webserv/cgi/a.out", argv, env);       
+      	Logger::getInstance().log(ERROR, "execve failed");
+	    //! LEAKS 
+	    exit(1);
     } 
     else
     {                
@@ -60,8 +62,8 @@ ssize_t Cgi::getBody(Client & client)
     // char buff[150];
     // char buff2[5] = {'s','a','l','u','t'};
     // send(this->_fds[1], buff2, sizeof(buff2), 0);
-    // if (!FD_ISSET(this->_fds[1], &Kernel::_readSet))
-    //     return 73;
+    if (!FD_ISSET(this->_fds[1], &Kernel::_readSet))
+        return 73;
     Logger::getInstance().log(INFO, "ive not been retarded");
     client.messageSend.clear();
     client.messageSend.resize(SEND_BUFF_SIZE);//!
@@ -139,9 +141,9 @@ ssize_t Cgi::getBody(Client & client)
 
 Cgi::~Cgi()
 {
-    FD_CLR(this->_fds[1], &Kernel::_actualSet);
-    if (this->_fds[1] > 0)
-        close(this->_fds[1]);//!
+    // FD_CLR(this->_fds[1], &Kernel::_actualSet);
+    // if (this->_fds[1] > 0)
+    //     close(this->_fds[1]);//!
 }
 
 void Cgi::setBody(Client & client)
