@@ -133,13 +133,17 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
 			checkMethod();
 
+			if (_method != DELETE)
+				checkCGI();
+			
+			if (_method == POST)
+				postCheck();
+				
 			if(_method == DELETE)
 				setError(CODE_204_NO_CONTENT);
 			
 			resolveURI();
 
-			if (_method != DELETE)
-				checkCGI();
 			
 			checkAutho();
 			checkNature();

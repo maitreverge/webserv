@@ -21,6 +21,8 @@ void ResponseBuilder::checkCGI( void ){
     // If neither Python nor PHP extensions are found, set _isCGI to false and return
     if (phpLoc == std::string::npos and pythonLoc == std::string::npos )
         return;
+	// 
+	
 
     // If either extension is found, set _isCGI to true
     _isCGI = true;

@@ -43,9 +43,22 @@ void	ResponseBuilder::setContentLenght(){ // ⛔ NOT OKAY FUNCTION
 	// ! BOILERPLATE CODE
 }
 
+void	ResponseBuilder::postCheck( void ){
+
+	if (!_isCGI)
+	{
+		if (!_myconfig.uploadAllowed)
+			setError(CODE_403_FORBIDDEN);
+		else if ( access(_myconfig.uploadDirectory.c_str(), W_OK) == -1) // we can't write on the destination 
+			setError(CODE_401_UNAUTHORIZED);
+	}
+}
+
 void	ResponseBuilder::checkAutho( void ){ // ⛔ NOT OKAY FUNCTION
 	
-	string targetedAnswer = (_method == POST) ? _config->errorPaths.at(_errorType) : _realURI; // TODO : handle non existing 404.html
+	// string targetedAnswer = (_method == POST) ? _config->errorPaths.at(_errorType) : _realURI; // TODO : handle non existing 404.html
+
+	// string targetedAnswer = 
 
 	if (stat(targetedAnswer.c_str(), &_fileInfo) == 0)
 	{

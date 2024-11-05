@@ -41,16 +41,16 @@ struct ResponseHeaders
 
 struct MyConfig
 {
-	string				uri; // main key
+	string				uri; // ! main key
 
-	vector< string >	allowedMethods;
+	vector< string >	allowedMethods; // exploited ✅
 	string				redirection;
 	string				root;
 	bool				listingDirectory;
 	string				index;
-	vector< string >	cgiAllowed;
-	bool				uploadAllowed;
-	string				uploadDirectory;
+	vector< string >	cgiAllowed; // exploited ✅
+	bool				uploadAllowed; // exploited ✅
+	string				uploadDirectory; // checked access ✅
 
 	MyConfig()
 	{
@@ -139,6 +139,8 @@ class ResponseBuilder
 	bool	isErrorRedirect( void );
 	void	extractFileNature( string &target);
 	void	checkMethod( void );
+	void	postCheck( void );
+
 
 	// extractRouteConfig
 	void	extractRouteConfig( void );
