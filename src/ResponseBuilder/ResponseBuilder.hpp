@@ -39,7 +39,7 @@ struct ResponseHeaders
 	}
 };
 
-struct myConfig
+struct MyConfig
 {
 	string				uri; // main key
 
@@ -52,7 +52,7 @@ struct myConfig
 	bool				uploadAllowed;
 	string				uploadDirectory;
 
-	myConfig()
+	MyConfig()
 	{
 		allowedMethods.clear();
 		redirection.clear();
@@ -114,6 +114,8 @@ class ResponseBuilder
 	Client* _client;
 	Config* _config;
 
+	MyConfig _myconfig;
+
 	ResponseHeaders Headers;
 
 	// bool test;
@@ -140,6 +142,9 @@ class ResponseBuilder
 	// extractRouteConfig
 	void	extractRouteConfig( void );
 	void	clearingRoutes( vector< string >&routeNames, vector< string >&routeURIS );
+	void	buildRouteConfig( string path );
+	void	defaultConfig( void );
+
 
 
 

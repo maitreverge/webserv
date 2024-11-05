@@ -40,9 +40,108 @@ void ResponseBuilder::clearingRoutes( vector< string >&routeNames, vector< strin
 	}
 }
 
-void	foundPath( string path ){
+void	ResponseBuilder::buildRouteConfig( string path ){
+
+
+	try
+	{
+		_myconfig.uri = *_config->routes.at(path).at("uri").begin();
+	}
+	catch(const std::exception& e)
+	{
+		// log something here
+	}
+
+	// ! allowedMethods
+	try
+	{
+		_myconfig.allowedMethods = _config->routes.at(path).at("allowedMethods");
+	}
+	catch(const std::exception& e)
+	{
+		// log something here
+	}
+
+	// ! redirection
+	try
+	{
+		_myconfig.redirection = *_config->routes.at(path).at("redirection").begin();
+	}
+	catch(const std::exception& e)
+	{
+		// log something here
+	}
+	
+	// ! root
+	try
+	{
+		_myconfig.root = *_config->routes.at(path).at("root").begin();
+	}
+	catch(const std::exception& e)
+	{
+		// log something here
+	}
+
+	// ! listingDirectory
+	try
+	{
+		string myString = *_config->routes.at(path).at("listingDirectory").begin();
+		_myconfig.listingDirectory = (myString[0] == '0') ? false : true;
+	}
+	catch(const std::exception& e)
+	{
+		// log something here
+	}
+
+	// ! index
+	try
+	{
+		_myconfig.index = *_config->routes.at(path).at("index").begin();
+	}
+	catch(const std::exception& e)
+	{
+		// log something here
+	}
+	/*
+		bool				uploadAllowed;
+		string				uploadDirectory;
+	*/
+
+	// ! cgiAllowed
+	try
+	{
+		_myconfig.cgiAllowed = _config->routes.at(path).at("cgiAllowed");
+	}
+	catch(const std::exception& e)
+	{
+		// log something here
+	}
+
+	// ! uploadAllowed
+	try
+	{
+		string myString = *_config->routes.at(path).at("uploadAllowed").begin();
+		_myconfig.uploadAllowed = (myString[0] == '0') ? false : true;
+	}
+	catch(const std::exception& e)
+	{
+		// log something here
+	}
+	try
+	{
+		_myconfig.allowedMethods = _config->routes.at(path).at("allowedMethods");
+	}
+	catch(const std::exception& e)
+	{
+		// log something here
+	}
 
 	
+}
+
+void	ResponseBuilder::defaultConfig( void ){
+
+
 }
 
 void	ResponseBuilder::extractRouteConfig( void ){
@@ -90,15 +189,7 @@ void	ResponseBuilder::extractRouteConfig( void ){
 	}
 
 	if (found)
-	{
-		foundPath(routeNames[pos]);
-
-
-	}
+		buildRouteConfig(routeNames[pos]);
 	else
-	{
-
-	}
-	
-
+		defaultConfig();
 }
