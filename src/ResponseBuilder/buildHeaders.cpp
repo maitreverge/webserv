@@ -64,7 +64,7 @@ void	ResponseBuilder::buildHeaders(){
 		stringstream streamLocation;
 		streamLocation	<< "Location:"
 						<< SPACE
-						<< _myconfig.redirection
+						<< _realURI
 						// << "http://www.github.com/maitreverge"
 						<< HTTP_HEADER_SEPARATOR;
 		Headers.location = streamLocation.str();
