@@ -9,7 +9,7 @@
 			"type": "cppdbg",
 			"request": "launch",
 			"program": "${workspaceFolder}/debug_webserv",
-			"args": ["_configs/flo_config.ini"], // Need to add args when it's time to process a config file
+			"args": ["_configs/simple_config_404.ini"], // Need to add args when it's time to process a config file
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}",
 			"environment": [],
@@ -25,7 +25,12 @@
 					"description": "Set Disassembly Flavor to Intel",
 					"text": "-gdb-set disassembly-flavor intel",
 					"ignoreFailures": true
-				}
+				},
+				{
+                    "description": "Continue execution when an exception is thrown and caught",
+                    "text": "catch throw",
+                    "ignoreFailures": true
+                }
 			]
 		}
 

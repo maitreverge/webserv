@@ -134,7 +134,7 @@ class ResponseBuilder
 	void	buildHeaders( void );
 	void	setContentLenght( void ); // not a regular setter
 	void	extractMethod( void );
-	void	setError( e_errorCodes );
+	void	setError( e_errorCodes, bool skip = false );
 	string	extractType( const string& extension ) const;
 	void	initMimes( void );
 	void	checkAutho( void );

@@ -30,9 +30,9 @@ void	ResponseBuilder::setContentLenght(){ // ⛔ NOT OKAY FUNCTION
 	if (stat(_realURI.c_str(), &_fileInfo) == -1)
 	{
 		if (errno == EACCES)
-			setError(CODE_401_UNAUTHORIZED);
+			setError(CODE_401_UNAUTHORIZED, true);
 		else if (errno == ENOENT or errno == EFAULT)
-			setError(CODE_404_NOT_FOUND);
+			setError(CODE_404_NOT_FOUND, true);
 	}
 	
 	Headers.bodyLenght = static_cast<uint64_t>(_fileInfo.st_size); //! the targeted file in a GET requests
@@ -148,21 +148,17 @@ void	ResponseBuilder::checkNature( void ){ // ⛔ NOT OKAY FUNCTION
 	}
 }
 
-void ResponseBuilder::setError(e_errorCodes code){ // 🟠 FUNCTION IN PROCESS
+void ResponseBuilder::setError(e_errorCodes code, bool skip){ // 🟠 FUNCTION IN PROCESS
 
 	_errorType = code;
 
 	
-	// if (_errorType == CODE_204_NO_CONTENT)
-	// 	return;
+	_realURI = _config->errorPaths.at(_errorType); // TODO : handle non existing 404.html
 	
-	// if (_method == POST)
-	// {
-	// 	extractFileNature(_config->errorPaths.at(_errorType));
-	// }
-	// else
-	// 	_realURI = _config->errorPaths.at(_errorType); // TODO : handle non existing 404.html
-	if (_errorType != CODE_204_NO_CONTENT)
+	extractFileNature(_realURI);
+	extractType(_realURI);
+	
+	if (_errorType != CODE_204_NO_CONTENT and not skip)
 		throw CodeErrorRaised();
 }
 
