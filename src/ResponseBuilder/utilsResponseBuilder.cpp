@@ -152,9 +152,9 @@ void ResponseBuilder::setError(e_errorCodes code, bool skip){ // !!!!!!!!!!!!!!!
 
 	_errorType = code;
 
-	if (_errorType >= CODE_300_MULTIPLE_CHOICES and _errorType <= CODE_308_PERMANENT_REDIRECT)
+	if (isErrorRedirect())
 	{
-		_realURI.erase();
+		// _realURI.erase();
 		Headers.bodyLenght = 0; 
 		throw CodeErrorRaised();
 	}

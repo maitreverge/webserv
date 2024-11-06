@@ -153,6 +153,7 @@ class ResponseBuilder
 	void	buildRouteConfig( string path );
 	void	printMyConfig( void );
 	
+	bool	isDirectory(string &uri);
 
 
 

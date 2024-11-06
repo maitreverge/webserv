@@ -21,8 +21,10 @@ bool ResponseBuilder::redirectURI( void ){ // ✅ OKAY FUNCTION
 
 	if (_myconfig.redirection.empty())
 		return false;
+
+	_realURI = _myconfig.redirection;
 	
-	setError(CODE_307_TEMPORARY_REDIRECT, true);
+	setError(CODE_308_PERMANENT_REDIRECT, true);
 	return true;
 }
 
@@ -34,10 +36,27 @@ void ResponseBuilder::rootMapping( void ){ // ✅ OKAY FUNCTION
 	_realURI.replace(0, _myconfig.uri.size(), _myconfig.root);
 }
 
+bool ResponseBuilder::isDirectory(string &uri) {
+	
+	struct stat info;
+
+	if (stat(uri.c_str(), &_fileInfo) != 0)
+		return false;
+	else if (info.st_mode & S_IFDIR)
+		return true;
+	else
+		return false;
+}
+
 void ResponseBuilder::resolveURI( void ) {// ⛔ NOT OKAY FUNCTION
 	
 	// ! STEP 1 : Check the rootMapping
 	rootMapping();
+
+	// Step 2: Handle redirection
+    if (redirectURI()) {
+        return;
+    }
 	
 	// ! STEP 2 : Trim all "../" from the URI for transversal path attacks
 	// sanatizeURI(_realURI); // ! STAY COMMENTED until refactoring for better "../" erasing process
@@ -57,10 +76,14 @@ void ResponseBuilder::resolveURI( void ) {// ⛔ NOT OKAY FUNCTION
 	// 	}
 	// }
 
-	if (not _myconfig.listingDirectory)
+	if (isDirectory(_realURI))
 	{
 		_realURI += "/";
 		_realURI += _myconfig.index; // after checking the nature
+    }
+
+	if (not _myconfig.listingDirectory)
+	{
 	}
 }
 
@@ -97,8 +120,8 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
 	try
 	{
-		if ( not redirectURI())
-		{
+		// if ( not redirectURI())
+		// {
 			extractMethod();
 
 			checkMethod();
@@ -122,7 +145,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
 			if (_method == DELETE and _errorType < CODE_400_BAD_REQUEST)
 				deleteEngine();	
-		}
+		// }
 	}
 	catch(const CodeErrorRaised& e)
 	{
