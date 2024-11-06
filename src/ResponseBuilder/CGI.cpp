@@ -49,7 +49,7 @@ void ResponseBuilder::checkCGI( void ){
     // If either extension is found, set _isCGI to true
     _isCGI = true;
     
-    std::string::size_type realLoc = ( phpLoc == std::string::npos ) ? pythonLoc : phpLoc;
+    // std::string::size_type realLoc = ( phpLoc == std::string::npos ) ? pythonLoc : phpLoc;
 
     // Adjust the position to the end of the extension
 	targetLoc += extensionTarget.length();

@@ -49,51 +49,11 @@ void ResponseBuilder::resolveURI( void ) {// ⛔ NOT OKAY FUNCTION
 		
 		// Removing all ending '/' URIs //! maybe useless to delete last "/" char
 		
-		// if ( *_realURI.rbegin() == '/' )
+		// if ( *_realURI.rbegin() == '/' and _realURI.size() > 1 )
 		// {
 		// 	_realURI.erase(_realURI.size() -1);
 		// }
 	}
-}
-
-void	ResponseBuilder::validateURI( void ){
-
-	// ! STEP 1 = EDGE CASES FOR EMPTY PATH or PATH == "/"
-	// if (_realURI == "/" and _method == GET) // What if the resolved URI is a directory and not just "/"
-	// {
-	// 	// string originalURI = "/";
-	// 	vector<string>::iterator it;
-	// 	for (it = _config->indexFiles.begin(); it < _config->indexFiles.end(); ++it)
-	// 	{
-	// 		_realURI = *it;
-			
-	// 		// Check permissions with stat
-	// 		if (stat(_realURI.c_str(), &_fileInfo) == 0)
-	// 			break ;
-	// 	}
-
-	// 	if (it == _config->indexFiles.end())
-	// 	{
-	// 		if (errno == EACCES) // The process does not have execute permissions on one or more directories in the path.
-	// 		{
-	// 			setError(CODE_401_UNAUTHORIZED); return;
-	// 		}
-	// 		else if (errno == ENOENT) // The file or directory does not exist.
-	// 		{
-	// 			setError(CODE_404_NOT_FOUND); return;
-	// 		}
-	// 	}
-	// }
-
-	// TODO = Is URI a CGI ??
-	
-
-
-	if (_isDirectory and (_method == GET) and (not _isCGI))
-	{
-		generateListingHTML();
-	}
-
 }
 
 void	ResponseBuilder::checkMethod( void ){
@@ -125,6 +85,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
 	extractRouteConfig();
 	// printMyConfig();
+	
 
 	try
 	{
@@ -142,15 +103,17 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 				uploadCheck();
 			
 			resolveURI();
-
-			
 			checkAutho();
-			// ! WORK NEEDLE
 			checkNature();
 			
-			validateURI();
+			// ! WORK NEEDLE
+			if (_isDirectory and (_method == GET) and (not _isCGI))
+			{
+				generateListingHTML();
+			}
 
-
+			if (_method == DELETE and _errorType < CODE_400_BAD_REQUEST)
+				deleteEngine();	
 		}
 	}
 	catch(const CodeErrorRaised& e)
@@ -162,24 +125,15 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
 	}
 
-
-	// {
-		
-	// 	// if (_isCGI and _errorType <= CODE_400_BAD_REQUEST) // or potentially another adress
-	// 	// 	launchCGI();
-		
-	// 	checkNatureAndAuthoURI(); // double check for this Nature, if the URi has been swapped for an error file
-	// 	setContentLenght();
-	// }
-	
+	setContentLenght();
 	buildHeaders();
 
-	// // Copying the build Headers in headerRespons
-	// inputClient.headerRespons = Headers.masterHeader;
+	inputClient.headerRespons = Headers.masterHeader;
+	
 
-	// if (_method == DELETE and _errorType < CODE_400_BAD_REQUEST)
-	// 	deleteEngine();	
+	// // Copying the build Headers in headerRespons
+
 	// Headers.masterHeader.clear();//!
 
-	// printAllHeaders();
+	printAllHeaders();
 }

@@ -25,21 +25,22 @@ void	ResponseBuilder::extractMethod( void ){ // ⛔ NOT OKAY FUNCTION
 
 void	ResponseBuilder::setContentLenght(){ // ⛔ NOT OKAY FUNCTION
 
-	string targetedAnswer = (_method == POST) ? _fileName : _realURI ; // TODO : handle non existing 404.html
+	// string targetedAnswer = (_method == POST) ? _fileName : _realURI ; // TODO : handle non existing 404.html
 
-	if (stat(targetedAnswer.c_str(), &_fileInfo) == -1)
+	if (stat(_realURI.c_str(), &_fileInfo) == -1)
 	{
 		if (errno == EACCES)
 			setError(CODE_401_UNAUTHORIZED);
 		else if (errno == ENOENT or errno == EFAULT)
 			setError(CODE_404_NOT_FOUND);
 	}
-	else if (_method == GET and _isFile) // valid path and PATH is a file
-	{
-		Headers.bodyLenght = static_cast<uint64_t>(_fileInfo.st_size); //! the targeted file in a GET requests
-	}
-	else
-		Headers.bodyLenght = static_cast<uint64_t>(_fileInfo.st_size); //! the targeted file in a GET requests
+	
+	Headers.bodyLenght = static_cast<uint64_t>(_fileInfo.st_size); //! the targeted file in a GET requests
+	// else if (_method == GET and _isFile) // valid path and PATH is a file
+	// {
+	// }
+	// else
+	// 	Headers.bodyLenght = static_cast<uint64_t>(_fileInfo.st_size); //! the targeted file in a GET requests
 	// ! BOILERPLATE CODE
 }
 
@@ -121,7 +122,6 @@ void	ResponseBuilder::checkNature( void ){ // ⛔ NOT OKAY FUNCTION
 			_isFile = true;
 			if (_method == POST and not _isCGI)
 				setError(CODE_405_METHOD_NOT_ALLOWED); // A POST Method being NOT CGI might overwrite a file, then I reject it.
-			// ! WoRK NEEDLE
 			if (_method == GET)
 				extractFileNature( _realURI );
 			else // POST AND DELETE

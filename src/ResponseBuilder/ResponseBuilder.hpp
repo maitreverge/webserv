@@ -47,7 +47,7 @@ struct MyConfig
 	string				redirection;
 	string				root;
 	bool				listingDirectory;
-	string				index;
+	string				index; // exploited ✅
 	vector< string >	cgiAllowed; // exploited ✅
 	bool				uploadAllowed; // exploited ✅
 	string				uploadDirectory; // checked access ✅
@@ -131,7 +131,6 @@ class ResponseBuilder
 	// ------------- Priv Methods
 	void	resolveURI( void );
 	void	sanatizeURI( string & );
-	void	validateURI( void );
 	void	buildHeaders( void );
 	void	setContentLenght( void ); // not a regular setter
 	void	extractMethod( void );
@@ -179,11 +178,6 @@ class ResponseBuilder
 	// DELETE
 	void	deleteEngine( void );
 
-	class CodeErrorRaised : public exception
-	{
-		public:
-			virtual const char* what( void ) const throw();
-	};
 
 
 
@@ -213,4 +207,13 @@ public:
 	void	setMethod( const e_method& method );
 
 	void	printAllHeaders( void )const;
+
+	class CodeErrorRaised : public exception
+	{
+		public:
+			virtual const char* what( void ) const throw()
+			{
+				return ("CODE ERROR RAISED");
+			}
+	};
 };

@@ -5,29 +5,17 @@ bool ResponseBuilder::foundDefaultPath( void ){
 
 	string saveURI = _realURI;
 
-	vector<string>::iterator it;
+	saveURI += _myconfig.index;
 
+	if (stat(_realURI.c_str(), &_fileInfo) == 0) // found default path
 	{
-		// TODO : If default path does not exists => 403 forbiden
-	}
-	// Looks accross all default files
-	// ! Can possibly be another map in the config file !
-	for (it = _config->indexFiles.begin(); it < _config->indexFiles.end(); ++it)
-	{
-		saveURI += *it;	
-		
-		if (stat(_realURI.c_str(), &_fileInfo) == 0)
-			break ;
-		else
-			saveURI.erase(saveURI.find_last_of("/") + 1, (*it).size()); // Clean the appended string from the last "/"
-	}
-
-	if (it == _config->indexFiles.end())
-		return false;
-	else if ( (_fileInfo.st_mode & S_IFMT) == S_IFREG and ( _fileInfo.st_mode & S_IRUSR) ) // check if the index.html is a file AND can be read
-	{
-		_realURI = saveURI;
-		return true;
+		// check if the index.html is a file AND can be read
+		if ( (_fileInfo.st_mode & S_IFMT) == S_IFREG and ( _fileInfo.st_mode & S_IRUSR) )
+		{
+			_realURI = saveURI;
+			extractFileNature(_realURI);
+			return true;
+		}
 	}
 	return false;
 }
@@ -99,7 +87,7 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 
 	// TODO : Get from config the default file name for listing directories
 
-	string defautFile = _realURI + "/index.html";
+	string defautFile = _realURI + "/listing.html";
 	ofstream listingFile(defautFile.c_str());
 
 	listingFile << result.str();
@@ -116,20 +104,16 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 void ResponseBuilder::generateListingHTML( void ){
 
 	// ! STEP 0 : check if we can read in the directory
-	if ( not _isROK )
+	if (not _myconfig.listingDirectory or not _isWOK or _isROK)
 	{
-		setError(CODE_401_UNAUTHORIZED);
-		return;
+		if (_myconfig.index.empty())
+			setError(CODE_401_UNAUTHORIZED);
 	}
-	// ! STEP 1 : Checks if the Directory has been touched since, and if there is a default path
 	else if (foundDefaultPath())
 		return;
 
-	// ! STEP 2 : Generate an index.html for the current page	
-	if (_config->listingDirectories)
-		listingHTMLBuilder();
-	else
-		setError(CODE_401_UNAUTHORIZED);
+	listingHTMLBuilder();
 
-	checkNatureAndAuthoURI(); // Update URI and Nature
+	checkNature();
+	checkAutho();
 }
