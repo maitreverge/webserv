@@ -44,16 +44,16 @@ void Server::listenClients()
 				||  !this->_clients[i].headerRequest.getHeaders().ContentLength)
 			{
 				
-			this->_readBuffer.clear();
-			this->_readBuffer.resize(RECV_BUFF_SIZE);
-			ssize_t ret = recv(this->_clients[i].fd, this->_readBuffer.data(),
-				this->_readBuffer.size(), 0);
-			if (ret < 0)			
-				Logger::getInstance().log(ERROR, "recv"), this->exitClient(i);	
-			else if (ret == 0)					
-				this->exitClient(i);		
-			else
-				clientMessage(i, ret);			
+				this->_readBuffer.clear();
+				this->_readBuffer.resize(RECV_BUFF_SIZE);
+				ssize_t ret = recv(this->_clients[i].fd, this->_readBuffer.data(),
+					this->_readBuffer.size(), 0);
+				if (ret < 0)			
+					Logger::getInstance().log(ERROR, "recv"), this->exitClient(i);	
+				else if (ret == 0)					
+					this->exitClient(i);		
+				else
+					clientMessage(i, ret);			
 			}
 			else
 			{
@@ -307,6 +307,7 @@ bool Server::isBodyTerminated(size_t i)
 		<< this->_clients[i].bodySize << " Content-Lenght: "
 		<< this->_clients[i].headerRequest.getHeaders().ContentLength;
 		Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
+		
 		this->_clients[i].bodySize = 0;//!
 		if (this->_clients[i].headerRequest.getMethod() == "POST")
 			this->_clients[i].responseBuilder._cgi.

@@ -40,6 +40,7 @@ int main()
     {
         buff[ret] = 0;
 		write(2, buff, strlen(buff));
+        while(1);
         // printf("coucou%s", buff);
     }
 
