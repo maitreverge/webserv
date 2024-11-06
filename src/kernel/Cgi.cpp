@@ -56,7 +56,7 @@ void Cgi::launch() //!WARNING select
 
 ssize_t Cgi::getBody(Client & client)
 {
-    // Logger::getInstance().log(INFO, "hello from parent");
+    Logger::getInstance().log(INFO, "Get Body");
     
     
     // char buff[150];
@@ -73,7 +73,7 @@ ssize_t Cgi::getBody(Client & client)
         client.messageSend.size(), 0);
         /* code */    
   
-    sleep(1);
+    // sleep(1);
     if (ret < 0)
     {
         Logger::getInstance().log(ERROR, "recv cgi");

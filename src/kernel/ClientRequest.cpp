@@ -27,18 +27,23 @@
 // 		}	
 // 	}
 // }
-bool tog = false;
+// bool tog = false;
 void Server::listenClients()
 {	
 	for (size_t i = 0; i < this->_clients.size(); i++)
 	{
 		if (this->_clients[i].ping >= 2)
 			continue;
-		if (tog && this->_clients[i].headerRequest.getHeaders().ContentLength
+		if (this->_clients[i].headerRequest.getHeaders().ContentLength
 			&& !this->_clients[i].messageRecv.empty())
 			reSend(i);
 		else if (FD_ISSET(this->_clients[i].fd, &this->_readSet))
 		{	
+			if ((this->_clients[i].messageRecv.empty()
+				&& this->_clients[i].headerRequest.getHeaders().ContentLength)
+				||  !this->_clients[i].headerRequest.getHeaders().ContentLength)
+			{
+				
 			this->_readBuffer.clear();
 			this->_readBuffer.resize(RECV_BUFF_SIZE);
 			ssize_t ret = recv(this->_clients[i].fd, this->_readBuffer.data(),
@@ -49,23 +54,46 @@ void Server::listenClients()
 				this->exitClient(i);		
 			else
 				clientMessage(i, ret);			
+			}
+			else
+			{
+				this->printResponse(this->_clients[i].messageRecv);
+				Logger::getInstance().log(ERROR, "listen message unhandle case",
+					this->_clients[i]);	
+			}
 		}	
 	}
 }
-
+// void Server::printResponse2(const std::vector<char> & response)
+// {
+// 	std::cout << std::endl << "\e[34mPrint Vector: \e[31m" << std::endl;
+// 	std::cout << "-";		
+// 	for (size_t i = 0; i < response.size(); i++)				
+// 		std::cout << response[i];
+// 	std::cout << "-\e[0m" << std::endl << std::endl;
+// }
 void Server::reSend(size_t i)
 {
 	Logger::getInstance().log(INFO, "Re Send", this->_clients[i]);
 	std::cout << this->_clients[i].headerRequest.getHeaders().ContentLength << " " <<
 			this->_clients[i].messageRecv.size() << std::endl;
 	if (this->_clients[i].headerRequest.getMethod() != "POST")
+	{
+		this->_clients[i].messageRecv.clear();
 		return;
+	}
 	if (this->_clients[i].ping >= 1)
+	{
+		Logger::getInstance().log(INFO, "Re Send True", this->_clients[i]);
 		this->_clients[i].responseBuilder._cgi.
 			setBody(this->_clients[i], true);
+	}
 	else
+	{
+		Logger::getInstance().log(INFO, "Re Send False", this->_clients[i]);
 		this->_clients[i].responseBuilder._cgi.
 			setBody(this->_clients[i], false);
+	}
 	if (this->_clients[i].messageRecv.empty() && this->_clients[i].ping >= 1)
 		this->_clients[i].ping++; 
 }
@@ -78,11 +106,14 @@ void Server::clientMessage(size_t i, ssize_t ret)
 	this->_readBuffer.begin() + ret);				
 	if (!this->_clients[i].headerRequest.getHeaders().ContentLength)
 		this->handleClientHeader(i, ret);
-	else if (this->_clients[i].messageRecv.empty())
+	else // if (this->_clients[i].messageRecv.empty())
 		this->handleClientBody(i, ret);
-	else
-		Logger::getInstance().log(ERROR, "client message unhandle case",
-			this->_clients[i]);	
+	// else
+	// {
+	// 	this->printResponse(this->_clients[i].messageRecv);
+	// 	Logger::getInstance().log(ERROR, "client message unhandle case",
+	// 		this->_clients[i]);	
+	// }
 }
 
 // void Server::clientMessage(size_t i, ssize_t ret)
@@ -141,10 +172,10 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 		this->_clients[i].bodySize += this->_clients[i].messageRecv.size();
 		if (!this->_clients[i].headerRequest.getHeaders().ContentLength) //!new
 			this->_clients[i].ping = 2; //!pong
-		// if (!this->isContentLengthValid(i)
-		// 	|| this->isBodyTooLarge(i)
-		// 	|| this->isBodyTerminated(i))
-			// return ;						
+		if (!this->isContentLengthValid(i)
+			|| this->isBodyTooLarge(i)
+			|| this->isBodyTerminated(i))
+			return ;						
 	}
 	else
 		isMaxHeaderSize(it + 1, i);
@@ -186,8 +217,7 @@ void floSimulatorPut(std::vector<char> part)
 }
 
 void Server::handleClientBody(size_t i, ssize_t ret)
-{
-	tog = true;
+{	
 	stringstream ss;
 	ss << "receive client body" << " " << ret << " bytes";
 	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
@@ -292,6 +322,7 @@ bool Server::isBodyTerminated(size_t i)
 		else
 		{
 			this->_clients[i].messageRecv.clear();//! clear dans le post normal
+			shutdown(this->_clients[i].responseBuilder._cgi._fds[1], SHUT_WR);
 		}
 		this->_clients[i].ping++;
 		if (this->_clients[i].messageRecv.empty())
