@@ -3,6 +3,9 @@
 
 void	ResponseBuilder::buildHeaders(){
 
+	Logger::getInstance().log(DEBUG, "ResponseBuilder->buildHeader", *_client);
+
+
 	errorCode codes;
 
 	stringstream	streamStatusLine,
@@ -30,7 +33,7 @@ void	ResponseBuilder::buildHeaders(){
 	Headers.timeStamp = streamTimeStamp.str();
 	
 	// ✅ GET FRIENDLY ✅ POST FRIENDLY ✅ DELETE FRIENDLY
-	uint64_t result = (_errorType == CODE_204_NO_CONTENT) ? 0 : Headers.bodyLenght;
+	uint64_t result = (_errorType == CODE_204_NO_CONTENT or _errorType == CODE_307_TEMPORARY_REDIRECT ) ? 0 : Headers.bodyLenght;
 	streamContentLenght	<< "Content-Length:"
 						<< SPACE
 						<< result
@@ -61,7 +64,7 @@ void	ResponseBuilder::buildHeaders(){
 		stringstream streamLocation;
 		streamLocation	<< "Location:"
 						<< SPACE
-						<< _config->redirection.at(_realURI)
+						<< _myconfig.redirection
 						// << "http://www.github.com/maitreverge"
 						<< HTTP_HEADER_SEPARATOR;
 		Headers.location = streamLocation.str();

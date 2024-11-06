@@ -16,9 +16,9 @@ ssize_t	ResponseBuilder::getBody( Client &inputClient ){
 	{	
 		Logger::getInstance().log(INFO, _realURI.c_str(), inputClient);	
 
-		if (_method == POST)
-			this->_ifs.open(_fileName.c_str(), std::ios::binary);	
-		else
+		// if (_method == POST)
+		// 	this->_ifs.open(_fileName.c_str(), std::ios::binary);	
+		// else
 			this->_ifs.open(_realURI.c_str(), std::ios::binary);	
 	}
 

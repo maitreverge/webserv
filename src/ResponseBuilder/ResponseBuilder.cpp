@@ -22,7 +22,7 @@ bool ResponseBuilder::redirectURI( void ){ // ✅ OKAY FUNCTION
 	if (_myconfig.redirection.empty())
 		return false;
 	
-	setError(CODE_307_TEMPORARY_REDIRECT);
+	setError(CODE_307_TEMPORARY_REDIRECT, true);
 	return true;
 }
 
@@ -44,19 +44,24 @@ void ResponseBuilder::resolveURI( void ) {// ⛔ NOT OKAY FUNCTION
 
 	// ! STEP 3  : Deleting URI first 
 	_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
+	
 	// if (_realURI.size() > 1)
 	// {
 		
-		// Removing all ending '/' URIs //! maybe useless to delete last "/" char
+	// 	// Removing all ending '/' URIs //! maybe useless to delete last "/" char
 		
-		// if ( *_realURI.rbegin() == '/' and _realURI.size() > 1 )
-		// if ( *_realURI.rbegin() == '/' )
-		// {
-		// 	_realURI.erase(_realURI.size() -1);
-		// }
+	// 	if ( *_realURI.rbegin() == '/' and _realURI.size() > 1 )
+	// 	if ( *_realURI.rbegin() == '/' )
+	// 	{
+	// 		_realURI.erase(_realURI.size() -1);
+	// 	}
 	// }
 
-	_realURI += _myconfig.index;
+	if (not _myconfig.listingDirectory)
+	{
+		_realURI += "/";
+		_realURI += _myconfig.index; // after checking the nature
+	}
 }
 
 void	ResponseBuilder::checkMethod( void ){
@@ -79,7 +84,7 @@ void	ResponseBuilder::checkMethod( void ){
 
 void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
-	Logger::getInstance().log(DEBUG, "Response Builder GET Header", inputClient);
+	Logger::getInstance().log(DEBUG, "ResponseBuilder->getHeader", inputClient);
 		
 	_client = &inputClient; // init client
 	_config = &inputConfig; // init config
@@ -87,7 +92,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	_realURI = _client->headerRequest.getURI();
 
 	extractRouteConfig();
-	// printMyConfig();
+	printMyConfig();
 	
 
 	try
@@ -128,7 +133,10 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 		Logger::getInstance().log(INFO, "Another kind or error has been raised in the getHeader process", inputClient);
 	} 
 
-	setContentLenght();
+	if (not isErrorRedirect())
+		setContentLenght();
+	
+	
 	buildHeaders();
 
 	inputClient.headerRespons = Headers.masterHeader;

@@ -152,11 +152,17 @@ void ResponseBuilder::setError(e_errorCodes code, bool skip){ // !!!!!!!!!!!!!!!
 
 	_errorType = code;
 
+	if (_errorType >= CODE_300_MULTIPLE_CHOICES and _errorType <= CODE_308_PERMANENT_REDIRECT)
+	{
+		_realURI.erase();
+		Headers.bodyLenght = 0; 
+		throw CodeErrorRaised();
+	}
 	// TODO : handle non existing 404.html
 	try
 	{
 		if (_errorType != CODE_204_NO_CONTENT)
-			_realURI = _config->errorPaths.at(_errorType);
+		_realURI = _config->errorPaths.at(_errorType);
 	}
 	catch(const std::exception& e)
 	{
