@@ -24,7 +24,7 @@ bool ResponseBuilder::redirectURI( void ){ // ✅ OKAY FUNCTION
 
 	_realURI = _myconfig.redirection;
 	
-	setError(CODE_308_PERMANENT_REDIRECT, true);
+	setError(CODE_307_TEMPORARY_REDIRECT);
 	return true;
 }
 
@@ -38,11 +38,9 @@ void ResponseBuilder::rootMapping( void ){ // ✅ OKAY FUNCTION
 
 bool ResponseBuilder::isDirectory(string &uri) {
 	
-	struct stat info;
-
 	if (stat(uri.c_str(), &_fileInfo) != 0)
 		return false;
-	else if (info.st_mode & S_IFDIR)
+	else if (_fileInfo.st_mode & S_IFDIR)
 		return true;
 	else
 		return false;
@@ -76,14 +74,13 @@ void ResponseBuilder::resolveURI( void ) {// ⛔ NOT OKAY FUNCTION
 	// 	}
 	// }
 
-	if (isDirectory(_realURI))
+	if (isDirectory(_realURI) and not _myconfig.listingDirectory)
 	{
 		_realURI += "/";
 		_realURI += _myconfig.index; // after checking the nature
     }
 
-	if (not _myconfig.listingDirectory)
-	{
+	{	
 	}
 }
 
@@ -113,6 +110,8 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	_config = &inputConfig; // init config
 	
 	_realURI = _client->headerRequest.getURI();
+
+	_errorType = CODE_200_OK;
 
 	extractRouteConfig();
 	printMyConfig();

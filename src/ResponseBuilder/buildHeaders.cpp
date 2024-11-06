@@ -33,12 +33,15 @@ void	ResponseBuilder::buildHeaders(){
 	Headers.timeStamp = streamTimeStamp.str();
 	
 	// ✅ GET FRIENDLY ✅ POST FRIENDLY ✅ DELETE FRIENDLY
-	uint64_t result = (_errorType == CODE_204_NO_CONTENT or _errorType == CODE_307_TEMPORARY_REDIRECT ) ? 0 : Headers.bodyLenght;
-	streamContentLenght	<< "Content-Length:"
-						<< SPACE
-						<< result
-						<< HTTP_HEADER_SEPARATOR;
-	Headers.contentLenght = streamContentLenght.str();
+	if (not isErrorRedirect())
+	{
+		uint64_t result = (_errorType == CODE_204_NO_CONTENT ) ? 0 : Headers.bodyLenght;
+		streamContentLenght	<< "Content-Length:"
+							<< SPACE
+							<< result
+							<< HTTP_HEADER_SEPARATOR;
+		Headers.contentLenght = streamContentLenght.str();
+	}
 
 	
 	// --------------  Optionals Headers --------------  
@@ -109,4 +112,6 @@ void	ResponseBuilder::buildHeaders(){
 
 	// Insert all headers in a vector char
 	Headers.masterHeader.insert(Headers.masterHeader.end(), tempAllHeaders.begin(), tempAllHeaders.end());
+
+	// sleep(4);
 }
