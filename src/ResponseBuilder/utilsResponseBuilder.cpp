@@ -34,8 +34,8 @@ void	ResponseBuilder::setContentLenght(){ // ⛔ NOT OKAY FUNCTION
 		else if (errno == ENOENT or errno == EFAULT)
 			setError(CODE_404_NOT_FOUND, true);
 	}
-	
-	Headers.bodyLenght = static_cast<uint64_t>(_fileInfo.st_size); //! the targeted file in a GET requests
+	else
+		Headers.bodyLenght = static_cast<uint64_t>(_fileInfo.st_size); //! the targeted file in a GET requests
 	// else if (_method == GET and _isFile) // valid path and PATH is a file
 	// {
 	// }
@@ -152,8 +152,19 @@ void ResponseBuilder::setError(e_errorCodes code, bool skip){ // 🟠 FUNCTION I
 
 	_errorType = code;
 
+	// TODO : handle non existing 404.html
+	try
+	{
+		if (_errorType != CODE_204_NO_CONTENT)
+			_realURI = _config->errorPaths.at(_errorType);
+	}
+	catch(const std::exception& e)
+	{
+		// ? is this handling correct
+		_realURI.erase();
+		Headers.bodyLenght = 0; 
+	}
 	
-	_realURI = _config->errorPaths.at(_errorType); // TODO : handle non existing 404.html
 	
 	extractFileNature(_realURI);
 	extractType(_realURI);
