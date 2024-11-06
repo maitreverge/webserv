@@ -3,6 +3,9 @@
 
 bool ResponseBuilder::foundDefaultPath( void ){
 
+	if (_myconfig.index.empty())
+		return false;
+	
 	string saveURI = _realURI;
 
 	saveURI += _myconfig.index;
@@ -87,7 +90,7 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 
 	// TODO : Get from config the default file name for listing directories
 
-	string defautFile = _realURI + "/listing.html";
+	string defautFile = _realURI + "listing.html";
 	ofstream listingFile(defautFile.c_str());
 
 	listingFile << result.str();
@@ -104,16 +107,22 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 void ResponseBuilder::generateListingHTML( void ){
 
 	// ! STEP 0 : check if we can read in the directory
-	if (not _myconfig.listingDirectory or not _isWOK or _isROK)
-	{
-		if (_myconfig.index.empty())
-			setError(CODE_401_UNAUTHORIZED);
-	}
-	else if (foundDefaultPath())
-		return;
-
+	if (not _myconfig.listingDirectory and _myconfig.index.empty())
+		setError(CODE_401_UNAUTHORIZED);
+	
+	// if (foundDefaultPath())
+	// {
+	// }
 	listingHTMLBuilder();
-
 	checkNature();
 	checkAutho();
+
+	// if (_myconfig.index.empty())
+	
+	// if (not _myconfig.listingDirectory or not _isWOK or _isROK)
+	// {
+	// }
+	// 	return;
+
+
 }

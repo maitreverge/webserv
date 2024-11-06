@@ -43,17 +43,20 @@ void ResponseBuilder::resolveURI( void ) {// ⛔ NOT OKAY FUNCTION
 	// sanatizeURI(_realURI); // ! STAY COMMENTED until refactoring for better "../" erasing process
 
 	// ! STEP 3  : Deleting URI first 
-	if (_realURI.size() > 1)
-	{
-		_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
+	_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
+	// if (_realURI.size() > 1)
+	// {
 		
 		// Removing all ending '/' URIs //! maybe useless to delete last "/" char
 		
 		// if ( *_realURI.rbegin() == '/' and _realURI.size() > 1 )
+		// if ( *_realURI.rbegin() == '/' )
 		// {
 		// 	_realURI.erase(_realURI.size() -1);
 		// }
-	}
+	// }
+
+	_realURI += _myconfig.index;
 }
 
 void	ResponseBuilder::checkMethod( void ){
@@ -122,8 +125,8 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	}
 	catch(const std::exception& e)
 	{
-
-	}
+		Logger::getInstance().log(INFO, "Another kind or error has been raised in the getHeader process", inputClient);
+	} 
 
 	setContentLenght();
 	buildHeaders();
