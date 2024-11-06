@@ -8,6 +8,7 @@ Error::Error() {
 					_errorPages[401] = "/errorPages/401.html";
 					_errorPages[403] = "/errorPages/403.html";
 					_errorPages[404] = "/errorPages/404.html";
+					_errorPages[405] = "/errorPages/405.html";
 					_errorPages[413] = "/errorPages/413.html";
 					_errorPages[431] = "/errorPages/431.html";
 					_errorPages[500] = "/errorPages/500.html";

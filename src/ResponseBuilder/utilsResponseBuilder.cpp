@@ -148,7 +148,7 @@ void	ResponseBuilder::checkNature( void ){ // ⛔ NOT OKAY FUNCTION
 	}
 }
 
-void ResponseBuilder::setError(e_errorCodes code, bool skip){ // 🟠 FUNCTION IN PROCESS
+void ResponseBuilder::setError(e_errorCodes code, bool skip){ // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	_errorType = code;
 
