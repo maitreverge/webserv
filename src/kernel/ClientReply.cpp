@@ -8,12 +8,14 @@ void Server::replyClients()
 		if (this->_clients[i].ping < 2 
 			|| !FD_ISSET(this->_clients[i].fd, &this->_writeSet))
 				continue;	
-		if (!this->_clients[i].headerRespons.empty())			
+		if (!this->_clients[i].headerRespons.empty())
+		{
 			if (replyClient(i, this->_clients[i].headerRespons,
 				static_cast<ssize_t>
 				(this->_clients[i].headerRespons.size())))
 				break ;	
-		if (this->_clients[i].messageSend.empty())
+		}
+		else if (this->_clients[i].messageSend.empty())
 		{
 			if (fillMessageSend(i))
 				break ;
@@ -35,9 +37,8 @@ bool Server::fillMessageSend(size_t i)
 			return true;								
 		usleep(500);
 	}
-	else if (endReply(i))
-		return true;
-	return false;
+	else
+		return endReply(i);	
 }
 
 bool Server::endReply(size_t i)
