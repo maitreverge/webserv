@@ -52,20 +52,29 @@ bool ResponseBuilder::isDirectory(string &uri) {
 void	ResponseBuilder::slashManip( void ){
 
 	// turn a regular URI ("/index.html" into "index.html")
-	if ( !_realURI.empty() and *_realURI.begin() == '/')
-		_realURI.erase(_realURI.begin() + 0);
-	if (*_realURI.rbegin() != '/')
-		_realURI += "/";
-	// if (_realURI.empty())
-	// 	_realURI += "/";
+	bool beginWithSlash = !_realURI.empty() && (*_realURI.begin() == '/');
+	bool endWithSlash = !_realURI.empty() && (*_realURI.rbegin() == '/');
+	
+	if (_realURI.empty())
+	{
+
+	}
+	else if (_realURI == "/")
+	{
+
+	}
+	else
+	{
+		if (beginWithSlash)
+			_realURI.erase(_realURI.begin());
+	}
+
 	if (isDirectory(_realURI) and _myconfig.listingDirectory == false)
 	{
+		if (!endWithSlash)
+			_realURI += "/";
 		_realURI += _myconfig.index; // after checking the nature
-		return;
     }
-	if ( not (_realURI.size() == 1 and *_realURI.begin() == '/') )
-		_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
-
 }
 
 void ResponseBuilder::resolveURI( void ) {// ⛔ NOT OKAY FUNCTION
