@@ -96,8 +96,6 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 
 	// TODO : Get from config the default file name for listing directories
 
-	// if (*_realURI.begin() == '/')
-	// 	_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
 
 	string listingName = "listing.html";
 
@@ -112,6 +110,8 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 
 	_realURI = _originalURI + listingName;
 
+	if (*_realURI.begin() == '/')
+		_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
 
 	closedir(dir);
 
