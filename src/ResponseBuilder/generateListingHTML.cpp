@@ -130,7 +130,7 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 void ResponseBuilder::generateListingHTML( void ){
 
 	// ! STEP 0 : check if we can read in the directory
-	if (not _myconfig.listingDirectory and _myconfig.index.empty())
+	if ( _myconfig.listingDirectory == false and _myconfig.index.empty())
 		setError(CODE_401_UNAUTHORIZED);
 	
 	// if (foundDefaultPath())

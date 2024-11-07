@@ -32,7 +32,10 @@ void ResponseBuilder::rootMapping( void ){ // ✅ OKAY FUNCTION
 
 	if (_myconfig.root.empty())
 		return;
-	
+
+	if (*_myconfig.root.rbegin() != '/')
+		_myconfig.root += "/";
+
 	_realURI.replace(0, _myconfig.uri.size(), _myconfig.root);
 }
 
@@ -60,19 +63,20 @@ void ResponseBuilder::resolveURI( void ) {// ⛔ NOT OKAY FUNCTION
 	// sanatizeURI(_realURI); // ! STAY COMMENTED until refactoring for better "../" erasing process
 
 	// ! STEP 3  : Deleting URI first 
-	if (isDirectory(_realURI) and not _myconfig.listingDirectory)
+	if ( !_realURI.empty() and *_realURI.begin() == '/')
+		_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
+	if (*_realURI.rbegin() != '/')
+		_realURI += "/";
+	// if (_realURI.empty())
+	// 	_realURI += "/";
+	if (isDirectory(_realURI) and _myconfig.listingDirectory == false)
 	{
-		if (*_realURI.begin() == '/')
-			_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
-		if (*_realURI.rbegin() != '/' or not _realURI.empty())
-			_realURI += "/"; 
-		// if (not _realURI.empty())
-		// 	_realURI += "/";
 		_realURI += _myconfig.index; // after checking the nature
 		return;
     }
 	if ( not (_realURI.size() == 1 and *_realURI.begin() == '/') )
 		_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
+
 }
 
 void	ResponseBuilder::checkMethod( void ){
