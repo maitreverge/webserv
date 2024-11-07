@@ -31,9 +31,7 @@ void Server::reSend(size_t i)
 	Logger::getInstance().log(INFO, "Re Send", this->_clients[i]);
 	std::cout << this->_clients[i].headerRequest.getHeaders().ContentLength
 		<< " " << this->_clients[i].messageRecv.size() << std::endl;
-
-	if (this->_clients[i].headerRequest.getMethod() != "POST")	
-		return this->_clients[i].messageRecv.clear();
+	
 	if (this->_clients[i].ping >= 1)
 	{
 		Logger::getInstance().log(INFO, "Re Send True", this->_clients[i]);
@@ -159,6 +157,8 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 	if (this->_clients[i].headerRequest.getMethod() == "POST")
 		this->_clients[i].responseBuilder._cgi.
 			setBody(this->_clients[i], false);
+	else
+		this->_clients[i].messageRecv.clear();		
 }
 
 #include "Error.hpp"//!
@@ -249,7 +249,7 @@ bool Server::isBodyTerminated(size_t i)
 				setBody(this->_clients[i], true);			
 		else
 		{
-			this->_clients[i].messageRecv.clear();//! clear dans le post normal
+			this->_clients[i].messageRecv.clear();
 			shutdown(this->_clients[i].responseBuilder._cgi._fds[1], SHUT_WR);
 		}
 		this->_clients[i].ping++;
