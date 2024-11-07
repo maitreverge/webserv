@@ -27,6 +27,11 @@
 // 		}	
 // 	}
 // }
+
+// if ((this->_clients[i].messageRecv.empty()
+// 				&& this->_clients[i].headerRequest.getHeaders().ContentLength)
+// 				||  !this->_clients[i].headerRequest.getHeaders().ContentLength)
+// 			{
 // bool tog = false;
 void Server::listenClients()
 {	
@@ -38,12 +43,7 @@ void Server::listenClients()
 			&& !this->_clients[i].messageRecv.empty())
 			reSend(i);
 		else if (FD_ISSET(this->_clients[i].fd, &this->_readSet))
-		{	
-			if ((this->_clients[i].messageRecv.empty()
-				&& this->_clients[i].headerRequest.getHeaders().ContentLength)
-				||  !this->_clients[i].headerRequest.getHeaders().ContentLength)
-			{
-				
+		{
 			this->_readBuffer.clear();
 			this->_readBuffer.resize(RECV_BUFF_SIZE);
 			ssize_t ret = recv(this->_clients[i].fd, this->_readBuffer.data(),
@@ -54,13 +54,6 @@ void Server::listenClients()
 				this->exitClient(i);		
 			else
 				clientMessage(i, ret);			
-			}
-			else
-			{
-				this->printResponse(this->_clients[i].messageRecv);
-				Logger::getInstance().log(ERROR, "listen message unhandle case",
-					this->_clients[i]);	
-			}
 		}	
 	}
 }
@@ -75,18 +68,18 @@ void Server::listenClients()
 void Server::reSend(size_t i)
 {
 	Logger::getInstance().log(INFO, "Re Send", this->_clients[i]);
-	std::cout << this->_clients[i].headerRequest.getHeaders().ContentLength << " " <<
-			this->_clients[i].messageRecv.size() << std::endl;
-	if (this->_clients[i].headerRequest.getMethod() != "POST")
-	{
-		this->_clients[i].messageRecv.clear();
-		return;
-	}
+	std::cout << this->_clients[i].headerRequest.getHeaders().ContentLength
+		<< " " << this->_clients[i].messageRecv.size() << std::endl;
+
+	if (this->_clients[i].headerRequest.getMethod() != "POST")	
+		return this->_clients[i].messageRecv.clear();
 	if (this->_clients[i].ping >= 1)
 	{
 		Logger::getInstance().log(INFO, "Re Send True", this->_clients[i]);
 		this->_clients[i].responseBuilder._cgi.
 			setBody(this->_clients[i], true);
+		if (this->_clients[i].messageRecv.empty())
+			this->_clients[i].ping++; 
 	}
 	else
 	{
@@ -94,8 +87,6 @@ void Server::reSend(size_t i)
 		this->_clients[i].responseBuilder._cgi.
 			setBody(this->_clients[i], false);
 	}
-	if (this->_clients[i].messageRecv.empty() && this->_clients[i].ping >= 1)
-		this->_clients[i].ping++; 
 }
 
 void Server::clientMessage(size_t i, ssize_t ret)
@@ -106,14 +97,8 @@ void Server::clientMessage(size_t i, ssize_t ret)
 	this->_readBuffer.begin() + ret);				
 	if (!this->_clients[i].headerRequest.getHeaders().ContentLength)
 		this->handleClientHeader(i, ret);
-	else // if (this->_clients[i].messageRecv.empty())
-		this->handleClientBody(i, ret);
-	// else
-	// {
-	// 	this->printResponse(this->_clients[i].messageRecv);
-	// 	Logger::getInstance().log(ERROR, "client message unhandle case",
-	// 		this->_clients[i]);	
-	// }
+	else
+		this->handleClientBody(i, ret);	
 }
 
 // void Server::clientMessage(size_t i, ssize_t ret)
@@ -230,7 +215,7 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 			setBody(this->_clients[i], false);
 	
 		// floSimulatorPut(this->_clients[i].messageRecv);
-	// this->_clients[i].messageRecv.clear();//!del	
+	// this->_clients[i].messageRecv.clear();//!del
 }
 
 #include "Error.hpp"//!
@@ -243,12 +228,13 @@ void Server::errorShortCircuit(e_errorCodes err, size_t i)
 	std::stringstream ss;
 	ss << err << " " << errStr;
 	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);	
+
 	this->_clients[i].headerRequest.setURI(errStr);
 	this->_clients[i].responseBuilder = ResponseBuilder();
 	this->_clients[i].responseBuilder.getHeader(this->_clients[i],
 		this->_conf);
 	this->_clients[i].messageRecv.clear();
-	this->_clients[i].ping = false;
+	this->_clients[i].ping = 2;
 	this->_clients[i].exitRequired = true;	
 }
 
@@ -314,11 +300,11 @@ bool Server::isBodyTerminated(size_t i)
 		<< this->_clients[i].bodySize << " Content-Lenght: "
 		<< this->_clients[i].headerRequest.getHeaders().ContentLength;
 		Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
+
 		this->_clients[i].bodySize = 0;//!
 		if (this->_clients[i].headerRequest.getMethod() == "POST")
 			this->_clients[i].responseBuilder._cgi.
-				setBody(this->_clients[i], true);
-			// floSimulatorPut(this->_clients[i].messageRecv);
+				setBody(this->_clients[i], true);			
 		else
 		{
 			this->_clients[i].messageRecv.clear();//! clear dans le post normal
@@ -326,8 +312,7 @@ bool Server::isBodyTerminated(size_t i)
 		}
 		this->_clients[i].ping++;
 		if (this->_clients[i].messageRecv.empty())
-		 	this->_clients[i].ping++;	//! si le message nest pas send en entier
-		//! il vas etre en pong mais peut etre que il ny aura rien a repondre ou plantage	
+		 	this->_clients[i].ping++;	
 		return true;
 	}
 	return false;
