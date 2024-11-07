@@ -39,6 +39,9 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 
 	path = getcwd(cwd, sizeof(cwd)) + _originalURI;
 
+	if (*path.rbegin() != '/')
+		path += "/";
+
 	// ! STEP 1 : Opens the directory
 	DIR *dir = opendir(path.c_str());
 	if (dir == NULL)
@@ -74,7 +77,8 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
     while ((listing = readdir(dir)) != NULL)
 	{
 		string curFile = listing->d_name;
-		string curPath = _originalURI + listing->d_name;
+		string curPath = "/";
+		curPath += listing->d_name;
 		if (curFile != "." and curFile != "..") // do not list either "." or ".."
 		{
 			// <a href="test.html">Go to Test Page</a>
