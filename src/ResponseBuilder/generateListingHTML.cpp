@@ -77,10 +77,13 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
     while ((listing = readdir(dir)) != NULL)
 	{
 		string curFile = listing->d_name;
-		string curPath = "/";
-		curPath += listing->d_name;
+		// string curPath = "/";
+		string curPath = listing->d_name;
 		if (curFile != "." and curFile != "..") // do not list either "." or ".."
 		{
+			if (listing->d_type == DT_DIR)
+				curPath += "/"; // Append trailing slash for directories
+		
 			// <a href="test.html">Go to Test Page</a>
 			result << "<li>";
 			result << "<a href=\"";
