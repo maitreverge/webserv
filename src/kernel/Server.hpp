@@ -12,7 +12,7 @@
 #include "errorCode.hpp"
 #include "ResponseBuilder.hpp"
 
-#define RECV_BUFF_SIZE 1
+#define RECV_BUFF_SIZE 3
 #define SEND_BUFF_SIZE 1
 
 #define MAX_HDR_SIZE 8192
@@ -37,6 +37,7 @@ class Server
 	void reSend(size_t i);
 	void handleClientHeader(size_t i, ssize_t ret);
 	void getRespHeader(size_t i);
+	void bodyCheckin(size_t i);
 	void handleClientBody(size_t i, ssize_t ret);
 	bool isDelimiterFind(size_t i, std::vector<char>::iterator & it);
 	void errorShortCircuit(e_errorCodes err, size_t i);
