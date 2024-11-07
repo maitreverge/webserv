@@ -157,7 +157,8 @@ class ResponseBuilder
 	
 	bool	isDirectory(string &uri);
 
-
+	void	slashManip( void );
+	
 
 
 

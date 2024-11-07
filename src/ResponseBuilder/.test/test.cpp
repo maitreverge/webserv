@@ -7,16 +7,23 @@
 
 // int main() {
 
-// 	string clientURI = "/dir1/script.py/hehehe/script/kakakkaka/script.py";
-	
-// 	string targetPHP = ".php";
-//     string targetPython = ".py";
+// 	string _realURI = "/";
 
-//     // Find the first positions of the Python and PHP extensions in the URI
-//     std::string::size_type pythonLoc = clientURI.find(targetPython);
-//     std::string::size_type phpLoc = clientURI.find(targetPHP);
 
-// 	cout << pythonLoc << endl;
-// 	cout << phpLoc << endl;
+// 	string root;
+
+// 	// root.erase();
+
+// 	root = "/cyborg_gaming";
+
+
+
+// 	if (root.empty())
+// 		return;
+
+// 	// if (*_myconfig.root.rbegin() != '/')
+// 	// 	_myconfig.root += "/";
+
+// 	_realURI.replace(0, _myconfig.uri.size(), root);
 
 // }

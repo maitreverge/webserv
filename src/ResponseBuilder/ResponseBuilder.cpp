@@ -33,8 +33,8 @@ void ResponseBuilder::rootMapping( void ){ // ✅ OKAY FUNCTION
 	if (_myconfig.root.empty())
 		return;
 
-	if (*_myconfig.root.rbegin() != '/')
-		_myconfig.root += "/";
+	// if (*_myconfig.root.rbegin() != '/')
+	// 	_myconfig.root += "/";
 
 	_realURI.replace(0, _myconfig.uri.size(), _myconfig.root);
 }
@@ -47,6 +47,25 @@ bool ResponseBuilder::isDirectory(string &uri) {
 		return true;
 	else
 		return false;
+}
+
+void	ResponseBuilder::slashManip( void ){
+
+	// turn a regular URI ("/index.html" into "index.html")
+	if ( !_realURI.empty() and *_realURI.begin() == '/')
+		_realURI.erase(_realURI.begin() + 0);
+	if (*_realURI.rbegin() != '/')
+		_realURI += "/";
+	// if (_realURI.empty())
+	// 	_realURI += "/";
+	if (isDirectory(_realURI) and _myconfig.listingDirectory == false)
+	{
+		_realURI += _myconfig.index; // after checking the nature
+		return;
+    }
+	if ( not (_realURI.size() == 1 and *_realURI.begin() == '/') )
+		_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
+
 }
 
 void ResponseBuilder::resolveURI( void ) {// ⛔ NOT OKAY FUNCTION
@@ -63,19 +82,7 @@ void ResponseBuilder::resolveURI( void ) {// ⛔ NOT OKAY FUNCTION
 	// sanatizeURI(_realURI); // ! STAY COMMENTED until refactoring for better "../" erasing process
 
 	// ! STEP 3  : Deleting URI first 
-	if ( !_realURI.empty() and *_realURI.begin() == '/')
-		_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
-	if (*_realURI.rbegin() != '/')
-		_realURI += "/";
-	// if (_realURI.empty())
-	// 	_realURI += "/";
-	if (isDirectory(_realURI) and _myconfig.listingDirectory == false)
-	{
-		_realURI += _myconfig.index; // after checking the nature
-		return;
-    }
-	if ( not (_realURI.size() == 1 and *_realURI.begin() == '/') )
-		_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
+	slashManip();
 
 }
 
@@ -84,7 +91,7 @@ void	ResponseBuilder::checkMethod( void ){
 	if (_myconfig.allowedMethods.empty())
 		return;
 	
-	for (std::vector<string>::iterator it = _myconfig.allowedMethods.begin(); it < _myconfig.allowedMethods.end(); ++it)
+	for (std::vector<string>::iterator it = _myconfig.allowedMethods.begin(); it != _myconfig.allowedMethods.end(); ++it)
 	{
 		if (*(it) == "GET" and _method == GET)
 			return;
@@ -115,32 +122,27 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
 	try
 	{
-		// if ( not redirectURI())
-		// {
-			extractMethod();
+		extractMethod();
 
-			checkMethod();
+		checkMethod();
 
-			if (_method == DELETE)
-				setError(CODE_204_NO_CONTENT); // does not throw exception
-			else // if (_method != DELETE)
-				checkCGI();
-			if (_method == POST and !_isCGI)
-				uploadCheck();
-			
-			resolveURI();
-			checkAutho();
-			checkNature();
-			
-			// ! WORK NEEDLE
-			if (_isDirectory and (_method == GET) and (not _isCGI))
-			{
-				generateListingHTML();
-			}
+		if (_method == DELETE)
+			setError(CODE_204_NO_CONTENT); // does not throw exception
+		else // if (_method != DELETE)
+			checkCGI();
+		if (_method == POST and !_isCGI)
+			uploadCheck();
+		
+		resolveURI();
+		checkAutho();
+		checkNature();
+		
+		// ! WORK NEEDLE
+		if (_isDirectory and (_method == GET) and (not _isCGI))
+		{
+			generateListingHTML();
+		}
 
-			if (_method == DELETE and _errorType < CODE_400_BAD_REQUEST)
-				deleteEngine();	
-		// }
 	}
 	catch(const CodeErrorRaised& e)
 	{
@@ -155,12 +157,13 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 		setContentLenght();
 	
 	
+	if (_method == DELETE and _errorType < CODE_400_BAD_REQUEST)
+		deleteEngine();	
+
 	buildHeaders();
 
 	inputClient.headerRespons = Headers.masterHeader;
 	
-
-	// // Copying the build Headers in headerRespons
 
 	// Headers.masterHeader.clear();//!
 
