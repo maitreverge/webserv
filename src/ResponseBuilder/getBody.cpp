@@ -87,13 +87,15 @@ ssize_t	ResponseBuilder::getBody( Client &inputClient ){
 		inputClient.messageSend.clear();
 		inputClient.messageSend.resize(SEND_BUFF_SIZE);//!
 		// ! ADVANCED TEST : keskis passe si READ se passe mal 
-		this->_ifs.read(inputClient.messageSend.data(), static_cast<std::streamsize>(inputClient.messageSend.size()));	
+		this->_ifs.read(inputClient.messageSend.data(),
+			static_cast<std::streamsize>(inputClient.messageSend.size()));	
 		this->_streamHead = this->_ifs.tellg();
-		
 		std::streamsize gcount = this->_ifs.gcount();
+		inputClient.messageSend.erase(inputClient.messageSend.begin() + gcount,
+			inputClient.messageSend.end());
 		if (this->_ifs.eof()) 
 		{
-			// Logger::getInstance().log(INFO, "file end", inputClient);						
+			Logger::getInstance().log(INFO, "file end", inputClient);						
 			this->_ifs.close();		
 		}
 

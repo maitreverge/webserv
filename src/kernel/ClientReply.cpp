@@ -10,9 +10,7 @@ void Server::replyClients()
 				continue;	
 		if (!this->_clients[i].headerRespons.empty())
 		{
-			if (replyClient(i, this->_clients[i].headerRespons,
-				static_cast<ssize_t>
-				(this->_clients[i].headerRespons.size())))
+			if (replyClient(i, this->_clients[i].headerRespons))
 				break ;	
 		}
 		else if (this->_clients[i].messageSend.empty())
@@ -20,20 +18,23 @@ void Server::replyClients()
 			if (fillMessageSend(i))
 				break ;
 		}
-		else if (replyClient(i, this->_clients[i].messageSend,
-			static_cast<ssize_t>(this->_clients[i].messageSend.size())))
+		else if (replyClient(i, this->_clients[i].messageSend))
 			break ;
 	}
 }
 
 bool Server::fillMessageSend(size_t i)
 {
+	getBody(this->_clients[i]);
+	  if (!FD_ISSET(this->_fds[1], &Kernel::_readSet))
+        return ;
+	if (this->_clients[i].messageSend.empty())
 	if (ssize_t ret = this->_clients[i].responseBuilder.
 		getBody(this->_clients[i]))
 	{
 		if (ret == 73)
 			return false;							
-		if (replyClient(i, this->_clients[i].messageSend, ret))
+		if (replyClient(i, this->_clients[i].messageSend))
 			return true;								
 		usleep(500);
 	}
@@ -64,25 +65,22 @@ void Server::printResponse(const std::vector<char> & response)
 	std::cout << "-\e[0m" << std::endl << std::endl;
 }
 
-bool Server::replyClient(size_t i, std::vector<char> & response,
-	ssize_t repSize)
+bool Server::replyClient(size_t i, std::vector<char> & response)
 {	
 	Logger::getInstance().log(INFO, "reply client", this->_clients[i]);
 	printResponse(response);
 
-	response.erase(response.begin() + repSize, response.end());
-	ssize_t ret;
-		
+	ssize_t ret;		
 	if ((ret = send(this->_clients[i].fd, response.data(), response.size(),
-		MSG_NOSIGNAL)) < 0)
+		MSG_NOSIGNAL)) < 0 || !ret)
 	return Logger::getInstance().log(ERROR, "send", this->_clients[i]),
 		this->exitClient(i), true;		
-
+//! SEND == 0
 	std::string str(response.data(), response.data()
 		+ static_cast<size_t>(ret));      
 	std::stringstream ss; ss << "data sent to client: -" << str << "-";	
 	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]); 
 
-	response.erase(response.begin(), response.begin() + ret);	
+	response.erase(response.begin(), response.begin() + ret);
 	return false;
 }

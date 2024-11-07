@@ -46,8 +46,7 @@ class Server
 	bool isBodyTerminated(size_t i);
 	bool isBodyTooLarge(size_t i);
 	void printResponse(const std::vector<char> & response);
-	bool replyClient(size_t i, std::vector<char> & response,
-		ssize_t repSize);
+	bool replyClient(size_t i, std::vector<char> & response);
 	bool fillMessageSend(size_t i);
 	bool endReply(size_t i);
 	void exitClient(size_t index);

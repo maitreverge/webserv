@@ -63,47 +63,45 @@ void Cgi::launch()
         close(this->_fds[0]);
 }
 
-ssize_t Cgi::getBody(Client & client)
+bool Cgi::retHandle(ssize_t ret, std::string err, std::string info)
 {
-    Logger::getInstance().log(INFO, "Get Body");
-      
-   
-    if (!FD_ISSET(this->_fds[1], &Kernel::_readSet))
-        return 73;
-    Logger::getInstance().log(INFO, "ive not been retarded");
-    client.messageSend.clear();
-    client.messageSend.resize(SEND_BUFF_SIZE);//!
-    ssize_t ret; 
+	stringstream ss; ss << "ret: " << ret;
+	Logger::getInstance().log(DEBUG, ss.str());
 
-    ret = recv(this->_fds[1], client.messageSend.data(),
-        client.messageSend.size(), 0);
-        /* code */    
-  
-    // sleep(1);
-    if (ret < 0)
+    if (ret < 0 || !ret)
     {
-        Logger::getInstance().log(ERROR, "recv cgi");
-
+		ret < 0 ?
+        Logger::getInstance().log(ERROR, err), errnoHandle():
+		Logger::getInstance().log(INFO, info);
    
 		FD_CLR(this->_fds[1], &Kernel::_actualSet);
-        close(this->_fds[1]);//! delete from FD
+        close(this->_fds[1]);
         this->_fds[1] = -1;
         //!exitclient
-        return 0;
-    }
-    std::cout << "RET " << ret << std::endl;
-    // for (ssize_t i = 0; i < ret; i++)
-    //     std::cout << "." << buff[i];
-    if (!ret)
+        return true;
+    } 
+	return false;
+}
+
+bool Cgi::getBody(Client & client)
+{
+    Logger::getInstance().log(INFO, "Get Body");
+         
+    if (!FD_ISSET(this->_fds[1], &Kernel::_readSet))
     {
-        Logger::getInstance().log(INFO, "end cgi");
-        FD_CLR(this->_fds[1], &Kernel::_actualSet);
-        close(this->_fds[1]);//!
-        this->_fds[1] = -1;
-        //!exitclient
-        return 0;
+        Logger::getInstance().log(DEBUG, "not ready to recev");
+        return true;
     }
-    return ret;
+    client.messageSend.clear();
+    client.messageSend.resize(SEND_BUFF_SIZE);
+    ssize_t ret = recv(this->_fds[1], client.messageSend.data(),
+        client.messageSend.size(), 0);  
+	if (retHandle(ret, "recv", "end cgi"))
+		return false;
+   
+	client.messageSend.erase(client.messageSend.begin() + ret,
+		client.messageSend.end());
+	return false; 
 }
 
 
@@ -116,34 +114,19 @@ void Cgi::setBody(Client & client, bool eof)
         return;
     }
     Logger::getInstance().log(DEBUG, "ready to send");
+
  	ssize_t ret = send(this->_fds[1], client.messageRecv.data(),
         client.messageRecv.size(), 0);
-	if (ret < 0)
-    {
-        Logger::getInstance().log(ERROR, "recv cgi");
-
-        errnoHandle();
-		close(this->_fds[1]);
-        this->_fds[1] = -1;
-        //!exitclient
-        return ;
-    }
-	if (!ret) //?????
-    {
-        Logger::getInstance().log(INFO, "end cgi");
-        close(this->_fds[1]);
-        this->_fds[1] = -1;
-        //!exitclient
-        return ;
-    }
+	if (retHandle(ret, "send", "cgi exited"))
+		return ;
     
     std::string str(client.messageRecv.data(), client.messageRecv.data()
 		+ static_cast<size_t>(ret));      
 	std::stringstream ss; ss << "data sent to cgi: -" << str << "-";	
 	Logger::getInstance().log(DEBUG, ss.str(), client);
-
+		
 	client.messageRecv.erase(client.messageRecv.begin(),
-        client.messageRecv.begin() + ret);	
+        client.messageRecv.begin() + ret);
 	if (eof && client.messageRecv.empty())	
 		shutdown(_fds[1], SHUT_WR);	
 }
