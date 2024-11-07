@@ -33,8 +33,14 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 		OR
 		I just check the authorizations within the 
 	*/
+	char cwd[1024];
+
+	string path;
+
+	path = getcwd(cwd, sizeof(cwd)) + _originalURI;
+
 	// ! STEP 1 : Opens the directory
-	DIR *dir = opendir(_realURI.c_str());
+	DIR *dir = opendir(path.c_str());
 	if (dir == NULL)
 	{
 		Logger::getInstance().log(ERROR, "Failing Openning Directory");
@@ -68,7 +74,7 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
     while ((listing = readdir(dir)) != NULL)
 	{
 		string curFile = listing->d_name;
-		string curPath = _realURI + "/" + listing->d_name;
+		string curPath = _originalURI + listing->d_name;
 		if (curFile != "." and curFile != "..") // do not list either "." or ".."
 		{
 			// <a href="test.html">Go to Test Page</a>
@@ -90,12 +96,22 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 
 	// TODO : Get from config the default file name for listing directories
 
-	string defautFile = _realURI + "listing.html";
+	// if (*_realURI.begin() == '/')
+	// 	_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
+
+	string listingName = "listing.html";
+
+	string defautFile = path + listingName;
+
 	ofstream listingFile(defautFile.c_str());
+
+	
+	
 
 	listingFile << result.str();
 
-	_realURI = defautFile;
+	_realURI = _originalURI + listingName;
+
 
 	closedir(dir);
 

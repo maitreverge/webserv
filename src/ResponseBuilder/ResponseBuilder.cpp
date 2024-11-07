@@ -60,28 +60,19 @@ void ResponseBuilder::resolveURI( void ) {// ⛔ NOT OKAY FUNCTION
 	// sanatizeURI(_realURI); // ! STAY COMMENTED until refactoring for better "../" erasing process
 
 	// ! STEP 3  : Deleting URI first 
-	_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
-	
-	// if (_realURI.size() > 1)
-	// {
-		
-	// 	// Removing all ending '/' URIs //! maybe useless to delete last "/" char
-		
-	// 	if ( *_realURI.rbegin() == '/' and _realURI.size() > 1 )
-	// 	if ( *_realURI.rbegin() == '/' )
-	// 	{
-	// 		_realURI.erase(_realURI.size() -1);
-	// 	}
-	// }
-
 	if (isDirectory(_realURI) and not _myconfig.listingDirectory)
 	{
-		_realURI += "/";
+		if (*_realURI.begin() == '/')
+			_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
+		if (*_realURI.rbegin() != '/' or not _realURI.empty())
+			_realURI += "/"; 
+		// if (not _realURI.empty())
+		// 	_realURI += "/";
 		_realURI += _myconfig.index; // after checking the nature
+		return;
     }
-
-	{	
-	}
+	if ( not (_realURI.size() == 1 and *_realURI.begin() == '/') )
+		_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
 }
 
 void	ResponseBuilder::checkMethod( void ){
@@ -110,6 +101,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	_config = &inputConfig; // init config
 	
 	_realURI = _client->headerRequest.getURI();
+	_originalURI = _client->headerRequest.getURI();
 
 	_errorType = CODE_200_OK;
 

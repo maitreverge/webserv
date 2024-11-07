@@ -118,6 +118,7 @@ $(DEBUG_NAME) : $(OBJ_DEBUG)
 	@echo ""
 	@echo " $(ORANGE)⛔ Do Not Launch ./debug_webserv on the CLI ⛔$(RESET)"
 	@echo " $(GREEN)✅     Just click on "RUN DEBUG" in VSCode    ✅$(RESET)"
+	@echo " $(ORANGE)⚠️     Don't forget to check args in launch.json    ⚠️$(RESET)"
 	@echo -n "$(SHOW_CURSOR)"
 	@touch $(TEMP_FILE_DEBUG)  # Create a temporary file after a successful build
 

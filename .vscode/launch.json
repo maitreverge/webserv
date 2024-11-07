@@ -9,7 +9,7 @@
 			"type": "cppdbg",
 			"request": "launch",
 			"program": "${workspaceFolder}/debug_webserv",
-			"args": ["_configs/redirection_and_404.ini"], // Need to add args when it's time to process a config file
+			"args": ["_configs/listing_test.ini"], // Need to add args when it's time to process a config file
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}",
 			"environment": [],

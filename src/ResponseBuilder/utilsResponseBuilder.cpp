@@ -61,7 +61,7 @@ void	ResponseBuilder::checkAutho( void ){ // ⛔ NOT OKAY FUNCTION
 	
 	// string targetedAnswer = (_method == POST) ? _config->errorPaths.at(_errorType) : _realURI; // TODO : handle non existing 404.html
 
-	if (stat(_realURI.c_str(), &_fileInfo) == 0)
+	if (stat(_realURI.c_str(), &_fileInfo) == 0) // ! empty URI = fail
 	{
 		_isROK = _fileInfo.st_mode & S_IRUSR;
 		_isWOK = _fileInfo.st_mode & S_IWUSR;

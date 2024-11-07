@@ -92,7 +92,6 @@ void	ResponseBuilder::buildHeaders(){
 	// ======================== BONUS METHODS ========================
 	// TODO : Coockie and session generator
 	{
-
 	}
 	// ======================== BONUS METHODS ========================
 

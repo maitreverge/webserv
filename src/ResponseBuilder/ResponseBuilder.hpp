@@ -96,6 +96,8 @@ class ResponseBuilder
 	map<string, string> _mimeTypes;
 
 	string _realURI;
+
+	string _originalURI;
 	e_method _method;
 
 	// Nature File
