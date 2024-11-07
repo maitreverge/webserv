@@ -5,6 +5,49 @@
 #include "Logger.hpp"
 #include "Server.hpp"
 
+void errnoHandle() //! a suppr
+{
+	switch (errno) 
+	{        
+		case EWOULDBLOCK:
+			printf("Pas de données disponibles pour le moment (socket en mode non bloquant).\n");
+			break;
+		case EINTR:
+			printf("recv a été interrompu par un signal, réessayez.\n");
+			break;
+		case ECONNRESET:
+			printf("Connexion réinitialisée par le pair.\n");
+			break;
+		case ETIMEDOUT:
+			printf("Délai de connexion dépassé.\n");
+			break;
+		case ENOTCONN:
+			printf("La socket n'est pas connectée.\n");
+			break;
+		case EHOSTUNREACH:
+			printf("Hôte distant injoignable.\n");
+			break;
+		case ENETDOWN:
+			printf("Réseau local non disponible.\n");
+			break;
+		case EMSGSIZE:
+			printf("Le message est trop grand pour le tampon de réception.\n");
+			break;
+		case EBADF:
+			printf("Descripteur de fichier invalide.\n");
+			break;
+		case EINVAL:
+			printf("Arguments invalides ou socket fermée.\n");
+			break;
+		case ENOBUFS:
+			printf("Pas assez de mémoire pour traiter la demande.\n");
+			break;
+		default:
+			printf("Erreur inconnue : %d\n", errno);
+			break;
+	}
+}
+
 void disableSignalEcho()
 {
     struct termios tty;
@@ -18,7 +61,6 @@ void signalHandle(int)
 	Kernel::_exit = true;	
 }
 
-#include "Cgi.hpp"
 int main(int argc, char* argv[])
 {
 	if (argc > 2)
@@ -35,9 +77,7 @@ int main(int argc, char* argv[])
 		Kernel kernel;
 	else
 		Kernel kernel(argv[1]);
-	// (void) argv; (void) argc;
-	// Cgi cgi;
-	// cgi.launch();
+	
 	std::cout << std::endl;
 	Logger::getInstance().log(INFO, "\e[1;3;91mServer is Offline.\e[0m");	
 	std::cout << std::endl;	

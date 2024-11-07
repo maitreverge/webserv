@@ -57,14 +57,7 @@ void Server::listenClients()
 		}	
 	}
 }
-// void Server::printResponse2(const std::vector<char> & response)
-// {
-// 	std::cout << std::endl << "\e[34mPrint Vector: \e[31m" << std::endl;
-// 	std::cout << "-";		
-// 	for (size_t i = 0; i < response.size(); i++)				
-// 		std::cout << response[i];
-// 	std::cout << "-\e[0m" << std::endl << std::endl;
-// }
+
 void Server::reSend(size_t i)
 {
 	Logger::getInstance().log(INFO, "Re Send", this->_clients[i]);
@@ -300,7 +293,7 @@ bool Server::isBodyTerminated(size_t i)
 		<< this->_clients[i].bodySize << " Content-Lenght: "
 		<< this->_clients[i].headerRequest.getHeaders().ContentLength;
 		Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
-
+		
 		this->_clients[i].bodySize = 0;//!
 		if (this->_clients[i].headerRequest.getMethod() == "POST")
 			this->_clients[i].responseBuilder._cgi.

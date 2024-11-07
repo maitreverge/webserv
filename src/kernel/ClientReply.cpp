@@ -46,11 +46,11 @@ bool Server::endReply(size_t i)
 		this->_clients[i]);
 	if (this->_clients[i].exitRequired)	
 		return this->exitClient(i), true;						
+	this->_clients[i].headerRequest = RequestParser();
 	this->_clients[i].responseBuilder = ResponseBuilder();
 	this->_clients[i].bodySize = 0;
 	this->_clients[i].ping = 0;		
 	this->_clients[i].messageSend.clear();
-	this->_clients[i].headerRequest = RequestParser();//!new
 	return false;
 }
 
