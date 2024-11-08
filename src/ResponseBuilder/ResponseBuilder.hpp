@@ -132,7 +132,7 @@ public:
 	ResponseBuilder & operator=( const ResponseBuilder & rhs);	
 
 	void	getHeader( Client &, Config& );
-	ssize_t	getBody( Client &inputClient );
+	bool	getBody( Client &inputClient );
 	Cgi		_cgi;//! provisoire sinon private
 
 	// For testing

@@ -1,12 +1,14 @@
 #pragma once
 
 #include <unistd.h>
+#include <string>
 
 struct Client;
 
 class Cgi
 {
-	bool retHandle(ssize_t ret, std::string err, std::string info);
+	bool retHandle(Client & client, ssize_t ret, std::string err,
+		std::string info);
 
     public:
     

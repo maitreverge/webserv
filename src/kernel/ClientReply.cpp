@@ -25,19 +25,10 @@ void Server::replyClients()
 
 bool Server::fillMessageSend(size_t i)
 {
-	getBody(this->_clients[i]);
-	  if (!FD_ISSET(this->_fds[1], &Kernel::_readSet))
-        return ;
-	if (this->_clients[i].messageSend.empty())
-	if (ssize_t ret = this->_clients[i].responseBuilder.
-		getBody(this->_clients[i]))
-	{
-		if (ret == 73)
-			return false;							
-		if (replyClient(i, this->_clients[i].messageSend))
-			return true;								
-		usleep(500);
-	}
+	if (this->_clients[i].responseBuilder.getBody(this->_clients[i]))
+		return false;
+	if (!this->_clients[i].messageSend.empty())									
+		return replyClient(i, this->_clients[i].messageSend);	
 	else
 		return endReply(i);	
 }
@@ -46,6 +37,7 @@ bool Server::endReply(size_t i)
 {
 	Logger::getInstance().log(DEBUG, "reinit response Builder",
 		this->_clients[i]);
+
 	if (this->_clients[i].exitRequired)	
 		return this->exitClient(i), true;						
 	this->_clients[i].headerRequest = RequestParser();
@@ -75,7 +67,7 @@ bool Server::replyClient(size_t i, std::vector<char> & response)
 		MSG_NOSIGNAL)) < 0 || !ret)
 	return Logger::getInstance().log(ERROR, "send", this->_clients[i]),
 		this->exitClient(i), true;		
-//! SEND == 0
+
 	std::string str(response.data(), response.data()
 		+ static_cast<size_t>(ret));      
 	std::stringstream ss; ss << "data sent to client: -" << str << "-";	

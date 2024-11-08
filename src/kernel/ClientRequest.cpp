@@ -178,7 +178,7 @@ void Server::errorShortCircuit(e_errorCodes err, size_t i)
 		this->_conf);
 	this->_clients[i].messageRecv.clear();
 	this->_clients[i].ping = 2;
-	this->_clients[i].exitRequired = true;	
+	this->_clients[i].exitRequired = true;
 }
 
 bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
