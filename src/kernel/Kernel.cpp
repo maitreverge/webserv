@@ -57,8 +57,7 @@ void Kernel::launch()
 	while (true)
 	{
 		struct timeval timeout = {1, 0};
-		this->_readSet = this->_writeSet = this->_actualSet;
-		std::cout << "SELECT" << std::endl;
+		this->_readSet = this->_writeSet = this->_actualSet;		
 		if (select(this->_maxFd + 1, &this->_readSet, &this->_writeSet,
 			0, &timeout) < 0)
 		{	
