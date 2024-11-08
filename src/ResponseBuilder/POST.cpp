@@ -26,7 +26,7 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 		if (_method == DELETE)
 			setError(CODE_204_NO_CONTENT); // does not throw exception
 		else // if (_method != DELETE)
-			checkCGI();
+			checkCGI(inputClient);
 		if (_method == POST and !_isCGI)
 			uploadCheck();
 		
@@ -59,8 +59,15 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 
 	buildHeaders();
 
+
 	inputClient.headerRespons = Headers.masterHeader;
 	
+		// Copying the build Headers in headerRespons
+	// ! Si on mixe les headers du CGI + de ResponseBuilder
+	if (!_isCGI)
+		inputClient.headerRespons = Headers.masterHeader;
+	else
+		inputClient.headerRespons.clear();
 
 	// Headers.masterHeader.clear();//!
 

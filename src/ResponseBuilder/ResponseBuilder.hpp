@@ -174,7 +174,7 @@ class ResponseBuilder
 
 
 	// CGI.cpp
-	void	checkCGI( void );
+	void	checkCGI( Client &client );
 	void	launchCGI( void );
 
 	// POST

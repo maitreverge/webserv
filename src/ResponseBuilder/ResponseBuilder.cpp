@@ -179,13 +179,15 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 		if (_method == DELETE)
 			setError(CODE_204_NO_CONTENT); // does not throw exception
 		else // if (_method != DELETE)
-			checkCGI();
+			checkCGI(inputClient);
 		if (_method == POST and !_isCGI)
 			uploadCheck();
 		
 		resolveURI();
 		checkAutho();
 		checkNature();
+		
+		_cgi.launch();
 		
 		// ! WORK NEEDLE
 		if (_isDirectory and (_method == GET) and (not _isCGI))
@@ -217,7 +219,8 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	// ! Si on mixe les headers du CGI + de ResponseBuilder
 	if (!_isCGI)
 		inputClient.headerRespons = Headers.masterHeader;
-	
+	else
+		inputClient.headerRespons.clear();
 
 	printAllHeaders();
 }

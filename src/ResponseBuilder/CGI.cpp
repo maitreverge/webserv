@@ -10,8 +10,9 @@ void ResponseBuilder::launchCGI( void ){
 	this->_cgi.launch(); 
 }
 
-void ResponseBuilder::checkCGI( void ){
+void ResponseBuilder::checkCGI( Client &client ){
 
+	(void)(client);
     // Define the file extensions for Python and PHP scripts
     string extensionPHP = ".php";
     string extensionPython = ".py";
@@ -61,4 +62,6 @@ void ResponseBuilder::checkCGI( void ){
 
     // Update _realURI to only include the part up to and including the script extension
     _realURI = _realURI.substr(0, targetLoc);
+
+	// client.headerRespons.clear();
 }
