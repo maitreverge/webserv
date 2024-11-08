@@ -35,7 +35,7 @@ bool Server::fillMessageSend(size_t i)
 
 bool Server::endReply(size_t i)
 {
-	Logger::getInstance().log(DEBUG, "reinit response Builder",
+	Logger::getInstance().log(DEBUG, "End Reply",
 		this->_clients[i]);
 
 	if (this->_clients[i].exitRequired)	

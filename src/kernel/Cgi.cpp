@@ -69,11 +69,15 @@ bool Cgi::retHandle(Client & client, ssize_t ret, std::string err,
 	stringstream ss; ss << "ret: " << ret;
 	Logger::getInstance().log(DEBUG, ss.str());
 
-    if (ret < 0 || !ret)
+    if (!ret)
     {
-		ret < 0 ?
-        Logger::getInstance().log(ERROR, err), errnoHandle():
-		Logger::getInstance().log(INFO, info);
+        Logger::getInstance().log(INFO, info);        
+        return false;
+    }
+    else if (ret < 0)
+    {		
+        Logger::getInstance().log(ERROR, err);
+        errnoHandle();		
    
 		FD_CLR(this->_fds[1], &Kernel::_actualSet);
         close(this->_fds[1]);
@@ -90,6 +94,7 @@ bool Cgi::getBody(Client & client)
          
     if (!FD_ISSET(this->_fds[1], &Kernel::_readSet))
     {
+        sleep(1);
         Logger::getInstance().log(DEBUG, "not ready to recev");
         return true;
     }
@@ -109,6 +114,7 @@ bool Cgi::getBody(Client & client)
 void Cgi::setBody(Client & client, bool eof)
 {
     Logger::getInstance().log(INFO, "Set Body");
+
     if (!FD_ISSET(this->_fds[1], &Kernel::_writeSet))
     {
         Logger::getInstance().log(DEBUG, "not ready to write");
