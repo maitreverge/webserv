@@ -75,8 +75,9 @@ void	ResponseBuilder::slashManip( void ){
 	{
 		if (!endWithSlash)
 			_realURI += "/";
-		_realURI += _myconfig.index; // after checking the nature
-		bool beginWithSlash = !_realURI.empty() && (*_realURI.begin() == '/');
+		if (_method == GET)
+			_realURI += _myconfig.index; // after checking the nature
+		beginWithSlash = !_realURI.empty() && (*_realURI.begin() == '/');
 		if (beginWithSlash)
 			_realURI.erase(_realURI.begin());
     }
