@@ -63,17 +63,14 @@ void Cgi::launch()
         close(this->_fds[0]);
 }
 
-bool Cgi::retHandle(Client & client, ssize_t ret, std::string err,
+void Cgi::retHandle(Client & client, ssize_t & ret, std::string err,
 	std::string info)
 {
 	stringstream ss; ss << "ret: " << ret;
 	Logger::getInstance().log(DEBUG, ss.str());
 
-    if (!ret)
-    {
-        Logger::getInstance().log(INFO, info);        
-        return false;
-    }
+    if (!ret)    
+        Logger::getInstance().log(INFO, info);
     else if (ret < 0)
     {		
         Logger::getInstance().log(ERROR, err);
@@ -83,9 +80,8 @@ bool Cgi::retHandle(Client & client, ssize_t ret, std::string err,
         close(this->_fds[1]);
         this->_fds[1] = -1;
         client.exitRequired = true;
-        return true;
-    } 
-	return false;
+		ret = 0;       
+    } 	
 }
 
 bool Cgi::getBody(Client & client)
@@ -102,14 +98,11 @@ bool Cgi::getBody(Client & client)
     client.messageSend.resize(SEND_BUFF_SIZE);
     ssize_t ret = recv(this->_fds[1], client.messageSend.data(),
         client.messageSend.size(), 0);  
-	if (retHandle(client, ret, "recv", "end cgi"))
-		return false;
-   
+	retHandle(client, ret, "recv", "end cgi");   
 	client.messageSend.erase(client.messageSend.begin() + ret,
 		client.messageSend.end());
 	return false; 
 }
-
 
 void Cgi::setBody(Client & client, bool eof)
 {
@@ -123,10 +116,9 @@ void Cgi::setBody(Client & client, bool eof)
     Logger::getInstance().log(DEBUG, "ready to send");
 
  	ssize_t ret = send(this->_fds[1], client.messageRecv.data(),
-        client.messageRecv.size(), 0);
-	if (retHandle(client, ret, "send", "cgi exited"))
-		return ;
-    
+        client.messageRecv.size(), MSG_NOSIGNAL);//!TIMEOUT
+	retHandle(client, ret, "send", "cgi exited");
+	    
     std::string str(client.messageRecv.data(), client.messageRecv.data()
 		+ static_cast<size_t>(ret));      
 	std::stringstream ss; ss << "data sent to cgi: -" << str << "-";	
