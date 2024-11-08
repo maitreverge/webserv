@@ -4,9 +4,13 @@
 void Server::listenClients()
 {	
 	for (size_t i = 0; i < this->_clients.size(); i++)
-	{	
-		if (this->_clients[i].ping
-			&& FD_ISSET(this->_clients[i].fd, &this->_readSet))
+	{
+		if (this->_clients[i].ping >= 2)
+			continue;
+		if (this->_clients[i].headerRequest.getHeaders().ContentLength
+			&& !this->_clients[i].messageRecv.empty())
+			reSend(i);
+		else if (FD_ISSET(this->_clients[i].fd, &this->_readSet))
 		{
 			this->_readBuffer.clear();
 			this->_readBuffer.resize(RECV_BUFF_SIZE);
@@ -17,8 +21,28 @@ void Server::listenClients()
 			else if (ret == 0)					
 				this->exitClient(i);		
 			else
-				clientMessage(i, ret);
+				clientMessage(i, ret);			
 		}	
+	}
+}
+
+void Server::reSend(size_t i)
+{
+	Logger::getInstance().log(INFO, "Re Send", this->_clients[i]);
+	std::cout << this->_clients[i].headerRequest.getHeaders().ContentLength
+		<< " " << this->_clients[i].messageRecv.size() << std::endl;
+	
+	if (this->_clients[i].ping >= 1)
+	{
+		Logger::getInstance().log(INFO, "Re Send True", this->_clients[i]);
+		this->_clients[i].responseBuilder.setBodyPost(this->_clients[i], true);	
+		if (this->_clients[i].messageRecv.empty())
+			this->_clients[i].ping++; 
+	}
+	else
+	{
+		Logger::getInstance().log(INFO, "Re Send False", this->_clients[i]);
+		this->_clients[i].responseBuilder.setBodyPost(this->_clients[i], false);
 	}
 }
 
@@ -28,10 +52,10 @@ void Server::clientMessage(size_t i, ssize_t ret)
 	insert(this->_clients[i].messageRecv.end(), 
 	this->_readBuffer.begin(),
 	this->_readBuffer.begin() + ret);				
-	if (!this->_clients[i].bodySize)
+	if (!this->_clients[i].headerRequest.getHeaders().ContentLength)
 		this->handleClientHeader(i, ret);
 	else
-		this->handleClientBody(i, ret);
+		this->handleClientBody(i, ret);	
 }
 
 bool Server::isDelimiterFind(size_t i, std::vector<char>::iterator & it)
@@ -41,10 +65,8 @@ bool Server::isDelimiterFind(size_t i, std::vector<char>::iterator & it)
 		(this->_clients[i].messageRecv.begin(),
 		this->_clients[i].messageRecv.end(),
 		delimiter.begin(),
-		delimiter.end() - 1);
-	if (it != this->_clients[i].messageRecv.end())
-		return true;
-	return false;
+		delimiter.end());
+	return (it != this->_clients[i].messageRecv.end());	
 }
 
 void Server::handleClientHeader(size_t i, ssize_t ret)
@@ -65,15 +87,25 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 		this->_clients[i].headerRequest.displayParsingResult();
 		getRespHeader(i);
 		this->_clients[i].messageRecv.
-            erase(this->_clients[i].messageRecv.begin(), it + 4);
+            erase(this->_clients[i].messageRecv.begin(), it + 4);	
 		this->_clients[i].bodySize += this->_clients[i].messageRecv.size();
-		if (!this->isContentLengthValid(i)
-			|| this->isBodyTooLarge(i)
-			|| this->isBodyTerminated(i))
-			return ;						
+		bodyCheckin(i);						
 	}
 	else
 		isMaxHeaderSize(it + 1, i);
+}
+
+void Server::bodyCheckin(size_t i)
+{
+	if (!this->_clients[i].headerRequest.getHeaders().ContentLength)
+	{
+		this->_clients[i].ping = 2;
+		this->isBodyTooLarge(i);		
+	}
+	else if (!this->isContentLengthValid(i)
+		|| this->isBodyTooLarge(i)
+		|| this->isBodyTerminated(i))
+		return ;
 }
 
 void Server::getRespHeader(size_t i)
@@ -106,11 +138,12 @@ void Server::getRespHeader(size_t i)
 // 		}
 //     } else {
 //         std::cout << "Erreur : impossible d'ouvrir le fichier." << std::endl;
-//     }
+//     }//! CLEAR MSG
+
 // }
 
 void Server::handleClientBody(size_t i, ssize_t ret)
-{
+{	
 	stringstream ss;
 	ss << "receive client body" << " " << ret << " bytes";
 	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
@@ -119,11 +152,9 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 	if (this->isBodyTooLarge(i) || this->isBodyTerminated(i))
 		return ;
 	if (this->_clients[i].headerRequest.getMethod() == "POST")
-	{
-		// floSimulatorPut(this->_clients[i].messageRecv);
-		this->_clients[i].responseBuilder.setBodyPost(this->_clients[i].messageRecv);
-	}
-	this->_clients[i].messageRecv.clear();	
+		this->_clients[i].responseBuilder.setBodyPost(this->_clients[i], false);
+	else
+		this->_clients[i].messageRecv.clear();		
 }
 
 #include "Error.hpp"//!
@@ -136,22 +167,20 @@ void Server::errorShortCircuit(e_errorCodes err, size_t i)
 	std::stringstream ss;
 	ss << err << " " << errStr;
 	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);	
+
 	this->_clients[i].headerRequest.setURI(errStr);
 	this->_clients[i].responseBuilder = ResponseBuilder();
 	this->_clients[i].responseBuilder.getHeader(this->_clients[i],
 		this->_conf);
 	this->_clients[i].messageRecv.clear();
-	this->_clients[i].ping = false;
-	this->_clients[i].exitRequired = true;	
+	this->_clients[i].ping = 2;
+	this->_clients[i].exitRequired = true;
 }
 
-bool tog = true;
 bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
 {
-	// if (tog)
 	if (it - this->_clients[i].messageRecv.begin() > MAX_HDR_SIZE)
-	{
-		// tog = !tog;
+	{		
 		stringstream ss;
 		ss << "header size" << " Actual-Size: "
             << it - this->_clients[i].messageRecv.begin()
@@ -166,13 +195,10 @@ bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
 }
 
 bool Server::isContentLengthValid(size_t i)
-{
-	// if (tog)
+{	
 	if (this->_clients[i].headerRequest.getHeaders().ContentLength
 		> MAX_CNT_SIZE)
-	{
-		// tog = !tog;
-		Logger::getInstance().log(ERROR, "CONTENT YEAH", this->_clients[i]);
+	{			
 		stringstream ss;
 		ss << "max content size reached" << " - Content-Lenght: "
 			<< this->_clients[i].headerRequest.getHeaders().ContentLength
@@ -187,11 +213,9 @@ bool Server::isContentLengthValid(size_t i)
 
 bool Server::isBodyTooLarge(size_t i)
 {
-	// if (tog)
 	if (this->_clients[i].bodySize >
 		this->_clients[i].headerRequest.getHeaders().ContentLength)
-	{
-		// tog = !tog;
+	{	
 		stringstream ss;
 		ss << "content size" << " - Body-Size: "
 		    << this->_clients[i].bodySize << " Content-Lenght: "
@@ -215,15 +239,18 @@ bool Server::isBodyTerminated(size_t i)
 		<< this->_clients[i].bodySize << " Content-Lenght: "
 		<< this->_clients[i].headerRequest.getHeaders().ContentLength;
 		Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
-
-		this->_clients[i].bodySize = 0;
+	
 		if (this->_clients[i].headerRequest.getMethod() == "POST")
+			this->_clients[i].responseBuilder.
+				setBodyPost(this->_clients[i], true);			
+		else
 		{
-			// floSimulatorPut(this->_clients[i].messageRecv);
-			this->_clients[i].responseBuilder.setBodyPost(this->_clients[i].messageRecv);
+			this->_clients[i].messageRecv.clear();
+			shutdown(this->_clients[i].responseBuilder._cgi._fds[1], SHUT_WR);
 		}
-		this->_clients[i].messageRecv.clear();
-		this->_clients[i].ping = false;		
+		this->_clients[i].ping++;
+		if (this->_clients[i].messageRecv.empty())
+		 	this->_clients[i].ping++;	
 		return true;
 	}
 	return false;

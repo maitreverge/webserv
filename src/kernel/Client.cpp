@@ -15,7 +15,7 @@ Client::Client()
 	headerRespons.reserve(MAX_HDR_SIZE); 
 	messageSend.reserve(SEND_BUFF_SIZE);
 	
-	ping = true;	
+	ping = 0;	
 	pongHeader = false;
 	exitRequired = false;
 }

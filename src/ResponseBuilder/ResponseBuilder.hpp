@@ -4,6 +4,7 @@
 #include "errorCode.hpp"
 #include "timeStamp.hpp"
 #include "Config.hpp"
+#include "Cgi.hpp"
 
 #define HTTP_PROTOCOL "HTTP/1.1"
 #define SPACE " "
@@ -127,7 +128,6 @@ class ResponseBuilder
 	MyConfig _myconfig;
 
 	ResponseHeaders Headers;
-
 	// bool test;
 
 	// ------------- Priv Methods
@@ -191,7 +191,6 @@ public:
 	std::ifstream 	_ifs; // ! PAS DANS LES CONSTRUCTEURS
 	std::streampos	_ifsStreamHead; // ! ABSOLUMENT METTRE DANS LES CONSTRUCTEURS
     std::ofstream	_ofs;
-	std::streampos	_ofsStreamHead; // ! ABSOLUMENT METTRE DANS LES CONSTRUCTEURS
 
 	ResponseBuilder( void );
 	~ResponseBuilder( void );
@@ -200,11 +199,13 @@ public:
 
 	// ✅ GET ONLY
 	void	getHeader( Client &, Config& );
-	ssize_t	getBody( Client &inputClient );
+	bool	getBody( Client &inputClient );
+	Cgi		_cgi;//! provisoire sinon private
 
 	// ✅ POST ONLY
 	void	getHeaderPost( Client &inputClient, Config &inputConfig );
-	void	setBodyPost( std::vector<char> bodyParts );
+	void	setBodyPost( Client & client, bool eof );
+
 
 
 	// For testing

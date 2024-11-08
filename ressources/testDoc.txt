@@ -16,3 +16,5 @@ docker run --rm -t jstarcher/siege -c1 -r5 10.12.6.8:1512
 
 
 docker run --rm -t -v $(pwd)/siege_urls.txt:/siege_urls.txt jstarcher/siege -f /siege_urls.txt -c1 -r5
+
+valgrind --trace-children=yes --track-fds=yes ./webserv

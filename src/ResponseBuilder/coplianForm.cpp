@@ -55,7 +55,6 @@ ResponseBuilder::ResponseBuilder( void ){
 	_errorNotFound = false;
 
 	this->_ifsStreamHead = 0; // ! NE PAS TOUCHER	
-	this->_ofsStreamHead = 0; // ! NE PAS TOUCHER	
 }
 
 ResponseBuilder::ResponseBuilder( const ResponseBuilder & src)
@@ -104,9 +103,9 @@ ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 
 	// ! DO NOT FUCKING TOUCH (Kernel copy stuff)
 	this->_ifsStreamHead = rhs._ifsStreamHead;
-	this->_ofsStreamHead = rhs._ofsStreamHead;// ! NE PAS TOUCHER	
 	this->_ifs.close();
 	this->_ofs.close();
+	this->_cgi = rhs._cgi;
 	return *this;
 };
 

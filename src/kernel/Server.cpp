@@ -19,9 +19,10 @@ const sockaddr_in & Server::getSockAdress() const
 
 bool Server::setup()
 {	
-	this->_maxFd = this->_fd = socket(AF_INET, SOCK_STREAM, 0);
+	this->_fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (this->_fd < 0)	
 		return Logger::getInstance().log(ERROR, "socket"), false;
+	this->_maxFd = std::max(this->_maxFd, this->_fd);
 	FD_SET(this->_fd, &_actualSet);
 	if (bind(this->_fd, reinterpret_cast<const sockaddr *>
 		(&this->_sockAddr), sizeof(this->_sockAddr)) < 0)

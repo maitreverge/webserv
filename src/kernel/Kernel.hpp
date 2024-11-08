@@ -19,10 +19,6 @@ class Kernel
 	Config 				_conf;
 	std::vector<Server> _servers;
 
-	fd_set				_actualSet;
-	fd_set 				_readSet;
-	fd_set 				_writeSet;
-	int					_maxFd; 
 
 	static void callCatch(Server & server);
 	static void callListen(Server & server);
@@ -31,7 +27,11 @@ class Kernel
 
 	public:
 
-		static bool		_exit;
+	static bool		_exit;
+	static int		_maxFd; 
+	static fd_set	_actualSet;
+	static fd_set 	_readSet;
+	static fd_set 	_writeSet;
 		
 		Kernel(void);
 		Kernel(char* path);

@@ -1,7 +1,10 @@
 #include "Kernel.hpp"
 
 bool Kernel::_exit = false;
-
+int Kernel::_maxFd = 0;
+fd_set Kernel::_actualSet;
+fd_set Kernel::_readSet;
+fd_set Kernel::_writeSet;
 Kernel::Kernel(void) : _conf()
 {
 	this->_servers.reserve(300);//!
@@ -56,8 +59,7 @@ void Kernel::launch()
 	while (true)
 	{
 		struct timeval timeout = {1, 0};
-		this->_readSet = this->_writeSet = this->_actualSet;
-
+		this->_readSet = this->_writeSet = this->_actualSet;		
 		if (select(this->_maxFd + 1, &this->_readSet, &this->_writeSet,
 			0, &timeout) < 0)
 		{	
