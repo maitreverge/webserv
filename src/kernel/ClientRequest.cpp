@@ -119,6 +119,9 @@ void Server::getRespHeader(size_t i)
 	else if (this->_clients[i].headerRequest.getMethod() == "DELETE")		
 		this->_clients[i].responseBuilder.getHeader(this->_clients[i],
 		this->_conf);
+	else
+		this->_clients[i].responseBuilder.getHeader(this->_clients[i],
+			this->_conf); 
 }
 
 // void floSimulatorPut(std::vector<char> part)
