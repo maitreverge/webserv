@@ -23,6 +23,8 @@ bool ResponseBuilder::redirectURI( void ){ // ✅ OKAY FUNCTION
 		return false;
 
 	_realURI = _myconfig.redirection;
+
+	_client->headerRequest.setURI(_myconfig.redirection);
 	
 	setError(CODE_307_TEMPORARY_REDIRECT);
 	return true;
@@ -74,6 +76,9 @@ void	ResponseBuilder::slashManip( void ){
 		if (!endWithSlash)
 			_realURI += "/";
 		_realURI += _myconfig.index; // after checking the nature
+		bool beginWithSlash = !_realURI.empty() && (*_realURI.begin() == '/');
+		if (beginWithSlash)
+			_realURI.erase(_realURI.begin());
     }
 }
 

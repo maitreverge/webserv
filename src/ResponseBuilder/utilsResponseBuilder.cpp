@@ -50,8 +50,9 @@ void	ResponseBuilder::uploadCheck( void ){
 		setError(CODE_403_FORBIDDEN);
 	if (_myconfig.uploadDirectory.empty())
 	{
-		_myconfig.samePathWrite = false;
-		return;
+		setError(CODE_403_FORBIDDEN);
+		// _myconfig.samePathWrite = false;
+		// return;
 	}
 	else if ( access(_myconfig.uploadDirectory.c_str(), W_OK) == -1 ) // we can't write on the destination 
 		setError(CODE_401_UNAUTHORIZED);
@@ -120,8 +121,8 @@ void	ResponseBuilder::checkNature( void ){ // ⛔ NOT OKAY FUNCTION
 		else if ((_fileInfo.st_mode & S_IFMT) == S_IFREG) // checks is the given path is a FILE
 		{
 			_isFile = true;
-			if (_method == POST and not _isCGI)
-				setError(CODE_405_METHOD_NOT_ALLOWED); // A POST Method being NOT CGI might overwrite a file, then I reject it.
+			// if (_method == POST and not _isCGI)
+			// 	setError(CODE_405_METHOD_NOT_ALLOWED); // A POST Method being NOT CGI might overwrite a file, then I reject it.
 			if (_method == GET)
 				extractFileNature( _realURI );
 			else // POST AND DELETE

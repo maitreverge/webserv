@@ -64,7 +64,4 @@ tests/config/my_ip.txt
 tests/siege/siege_urls.txt
 
 # Uploads
-uploads/apple.jpeg
-uploads/image_upload.jpeg
-uploads/index.html
 testResponseBuilder/folder_to_delete/file_to_delete
