@@ -65,3 +65,5 @@ tests/siege/siege_urls.txt
 
 # Uploads
 testResponseBuilder/folder_to_delete/file_to_delete
+
+listing.html
