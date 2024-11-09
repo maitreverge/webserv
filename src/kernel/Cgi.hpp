@@ -7,8 +7,8 @@ struct Client;
 
 class Cgi
 {
-	void retHandle(Client & client, ssize_t & ret, std::string err,
-		std::string info);
+	bool retHandle(Client & client, ssize_t ret, std::string err, 
+        std::string info);
 
     public:
     

@@ -66,7 +66,7 @@ void Cgi::launch()
         close(this->_fds[0]);
 }
 
-void Cgi::retHandle(Client & client, ssize_t & ret, std::string err,
+bool Cgi::retHandle(Client & client, ssize_t ret, std::string err,
 	std::string info)
 {
 	stringstream ss; ss << "ret: " << ret;
@@ -79,12 +79,13 @@ void Cgi::retHandle(Client & client, ssize_t & ret, std::string err,
         Logger::getInstance().log(ERROR, err);
         errnoHandle();		
    
-		// FD_CLR(this->_fds[1], &Kernel::_actualSet);//!
+		// FD_CLR(this->_fds[1], &Kernel::_actualSet);//! err 4..
         // close(this->_fds[1]);
         // this->_fds[1] = -1;
         client.exitRequired = true;
-		ret = 0;       
-    } 	
+        return true;
+    } 
+    return false;	
 }
 
 void Cgi::setBody(Client & client, bool eof)
@@ -100,7 +101,8 @@ void Cgi::setBody(Client & client, bool eof)
 
  	ssize_t ret = send(this->_fds[1], client.messageRecv.data(),
         client.messageRecv.size(), MSG_NOSIGNAL);
-	retHandle(client, ret, "send", "cgi exited");
+	if (retHandle(client, ret, "send", "cgi exited"))
+        ret = static_cast<ssize_t>(client.messageRecv.size());
 	    
     std::string str(client.messageRecv.data(), client.messageRecv.data()
 		+ static_cast<size_t>(ret));      
@@ -128,7 +130,8 @@ bool Cgi::getBody(Client & client)
     client.messageSend.resize(SEND_BUFF_SIZE);
     ssize_t ret = recv(this->_fds[1], client.messageSend.data(),
         client.messageSend.size(), 0);  
-	retHandle(client, ret, "recv", "end cgi");   
+	if (retHandle(client, ret, "recv", "end cgi"))
+        ret = 0;  
 	client.messageSend.erase(client.messageSend.begin() + ret,
 		client.messageSend.end());
 	return false; 

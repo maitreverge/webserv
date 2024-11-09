@@ -36,9 +36,11 @@ void Server::reSend(size_t i)
 	ss << "Content-Length: "
 		<< this->_clients[i].headerRequest.getHeaders().ContentLength
 		<< " MessageRecv-Size: " << this->_clients[i].messageRecv.size()
-		<< std::endl;
+		<< std::endl;		
 	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
 	
+	if (this->_clients[i].headerRequest.getMethod() != "POST")
+		return this->_clients[i].messageRecv.clear();
 	if (this->_clients[i].ping >= 1)
 	{
 		Logger::getInstance().log(INFO, "Re Send True", this->_clients[i]);

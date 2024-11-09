@@ -11,9 +11,7 @@ int main()
     while ((ret = read(STDIN_FILENO, buff, 20)) > 0)
     {
         buff[ret] = 0;
-        fflush(stdout); 
-        while (1);      
-		write(2, buff, strlen(buff)); 
+		write(2, buff, strlen(buff));        
     }
     if (ret < 0)    
         printf("error read\n");    
@@ -30,11 +28,6 @@ Content-Type: text/html\r\n\
 Content-Length: ";
     int len = strlen(body);
     char * end = "\r\n\r\n";
-
-    printf("%s", header);
-    printf("%d", len);
-    printf("%s", end);
-    printf("%s", body);
     
     return (0);
 }
