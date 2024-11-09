@@ -61,12 +61,13 @@ void Kernel::launch()
 		struct timeval timeout = {SLCT_TIMEOUT, 0};
 		this->_readSet = this->_writeSet = this->_actualSet;		
 		if (select(this->_maxFd + 1, &this->_readSet, &this->_writeSet,
-			0, &timeout) < 0)
+			0, &timeout) < 0) 
 		{	
 			if (!this->_exit)
 				Logger::getInstance().log(ERROR, "select");
 			continue;
 		}
+		std::cout << "boucle" << std::endl;
 		if (this->_exit)
 			break;
 		std::for_each(this->_servers.begin(), this->_servers.end(),

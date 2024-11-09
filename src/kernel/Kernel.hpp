@@ -12,7 +12,7 @@
 #define MAX_SERVERS 42
 #define MAX_CLIENTS 1000
 #define SLCT_TIMEOUT 1
-#define SND_TIMEOUT 5
+#define SND_TIMEOUT 1
 
 class Server;
 

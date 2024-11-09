@@ -61,7 +61,7 @@ void Server::catchClients()
 		struct timeval timeout = {SND_TIMEOUT, 0};	
 		if (setsockopt(client.fd, SOL_SOCKET, SO_SNDTIMEO, &timeout,
 			sizeof(timeout)) < 0)
-	  		return Logger::getInstance().log(ERROR, "send timeout" , client); 	
+	  		return Logger::getInstance().log(ERROR, "send timeout", client); 	
 
 		FD_SET(client.fd, &this->_actualSet);
 		this->_maxFd = std::max(this->_maxFd, client.fd);
