@@ -54,7 +54,7 @@ void Kernel::setup()
 
 void Kernel::launch()
 {
-	ConfigFileParser::printRoutesData(_conf.routes);
+	// ConfigFileParser::printRoutesData(_conf.routes);
 
 	while (true)
 	{

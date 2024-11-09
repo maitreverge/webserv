@@ -25,6 +25,7 @@ void ConfigFileParser::parseConfigFile(Config& configStruct, char* path)
 {
 	extractDataFromConfigFile(path);
 	intializeConfigStruct(configStruct);
+	printServerData(configStruct._serverStruct, 3);
 }
 
 void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
@@ -60,11 +61,13 @@ void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
 				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].host, "host");
 				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].port, "port");
 				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].serverName, "serverName");
+				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].allowedRoutes, "allowedRoutes");
 				// category routes (inner loop)
-				setConfigValue(catIt, itemIt, valIt, configStruct);
+				setConfigValue(catIt, itemIt, valIt, configStruct, i);
 			}
 		}
 	}
+
 	// printRoutesData(configStruct.routes);
 }
 
@@ -86,13 +89,19 @@ void	ConfigFileParser::initializeServers(Config& configStruct, int& i)
  *                           SETCONFIGVALUE OVERLOADS
  *========================================================================**/
 //? routes data
-void	ConfigFileParser::setConfigValue(catIt catIt, itemIt itemIt, valIt valIt, Config& configStruct)
+void	ConfigFileParser::setConfigValue(catIt catIt, itemIt itemIt, valIt valIt, Config& configStruct, int j)
 {
+	(void)j;
 	for (size_t i = 0; i < routeKey.size(); i++)
 	{
+			// if(!configStruct._serverStruct[j].serverName.empty())
+			// 	print(configStruct._serverStruct[j].serverName);
 		if (isRouteData(catIt->first) && itemIt->first == routeKey[i])
+		{
+			// print("route: " + catIt->first);
 			if (!(*valIt).empty())
 				configStruct.routes[catIt->first][routeKey[i]] = itemIt->second;
+		}
 	}
 }
 
@@ -111,6 +120,12 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt
 		if (!(*valIt).empty())
 			field = itemIt->second[0];		
 }
+
+// void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::vector<std::string>& allowedRoutes, const char str[])
+// {
+
+// }
+
 
 //? maxClient
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, short& field, const char str[])
@@ -131,8 +146,9 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, bool& field,
 //? indexFiles
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::vector<std::string>& vec, const char str[])
 {
+	(void)catIt;
 	static bool hasUserConfig = false;
-	if (catIt->first == "global" && itemIt->first == str)
+	if (itemIt->first == str)
 		if (!(*valIt).empty())
 		{
 			if (!hasUserConfig)
@@ -141,6 +157,7 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt
 				hasUserConfig = true;
 			}
 			vec.push_back(*valIt);
+			// printColor(RED, *valIt);
 		}
 }
 
@@ -274,7 +291,10 @@ void ConfigFileParser::printServerData(const server _serverStruct[], size_t size
 		std::cout << "  Host: " << _serverStruct[i].host << std::endl;
 		std::cout << "  Port: " << _serverStruct[i].port << std::endl;
 		std::cout << "  Server Name: " << _serverStruct[i].serverName << std::endl;
-		std::cout << "------------------------" << std::endl;
+		std::cout << "  Allowed Routes: ";
+		for(size_t j = 0; j < _serverStruct[i].allowedRoutes.size(); j++)
+			std::cout << _serverStruct[i].allowedRoutes[j] << " ";
+		std::cout << "\n------------------------" << std::endl;
 	}
 }
 

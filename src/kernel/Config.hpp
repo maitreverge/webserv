@@ -11,6 +11,7 @@ struct server
 	std::string	host;
 	std::string	port;
 	std::string	serverName;
+	std::vector<std::string> allowedRoutes;
 };
 
 typedef map<std::string, map<std::string, std::vector<std::string> > > RoutesData;
