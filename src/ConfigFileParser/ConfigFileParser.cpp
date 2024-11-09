@@ -96,9 +96,9 @@ void	ConfigFileParser::setConfigValue(catIt catIt, itemIt itemIt, valIt valIt, C
 	{
 			// if(!configStruct._serverStruct[j].serverName.empty())
 			// 	print(configStruct._serverStruct[j].serverName);
-		if (isRouteData(catIt->first) && itemIt->first == routeKey[i])
+		if (isRouteData(catIt->first) && itemIt->first == routeKey[i] && isAllowedRoute(catIt->first, configStruct._serverStruct[j]))
 		{
-			// print("route: " + catIt->first);
+			print("route: " + catIt->first);
 			if (!(*valIt).empty())
 				configStruct.routes[catIt->first][routeKey[i]] = itemIt->second;
 		}
@@ -252,6 +252,13 @@ bool ConfigFileParser::isRouteData(const std::string& category)
 {
 	const std::string prefix = "route";
 	return category.size() >= prefix.size() && category.find(prefix) == 0;
+}
+
+bool ConfigFileParser::isAllowedRoute(const std::string& str, server& serverStruct)
+{
+	std::vector<std::string>::iterator it;
+	it = std::find(serverStruct.allowedRoutes.begin(), serverStruct.allowedRoutes.end(), str);
+	return it != serverStruct.allowedRoutes.end();
 }
 
 void	ConfigFileParser::print(std::string str)

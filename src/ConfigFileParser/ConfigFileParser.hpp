@@ -47,7 +47,7 @@ class ConfigFileParser
 		void	initializeServers(Config& configStruct, int& i);
 		bool	isServerData(const std::string& category);
 		bool	isRouteData(const std::string& category);
-
+		bool	isAllowedRoute(const std::string& str, server& serverStruct);
 	public:
 		ConfigFileParser();
 		static void 	printServerData(const server _serverStruct[], size_t size);
