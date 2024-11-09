@@ -29,23 +29,25 @@ void Cgi::launch()
 {           
     socketpair(AF_UNIX, SOCK_STREAM, 0, this->_fds);  
     Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fds[1]);
-    
+    struct timeval timeout = {SND_TIMEOUT, 0};	
+	if (setsockopt(this->_fds[1], SOL_SOCKET, SO_SNDTIMEO, &timeout,
+		sizeof(timeout)) < 0)
+	  	return Logger::getInstance().log(ERROR, "cgi send timeout"); //!exit client req + error page
+
     FD_SET(this->_fds[1], &Kernel::_actualSet);
     
     pid_t pid = fork();
     if (pid < 0)
-        Logger::getInstance().log(ERROR, "fork failed");
+        Logger::getInstance().log(ERROR, "fork failed");//!exit client req + error page
     else if (pid == 0)
     {       
         dup2(this->_fds[0], STDIN_FILENO); 
         dup2(this->_fds[0], STDOUT_FILENO); 
-        close(this->_fds[0]);//!
-        close(this->_fds[1]);//!
-        // int t[2] = {1,2, NULL}
-        // char *args[] = {NULL};
-        // char *envp[] = {NULL};
-        // execve("./cgi/a.out", args, envp);
-        // chdir("./cgi");//!
+        close(this->_fds[0]);
+        close(this->_fds[1]);
+     
+     
+        chdir("./cgi");//!
         std::string str("PATH_INFO=coucoucpathinfo");
         char *env[] = 
         {
@@ -53,11 +55,11 @@ void Cgi::launch()
         };
 		char *argv[] = {NULL};
         //!FLAG ANTI HERITAGE FD OU CLOSE
-        execve("./cgi/a.out", argv, env);  //!     
+        execve("a.out", argv, env);  //!     
         // execve("/home/svidot/42_am/webserv/cgi/a.out", argv, env);       
       	Logger::getInstance().log(ERROR, "execve failed");
 	    //! LEAKS 
-	    exit(1);
+	    //!exit client req + error page
     } 
     else                 
         close(this->_fds[0]);
@@ -76,9 +78,9 @@ void Cgi::retHandle(Client & client, ssize_t & ret, std::string err,
         Logger::getInstance().log(ERROR, err);
         errnoHandle();		
    
-		FD_CLR(this->_fds[1], &Kernel::_actualSet);
-        close(this->_fds[1]);
-        this->_fds[1] = -1;
+		// FD_CLR(this->_fds[1], &Kernel::_actualSet);//!
+        // close(this->_fds[1]);
+        // this->_fds[1] = -1;
         client.exitRequired = true;
 		ret = 0;       
     } 	

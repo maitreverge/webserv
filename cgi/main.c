@@ -36,18 +36,18 @@ int main()
     char buff[20] ={0};
     ssize_t ret;
 	
-    // while ((ret = read(STDIN_FILENO, buff, 20)) > 0)
-    // {
-    //     buff[ret] = 0;
-	// 	write(2, buff, strlen(buff));
-    //     // while(1);
-    //     // printf("coucou%s", buff);
-    // }
+    while ((ret = read(STDIN_FILENO, buff, 20)) > 0)
+    {
+        buff[ret] = 0;
+		write(2, buff, strlen(buff));
+        // while(1);
+        // printf("coucou%s", buff);
+    }
 
-    // if (ret < 0)
-    // {
-    //     printf("error read\n");
-    // }
+    if (ret < 0)
+    {
+        printf("error read\n");
+    }
     // //  write(2, "whou", 4);
 
    
