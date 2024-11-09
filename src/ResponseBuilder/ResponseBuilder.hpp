@@ -128,6 +128,8 @@ class ResponseBuilder
 	MyConfig _myconfig;
 
 	ResponseHeaders Headers;
+
+	string _injectBase;
 	// bool test;
 
 	// ------------- Priv Methods

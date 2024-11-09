@@ -43,11 +43,12 @@ void	ResponseBuilder::setContentLenght(){
 	}
 	else
 		Headers.bodyLenght = static_cast<uint64_t>(_fileInfo.st_size); //! the targeted file in a GET requests
-	// else if (_method == GET and _isFile) // valid path and PATH is a file
-	// {
-	// }
-	// else
-	// 	Headers.bodyLenght = static_cast<uint64_t>(_fileInfo.st_size); //! the targeted file in a GET requests
+
+	// ! FIX REDIRECTION
+
+	// detect if the target file is an html file
+	
+
 	// ! BOILERPLATE CODE
 }
 

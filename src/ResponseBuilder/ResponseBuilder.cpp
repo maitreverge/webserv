@@ -190,6 +190,8 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 		deleteEngine();	
 	}
 
+	
+
 	buildHeaders();
 
 
