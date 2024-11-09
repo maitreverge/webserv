@@ -5,6 +5,7 @@ int Kernel::_maxFd = 0;
 fd_set Kernel::_actualSet;
 fd_set Kernel::_readSet;
 fd_set Kernel::_writeSet;
+
 Kernel::Kernel(void) : _conf()
 {
 	this->_servers.reserve(300);//!
@@ -55,10 +56,9 @@ void Kernel::setup()
 void Kernel::launch()
 {
 	ConfigFileParser::printRoutesData(_conf.routes);
-
 	while (true)
 	{
-		struct timeval timeout = {1, 0};
+		struct timeval timeout = {SLCT_TIMEOUT, 0};
 		this->_readSet = this->_writeSet = this->_actualSet;		
 		if (select(this->_maxFd + 1, &this->_readSet, &this->_writeSet,
 			0, &timeout) < 0)

@@ -61,7 +61,7 @@ bool Server::replyClient(size_t i, std::vector<char> & response)
 {	
 	Logger::getInstance().log(INFO, "Reply Client", this->_clients[i]);
 	printResponse(response);
-			
+
 	ssize_t ret = send(this->_clients[i].fd, response.data(), response.size(),
 		MSG_NOSIGNAL);		
 	if (ret <= 0)
