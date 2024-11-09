@@ -37,11 +37,11 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 		}
 		
 		resolveURI();
-		
 		checkAutho();
-		
 		checkNature();
 
+		_cgi.launch();
+		
 		// ! SEB CGI, DO NOT FUCKING REMOVE
 		_cgi.launch();
 		
