@@ -25,7 +25,8 @@ void ConfigFileParser::parseConfigFile(Config& configStruct, char* path)
 {
 	extractDataFromConfigFile(path);
 	intializeConfigStruct(configStruct);
-	// printServerData(configStruct._serverStruct, 3);
+	printServerData(configStruct._serverStruct, 3);
+	printRoutesData(configStruct.routes);
 }
 
 void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
@@ -67,6 +68,7 @@ void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
 			}
 		}
 	}
+	
 	// print("in ConfigFileParser func: ");
 	// printRoutesData(configStruct.routes);
 }
@@ -100,7 +102,7 @@ void	ConfigFileParser::setConfigValue(catIt catIt, itemIt itemIt, valIt valIt, C
 		// if (isRouteData(catIt->first) && itemIt->first == routeKey[i] && isAllowedRoute(catIt->first, configStruct._serverStruct[j]))
 		if (isRouteData(catIt->first) && itemIt->first == routeKey[i])
 		{
-			print("route: " + catIt->first);
+			// print("route: " + catIt->first);
 			if (!(*valIt).empty())
 				configStruct.routes[catIt->first][routeKey[i]] = itemIt->second;
 		}
