@@ -59,14 +59,18 @@ void Server::printResponse(const std::vector<char> & response)
 
 bool Server::replyClient(size_t i, std::vector<char> & response)
 {	
-	Logger::getInstance().log(INFO, "reply client", this->_clients[i]);
+	Logger::getInstance().log(INFO, "Reply Client", this->_clients[i]);
 	printResponse(response);
-
-	ssize_t ret;		
-	if ((ret = send(this->_clients[i].fd, response.data(), response.size(),
-		MSG_NOSIGNAL)) < 0 || !ret)
-	return Logger::getInstance().log(ERROR, "send", this->_clients[i]),
-		this->exitClient(i), true;		
+			
+	ssize_t ret = send(this->_clients[i].fd, response.data(), response.size(),
+		MSG_NOSIGNAL);		
+	if (ret <= 0)
+	{
+		if (ret < 0)
+			Logger::getInstance().log(ERROR, "send", this->_clients[i]);
+		this->exitClient(i);
+		return true;
+	}
 
 	std::string str(response.data(), response.data()
 		+ static_cast<size_t>(ret));      

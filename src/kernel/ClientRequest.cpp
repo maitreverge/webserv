@@ -6,7 +6,7 @@ void Server::listenClients()
 	for (size_t i = 0; i < this->_clients.size(); i++)
 	{
 		if (this->_clients[i].ping >= 2)
-			continue;
+			continue ;
 		if (this->_clients[i].headerRequest.getHeaders().ContentLength
 			&& !this->_clients[i].messageRecv.empty())
 			reSend(i);
@@ -16,10 +16,13 @@ void Server::listenClients()
 			this->_readBuffer.resize(RECV_BUFF_SIZE);
 			ssize_t ret = recv(this->_clients[i].fd, this->_readBuffer.data(),
 				this->_readBuffer.size(), 0);
-			if (ret < 0)			
-				Logger::getInstance().log(ERROR, "recv"), this->exitClient(i);	
-			else if (ret == 0)					
-				this->exitClient(i);		
+			if (ret <= 0)
+			{
+				if (ret < 0)
+					Logger::getInstance().log(ERROR, "recv", this->_clients[i]);
+				this->exitClient(i);
+				break ;
+			}				
 			else
 				clientMessage(i, ret);			
 		}	
@@ -118,37 +121,16 @@ void Server::getRespHeader(size_t i)
 			this->_conf);
 	else if (this->_clients[i].headerRequest.getMethod() == "DELETE")		
 		this->_clients[i].responseBuilder.getHeader(this->_clients[i],
-		this->_conf);
+			this->_conf);
 	else
 		this->_clients[i].responseBuilder.getHeader(this->_clients[i],
 			this->_conf); 
 }
 
-// void floSimulatorPut(std::vector<char> part)
-// {	
-// 	usleep(50000);
-//     Logger::getInstance().log(DEBUG, "FLO POST");
-
-//     static std::ofstream ofs("image_chat.jpeg", std::ios::binary);
-
-// 	ofs.clear();
-//     if (ofs.is_open()) {
-//         ofs.write(part.data(), static_cast<std::streamsize>(part.size()));  
-//         ofs.flush();
-// 		if (!ofs)
-// 		{
-// 			std::cout << "Erreur decriture dans le fichier." << std::endl;
-// 		}
-//     } else {
-//         std::cout << "Erreur : impossible d'ouvrir le fichier." << std::endl;
-//     }//! CLEAR MSG
-
-// }
-
 void Server::handleClientBody(size_t i, ssize_t ret)
 {	
 	stringstream ss;
-	ss << "receive client body" << " " << ret << " bytes";
+	ss << "Handle Client Body - receive " << ret << " bytes";
 	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
 
 	this->_clients[i].bodySize += static_cast<size_t>(ret);
@@ -161,8 +143,10 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 }
 
 #include "Error.hpp"//!
-void Server::errorShortCircuit(e_errorCodes err, size_t i)
+void Server::shortCircuit(e_errorCodes err, size_t i)
 {
+	Logger::getInstance().log(INFO, "Short Circuit", this->_clients[i]);
+
 	std::vector<char> errVector = Error::getInstance().
 		handleError(err, this->_clients[i]);
 	std::string errStr(errVector.begin(), errVector.end());
@@ -191,7 +175,7 @@ bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
 
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);		
 			//! 431 Request Header Fields Too Large !!
-		errorShortCircuit(static_cast<e_errorCodes>(431), i);
+		this->shortCircuit(static_cast<e_errorCodes>(431), i);
 		return true;	
 	}
 	return false;
@@ -208,7 +192,7 @@ bool Server::isContentLengthValid(size_t i)
 			<< " - Max content size: " << MAX_CNT_SIZE << std::endl;
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
 			//! 413 Payload Too Large
-		errorShortCircuit(static_cast<e_errorCodes>(413), i);
+		this->shortCircuit(static_cast<e_errorCodes>(413), i);
 		return false;
 	}
 	return true;
@@ -226,7 +210,7 @@ bool Server::isBodyTooLarge(size_t i)
             << std::endl;
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
 			//! 413 Payload Too Large
-		errorShortCircuit(static_cast<e_errorCodes>(413), i);
+		this->shortCircuit(static_cast<e_errorCodes>(413), i);
 		return true;;
 	}
 	return false;
