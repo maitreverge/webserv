@@ -1,7 +1,7 @@
 #include "ResponseBuilder.hpp"
 #include "Logger.hpp"
 
-void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
+void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 
 	Logger::getInstance().log(DEBUG, "ResponseBuilder->getHeader", inputClient);
 		
