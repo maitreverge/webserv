@@ -14,9 +14,7 @@ int main()
 		write(2, buff, strlen(buff));        
     }
     if (ret < 0)
-    {
-        printf("error read\n");
-    }
+        printf("error read\n");    
    
     char * body = "<html>\
 <head><title>My Styled Page</title></head>\
@@ -33,6 +31,8 @@ Content-Length: ";
 
     printf("%s", header);
     printf("%d", len);
+    fflush(stdout);
+    while (1);
     printf("%s", end);
     printf("%s", body);
     

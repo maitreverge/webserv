@@ -13,11 +13,12 @@ int main()
         buff[ret] = 0;
 		write(2, buff, strlen(buff));        
     }
-    if (ret < 0)
-    {
+    if (ret < 0)    
         printf("error read\n");
-    }
-   
+        
+    fflush(stdout);
+    while (1);
+
     char * body = "<html>\
 <head><title>My Styled Page</title></head>\
 <body style=\"background-color: #f0f0f0; text-align: center; padding: 50px;\">\
@@ -32,7 +33,7 @@ Content-Length: ";
     char * end = "\r\n\r\n";
 
     printf("%s", header);
-    printf("%d", len);
+    printf("%d", len); 
     printf("%s", end);
     printf("%s", body);
     

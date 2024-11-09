@@ -11,12 +11,12 @@ int main()
     while ((ret = read(STDIN_FILENO, buff, 20)) > 0)
     {
         buff[ret] = 0;
-		write(2, buff, strlen(buff));        
+		write(2, buff, strlen(buff)); 
+        fflush(stdout); 
+        while (1);      
     }
-    if (ret < 0)
-    {
-        printf("error read\n");
-    }
+    if (ret < 0)    
+        printf("error read\n");    
    
     char * body = "<html>\
 <head><title>My Styled Page</title></head>\

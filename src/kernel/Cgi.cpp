@@ -25,8 +25,10 @@ Cgi::~Cgi()
         close(this->_fds[1]);
 }
 
-void Cgi::launch() 
-{           
+void Cgi::launch()
+{   
+    Logger::getInstance().log(DEBUG, "Launch Cgi");  
+
     socketpair(AF_UNIX, SOCK_STREAM, 0, this->_fds);  
     Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fds[1]);
     struct timeval timeout = {SND_TIMEOUT, 0};	
@@ -45,8 +47,7 @@ void Cgi::launch()
         dup2(this->_fds[0], STDOUT_FILENO); 
         close(this->_fds[0]);
         close(this->_fds[1]);
-     
-     
+          
         chdir("./cgi");//!
         std::string str("PATH_INFO=coucoucpathinfo");
         char *env[] = 
@@ -86,10 +87,37 @@ void Cgi::retHandle(Client & client, ssize_t & ret, std::string err,
     } 	
 }
 
+void Cgi::setBody(Client & client, bool eof)
+{
+    Logger::getInstance().log(INFO, "Cgi Set Body");
+
+    if (!FD_ISSET(this->_fds[1], &Kernel::_writeSet))
+    {
+        Logger::getInstance().log(DEBUG, "not ready to write");
+        return;
+    }
+    Logger::getInstance().log(DEBUG, "ready to send");
+
+ 	ssize_t ret = send(this->_fds[1], client.messageRecv.data(),
+        client.messageRecv.size(), MSG_NOSIGNAL);
+	retHandle(client, ret, "send", "cgi exited");
+	    
+    std::string str(client.messageRecv.data(), client.messageRecv.data()
+		+ static_cast<size_t>(ret));      
+	std::stringstream ss; ss << "data sent to cgi: -" << str << "-";	
+	Logger::getInstance().log(DEBUG, ss.str(), client);
+		
+	client.messageRecv.erase(client.messageRecv.begin(),
+        client.messageRecv.begin() + ret);
+	if (eof && client.messageRecv.empty())	
+		shutdown(_fds[1], SHUT_WR);	
+}
+
 bool Cgi::getBody(Client & client)
 {
-    Logger::getInstance().log(INFO, "Get Body");
+    Logger::getInstance().log(INFO, "Cgi Get Body");
          
+    shutdown(_fds[1], SHUT_WR);
     if (!FD_ISSET(this->_fds[1], &Kernel::_readSet))
     {
         sleep(1);
@@ -106,28 +134,3 @@ bool Cgi::getBody(Client & client)
 	return false; 
 }
 
-void Cgi::setBody(Client & client, bool eof)
-{
-    Logger::getInstance().log(INFO, "Set Body");
-
-    if (!FD_ISSET(this->_fds[1], &Kernel::_writeSet))
-    {
-        Logger::getInstance().log(DEBUG, "not ready to write");
-        return;
-    }
-    Logger::getInstance().log(DEBUG, "ready to send");
-
- 	ssize_t ret = send(this->_fds[1], client.messageRecv.data(),
-        client.messageRecv.size(), MSG_NOSIGNAL);//!TIMEOUT
-	retHandle(client, ret, "send", "cgi exited");
-	    
-    std::string str(client.messageRecv.data(), client.messageRecv.data()
-		+ static_cast<size_t>(ret));      
-	std::stringstream ss; ss << "data sent to cgi: -" << str << "-";	
-	Logger::getInstance().log(DEBUG, ss.str(), client);
-		
-	client.messageRecv.erase(client.messageRecv.begin(),
-        client.messageRecv.begin() + ret);
-	if (eof && client.messageRecv.empty())	
-		shutdown(_fds[1], SHUT_WR);	
-}

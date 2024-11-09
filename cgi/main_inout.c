@@ -13,10 +13,8 @@ int main()
         buff[ret] = 0;
 		write(2, buff, strlen(buff));        
     }
-    if (ret < 0)
-    {
-        printf("error read\n");
-    }
+    if (ret < 0)    
+        printf("error read\n");    
    
     char * body = "<html>\
 <head><title>My Styled Page</title></head>\

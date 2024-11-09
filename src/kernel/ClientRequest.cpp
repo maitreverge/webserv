@@ -32,8 +32,12 @@ void Server::listenClients()
 void Server::reSend(size_t i)
 {
 	Logger::getInstance().log(INFO, "Re Send", this->_clients[i]);
-	std::cout << this->_clients[i].headerRequest.getHeaders().ContentLength
-		<< " " << this->_clients[i].messageRecv.size() << std::endl;
+	stringstream ss;
+	ss << "Content-Length: "
+		<< this->_clients[i].headerRequest.getHeaders().ContentLength
+		<< " MessageRecv-Size: " << this->_clients[i].messageRecv.size()
+		<< std::endl;
+	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
 	
 	if (this->_clients[i].ping >= 1)
 	{
