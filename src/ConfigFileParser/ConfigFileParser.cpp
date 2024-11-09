@@ -25,8 +25,9 @@ void ConfigFileParser::parseConfigFile(Config& configStruct, char* path)
 {
 	extractDataFromConfigFile(path);
 	intializeConfigStruct(configStruct);
+	assignRoutesToServers(configStruct);
 	printServerData(configStruct._serverStruct, 3);
-	printRoutesData(configStruct.routes);
+
 }
 
 void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
@@ -68,9 +69,23 @@ void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
 			}
 		}
 	}
-	
 	// print("in ConfigFileParser func: ");
 	// printRoutesData(configStruct.routes);
+}
+
+void ConfigFileParser::assignRoutesToServers(Config& configStruct)
+{
+	for (int i = 0; i < 4; ++i)
+	{
+		for (unsigned long j = 0;	j != configStruct._serverStruct[i].allowedRoutes.size(); j++)
+		{
+			std::string routeName = configStruct._serverStruct[i].allowedRoutes[j];
+			RoutesData::const_iterator routeIt = configStruct.routes.find(routeName);
+			if (routeIt != configStruct.routes.end())
+				configStruct._serverStruct[i].routesData[routeName] = routeIt->second;
+
+		}
+	}
 }
 
 void	ConfigFileParser::initializeServers(Config& configStruct, int& i)
@@ -96,13 +111,8 @@ void	ConfigFileParser::setConfigValue(catIt catIt, itemIt itemIt, valIt valIt, C
 	(void)j;
 	for (size_t i = 0; i < routeKey.size(); i++)
 	{
-			// if(!configStruct._serverStruct[j].serverName.empty())
-			// 	print(configStruct._serverStruct[j].serverName);
-			//! the last condition of the below line prevents the route to be recorded
-		// if (isRouteData(catIt->first) && itemIt->first == routeKey[i] && isAllowedRoute(catIt->first, configStruct._serverStruct[j]))
 		if (isRouteData(catIt->first) && itemIt->first == routeKey[i])
 		{
-			// print("route: " + catIt->first);
 			if (!(*valIt).empty())
 				configStruct.routes[catIt->first][routeKey[i]] = itemIt->second;
 		}
@@ -124,12 +134,6 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt
 		if (!(*valIt).empty())
 			field = itemIt->second[0];		
 }
-
-// void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::vector<std::string>& allowedRoutes, const char str[])
-// {
-
-// }
-
 
 //? maxClient
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, short& field, const char str[])
@@ -305,6 +309,8 @@ void ConfigFileParser::printServerData(const server _serverStruct[], size_t size
 		std::cout << "  Allowed Routes: ";
 		for(size_t j = 0; j < _serverStruct[i].allowedRoutes.size(); j++)
 			std::cout << _serverStruct[i].allowedRoutes[j] << " ";
+		std::cout << std::endl;
+		printRoutesData(_serverStruct[i].routesData);
 		std::cout << "\n------------------------" << std::endl;
 	}
 }
