@@ -22,6 +22,10 @@ bool ResponseBuilder::redirectURI( void ){ // ✅ OKAY FUNCTION
 	if (_myconfig.redirection.empty())
 		return false;
 
+	// Client keeps asking the same redirection over and over
+	if (_realURI == _myconfig.redirection)
+		setError(CODE_508_LOOP_DETECTED);
+	
 	_realURI = _myconfig.redirection;
 
 	_client->headerRequest.setURI(_myconfig.redirection);
