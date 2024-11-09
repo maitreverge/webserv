@@ -255,8 +255,8 @@ std::map<std::string, std::string> RequestParser::extractCookies(std::vector<std
  *========================================================================**/
 void RequestParser::displayParsingResult() const
 {
-	displayAttributes();
-	displayHeaders();
+	// displayAttributes();
+	// displayHeaders();
 }
 
 void RequestParser::displayAttributes() const

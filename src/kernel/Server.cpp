@@ -1,5 +1,6 @@
 #include "Server.hpp"
 #include "Logger.hpp" 
+#include "ConfigFileParser.hpp"
 
 Server::Server(sockaddr_in & sockAddr, int & maxFd,
 fd_set & actualSet, fd_set & readSet, fd_set & writeSet, Config & conf)
@@ -40,7 +41,9 @@ bool Server::setup()
 
 		this->exitServer();
 		return false;
-	}	
+	}
+	printColor(RED, this->_conf._serverStruct[2].serverName);
+	ConfigFileParser::printRoutesData(this->_conf.routes);
 	return true;
 }
 

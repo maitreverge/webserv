@@ -14,7 +14,7 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 	_errorType = CODE_201_CREATED;
 
 	extractRouteConfig();
-	printMyConfig();
+	// printMyConfig();
 	
 
 	try

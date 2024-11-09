@@ -60,7 +60,7 @@ void Server::printResponse(const std::vector<char> & response)
 bool Server::replyClient(size_t i, std::vector<char> & response)
 {	
 	Logger::getInstance().log(INFO, "Reply Client", this->_clients[i]);
-	printResponse(response);
+	// printResponse(response);
 			
 	ssize_t ret = send(this->_clients[i].fd, response.data(), response.size(),
 		MSG_NOSIGNAL);		

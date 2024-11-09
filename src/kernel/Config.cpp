@@ -13,6 +13,9 @@ Config::Config(char *path)
 	for (i = 0; i < 8; i++)
 		initializeServer((uint16_t)std::atoi(_serverStruct[i].port.c_str()), sockAddress, i);
 	// toto.printConfig(*this);
+	// print("in Config func: ");
+	// ConfigFileParser::printRoutesData(this->routes);
+
 }
 
 Config::Config()

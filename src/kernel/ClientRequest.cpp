@@ -32,8 +32,8 @@ void Server::listenClients()
 void Server::reSend(size_t i)
 {
 	Logger::getInstance().log(INFO, "Re Send", this->_clients[i]);
-	std::cout << this->_clients[i].headerRequest.getHeaders().ContentLength
-		<< " " << this->_clients[i].messageRecv.size() << std::endl;
+	// std::cout << this->_clients[i].headerRequest.getHeaders().ContentLength
+	// 	<< " " << this->_clients[i].messageRecv.size() << std::endl;
 	
 	if (this->_clients[i].ping >= 1)
 	{
@@ -87,7 +87,7 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 		if (isMaxHeaderSize(it + 4, i))
 			return ;				
 		this->_clients[i].headerRequest.parse(this->_clients[i]);								
-		this->_clients[i].headerRequest.displayParsingResult();
+		// this->_clients[i].headerRequest.displayParsingResult();
 		getRespHeader(i);
 		this->_clients[i].messageRecv.
             erase(this->_clients[i].messageRecv.begin(), it + 4);	
