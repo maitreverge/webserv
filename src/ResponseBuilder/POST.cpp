@@ -33,7 +33,7 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 		resolveURI();
 		checkAutho();
 		checkNature();
-		
+		_cgi.launch();
 		// ! WORK NEEDLE
 		if (_isDirectory and (_method == GET) and (not _isCGI))
 		{
@@ -72,7 +72,6 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 	// Headers.masterHeader.clear();//!
 
 	printAllHeaders();
-
 }
 
 void	ResponseBuilder::setBodyPost( Client & client, bool eof ){

@@ -153,6 +153,7 @@ void ResponseBuilder::setError(e_errorCodes code, bool skip){ // !!!!!!!!!!!!!!!
 
 	_errorType = code;
 
+	_isCGI = false;
 	if (isErrorRedirect())
 	{
 		// _realURI.erase();
