@@ -26,11 +26,11 @@ bool ResponseBuilder::redirectURI( void ){ // ✅ OKAY FUNCTION
 	if (_realURI == _myconfig.redirection)
 		setError(CODE_508_LOOP_DETECTED);
 	
-	_realURI = _myconfig.redirection;
+	_realURI = _myconfig.redirection + "/index.html";
 
 	_client->headerRequest.setURI(_myconfig.redirection);
 	
-	setError(CODE_307_TEMPORARY_REDIRECT);
+	setError(CODE_302_FOUND);
 	return true;
 }
 
