@@ -1,7 +1,7 @@
 #include "ResponseBuilder.hpp"
 #include "Logger.hpp"
 
-void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
+void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
 	Logger::getInstance().log(DEBUG, "ResponseBuilder->getHeader", inputClient);
 		
@@ -16,7 +16,6 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 	extractRouteConfig();
 	printMyConfig();
 	
-
 	try
 	{
 		extractMethod();
@@ -24,22 +23,32 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 		checkMethod();
 
 		if (_method == DELETE)
-			setError(CODE_204_NO_CONTENT); // does not throw exception
-		else // if (_method != DELETE)
+		{
+			setError(CODE_204_NO_CONTENT, true); // does not throw exception
+		}
+		else
+		{
 			checkCGI(inputClient);
+		}
+
 		if (_method == POST and !_isCGI)
+		{
 			uploadCheck();
+		}
 		
 		resolveURI();
-		checkAutho();
-		checkNature();
 		
-		// ! WORK NEEDLE
+		checkAutho();
+		
+		checkNature();
+
+		// ! SEB CGI, DO NOT FUCKING REMOVE
+		_cgi.launch();
+		
 		if (_isDirectory and (_method == GET) and (not _isCGI))
 		{
 			generateListingHTML();
 		}
-
 	}
 	catch(const CodeErrorRaised& e)
 	{
@@ -51,28 +60,31 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 	} 
 
 	if (not isErrorRedirect())
-		setContentLenght();
+	{
+		setContentLenght(); // Sets up body.lenghts
+	}
 	
 	
 	if (_method == DELETE and _errorType < CODE_400_BAD_REQUEST)
+	{
 		deleteEngine();	
+	}
 
 	buildHeaders();
 
 
-	inputClient.headerRespons = Headers.masterHeader;
-	
-		// Copying the build Headers in headerRespons
+	// Copying the build Headers in headerRespons
 	// ! Si on mixe les headers du CGI + de ResponseBuilder
 	if (!_isCGI)
+	{
 		inputClient.headerRespons = Headers.masterHeader;
+	}
 	else
+	{
 		inputClient.headerRespons.clear();
-
-	// Headers.masterHeader.clear();//!
+	}
 
 	printAllHeaders();
-
 }
 
 void	ResponseBuilder::setBodyPost( Client & client, bool eof ){

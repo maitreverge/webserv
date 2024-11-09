@@ -1,31 +1,38 @@
 #include "ResponseBuilder.hpp"
 #include "Logger.hpp"
 
-string ResponseBuilder::extractType( const string& extension ) const { // ⛔ NOT OKAY FUNCTION
+string ResponseBuilder::extractType( const string& extension ) const {
     
     map<string, string>::const_iterator it = _mimeTypes.find(extension);
     if (it != _mimeTypes.end())
+	{
         return it->second;
+	}
     else
+	{
         return "application/octet-stream"; // Default MIME type
+	}
 }
 
-void	ResponseBuilder::extractMethod( void ){ // ⛔ NOT OKAY FUNCTION
+void	ResponseBuilder::extractMethod( void ){
 
 	string tempMethod = _client->headerRequest.getMethod();
 
-	// verif already made by Dan
 	if (tempMethod == "GET")
+	{
 		_method = GET;
+	}
 	else if (tempMethod == "POST")
+	{
 		_method = POST;
+	}
 	else
+	{
 		_method = DELETE;
+	}
 }
 
-void	ResponseBuilder::setContentLenght(){ // ⛔ NOT OKAY FUNCTION
-
-	// string targetedAnswer = (_method == POST) ? _fileName : _realURI ; // TODO : handle non existing 404.html
+void	ResponseBuilder::setContentLenght(){
 
 	if (stat(_realURI.c_str(), &_fileInfo) == -1)
 	{
@@ -47,21 +54,23 @@ void	ResponseBuilder::setContentLenght(){ // ⛔ NOT OKAY FUNCTION
 void	ResponseBuilder::uploadCheck( void ){
 
 	if (!_myconfig.uploadAllowed)
-		setError(CODE_403_FORBIDDEN);
-	if (_myconfig.uploadDirectory.empty())
 	{
 		setError(CODE_403_FORBIDDEN);
-		// _myconfig.samePathWrite = false;
-		// return;
 	}
-	else if ( access(_myconfig.uploadDirectory.c_str(), W_OK) == -1 ) // we can't write on the destination 
+	else if (_myconfig.uploadDirectory.empty())
+	{
+		// ? Pertinent d'upload dans la meme URI si il n'y a pas d'UploadDirectory ?
+		setError(CODE_403_FORBIDDEN);
+	}
+	else if ( access(_myconfig.uploadDirectory.c_str(), W_OK) == -1 )
+	{
+		//!  we can't write on the destination 
 		setError(CODE_401_UNAUTHORIZED);
+	}
 }
 
-void	ResponseBuilder::checkAutho( void ){ // ⛔ NOT OKAY FUNCTION
+void	ResponseBuilder::checkAutho( void ){
 	
-	// string targetedAnswer = (_method == POST) ? _config->errorPaths.at(_errorType) : _realURI; // TODO : handle non existing 404.html
-
 	if (stat(_realURI.c_str(), &_fileInfo) == 0) // ! empty URI = fail
 	{
 		_isROK = _fileInfo.st_mode & S_IRUSR;
@@ -92,23 +101,27 @@ void	ResponseBuilder::checkAutho( void ){ // ⛔ NOT OKAY FUNCTION
 		}
 	}
 	else
+	{
 		setError(CODE_404_NOT_FOUND);
+	}
 }
 
-void	ResponseBuilder::extractFileNature( string &target){ // ⛔ NOT OKAY FUNCTION
+void	ResponseBuilder::extractFileNature( string &target){
 
 	// TODO : Handle shitty names files and put default values
 	if (_method == POST)
+	{
 		_fileName = target;
+	}
 	else
+	{
 		_fileName = target.substr(target.find_last_of("/") + 1); // extract file name // DOUBT for POST
+	}
 
 	_fileExtension = _fileName.substr(_fileName.find_last_of(".") + 1); // extract file extension
 }				
 
-void	ResponseBuilder::checkNature( void ){ // ⛔ NOT OKAY FUNCTION
-
-	// string targetedAnswer = (_method == POST) ? _config->errorPaths.at(_errorType) : _realURI; // TODO : handle non existing 404.html
+void	ResponseBuilder::checkNature( void ){
 
 	if (stat(_realURI.c_str(), &_fileInfo) == 0)
 	{
@@ -116,19 +129,22 @@ void	ResponseBuilder::checkNature( void ){ // ⛔ NOT OKAY FUNCTION
 		{
 			_isDirectory = true;
 			if (_method == DELETE) // ! I decided to reject DELETE methods on folders.
+			{
 				setError(CODE_403_FORBIDDEN);
+			}
 		}
 		else if ((_fileInfo.st_mode & S_IFMT) == S_IFREG) // checks is the given path is a FILE
 		{
 			_isFile = true;
-			// if (_method == POST and not _isCGI)
-			// 	setError(CODE_405_METHOD_NOT_ALLOWED); // A POST Method being NOT CGI might overwrite a file, then I reject it.
 			if (_method == GET)
+			{
 				extractFileNature( _realURI );
-			else // POST AND DELETE
+			}
+			else
+			{
+				// POST AND DELETE
 				extractFileNature( _config->errorPaths.at(_errorType) );
-			// _fileName = _realURI.substr(_realURI.find_last_of("/") + 1); // extract file name
-			// _fileExtension = _fileName.substr(_fileName.find_last_of(".") + 1); // extract file extension
+			}
 		}
 		else
 		{
@@ -149,17 +165,15 @@ void	ResponseBuilder::checkNature( void ){ // ⛔ NOT OKAY FUNCTION
 	}
 }
 
-void ResponseBuilder::setError(e_errorCodes code, bool skip){ // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+void ResponseBuilder::setError(e_errorCodes code, bool skip){
 
 	_errorType = code;
 
 	if (isErrorRedirect())
 	{
-		// _realURI.erase();
 		Headers.bodyLenght = 0; 
 		throw CodeErrorRaised();
 	}
-	// TODO : handle non existing 404.html
 	try
 	{
 		if (_errorType != CODE_204_NO_CONTENT)
@@ -176,11 +190,14 @@ void ResponseBuilder::setError(e_errorCodes code, bool skip){ // !!!!!!!!!!!!!!!
 	extractFileNature(_realURI);
 	extractType(_realURI);
 	
-	if (_errorType != CODE_204_NO_CONTENT and not skip)
+	// Allows the setError function to raise an exception, and skip the useless others checks
+	if (!skip)
+	{
 		throw CodeErrorRaised();
+	}
 }
 
-void	ResponseBuilder::printAllHeaders( void ) const{ // ⛔ NOT OKAY FUNCTION (need refactoring and polish)
+void	ResponseBuilder::printAllHeaders( void ) const{
 
 	print("=========== printAllHeaders ========");
 
@@ -209,7 +226,7 @@ void	ResponseBuilder::printAllHeaders( void ) const{ // ⛔ NOT OKAY FUNCTION (n
 	print("=========== printAllHeaders ========");
 }
 
-bool ResponseBuilder::isErrorRedirect( void ){ // ⛔ NOT OKAY FUNCTION
+bool ResponseBuilder::isErrorRedirect( void ){
 
 	if (this->_errorType >= CODE_300_MULTIPLE_CHOICES and this->_errorType < CODE_400_BAD_REQUEST)
 		return true;

@@ -12,7 +12,9 @@ void ResponseBuilder::launchCGI( void ){
 
 void ResponseBuilder::checkCGI( Client &client ){
 
+	// ! Keep the client plugged in until we're certain it is useless
 	(void)(client);
+
     // Define the file extensions for Python and PHP scripts
     string extensionPHP = ".php";
     string extensionPython = ".py";
@@ -52,8 +54,6 @@ void ResponseBuilder::checkCGI( Client &client ){
     // If either extension is found, set _isCGI to true
     _isCGI = true;
     
-    // std::string::size_type realLoc = ( phpLoc == std::string::npos ) ? pythonLoc : phpLoc;
-
     // Adjust the position to the end of the extension
 	targetLoc += extensionTarget.length();
 

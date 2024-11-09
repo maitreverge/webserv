@@ -10,7 +10,7 @@ void	ResponseBuilder::deleteEngine( void ){
 	if (std::remove(targetToDelete.c_str()) != 0)
 	{
 		Logger::getInstance().log(ERROR, "Delete engine failed deleting the file");
-		setError(CODE_500_INTERNAL_SERVER_ERROR, true);
+		setError(CODE_500_INTERNAL_SERVER_ERROR, true); // do not raise an exception
 	}
 	else
 		Logger::getInstance().log(INFO, "Target URI Successfully deleted");

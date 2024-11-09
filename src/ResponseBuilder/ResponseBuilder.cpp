@@ -35,25 +35,20 @@ void ResponseBuilder::rootMapping( void ){ // ✅ OKAY FUNCTION
 	if (_myconfig.root.empty())
 		return;
 
-	// if (*_myconfig.root.rbegin() != '/')
-	// 	_myconfig.root += "/";
-
 	_realURI.replace(0, _myconfig.uri.size(), _myconfig.root);
 }
 
 bool ResponseBuilder::isDirectory(string &uri) {
 	
-	if (stat(uri.c_str(), &_fileInfo) != 0)
-		return false;
-	else if (_fileInfo.st_mode & S_IFDIR)
+	if ( (stat(uri.c_str(), &_fileInfo) == 0) and (_fileInfo.st_mode & S_IFDIR))
+	{
 		return true;
-	else
-		return false;
+	}
+	return false;
 }
 
 void	ResponseBuilder::slashManip( void ){
 
-	// turn a regular URI ("/index.html" into "index.html")
 	bool beginWithSlash = !_realURI.empty() && (*_realURI.begin() == '/');
 	bool endWithSlash = !_realURI.empty() && (*_realURI.rbegin() == '/');
 	
@@ -89,7 +84,8 @@ void ResponseBuilder::resolveURI( void ) {// ⛔ NOT OKAY FUNCTION
 	rootMapping();
 
 	// Step 2: Handle redirection
-    if (redirectURI()) {
+    if (redirectURI())
+	{
         return;
     }
 	
@@ -104,7 +100,9 @@ void ResponseBuilder::resolveURI( void ) {// ⛔ NOT OKAY FUNCTION
 void	ResponseBuilder::checkMethod( void ){
 
 	if (_myconfig.allowedMethods.empty())
+	{
 		return;
+	}
 	
 	for (std::vector<string>::iterator it = _myconfig.allowedMethods.begin(); it != _myconfig.allowedMethods.end(); ++it)
 	{
@@ -118,41 +116,6 @@ void	ResponseBuilder::checkMethod( void ){
 	
 	setError(CODE_405_METHOD_NOT_ALLOWED);
 }
-
-// void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
-
-// 	Logger::getInstance().log(DEBUG, "Response Builder Get Header", inputClient);
-		
-// 	_client = &inputClient; // init client
-// 	_config = &inputConfig; // init config
-	
-// 	_realURI = _client->headerRequest.getURI();
-
-// 	extractMethod();
-// 	if ( not redirectURI())
-// 	{
-		
-// 		resolveURI();
-// 		validateURI();
-		
-// 		if (_isCGI and _errorType <= CODE_400_BAD_REQUEST) // or potentially another adress
-// 			launchCGI();
-		
-// 		checkNatureAndAuthoURI();
-// 		setContentLenght();
-
-// 	}
-	
-// 	buildHeaders();
-
-
-// 	// Copying the build Headers in headerRespons
-// 	inputClient.headerRespons = Headers.masterHeader;
-	
-// 	// Headers.masterHeader.clear();//!
-
-// 	// printAllHeaders();
-// }
 
 void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
@@ -169,7 +132,6 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	extractRouteConfig();
 	printMyConfig();
 	
-
 	try
 	{
 		extractMethod();
@@ -177,24 +139,32 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 		checkMethod();
 
 		if (_method == DELETE)
-			setError(CODE_204_NO_CONTENT); // does not throw exception
-		else // if (_method != DELETE)
+		{
+			setError(CODE_204_NO_CONTENT, true); // does not throw exception
+		}
+		else
+		{
 			checkCGI(inputClient);
+		}
+
 		if (_method == POST and !_isCGI)
+		{
 			uploadCheck();
+		}
 		
 		resolveURI();
-		checkAutho();
-		checkNature();
 		
+		checkAutho();
+		
+		checkNature();
+
+		// ! SEB CGI, DO NOT FUCKING REMOVE
 		_cgi.launch();
 		
-		// ! WORK NEEDLE
 		if (_isDirectory and (_method == GET) and (not _isCGI))
 		{
 			generateListingHTML();
 		}
-
 	}
 	catch(const CodeErrorRaised& e)
 	{
@@ -206,11 +176,15 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	} 
 
 	if (not isErrorRedirect())
-		setContentLenght();
+	{
+		setContentLenght(); // Sets up body.lenghts
+	}
 	
 	
 	if (_method == DELETE and _errorType < CODE_400_BAD_REQUEST)
+	{
 		deleteEngine();	
+	}
 
 	buildHeaders();
 
@@ -218,9 +192,13 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	// Copying the build Headers in headerRespons
 	// ! Si on mixe les headers du CGI + de ResponseBuilder
 	if (!_isCGI)
+	{
 		inputClient.headerRespons = Headers.masterHeader;
+	}
 	else
+	{
 		inputClient.headerRespons.clear();
+	}
 
 	printAllHeaders();
 }
