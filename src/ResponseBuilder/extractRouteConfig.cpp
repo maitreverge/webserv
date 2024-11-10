@@ -135,6 +135,52 @@ void	ResponseBuilder::buildRouteConfig( string path ){
 	}
 }
 
+void ResponseBuilder::extractRedirectionIndex( vector< string >&routeNames, vector< string >&routeURIS ){
+
+	static_cast<void>(routeURIS); // might need later for refactoring with Dan routes
+
+	typedef std::vector< string >::iterator itVector;
+
+	string needleIndex;
+	string targetRoute;
+
+	needleIndex.clear();
+	targetRoute.clear();
+
+	for (itVector outterIT = routeNames.begin(); outterIT != routeNames.end(); ++outterIT)
+	{
+		try
+		{
+			*_config->routes.at(*outterIT).at(_myconfig.redirection).begin();
+			targetRoute = *outterIT;
+			break;
+		}
+		catch(const std::exception& e)
+		{
+			continue;
+		}
+	}
+	
+	if (not targetRoute.empty())
+	{
+		try
+		{
+			needleIndex = *_config->routes.at(targetRoute).at("index").begin();
+		}
+		catch(const std::exception& e)
+		{
+			Logger::getInstance().log(DEBUG, "Index Redirection not Found");
+		}
+	}
+
+	if (*needleIndex.begin() != '/')
+		needleIndex.insert(0, "/");
+	else if (*needleIndex.rbegin() == '/')
+		needleIndex.erase(needleIndex.length() - 1);
+
+	_myconfig.indexRedirection = needleIndex;
+}
+
 void	ResponseBuilder::extractRouteConfig( void ){
 
 	vector< string > routeNames;
@@ -181,6 +227,11 @@ void	ResponseBuilder::extractRouteConfig( void ){
 
 	if (found)
 		buildRouteConfig(routeNames[pos]);
+	
+	if (not _myconfig.redirection.empty())
+	{
+		extractRedirectionIndex(routeNames, routeURIS);
+	}
 }
 
 void	ResponseBuilder::printMyConfig( void ){
