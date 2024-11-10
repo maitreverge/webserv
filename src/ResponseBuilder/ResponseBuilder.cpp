@@ -26,11 +26,9 @@ bool ResponseBuilder::redirectURI( void ){ // ✅ OKAY FUNCTION
 	if (_realURI == _myconfig.redirection)
 		setError(CODE_508_LOOP_DETECTED);
 	
-	_realURI = _myconfig.redirection;
-
-	_client->headerRequest.setURI(_myconfig.redirection);
+	_realURI = _myconfig.redirection + _myconfig.indexRedirection;
 	
-	setError(CODE_307_TEMPORARY_REDIRECT);
+	setError(CODE_302_FOUND);
 	return true;
 }
 
@@ -189,6 +187,8 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	{
 		deleteEngine();	
 	}
+
+	
 
 	buildHeaders();
 

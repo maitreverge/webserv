@@ -55,6 +55,7 @@ struct MyConfig
 
 	// ========== my stuff ==========
 	bool				samePathWrite;
+	string				indexRedirection;
 
 	MyConfig()
 	{
@@ -72,6 +73,8 @@ struct MyConfig
 
 	// ========== my stuff ==========
 		samePathWrite = true;
+		indexRedirection.clear();
+
 	}
 };
 
@@ -128,7 +131,6 @@ class ResponseBuilder
 	MyConfig _myconfig;
 
 	ResponseHeaders Headers;
-	// bool test;
 
 	// ------------- Priv Methods
 	void	resolveURI( void );
@@ -159,6 +161,7 @@ class ResponseBuilder
 
 	void	slashManip( void );
 	
+	void extractRedirectionIndex( vector< string >&routeNames, vector< string >&routeURIS );
 
 
 
