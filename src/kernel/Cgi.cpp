@@ -5,7 +5,7 @@ void errnoHandle(); //! a suppr
 
 Cgi::Cgi()
 {
-	this->_start = 0;
+	this->_start = 0; //! verif wrap arround
     this->_fds[0] = -1;
     this->_fds[1] = -1;
 }
