@@ -5,7 +5,7 @@ void errnoHandle(); //! a suppr
 
 Cgi::Cgi()
 {
-	this->_start = 0; //! reinit start at pong
+	this->_start = 0;
     this->_fds[0] = -1;
     this->_fds[1] = -1;
 }
@@ -25,18 +25,13 @@ Cgi::~Cgi()
     FD_CLR(this->_fds[1], &Kernel::_actualSet);
     if (this->_fds[1] > 0)
         close(this->_fds[1]);
+	//! kill cgi
 }
-
-
 
 void Cgi::launch()
 {   
     Logger::getInstance().log(DEBUG, "Launch Cgi");  
-
-	this->_start = std::clock();
 	
-
-
     socketpair(AF_UNIX, SOCK_STREAM, 0, this->_fds);  
     Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fds[1]);
     struct timeval timeout = {SND_TIMEOUT, 0};	
@@ -88,13 +83,14 @@ bool Cgi::retHandle(Client & client, ssize_t ret, std::string err,
     {		
         Logger::getInstance().log(ERROR, err);
         errnoHandle();		
-   
+
 		// FD_CLR(this->_fds[1], &Kernel::_actualSet);//! err 4..
         // close(this->_fds[1]);
         // this->_fds[1] = -1;
         client.exitRequired = true;
         return true;
-    } 
+    }
+	this->_start = std::clock(); 
     return false;	
 }
 
@@ -103,12 +99,22 @@ bool Cgi::isTimeout(Client & client, std::string err)
 	if (!this->_start)
 		this->_start = std::clock();
 	std::clock_t end = std::clock();
-	if (static_cast<double>(end - this->_start) / CLOCKS_PER_SEC >
+
+	std::stringstream ss; ss << "Timeout - start: "
+		<< this->_start << " end: " << end << " diff: "
+		<< static_cast<double>(end - this->_start) << " sec: "
+		<< static_cast<double>(end - this->_start) * 100 / CLOCKS_PER_SEC
+		<< "/" << TIMEOUT_CGI << std::endl;
+	Logger::getInstance().log(WARNING, ss.str(), client);	
+
+	if (static_cast<double>(end - this->_start) * 100 / CLOCKS_PER_SEC >
 		TIMEOUT_CGI)
-	{		
-        Logger::getInstance().log(INFO, err);
+	{	
+        Logger::getInstance().log(ERROR, err);
      	//!errpage!!
+		this->_start = 0;
         client.exitRequired = true;
+		client.ping = 2;	
         return true;
     } 
 	return false;
@@ -118,36 +124,35 @@ void Cgi::setBody(Client & client, bool eof)
 {
     Logger::getInstance().log(INFO, "Cgi Set Body");
 
-	if (isTimeout(client, "timeout setbody is over"))
+	if (isTimeout(client, "Timeout Cgi Set Body is over"))
 		return ;//! true 	
     if (!FD_ISSET(this->_fds[1], &Kernel::_writeSet))
     {
-        Logger::getInstance().log(DEBUG, "not ready to write");
+        Logger::getInstance().log(DEBUG, "not ready to send");
         return;
     }
     Logger::getInstance().log(DEBUG, "ready to send");
-
  	ssize_t ret = send(this->_fds[1], client.messageRecv.data(),
         client.messageRecv.size(), MSG_NOSIGNAL);
 	if (retHandle(client, ret, "send", "cgi exited"))
-        ret = static_cast<ssize_t>(client.messageRecv.size());	
-
-    std::string str(client.messageRecv.data(), client.messageRecv.data()
+        ret = static_cast<ssize_t>(client.messageRecv.size());			
+    
+	std::string str(client.messageRecv.data(), client.messageRecv.data()
 		+ static_cast<size_t>(ret));      
 	std::stringstream ss; ss << "data sent to cgi: -" << str << "-";	
 	Logger::getInstance().log(DEBUG, ss.str(), client);	
 
 	client.messageRecv.erase(client.messageRecv.begin(),
         client.messageRecv.begin() + ret);
-	if (eof && client.messageRecv.empty())
-		shutdown(_fds[1], SHUT_WR);			
+	if (eof && client.messageRecv.empty())	
+		shutdown(_fds[1], SHUT_WR);
 }
 
 bool Cgi::getBody(Client & client)
 {
     Logger::getInstance().log(INFO, "Cgi Get Body");
 
-	if (isTimeout(client, "timeout getbody is over"))
+	if (isTimeout(client, "Timeout Cgi Get Body is over"))
 		return false;
 
     shutdown(_fds[1], SHUT_WR);

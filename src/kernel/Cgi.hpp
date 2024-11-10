@@ -4,7 +4,7 @@
 #include <string>
 #include <ctime>
 
-#define TIMEOUT_CGI 2
+#define TIMEOUT_CGI 3
 
 struct Client;
 
