@@ -3,7 +3,7 @@
 
 // ------------------------- METHODS ---------------------------------
 
-void ResponseBuilder::sanatizeURI( string &oldURI ){ // ⛔ NOT OKAY FUNCTION
+void ResponseBuilder::sanatizeURI( string &oldURI ){
 
 	// TODO : refactor this function to avoid trimming usefull "../", as long as we don't escape the root webserv
 	string needle = "../";
@@ -17,7 +17,7 @@ void ResponseBuilder::sanatizeURI( string &oldURI ){ // ⛔ NOT OKAY FUNCTION
 	}
 }
 
-bool ResponseBuilder::redirectURI( void ){ // ✅ OKAY FUNCTION
+bool ResponseBuilder::redirectURI( void ){
 
 	if (_myconfig.redirection.empty())
 		return false;
@@ -32,7 +32,7 @@ bool ResponseBuilder::redirectURI( void ){ // ✅ OKAY FUNCTION
 	return true;
 }
 
-void ResponseBuilder::rootMapping( void ){ // ✅ OKAY FUNCTION
+void ResponseBuilder::rootMapping( void ){
 
 	if (_myconfig.root.empty())
 		return;
@@ -80,7 +80,7 @@ void	ResponseBuilder::slashManip( void ){
     }
 }
 
-void ResponseBuilder::resolveURI( void ) {// ⛔ NOT OKAY FUNCTION
+void ResponseBuilder::resolveURI( void ) {
 	
 	// ! STEP 1 : Check the rootMapping
 	rootMapping();
@@ -160,8 +160,11 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 		
 		checkNature();
 
-		// ! SEB CGI, DO NOT FUCKING REMOVE
-		_cgi.launch();
+		// ! CGI BY SEB, DO NOT FUCKING TOUCH
+		if (_isCGI and _method != DELETE)
+		{
+			_cgi.launch();
+		}
 		
 		if (_isDirectory and (_method == GET) and (not _isCGI))
 		{

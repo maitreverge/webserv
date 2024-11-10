@@ -267,5 +267,8 @@ void	ResponseBuilder::printMyConfig( void ){
 	print("UPLOAD DIRECTORY =");
 	printColor(BOLD_RED, _myconfig.uploadDirectory);
 
+	print("Index Redirection =");
+	printColor(BOLD_RED, _myconfig.indexRedirection);
+
 	printColor(CYAN, "================= PRINT MY CONFIG =============");
 }

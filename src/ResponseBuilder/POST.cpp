@@ -40,10 +40,11 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 		checkAutho();
 		checkNature();
 
-		_cgi.launch();
-		
-		// ! SEB CGI, DO NOT FUCKING REMOVE
-		_cgi.launch();
+		// ! CGI BY SEB, DO NOT FUCKING TOUCH
+		if (_isCGI and _method != DELETE)
+		{
+			_cgi.launch();
+		}
 		
 		if (_isDirectory and (_method == GET) and (not _isCGI))
 		{

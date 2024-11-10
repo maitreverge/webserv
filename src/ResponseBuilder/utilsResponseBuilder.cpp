@@ -43,13 +43,6 @@ void	ResponseBuilder::setContentLenght(){
 	}
 	else
 		Headers.bodyLenght = static_cast<uint64_t>(_fileInfo.st_size); //! the targeted file in a GET requests
-
-	// ! FIX REDIRECTION
-
-	// detect if the target file is an html file
-	
-
-	// ! BOILERPLATE CODE
 }
 
 void	ResponseBuilder::uploadCheck( void ){
@@ -176,6 +169,7 @@ void ResponseBuilder::setError(e_errorCodes code, bool skip){
 		Headers.bodyLenght = 0; 
 		throw CodeErrorRaised();
 	}
+
 	try
 	{
 		if (_errorType != CODE_204_NO_CONTENT)
@@ -187,7 +181,6 @@ void ResponseBuilder::setError(e_errorCodes code, bool skip){
 		_realURI.erase();
 		Headers.bodyLenght = 0; 
 	}
-	
 	
 	extractFileNature(_realURI);
 	extractType(_realURI);
