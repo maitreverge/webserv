@@ -66,8 +66,7 @@ void Kernel::launch()
 			if (!this->_exit)
 				Logger::getInstance().log(ERROR, "select");
 			continue;
-		}
-		std::cout << "boucle" << std::endl;
+		}		
 		if (this->_exit)
 			break;
 		std::for_each(this->_servers.begin(), this->_servers.end(),
