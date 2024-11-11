@@ -50,12 +50,18 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 	*/
 	char cwd[1024];
 
+	if (*_realURI.rbegin() != '/')
+		_realURI += '/';
+	
 	string path;
 
-	path = getcwd(cwd, sizeof(cwd)) + _originalURI;
+	path = getcwd(cwd, sizeof(cwd));
 
 	if (*path.rbegin() != '/')
 		path += "/";
+	
+	if (_realURI != "/")
+		path += _realURI;
 
 	// ! STEP 1 : Opens the directory
 	DIR *dir = opendir(path.c_str());
@@ -148,7 +154,12 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 
 	string listingName = "listing.html";
 
-	string defautFile = path + listingName;
+	string defautFile = path;
+
+	if (*defautFile.rbegin() != '/')
+		defautFile += "/";
+
+	defautFile += listingName;
 
 	ofstream listingFile(defautFile.c_str());
 
@@ -157,7 +168,7 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 
 	listingFile << result.str();
 
-	_realURI = _originalURI + listingName;
+	_realURI += listingName;
 
 	if (*_realURI.begin() == '/')
 		_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
@@ -165,8 +176,6 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 	closedir(dir);
 
 	listingFile.close();
-	// test
-	// localhost:1510/testResponseBuilder/listingDirectory
 }
 
 void ResponseBuilder::generateListingHTML( void ){
