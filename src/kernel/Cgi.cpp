@@ -28,9 +28,8 @@ Cgi::~Cgi()
 	//! kill cgi
 }
 
-void Cgi::launch(std::string uri, std::string pathInfo)
+void Cgi::launch(Client & client)
 {   
-	(void)(uri);
     Logger::getInstance().log(DEBUG, "Launch Cgi");  
 	
     socketpair(AF_UNIX, SOCK_STREAM, 0, this->_fds);  
@@ -52,8 +51,8 @@ void Cgi::launch(std::string uri, std::string pathInfo)
         close(this->_fds[0]);
         close(this->_fds[1]);
           
-        chdir("./cgi");//!
-        std::string envPathInfo("PATH_INFO=" + pathInfo);
+        chdir(client.responseBuilder._folderCGI.c_str());
+        std::string envPathInfo("PATH_INFO=" + client.responseBuilder._pathInfo);
       
         char *env[] = 
         {
@@ -61,7 +60,9 @@ void Cgi::launch(std::string uri, std::string pathInfo)
         };
 		char *argv[] = {NULL};
         //!FLAG ANTI HERITAGE FD OU CLOSE
-        execve("a.out", argv, env);  //!     
+
+        if (client.responseBuilder._fileExtension == "out")
+            execve(client.responseBuilder._fileName.c_str(), argv, env);  //!     
         // execve("/home/svidot/42_am/webserv/cgi/a.out", argv, env);       
       	Logger::getInstance().log(ERROR, "execve failed");
 	    //! LEAKS 

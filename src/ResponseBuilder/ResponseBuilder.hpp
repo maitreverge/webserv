@@ -110,8 +110,6 @@ class ResponseBuilder
 	// CGI Stuff
 	bool _isCGI;
 	e_errorCodes _errorType;
-	string _pathInfo;
-	string _folderCGI;
 
 	// Struct for File Info
 	struct stat _fileInfo; // ! PAS DANS LES CONSTRUCTEURS
@@ -120,10 +118,6 @@ class ResponseBuilder
 	bool _isROK;
 	bool _isWOK;
 	bool _isXOK;
-
-	string _fileName;
-	string _fileExtension;
-
 
 	Client* _client;
 	Config* _config;
@@ -194,6 +188,10 @@ public:
 	std::ifstream 	_ifs; // ! PAS DANS LES CONSTRUCTEURS
 	std::streampos	_ifsStreamHead; // ! ABSOLUMENT METTRE DANS LES CONSTRUCTEURS
     std::ofstream	_ofs;
+	string 			_pathInfo;
+	string 			_folderCGI;
+	string 			_fileName;
+	string 			_fileExtension;
 
 	ResponseBuilder( void );
 	~ResponseBuilder( void );

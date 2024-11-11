@@ -33,7 +33,7 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 		resolveURI();
 		checkAutho();
 		checkNature();
-		_cgi.launch(_realURI, _pathInfo);
+		_cgi.launch(inputClient);
 		// ! WORK NEEDLE
 		if (_isDirectory and (_method == GET) and (not _isCGI))
 		{
