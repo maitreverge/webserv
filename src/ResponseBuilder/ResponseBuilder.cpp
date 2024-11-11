@@ -36,8 +36,10 @@ void ResponseBuilder::rootMapping( void ){
 
 	if (_myconfig.root.empty())
 		return;
+	
+	if (_realURI.find(_myconfig.root) == std::string::npos)
+		_realURI.replace(0, _myconfig.uri.size(), _myconfig.root);
 
-	_realURI.replace(0, _myconfig.uri.size(), _myconfig.root);
 }
 
 bool ResponseBuilder::isDirectory(string &uri) {
@@ -161,7 +163,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 		checkNature();
 
 		// ! CGI BY SEB, DO NOT FUCKING TOUCH
-		if (_isCGI and _method != DELETE)
+		if (_isCGI)
 		{
 			_cgi.launch(_realURI, _pathInfo);
 

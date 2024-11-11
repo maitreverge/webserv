@@ -122,6 +122,11 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 		{
 			if (listing->d_type == DT_DIR)
 				curFile += "/"; // Append trailing slash for directories
+			if (curFile.find(_realURI) == std::string::npos)
+			{
+				curFile.insert(0, _realURI);
+			}
+			
 			paths.push_back(curFile);
 		}
 	}
