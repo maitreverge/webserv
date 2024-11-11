@@ -163,7 +163,8 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 		// ! CGI BY SEB, DO NOT FUCKING TOUCH
 		if (_isCGI and _method != DELETE)
 		{
-			_cgi.launch();
+			_cgi.launch(_realURI, _pathInfo);
+
 		}
 		
 		if (_isDirectory and (_method == GET) and (not _isCGI))

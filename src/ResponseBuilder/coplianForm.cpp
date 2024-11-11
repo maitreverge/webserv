@@ -82,7 +82,7 @@ ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 	_errorNotFound = rhs._errorNotFound;
 
 
-	// PRIV
+	// TODO : actualiser les variables
 	this->_mimeTypes = rhs._mimeTypes;
 	this->_realURI = rhs._realURI;
 	this->_errorType = rhs._errorType;
@@ -96,6 +96,7 @@ ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 	this->_isXOK = rhs._isXOK;
 	this->_fileName = rhs._fileName;
 	this->_fileExtension = rhs._fileExtension;
+	this->_folderCGI = rhs._folderCGI;
 
 	this->_client = rhs._client;
 	this->_config = rhs._config;

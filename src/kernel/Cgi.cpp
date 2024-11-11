@@ -25,8 +25,12 @@ Cgi::~Cgi()
         close(this->_fds[1]);
 }
 
-void Cgi::launch() 
-{           
+void Cgi::launch(std::string uri, std::string pathInfo)
+{   
+	(void)(uri);
+	(void)(pathInfo);
+    Logger::getInstance().log(DEBUG, "Launch Cgi");  
+	
     socketpair(AF_UNIX, SOCK_STREAM, 0, this->_fds);  
     Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fds[1]);
     

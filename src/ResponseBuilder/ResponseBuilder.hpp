@@ -114,6 +114,7 @@ class ResponseBuilder
 	bool _isCGI;
 	e_errorCodes _errorType;
 	string _pathInfo;
+	string _folderCGI;
 
 	// Struct for File Info
 	struct stat _fileInfo; // ! PAS DANS LES CONSTRUCTEURS
@@ -122,8 +123,10 @@ class ResponseBuilder
 	bool _isROK;
 	bool _isWOK;
 	bool _isXOK;
+
 	string _fileName;
 	string _fileExtension;
+
 
 	Client* _client;
 	Config* _config;
@@ -178,7 +181,6 @@ class ResponseBuilder
 
 	// CGI.cpp
 	void	checkCGI( void );
-	void	launchCGI( void );
 
 	// POST
 

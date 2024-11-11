@@ -2,14 +2,6 @@
 #include "Logger.hpp"
 
 
-void ResponseBuilder::launchCGI( void ){
-
-	// ! STEP 1 : Export PATH_INFO
-	std::cout << "LAUNCH" << std::endl;
-	// ! LAST STEP : UNSET PATH_INFO
-	this->_cgi.launch(); 
-}
-
 void ResponseBuilder::checkCGI( void ){
 
     // Define the file extensions for Python and PHP scripts
@@ -59,6 +51,10 @@ void ResponseBuilder::checkCGI( void ){
 
     // Update _realURI to only include the part up to and including the script extension
     _realURI = _realURI.substr(0, targetLoc);
+
+	_folderCGI = _realURI.substr(0, _realURI.find_last_of('/') + 1);
+
+	_folderCGI.insert(0, ".");
 
 	// client.headerRespons.clear();
 }

@@ -39,13 +39,8 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 		resolveURI();
 		checkAutho();
 		checkNature();
-
-		// ! CGI BY SEB, DO NOT FUCKING TOUCH
-		if (_isCGI and _method != DELETE)
-		{
-			_cgi.launch();
-		}
-		
+		_cgi.launch(_realURI, _pathInfo);
+		// ! WORK NEEDLE
 		if (_isDirectory and (_method == GET) and (not _isCGI))
 		{
 			generateListingHTML();
