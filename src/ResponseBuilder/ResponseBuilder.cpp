@@ -187,7 +187,8 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 		checkAutho();
 		checkNature();
 		
-		_cgi.launch(inputClient);
+		if (_isCGI)
+			_cgi.launch(inputClient);
 		
 		// ! WORK NEEDLE
 		if (_isDirectory and (_method == GET) and (not _isCGI))

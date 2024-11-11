@@ -47,15 +47,19 @@ void Server::catchClients()
 	// Logger::getInstance().log(INFO, "Catch clients", *this);
 
 	if (FD_ISSET(this->_fd, &Kernel::_readSet))
-	{		
+	{	
 		Client client;			
 		client.fd = accept(this->_fd, reinterpret_cast<sockaddr *>
 			(&client.address), &client.addressLen);
 		if (client.fd < 0)		
 			return Logger::getInstance().log(ERROR, "accept");	
-		
+		if (this->_clients.size() >= static_cast<size_t>(this->_conf.maxClient))
+		{
+			Logger::getInstance().log(ERROR, "max client reached", client);	
+			close(client.fd);
+			return ;
+		}		
 		Logger::getInstance().log(INFO, "\e[30;101mnew client\e[0m", client);
-
 		struct timeval timeout = {SND_TIMEOUT, 0};	
 		if (setsockopt(client.fd, SOL_SOCKET, SO_SNDTIMEO, &timeout,
 			sizeof(timeout)) < 0)
