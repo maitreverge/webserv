@@ -21,23 +21,23 @@ class Kernel
 	Config 				_conf;
 	std::vector<Server> _servers;
 
-
-	static void callCatch(Server & server);
+	void		callCatch();
 	static void callListen(Server & server);
 	static void callReply(Server & server);
 	static void callExit(Server & server);
 
 	public:
 
-	static bool		_exit;
-	static int		_maxFd; 
-	static fd_set	_actualSet;
-	static fd_set 	_readSet;
-	static fd_set 	_writeSet;
-		
+		static bool		_exit;
+		static int		_maxFd; 
+		static fd_set	_actualSet;
+		static fd_set 	_readSet;
+		static fd_set 	_writeSet;
+			
 		Kernel(void);
 		Kernel(char* path);
 
-		void setup();
-		void launch();
+		void		setup();
+		void 		launch();
+		short int	countClients();
 };

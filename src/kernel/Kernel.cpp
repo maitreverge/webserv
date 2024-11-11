@@ -22,9 +22,10 @@ Kernel::Kernel(char* path) : _conf(path)
 	this->launch();
 }
 
-void Kernel::callCatch(Server & server)
+void Kernel::callCatch()
 {
-	server.catchClients();
+	for (size_t i = 0; i < this->_servers.size(); i++)
+		this->_servers[i].catchClients(*this);
 }
 
 void Kernel::callListen(Server & server)
@@ -35,6 +36,15 @@ void Kernel::callListen(Server & server)
 void Kernel::callReply(Server & server)
 {
 	server.replyClients();
+}
+
+short int Kernel::countClients()
+{
+	short int nClients = 0;
+
+	for (size_t i = 0; i < this->_servers.size(); i++)
+		nClients += static_cast<short int>(this->_servers[i]._clients.size());
+	return nClients;
 }
 
 void Kernel::callExit(Server & server)
@@ -68,8 +78,7 @@ void Kernel::launch()
 		}		
 		if (this->_exit)
 			break;
-		std::for_each(this->_servers.begin(), this->_servers.end(),
-			this->callCatch);
+		this->callCatch();
 		std::for_each(this->_servers.begin(), this->_servers.end(),
 			this->callListen);
 		std::for_each(this->_servers.begin(), this->_servers.end(),

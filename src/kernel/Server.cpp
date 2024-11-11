@@ -42,10 +42,8 @@ bool Server::setup()
 	return true;
 }
 
-void Server::catchClients()
+void Server::catchClients(Kernel & kernel)
 {
-	// Logger::getInstance().log(INFO, "Catch clients", *this);
-
 	if (FD_ISSET(this->_fd, &Kernel::_readSet))
 	{	
 		Client client;			
@@ -53,7 +51,7 @@ void Server::catchClients()
 			(&client.address), &client.addressLen);
 		if (client.fd < 0)		
 			return Logger::getInstance().log(ERROR, "accept");	
-		if (this->_clients.size() >= static_cast<size_t>(this->_conf.maxClient))
+		if (kernel.countClients() >= this->_conf.maxClient)
 		{
 			Logger::getInstance().log(ERROR, "max client reached", client);	
 			close(client.fd);

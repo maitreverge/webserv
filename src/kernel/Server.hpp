@@ -18,10 +18,10 @@
 #define MAX_HDR_SIZE 8192
 #define MAX_CNT_SIZE 30000000
 
+class Kernel;
 class Server
 {
 	sockaddr_in 		_sockAddr;
-	std::vector<Client> _clients;
 	std::vector<char>	_writeBuffer;
 	std::vector<char>	_readBuffer;
 	int					_fd;
@@ -50,12 +50,14 @@ class Server
 
 	public:
 
+		std::vector<Client> _clients;
+
 		Server(sockaddr_in & sockaddr, Config & conf);
 
 		const sockaddr_in & getSockAdress() const;
 
 		bool setup();
-		void catchClients();
+		void catchClients(Kernel & kernel);
 		void listenClients();
 		void replyClients();
 		void exitServer();
