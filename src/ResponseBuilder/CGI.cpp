@@ -63,5 +63,9 @@ void ResponseBuilder::checkCGI( Client &client ){
     // Update _realURI to only include the part up to and including the script extension
     _realURI = _realURI.substr(0, targetLoc);
 
+	_folderCGI = _realURI.substr(0, _realURI.find_last_of('/') + 1);
+
+	_folderCGI.insert(0, ".");
+
 	// client.headerRespons.clear();
 }

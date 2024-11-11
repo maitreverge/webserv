@@ -30,6 +30,7 @@ Cgi::~Cgi()
 
 void Cgi::launch(std::string uri, std::string pathInfo)
 {   
+	(void)(uri);
     Logger::getInstance().log(DEBUG, "Launch Cgi");  
 	
     socketpair(AF_UNIX, SOCK_STREAM, 0, this->_fds);  
