@@ -28,7 +28,7 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 		}
 		else
 		{
-			checkCGI(inputClient);
+			checkCGI();
 		}
 
 		if (_method == POST and !_isCGI)

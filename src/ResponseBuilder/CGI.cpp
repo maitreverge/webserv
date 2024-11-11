@@ -10,10 +10,7 @@ void ResponseBuilder::launchCGI( void ){
 	this->_cgi.launch(); 
 }
 
-void ResponseBuilder::checkCGI( Client &client ){
-
-	// ! Keep the client plugged in until we're certain it is useless
-	(void)(client);
+void ResponseBuilder::checkCGI( void ){
 
     // Define the file extensions for Python and PHP scripts
     string extensionPHP = ".php";
