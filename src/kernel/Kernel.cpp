@@ -46,8 +46,7 @@ void Kernel::setup()
 {	
 	for (size_t i = 0; i < this->_conf.sockAddress.size(); i++)
 	{
-		Server server(this->_conf.sockAddress[i], this->_maxFd,
-			this->_actualSet, this->_readSet, this->_writeSet, this->_conf);
+		Server server(this->_conf.sockAddress[i], this->_conf);
 		if (server.setup())
 			this->_servers.push_back(server);	
 	}	

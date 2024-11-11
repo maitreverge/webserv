@@ -10,7 +10,7 @@ void Server::listenClients()
 		if (this->_clients[i].headerRequest.getHeaders().ContentLength
 			&& !this->_clients[i].messageRecv.empty())
 			reSend(i);
-		else if (FD_ISSET(this->_clients[i].fd, &this->_readSet))
+		else if (FD_ISSET(this->_clients[i].fd, &Kernel::_readSet))
 		{
 			this->_readBuffer.clear();
 			this->_readBuffer.resize(RECV_BUFF_SIZE);

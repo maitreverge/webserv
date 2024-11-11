@@ -25,11 +25,7 @@ class Server
 	std::vector<char>	_writeBuffer;
 	std::vector<char>	_readBuffer;
 	int					_fd;
-
-	int	&				_maxFd;
-	fd_set &			_actualSet;
-	fd_set &			_readSet;
-	fd_set &			_writeSet;
+	
 	Config 				_conf;
 
 	void clientMessage(size_t i, ssize_t ret);
@@ -54,8 +50,7 @@ class Server
 
 	public:
 
-		Server(sockaddr_in & sockaddr, int & maxFd, fd_set & actualSet,
-			fd_set & readSet, fd_set & writeSet, Config & conf);
+		Server(sockaddr_in & sockaddr, Config & conf);
 
 		const sockaddr_in & getSockAdress() const;
 

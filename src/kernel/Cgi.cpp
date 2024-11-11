@@ -101,7 +101,8 @@ bool Cgi::isTimeout(Client & client, std::string err)
 	std::clock_t end = std::clock();
     double span = static_cast<double>(end - this->_start) * 5000
         / CLOCKS_PER_SEC;
- 
+    if (span < 0)
+        this->_start = 0;
     if (span > TIMEOUT_CGI / 2.0)
     { 
         std::stringstream ss; ss << "Timeout - start: "

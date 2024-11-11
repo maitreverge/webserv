@@ -6,7 +6,7 @@ void Server::replyClients()
 	for (size_t i = 0; i < this->_clients.size(); i++)
 	{		
 		if (this->_clients[i].ping < 2 
-			|| !FD_ISSET(this->_clients[i].fd, &this->_writeSet))
+			|| !FD_ISSET(this->_clients[i].fd, &Kernel::_writeSet))
 				continue;	
 		if (!this->_clients[i].headerRespons.empty())
 		{
