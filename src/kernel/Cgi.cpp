@@ -99,16 +99,18 @@ bool Cgi::isTimeout(Client & client, std::string err)
 	if (!this->_start)
 		this->_start = std::clock();
 	std::clock_t end = std::clock();
-
-	std::stringstream ss; ss << "Timeout - start: "
-		<< this->_start << " end: " << end << " diff: "
-		<< static_cast<double>(end - this->_start) << " sec: "
-		<< static_cast<double>(end - this->_start) * 100 / CLOCKS_PER_SEC
-		<< "/" << TIMEOUT_CGI << std::endl;
-	Logger::getInstance().log(WARNING, ss.str(), client);	
-
-	if (static_cast<double>(end - this->_start) * 100 / CLOCKS_PER_SEC >
-		TIMEOUT_CGI)
+    double span = static_cast<double>(end - this->_start) * 5000
+        / CLOCKS_PER_SEC;
+ 
+    if (span > TIMEOUT_CGI / 2.0)
+    { 
+        std::stringstream ss; ss << "Timeout - start: "
+            << this->_start << " end: " << end << " diff: "
+            << static_cast<double>(end - this->_start) << " sec: "
+            << span << "/" << TIMEOUT_CGI << std::endl;
+        Logger::getInstance().log(WARNING, ss.str(), client);	
+    }
+	if (span > TIMEOUT_CGI)
 	{	
         Logger::getInstance().log(ERROR, err);
      	//!errpage!!
