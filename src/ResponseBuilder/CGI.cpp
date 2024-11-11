@@ -4,10 +4,10 @@
 
 void ResponseBuilder::launchCGI( void ){
 
-	// ! STEP 1 : Export PATH_INFO
-	std::cout << "LAUNCH" << std::endl;
-	// ! LAST STEP : UNSET PATH_INFO
-	this->_cgi.launch(); 
+	// // ! STEP 1 : Export PATH_INFO
+	// std::cout << "LAUNCH" << std::endl;
+	// // ! LAST STEP : UNSET PATH_INFO
+	// this->_cgi.launch(); 
 }
 
 void ResponseBuilder::checkCGI( Client &client ){

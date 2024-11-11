@@ -23,7 +23,7 @@ class Cgi
         ~Cgi();  
 
         int     _fds[2];
-        void    launch();  
+        void    launch(std::string uri, std::string pathInfo);  
         bool 	getBody(Client & client);
 		void 	setBody(Client & client, bool eof);
 };

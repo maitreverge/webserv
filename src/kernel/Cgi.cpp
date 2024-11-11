@@ -28,7 +28,7 @@ Cgi::~Cgi()
 	//! kill cgi
 }
 
-void Cgi::launch()
+void Cgi::launch(std::string uri, std::string pathInfo)
 {   
     Logger::getInstance().log(DEBUG, "Launch Cgi");  
 	
@@ -52,10 +52,11 @@ void Cgi::launch()
         close(this->_fds[1]);
           
         chdir("./cgi");//!
-        std::string str("PATH_INFO=coucoucpathinfo");
+        std::string envPathInfo("PATH_INFO=" + pathInfo);
+      
         char *env[] = 
         {
-            const_cast<char *>(str.c_str()), NULL
+            const_cast<char *>(envPathInfo.c_str()), NULL
         };
 		char *argv[] = {NULL};
         //!FLAG ANTI HERITAGE FD OU CLOSE
