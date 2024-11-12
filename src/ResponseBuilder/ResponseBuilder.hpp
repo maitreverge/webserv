@@ -45,9 +45,9 @@ struct MyConfig
 	string				uri; // ! main key
 
 	vector< string >	allowedMethods; // exploited ✅
-	string				redirection;
-	string				root;
-	bool				listingDirectory;
+	string				redirection; // exploited ✅
+	string				root; // exploited ✅
+	bool				listingDirectory; // exploited ✅
 	string				index; // exploited ✅
 	vector< string >	cgiAllowed; // exploited ✅
 	bool				uploadAllowed; // exploited ✅
@@ -181,11 +181,18 @@ class ResponseBuilder
 	void	checkCGI( void );
 
 	// POST
+	void	boundarySetBodyPost( Client & client, bool eof );
+	void	initBoundaryTokens( void );
+	// ! TO DELETE, serves as a blueprint
+	void	_setBodyPost( Client & client, bool eof );
+
+	
+	string _tokenDelim;
+	string _tokenEnd;
+	string _postFileName;
 
 	// DELETE
 	void	deleteEngine( void );
-
-
 
 
 public:
