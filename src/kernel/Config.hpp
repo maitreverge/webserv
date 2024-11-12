@@ -16,6 +16,7 @@ struct server
 	std::string	serverName;
 	std::vector<std::string> allowedRoutes;
 	RoutesData routesData;
+	int	serverId;
 };
  
 /**========================================================================
@@ -37,6 +38,7 @@ struct Config
 	map<string, string>				redirection;
 	std::string						errorPagesPath;
 	RoutesData						routes;
+	RoutesData*						my_routes[8];
 
 	Config();
 	Config(char* path);

@@ -80,11 +80,11 @@ void	Config::initializeServers()
  *========================================================================**/
 void	Config::initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddress, int i)
 {
+	(void)i;
 	//! logic to be inserted here
 	// print("toto");
-	// if (!this->_serverStruct[i].host.empty() && i != 42)
-	// 	print("SERVER NAME: " + this->_serverStruct[i].host);
-	(void)i;
+	// if (!this->_serverStruct[i].serverStructName.empty())
+	// 	printColor(RED, "SERVER NAME: " + this->_serverStruct[i].serverStructName);
 	if (port)
 	{
 		struct sockaddr_in server;	
@@ -93,5 +93,14 @@ void	Config::initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddre
 		server.sin_addr.s_addr = htonl(INADDR_ANY);
 		server.sin_port = htons(port);
 		sockAddress.push_back(server);
+	}
+	_serverStruct[i].serverId = i;
+	my_routes[i] = &_serverStruct[i].routesData;
+	if (!_serverStruct[i].host.empty())
+	{
+		printColor(RED, "serverStruct");
+		ConfigFileParser::printServerData(_serverStruct, 4);
+		printColor(RED, "Config");
+		ConfigFileParser::printRoutesData(*my_routes[i]);
 	}
 }

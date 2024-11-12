@@ -54,8 +54,11 @@ void Kernel::setup()
 
 void Kernel::launch()
 {
-	// ConfigFileParser::printRoutesData(_conf.routes);
+	printColor(RED, "serverStruct");
 	ConfigFileParser::printServerData(_conf._serverStruct, 4);
+	// printColor(RED, "Config");
+	// ConfigFileParser::printRoutesData(_conf.my_routes);
+
 	while (true)
 	{
 		struct timeval timeout = {1, 0};
