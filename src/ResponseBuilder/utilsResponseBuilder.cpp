@@ -177,9 +177,12 @@ void ResponseBuilder::setError(e_errorCodes code, bool skip){
 	}
 	catch(const std::exception& e)
 	{
-		// ? is this handling correct
-		_realURI.erase();
-		Headers.bodyLenght = 0; 
+		// TODO : GENERATE A DEFAULT ERROR PAGE ON THE GO, THEN DELETES IT
+		errorNotFoundGenerator();
+		{ // potentially to delete after errorGenerator
+			_realURI.erase();
+			Headers.bodyLenght = 0; 
+		}
 	}
 	
 	extractFileNature(_realURI);

@@ -166,6 +166,8 @@ class ResponseBuilder
 	
 	void extractRedirectionIndex( vector< string >&routeNames, vector< string >&routeURIS );
 
+	void	errorNotFoundGenerator( void );
+
 
 
 	// generateListingHTML.cpp
