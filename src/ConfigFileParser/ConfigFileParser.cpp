@@ -26,8 +26,8 @@ void ConfigFileParser::parseConfigFile(Config& configStruct, char* path)
 	extractDataFromConfigFile(path);
 	intializeConfigStruct(configStruct);
 	assignRoutesToServers(configStruct);
-	printServerData(configStruct._serverStruct, 3);
-
+	// printServerData(configStruct._serverStruct, 4);
+	
 }
 
 void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
@@ -325,17 +325,20 @@ void ConfigFileParser::printData(const std::map<std::string, std::map<std::strin
 void ConfigFileParser::printServerData(const server _serverStruct[], size_t size)
 {
 	for (size_t i = 0; i < size; ++i) {
-		std::cout << "Server " << i + 1 << ":" << std::endl;
-		std::cout << "  Host: " << _serverStruct[i].host << std::endl;
-		std::cout << "  Port: " << _serverStruct[i].port << std::endl;
-		std::cout << "  Server Name: " << _serverStruct[i].serverName << std::endl;
-		std::cout << "  ServerStruct Name: " << _serverStruct[i].serverStructName << std::endl;
-		std::cout << "  Allowed Routes: ";
-		for(size_t j = 0; j < _serverStruct[i].allowedRoutes.size(); j++)
-			std::cout << _serverStruct[i].allowedRoutes[j] << " ";
-		std::cout << std::endl;
-		printRoutesData(_serverStruct[i].routesData);
-		std::cout << "\n------------------------" << std::endl;
+		if (!_serverStruct[i].host.empty())
+		{
+			std::cout << "Server " << i + 1 << ":" << std::endl;
+			std::cout << "  Host: " << _serverStruct[i].host << std::endl;
+			std::cout << "  Port: " << _serverStruct[i].port << std::endl;
+			std::cout << "  Server Name: " << _serverStruct[i].serverName << std::endl;
+			std::cout << "  ServerStruct Name: " << _serverStruct[i].serverStructName << std::endl;
+			std::cout << "  Allowed Routes: ";
+			for(size_t j = 0; j < _serverStruct[i].allowedRoutes.size(); j++)
+				std::cout << _serverStruct[i].allowedRoutes[j] << " ";
+			std::cout << std::endl;
+			printRoutesData(_serverStruct[i].routesData);
+			std::cout << "\n------------------------" << std::endl;
+		}
 	}
 }
 
