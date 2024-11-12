@@ -111,11 +111,15 @@ void Server::exitClient(size_t i)
 void Server::exitClients()
 {
 	for (size_t i = 0; i < this->_clients.size(); i++)
+	{
+		FD_CLR(this->_clients[i].fd, &Kernel::_actualSet);
 		close(this->_clients[i].fd);	
+	}
 }
 
 void Server::exitServer()
 {
+	std::cerr << "exit client" << std::endl;
 	this->exitClients();
 	FD_CLR(this->_fd, &Kernel::_actualSet);
 	close(this->_fd);	

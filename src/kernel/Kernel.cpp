@@ -22,14 +22,38 @@ Kernel::Kernel(char* path) : _conf(path)
 	this->launch();
 }
 
+// Kernel & Kernel::getInstance(char *path)
+// {
+// 	std::cerr << "GET INSTANCEEEEEEEE" << std::endl;
+// 	static Kernel * kernel_ptr;
+// 	if (!path)
+// 	{
+// 		std::cerr << "GET INSTANCEEEEEEEE PATH NULL" << std::endl;
+// 		if (kernel_ptr)
+// 		{
+// 			std::cerr << "GET INSTANCEEEEEEEE return PTR" << std::endl;
+// 			return *kernel_ptr;
+// 		}
+// 		std::cerr << "GET INSTANCEEEEEEEE le pointeur est null" << std::endl;
+// 		static Kernel kernel;
+// 		kernel_ptr = &kernel;
+// 		return kernel;
+// 	}	
+
+// 	static Kernel kernel(path);
+// 	kernel_ptr = &kernel;
+// 	std::cerr << "GET INSTANCEEEEEEEE le PATH est null" << std::endl;
+// 	return kernel;	
+// }
+
 Kernel & Kernel::getInstance(char *path)
 {
-	if (!path)
-	{		
-		static Kernel kernel;
-		return kernel;
-	}	
+	std::cerr << "GET INSTANCEEEEEEEE" << std::endl;
+	
+	if (path)
 	static Kernel kernel(path);
+	
+	std::cerr << "GET INSTANCEEEEEEEE le PATH est null" << std::endl;
 	return kernel;	
 }
 
@@ -97,6 +121,13 @@ void Kernel::launch()
 		usleep(100);	
 	}
 
+	std::for_each(this->_servers.begin(), this->_servers.end(),
+		this->callExit);
+}
+
+void Kernel::cgiExit()
+{
+	std::cerr << "CGIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIE EXIIIT" << std::endl;
 	std::for_each(this->_servers.begin(), this->_servers.end(),
 		this->callExit);
 }
