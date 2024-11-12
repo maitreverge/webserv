@@ -173,16 +173,14 @@ void ResponseBuilder::setError(e_errorCodes code, bool skip){
 	try
 	{
 		if (_errorType != CODE_204_NO_CONTENT)
-		_realURI = _config->errorPaths.at(_errorType);
+			_realURI = _config->errorPaths.at(_errorType);
+		if (access(_realURI.c_str(), F_OK) == -1 or access(_realURI.c_str(), R_OK) )
+			throw exception();
 	}
 	catch(const std::exception& e)
 	{
-		// TODO : GENERATE A DEFAULT ERROR PAGE ON THE GO, THEN DELETES IT
 		errorNotFoundGenerator();
-		{ // potentially to delete after errorGenerator
-			_realURI.erase();
-			Headers.bodyLenght = 0; 
-		}
+		setContentLenght();
 	}
 	
 	extractFileNature(_realURI);

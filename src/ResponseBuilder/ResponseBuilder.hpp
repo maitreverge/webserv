@@ -108,7 +108,9 @@ class ResponseBuilder
 	bool _isDirectory;
 	bool _isFile;
 
+	// errorNotFoundGenerator
 	bool _errorNotFound;
+	const string _backupNameFile;
 
 	// CGI Stuff
 	bool _isCGI;
@@ -188,7 +190,6 @@ class ResponseBuilder
 
 	// DELETE
 	void	deleteEngine( void );
-
 
 
 

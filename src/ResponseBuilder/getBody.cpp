@@ -42,6 +42,9 @@ bool ResponseBuilder::getBody( Client &inputClient ){
 		{
 			Logger::getInstance().log(INFO, "file end", inputClient);						
 			this->_ifs.close();		
+			
+			if (_errorNotFound)
+				std::remove(_realURI.c_str());
 		}
 
 		std::stringstream ss;

@@ -37,7 +37,8 @@ void ResponseBuilder::initMimes( void ){
 
 // ------------------------- COPLIAN FORM -----------------------------
 
-ResponseBuilder::ResponseBuilder( void ){
+ResponseBuilder::ResponseBuilder( void ) :
+	_backupNameFile("backup.html"){
 	
 	// SEB UTILS
 	// Logger::getInstance().log(INFO, "ResponseBuilder constructor");

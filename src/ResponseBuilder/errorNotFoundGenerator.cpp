@@ -10,21 +10,31 @@ void	ResponseBuilder::errorNotFoundGenerator( void ){
 	stringstream result;
 	stringstream body;
 	stringstream image;
+
+	string imageURL = "https://freeyork.org/wp-content/uploads/2015/06/DKOpAT4VAAEmmes.jpg";
 	
 	string errorName = codes.getCode(_errorType);
 
-	u_int8_t errorNumber = static_cast<u_int8_t>(_errorType);
+	u_int16_t errorNumber = static_cast<u_int16_t>(_errorType);
 
+	// Body text
 	body	<< "The "
 			<< errorNumber
-			<< ".html has not been found."
-			<< "This is a backup auto-generated solution.";
+			<< ".html file has not been found."
+			<< "This is a backup self-generated webpage.";
+	
+	// Image source because life is fun
+	image	<< "<img src=\""
+			<< imageURL
+			<< "\" alt=\"Description of image\">";
 
+	// Assemble all parts
 	result	<< "<!DOCTYPE html>"
 			<< "<html>"
 			<< "<head>"
 			<< "<title>"
 			<< errorNumber
+			<< "\t"
 			<< errorName
 			<< "</title>"
 			<< "</head>"
@@ -33,12 +43,20 @@ void	ResponseBuilder::errorNotFoundGenerator( void ){
 			<< body.str()
 			<< "</h1>"
 			<< "<h1>"
-			<< " hehhehehehehhehehehehehehhehehe"
+			<< image.str()
 			<< "</h1>"
 			<< "</body>"
 			<< "</html>";
 
+	ofstream backupStream(_backupNameFile.c_str());
 
+	backupStream << result.str();
+	
+	// ! Modify the _realURI
+	_realURI = _backupNameFile;
+	_errorNotFound = true;
+	
+	backupStream.close();
 }
 
 /*
