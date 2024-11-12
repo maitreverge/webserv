@@ -43,6 +43,8 @@ class ConfigFileParser
 		void	setConfigValue(catIt& catIt, itemIt& itemIt, bool& field, const char str[]);
 		void	setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::vector<std::string>& vec, const char str[]);
 		void	setConfigValue(catIt catIt, itemIt itemIt, valIt valIt, Config& configStruct, int i);
+		void	setConfigValue(catIt& catIt, itemIt& itemIt, server& serverStruct, int i);
+
 		// void	setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::vector<std::string>& allowedRoutes, const char str[]);
 		void	initializeServers(Config& configStruct, int& i);
 		bool	isServerData(const std::string& category);

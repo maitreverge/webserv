@@ -15,7 +15,7 @@ Config::Config(char *path)
 	// toto.printConfig(*this);
 	// print("in Config func: ");
 	// ConfigFileParser::printRoutesData(this->routes);
-
+	
 }
 
 Config::Config()
@@ -80,9 +80,10 @@ void	Config::initializeServers()
  *========================================================================**/
 void	Config::initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddress, int i)
 {
-
+	//! logic to be inserted here
+	// print("toto");
 	// if (!this->_serverStruct[i].host.empty() && i != 42)
-	// 	print("SERVER NAME: " + this->_serverStruct[i].serverName);
+	// 	print("SERVER NAME: " + this->_serverStruct[i].host);
 	(void)i;
 	if (port)
 	{

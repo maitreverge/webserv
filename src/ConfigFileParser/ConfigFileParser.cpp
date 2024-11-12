@@ -62,6 +62,7 @@ void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
 				// category server
 				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].host, "host");
 				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].port, "port");
+				setConfigValue(catIt, itemIt, configStruct._serverStruct[i], i);
 				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].serverName, "serverName");
 				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].allowedRoutes, "allowedRoutes");
 				// category routes (inner loop)
@@ -131,9 +132,31 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::string& field, const char str[])
 {
 	if (isServerData(catIt->first) && itemIt->first == str)
+	{
+		// 	printColor(GREEN, itemIt->first);
+		// if (itemIt->first == "serverStructName")
+		// {
+		// 	printColor(BLUE, "TQTQ");
+		// }
 		if (!(*valIt).empty())
 			field = itemIt->second[0];		
+	}
 }
+
+void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, server& serverStruct, int i)
+{
+	if (!serverStruct.port.empty() && !serverStruct.host.empty())
+	{
+		// printColor(YELLOW, "func is called :" + catIt->first);
+		serverStruct.serverStructName = catIt->first;
+	}
+
+	(void)itemIt;
+	// (void)catIt;
+	// (void)serverStruct;
+	(void)i;
+}
+
 
 //? maxClient
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, short& field, const char str[])
@@ -306,6 +329,7 @@ void ConfigFileParser::printServerData(const server _serverStruct[], size_t size
 		std::cout << "  Host: " << _serverStruct[i].host << std::endl;
 		std::cout << "  Port: " << _serverStruct[i].port << std::endl;
 		std::cout << "  Server Name: " << _serverStruct[i].serverName << std::endl;
+		std::cout << "  ServerStruct Name: " << _serverStruct[i].serverStructName << std::endl;
 		std::cout << "  Allowed Routes: ";
 		for(size_t j = 0; j < _serverStruct[i].allowedRoutes.size(); j++)
 			std::cout << _serverStruct[i].allowedRoutes[j] << " ";

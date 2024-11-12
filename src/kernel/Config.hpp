@@ -17,7 +17,7 @@ struct server
 	std::vector<std::string> allowedRoutes;
 	RoutesData routesData;
 };
-
+ 
 /**========================================================================
  *                             CONFIG
  *?  modifs done:

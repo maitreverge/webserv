@@ -42,8 +42,8 @@ bool Server::setup()
 		this->exitServer();
 		return false;
 	}
-	printColor(RED, this->_conf._serverStruct[2].serverName);
-	ConfigFileParser::printRoutesData(this->_conf.routes);
+	// printColor(RED, this->_conf._serverStruct[2].serverName);
+	// ConfigFileParser::printRoutesData(this->_conf.routes);
 	return true;
 }
 
