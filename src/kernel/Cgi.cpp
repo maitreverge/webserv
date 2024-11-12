@@ -6,6 +6,7 @@ void errnoHandle(); //! a suppr
 Cgi::Cgi()
 {
 	this->_start = 0; //! verif wrap arround
+	this->_pid = -1;
     this->_fds[0] = -1;
     this->_fds[1] = -1;
 }
@@ -13,18 +14,35 @@ Cgi::Cgi()
 Cgi & Cgi::operator=(const Cgi & rhs)
 {
 	this->_start = rhs._start;
+	this->_pid = rhs._pid;
 	this->_fds[0] = rhs._fds[0];
-	this->_fds[1] = dup(rhs._fds[1]);
+	if (rhs._fds[1] > 0)
+	{
+		this->_fds[1] = dup(rhs._fds[1]);
+		FD_SET(this->_fds[1], &Kernel::_actualSet);
+	}
+	else
+		this->_fds[1] = rhs._fds[1];
 	Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fds[1]);
-	FD_SET(this->_fds[1], &Kernel::_actualSet);
 	return *this;
 }
 
 Cgi::~Cgi()
 {
-    FD_CLR(this->_fds[1], &Kernel::_actualSet);
+	std::cout << "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz" << std::endl;
     if (this->_fds[1] > 0)
+	{
+		std::cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" << std::endl;
+  		FD_CLR(this->_fds[1], &Kernel::_actualSet);
         close(this->_fds[1]);
+		this->_fds[1] = -1;
+	}
+	if (this->_fds[0] > 0)
+	{
+		std::cout << "YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY" << std::endl;
+        close(this->_fds[0]);
+		this->_fds[1] = -1;
+	}
 	//! kill cgi
 }
 
@@ -63,14 +81,21 @@ void Cgi::launch(Client & client)
         Logger::getInstance().~Logger();
         // if (client.responseBuilder._fileExtension == "out")
         //     execve(client.responseBuilder._fileName.c_str(), argv, env);  //!     
-        execve("/home/svidot/42_am/webserv/cgi/main_errout.out", argv, env);       
-        // execve(client.responseBuilder., argv, env);       
-      	Logger::getInstance().log(ERROR, "execve failed");
+        // execve("/home/svidot/42_am/webserv/cgi/main_errout.out", argv, env); 
+        execve("/home/seblin/42/42_webserv/cgi/main_errout.out", argv, env); 
+		    
+        // execve(client.responseBuilder., argv, env);   
+		std::cerr << "EXEC FAILLLLLLLEEEEEEEED" << std::endl;    
+      	Logger::getInstance().log(ERROR, "execve failed");//§§§!!
 	    //! LEAKS 
+		//! Kernel exit
 	    //!exit client req + error page
     } 
-    else                 
+    else   
+	{
         close(this->_fds[0]);
+		this->_fds[0] = -1;
+	}              
 }
 
 bool Cgi::retHandle(Client & client, ssize_t ret, std::string err,
@@ -91,6 +116,7 @@ bool Cgi::retHandle(Client & client, ssize_t ret, std::string err,
 		// FD_CLR(this->_fds[1], &Kernel::_actualSet);//! err 4..
         // close(this->_fds[1]);
         // this->_fds[1] = -1;
+
         client.exitRequired = true;
         return true;
     }
@@ -118,6 +144,11 @@ bool Cgi::isTimeout(Client & client, std::string err)
 	if (span > TIMEOUT_CGI)
 	{	
         Logger::getInstance().log(ERROR, err);   	//!errpage!!
+
+		FD_CLR(this->_fds[1], &Kernel::_actualSet);
+		close(this->_fds[1]);
+		this->_fds[1] = -1;
+
         kill(this->_pid, SIGTERM);
 		this->_start = 0;
         client.exitRequired = true;
