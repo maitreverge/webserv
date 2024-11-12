@@ -50,10 +50,10 @@ void Server::catchClients(Kernel & kernel)
 		client.fd = accept(this->_fd, reinterpret_cast<sockaddr *>
 			(&client.address), &client.addressLen);			
 		if (client.fd < 0)		
-			return Logger::getInstance().log(ERROR, "accept");
+			return Logger::getInstance().log(ERROR, "accept"); //! close fd
 		int flags = fcntl(client.fd, F_GETFD);
 		flags |= FD_CLOEXEC; 
-		fcntl(client.fd, F_SETFD, flags);		
+		fcntl(client.fd, F_SETFD, flags); //! close fd
 		if (kernel.countClients() >= this->_conf.maxClient)
 		{
 			Logger::getInstance().log(ERROR, "max client reached", client);	
@@ -64,7 +64,7 @@ void Server::catchClients(Kernel & kernel)
 		struct timeval timeout = {SND_TIMEOUT, 0};	
 		if (setsockopt(client.fd, SOL_SOCKET, SO_SNDTIMEO, &timeout,
 			sizeof(timeout)) < 0)
-	  		return Logger::getInstance().log(ERROR, "send timeout", client); 	
+	  		return Logger::getInstance().log(ERROR, "send timeout", client); //! close fd	
 
 		FD_SET(client.fd, &Kernel::_actualSet);
 		Kernel::_maxFd = std::max(Kernel::_maxFd, client.fd);
