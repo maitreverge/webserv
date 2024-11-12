@@ -27,9 +27,14 @@ Logger::~Logger()
 
 Logger& Logger::getInstance()
 {
-static Logger instance;
-return instance;
+	static Logger instance;
+	return instance;
 }
+
+// Logger::closeFiles()
+// {
+// 	close(this->_acces)
+// }
 
 /**========================================================================
  *                           UTILS
