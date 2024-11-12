@@ -162,7 +162,7 @@ class ResponseBuilder
 	
 	bool	isDirectory(string &uri);
 
-	void	slashManip( void );
+	void	slashManip( string& target );
 	
 	void extractRedirectionIndex( vector< string >&routeNames, vector< string >&routeURIS );
 

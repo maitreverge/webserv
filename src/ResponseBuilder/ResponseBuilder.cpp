@@ -37,6 +37,8 @@ void ResponseBuilder::rootMapping( void ){
 	if (_myconfig.root.empty())
 		return;
 	
+	slashManip(_myconfig.root);
+	
 	if (_realURI.find(_myconfig.root) == std::string::npos)
 		_realURI.replace(0, _myconfig.uri.size(), _myconfig.root);
 
@@ -51,34 +53,36 @@ bool ResponseBuilder::isDirectory(string &uri) {
 	return false;
 }
 
-void	ResponseBuilder::slashManip( void ){
+void	ResponseBuilder::slashManip( string &target ){
 
-	bool beginWithSlash = !_realURI.empty() && (*_realURI.begin() == '/');
-	bool endWithSlash = !_realURI.empty() && (*_realURI.rbegin() == '/');
+	bool beginWithSlash = !target.empty() && (*target.begin() == '/');
+	bool endWithSlash = !target.empty() && (*target.rbegin() == '/');
 	
-	if (_realURI.empty())
+	if (target.empty())
 	{
 
 	}
-	else if (_realURI == "/")
+	else if (target == "/")
 	{
-
+		return;
 	}
 	else
 	{
 		if (beginWithSlash)
-			_realURI.erase(_realURI.begin());
+			target.erase(target.begin());
 	}
 
-	if (isDirectory(_realURI) and _myconfig.listingDirectory == false)
+	if ( isDirectory(target) )
 	{
 		if (!endWithSlash)
-			_realURI += "/";
-		if (_method == GET)
-			_realURI += _myconfig.index; // after checking the nature
-		beginWithSlash = !_realURI.empty() && (*_realURI.begin() == '/');
+			target += "/";
+		if (_method == GET and _myconfig.listingDirectory == false)
+			target += _myconfig.index; // after checking the nature
+		
+		// Refresh the bool
+		beginWithSlash = !target.empty() && (*target.begin() == '/');
 		if (beginWithSlash)
-			_realURI.erase(_realURI.begin());
+			target.erase(target.begin());
     }
 }
 
@@ -97,7 +101,7 @@ void ResponseBuilder::resolveURI( void ) {
 	// sanatizeURI(_realURI); // ! STAY COMMENTED until refactoring for better "../" erasing process
 
 	// ! STEP 3  : Deleting URI first 
-	slashManip();
+	slashManip(_realURI);
 
 }
 
