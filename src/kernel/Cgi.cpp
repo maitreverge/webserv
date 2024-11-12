@@ -15,35 +15,25 @@ Cgi & Cgi::operator=(const Cgi & rhs)
 {
 	this->_start = rhs._start;
 	this->_pid = rhs._pid;
-	this->_fds[0] = rhs._fds[0];
-	if (rhs._fds[1] > 0)
+	this->_fds[0] = rhs._fds[0];	
+	if (this->_fds[1] > 0)
 	{
-		this->_fds[1] = dup(rhs._fds[1]);
-		FD_SET(this->_fds[1], &Kernel::_actualSet);
+		FD_CLR(this->_fds[1], &Kernel::_actualSet);
+		close(this->_fds[1]);
 	}
-	else
-		this->_fds[1] = rhs._fds[1];
+	this->_fds[1] = dup(rhs._fds[1]);
+	FD_SET(this->_fds[1], &Kernel::_actualSet);
 	Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fds[1]);
 	return *this;
 }
 
 Cgi::~Cgi()
 {
-	std::cout << "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz" << std::endl;
     if (this->_fds[1] > 0)
-	{
-		std::cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" << std::endl;
+	{	
   		FD_CLR(this->_fds[1], &Kernel::_actualSet);
-        close(this->_fds[1]);
-		this->_fds[1] = -1;
-	}
-	if (this->_fds[0] > 0)
-	{
-		std::cout << "YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY" << std::endl;
-        close(this->_fds[0]);
-		this->_fds[1] = -1;
-	}
-	//! kill cgi
+        close(this->_fds[1]);	
+	}	
 }
 
 void Cgi::launch(Client & client)
@@ -51,6 +41,7 @@ void Cgi::launch(Client & client)
     Logger::getInstance().log(DEBUG, "Launch Cgi");  
 	
     socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, this->_fds);  
+	
     Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fds[1]);
     struct timeval timeout = {SND_TIMEOUT, 0};	
 	if (setsockopt(this->_fds[1], SOL_SOCKET, SO_SNDTIMEO, &timeout,
@@ -91,11 +82,8 @@ void Cgi::launch(Client & client)
 		//! Kernel exit
 	    //!exit client req + error page
     } 
-    else   
-	{
+    else
         close(this->_fds[0]);
-		this->_fds[0] = -1;
-	}              
 }
 
 bool Cgi::retHandle(Client & client, ssize_t ret, std::string err,
@@ -145,9 +133,9 @@ bool Cgi::isTimeout(Client & client, std::string err)
 	{	
         Logger::getInstance().log(ERROR, err);   	//!errpage!!
 
-		FD_CLR(this->_fds[1], &Kernel::_actualSet);
-		close(this->_fds[1]);
-		this->_fds[1] = -1;
+		// FD_CLR(this->_fds[1], &Kernel::_actualSet);
+		// close(this->_fds[1]);
+		// this->_fds[1] = -1;
 
         kill(this->_pid, SIGTERM);
 		this->_start = 0;
@@ -193,7 +181,8 @@ bool Cgi::getBody(Client & client)
 	if (isTimeout(client, "Timeout Cgi Get Body is over"))
 		return false;
 
-    shutdown(_fds[1], SHUT_WR);
+    if (shutdown(_fds[1], SHUT_WR) < 0)
+		Logger::getInstance().log(ERROR, "shutdown", client);//! ret ?
     if (!FD_ISSET(this->_fds[1], &Kernel::_readSet))
     {
         sleep(1);

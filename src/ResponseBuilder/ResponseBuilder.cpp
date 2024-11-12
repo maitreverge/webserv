@@ -119,41 +119,6 @@ void	ResponseBuilder::checkMethod( void ){
 	setError(CODE_405_METHOD_NOT_ALLOWED);
 }
 
-// void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
-
-// 	Logger::getInstance().log(DEBUG, "Response Builder Get Header", inputClient);
-		
-// 	_client = &inputClient; // init client
-// 	_config = &inputConfig; // init config
-	
-// 	_realURI = _client->headerRequest.getURI();
-
-// 	extractMethod();
-// 	if ( not redirectURI())
-// 	{
-		
-// 		resolveURI();
-// 		validateURI();
-		
-// 		if (_isCGI and _errorType <= CODE_400_BAD_REQUEST) // or potentially another adress
-// 			launchCGI();
-		
-// 		checkNatureAndAuthoURI();
-// 		setContentLenght();
-
-// 	}
-	
-// 	buildHeaders();
-
-
-// 	// Copying the build Headers in headerRespons
-// 	inputClient.headerRespons = Headers.masterHeader;
-	
-// 	// Headers.masterHeader.clear();//!
-
-// 	// printAllHeaders();
-// }
-
 void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
 	Logger::getInstance().log(DEBUG, "ResponseBuilder->getHeader", inputClient);
