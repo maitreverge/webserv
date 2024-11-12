@@ -33,11 +33,13 @@ class Kernel
 		static fd_set	_actualSet;
 		static fd_set 	_readSet;
 		static fd_set 	_writeSet;
-			
+
 		Kernel(void);
 		Kernel(char* path);
 
-		void		setup();
-		void 		launch();
-		short int	countClients();
+		static Kernel & getInstance(char *);
+	
+		void			setup();
+		void 			launch();
+		short int		countClients();
 };

@@ -74,10 +74,10 @@ int main(int argc, char* argv[])
 	Logger::getInstance().log(INFO, "\e[1;3;36mServer is Online!\e[0m");
 	std::cout << std::endl;
 	if (argc == 1)
-		Kernel kernel;
+		Kernel::getInstance(NULL);
 	else
-		Kernel kernel(argv[1]);
-	
+		Kernel::getInstance(argv[1]);
+		
 	std::cout << std::endl;
 	Logger::getInstance().log(INFO, "\e[1;3;91mServer is Offline.\e[0m");	
 	std::cout << std::endl;	

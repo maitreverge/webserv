@@ -77,7 +77,7 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 
 void	ResponseBuilder::setBodyPost( Client & client, bool eof ){
 
-	usleep(50000);
+	usleep(500000);
     Logger::getInstance().log(DEBUG, "setBodyPost");
 
 	if (this->_isCGI)	

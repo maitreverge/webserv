@@ -22,6 +22,17 @@ Kernel::Kernel(char* path) : _conf(path)
 	this->launch();
 }
 
+Kernel & Kernel::getInstance(char *path)
+{
+	if (!path)
+	{		
+		static Kernel kernel;
+		return kernel;
+	}	
+	static Kernel kernel(path);
+	return kernel;	
+}
+
 void Kernel::callCatch()
 {
 	for (size_t i = 0; i < this->_servers.size(); i++)
