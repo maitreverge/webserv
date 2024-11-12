@@ -17,7 +17,7 @@ const sockaddr_in & Server::getSockAdress() const
 
 bool Server::setup()
 {	
-	this->_fd = socket(AF_INET, SOCK_STREAM, 0);
+	this->_fd = socket(AF_INET, SOCK_STREAM | SOCK_CLOEXEC, 0);
 	if (this->_fd < 0)	
 		return Logger::getInstance().log(ERROR, "socket"), false;
 	Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fd);
@@ -48,9 +48,12 @@ void Server::catchClients(Kernel & kernel)
 	{	
 		Client client;			
 		client.fd = accept(this->_fd, reinterpret_cast<sockaddr *>
-			(&client.address), &client.addressLen);
+			(&client.address), &client.addressLen);			
 		if (client.fd < 0)		
-			return Logger::getInstance().log(ERROR, "accept");	
+			return Logger::getInstance().log(ERROR, "accept");
+		int flags = fcntl(client.fd, F_GETFD);
+		flags |= FD_CLOEXEC; 
+		fcntl(client.fd, F_SETFD, flags);		
 		if (kernel.countClients() >= this->_conf.maxClient)
 		{
 			Logger::getInstance().log(ERROR, "max client reached", client);	

@@ -4,13 +4,14 @@
 #include <string>
 #include <ctime>
 
-#define TIMEOUT_CGI 5
+#define TIMEOUT_CGI 10
 
 struct Client;
 
 class Cgi
 {
 	std::clock_t _start;
+    pid_t        _pid;
 
 	bool retHandle(Client & client, ssize_t ret, std::string err, 
         std::string info);

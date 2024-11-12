@@ -32,7 +32,7 @@ void Cgi::launch(Client & client)
 {   
     Logger::getInstance().log(DEBUG, "Launch Cgi");  
 	
-    socketpair(AF_UNIX, SOCK_STREAM, 0, this->_fds);  
+    socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, this->_fds);  
     Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fds[1]);
     struct timeval timeout = {SND_TIMEOUT, 0};	
 	if (setsockopt(this->_fds[1], SOL_SOCKET, SO_SNDTIMEO, &timeout,
@@ -41,10 +41,10 @@ void Cgi::launch(Client & client)
 
     FD_SET(this->_fds[1], &Kernel::_actualSet);
     
-    pid_t pid = fork();
-    if (pid < 0)
+    this->_pid = fork();
+    if (this->_pid < 0)
         Logger::getInstance().log(ERROR, "fork failed");//!exit client req + error page
-    else if (pid == 0)
+    else if (!this->_pid)
     {       
         dup2(this->_fds[0], STDIN_FILENO); 
         dup2(this->_fds[0], STDOUT_FILENO); 
@@ -60,10 +60,10 @@ void Cgi::launch(Client & client)
         };
 		char *argv[] = {NULL};
         //!FLAG ANTI HERITAGE FD OU CLOSE
-
-        if (client.responseBuilder._fileExtension == "out")
-            execve(client.responseBuilder._fileName.c_str(), argv, env);  //!     
-        // execve("/home/svidot/42_am/webserv/cgi/a.out", argv, env);       
+        Kernel::_exit = true;
+        // if (client.responseBuilder._fileExtension == "out")
+        //     execve(client.responseBuilder._fileName.c_str(), argv, env);  //!     
+        execve("/home/svidot/42_am/webserv/cgi/main_errout.out", argv, env);       
       	Logger::getInstance().log(ERROR, "execve failed");
 	    //! LEAKS 
 	    //!exit client req + error page
@@ -116,8 +116,8 @@ bool Cgi::isTimeout(Client & client, std::string err)
     }
 	if (span > TIMEOUT_CGI)
 	{	
-        Logger::getInstance().log(ERROR, err);
-     	//!errpage!!
+        Logger::getInstance().log(ERROR, err);   	//!errpage!!
+        kill(this->_pid, SIGTERM);
 		this->_start = 0;
         client.exitRequired = true;
 		client.ping = 2;	
