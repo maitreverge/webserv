@@ -35,13 +35,11 @@ class Kernel
 
 		Kernel(void);
 		Kernel(char* path);
-		// ~Kernel();
+		~Kernel();
 
 		static Kernel & getInstance(char *);
 	
 		void		setup();
 		void 		launch();
 		short int	countClients();
-		void 		callExit();
-	
 };

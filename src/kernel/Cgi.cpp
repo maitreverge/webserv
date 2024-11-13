@@ -70,17 +70,18 @@ void Cgi::launch(Client & client)
 		char *argv[] = {NULL};
         //!FLAG ANTI HERITAGE FD OU CLOSE
         Logger::getInstance().~Logger();
-		Kernel::getInstance(NULL).callExit();//.~Kernel();
+		Kernel::getInstance(NULL).~Kernel();
         // if (client.responseBuilder._fileExtension == "out")
         //     execve(client.responseBuilder._fileName.c_str(), argv, env);  //!     
-        // execve("/home/svidot/42_am/webserv/cgi/main_errout.out", argv, env); 
-        execve("/home/seblin/42/42_webserv/cgi/main_erroute.out", argv, env); 
+        execve("/home/svidot/42_am/webserv/cgi/main_errout.out", argv, env); 
+        // execve("/home/seblin/42/42_webserv/cgi/main_errout.out", argv, env); 
 		    
         // execve(client.responseBuilder., argv, env);   
 		std::cerr << "\e[1;31mexecve failed\e[0m" << std::endl;    
       	Logger::getInstance().log(ERROR, "execve failed");//§§§!!
+         
 		// Logger::getInstance().~Logger();
-		exit(1);
+		_exit(1);
 		// Kernel::_exit = true;
 	    //! LEAKS 
 		//! Kernel exit
