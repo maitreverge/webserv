@@ -4,29 +4,17 @@
 
 Config::Config(char *path) : index(0)
 {
-	printColor(BOLD_BLUE, "CONFIG CONSTRUCTOR CALLED");
-	// std::cout << "test" << this->maxClient << std::endl;
 	intitializeVars(1);
-	// std::cout << "test2" << this->maxClient << std::endl;
-	ConfigFileParser toto;
-	toto.parseConfigFile(*this, path);
+	ConfigFileParser parser;
+	parser.parseConfigFile(*this, path);
 	int i = 0;
 	for (i = 0; i < 8; i++)
 		initializeServer((uint16_t)std::atoi(_serverStruct[i].port.c_str()), sockAddress, i);
-	// toto.printConfig(*this);
-	// print("in Config func: ");
-	// ConfigFileParser::printRoutesData(this->routes);
-
 }
 
 Config::Config()
 {
-	// var serverName a passer a la structure Client
-	// => dans le constructeur de Client, prendre le fichier de Conf en argument
 	intitializeVars(0);
-
-	ConfigFileParser toto;
-	// toto.printConfig(*this);
 }
 
 void	Config::intitializeVars(bool withConfigFile)
@@ -83,13 +71,6 @@ void	Config::initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddre
 {
 	//! logic to be inserted here
 
-	printColor(BOLD_GREEN, "toto");
-	printColor(BOLD_GREEN, i);
-	if (this->index == 0)
-		this->index = i;
-	printColor(BOLD_GREEN, this->index);
-	if (!this->_serverStruct[i].serverStructName.empty())
-		printColor(RED, "SERVER NAME: " + this->_serverStruct[i].serverStructName);
 	if (port)
 	{
 		struct sockaddr_in server;	
@@ -99,13 +80,5 @@ void	Config::initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddre
 		server.sin_port = htons(port);
 		sockAddress.push_back(server);
 	}
-	_serverStruct[i].serverId = i;
 	my_routes[i] = &_serverStruct[i].routesData;
-	if (!_serverStruct[i].host.empty())
-	{
-		printColor(RED, "serverStruct");
-		ConfigFileParser::printServerData(_serverStruct, 4);
-		printColor(RED, "Config");
-		ConfigFileParser::printRoutesData(*my_routes[i]);
-	}
 }
