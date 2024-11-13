@@ -22,40 +22,21 @@ Kernel::Kernel(char* path) : _conf(path)
 
 Kernel & Kernel::getInstance(char *path)
 {
-	std::cerr << "GET INSTANCEEEEEEEE" << std::endl;
 	static Kernel * kernel_ptr;
 	if (!path)
 	{
-		std::cerr << "GET INSTANCEEEEEEEE PATH NULL" << std::endl;
-		if (kernel_ptr)
-		{
-			std::cerr << "GET INSTANCEEEEEEEE return PTR" << std::endl;
-			return *kernel_ptr;
-		}
-		std::cerr << "GET INSTANCEEEEEEEE le pointeur est null" << std::endl;
+		if (kernel_ptr)	
+			return *kernel_ptr;			
 		static Kernel kernel;
 		kernel_ptr = &kernel;
 		kernel.launch();		
 		return kernel;
 	}	
-
 	static Kernel kernel(path);
 	kernel_ptr = &kernel;
 	kernel.launch();
-	std::cerr << "GET INSTANCEEEEEEEE le PATH est null" << std::endl;
 	return kernel;	
 }
-
-// Kernel & Kernel::getInstance(char *path)
-// {
-// 	std::cerr << "GET INSTANCEEEEEEEE" << std::endl;
-	
-// 	if (path)
-// 	static Kernel kernel(path);
-	
-// 	std::cerr << "GET INSTANCEEEEEEEE le PATH est null" << std::endl;
-// 	return kernel;	
-// }
 
 void Kernel::callCatch()
 {
@@ -82,9 +63,10 @@ short int Kernel::countClients()
 	return nClients;
 }
 
-void Kernel::callExit(Server & server)
+void Kernel::callExit()
 {
-	server.exitServer();
+	for (size_t i = 0; i < this->_servers.size(); i++)
+		this->_servers[i].exitServer();
 }
 
 void Kernel::setup()
@@ -120,14 +102,5 @@ void Kernel::launch()
 			this->callReply);
 		usleep(100);	
 	}
-
-	std::for_each(this->_servers.begin(), this->_servers.end(),
-		this->callExit);
-}
-
-void Kernel::cgiExit()
-{
-	std::cerr << "CGIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIE EXIIIT" << std::endl;
-	std::for_each(this->_servers.begin(), this->_servers.end(),
-		this->callExit);
+	this->callExit();
 }

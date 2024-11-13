@@ -24,7 +24,6 @@ class Kernel
 	void		callCatch();
 	static void callListen(Server & server);
 	static void callReply(Server & server);
-	static void callExit(Server & server);
 
 	public:
 
@@ -42,5 +41,6 @@ class Kernel
 		void		setup();
 		void 		launch();
 		short int	countClients();
-		void 		cgiExit();
+		void 		callExit();
+	
 };
