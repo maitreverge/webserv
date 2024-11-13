@@ -65,9 +65,9 @@ Referer: http://localhost:1510/testResponseBuilder/upload/uploadEntryPoint.html
 Accept-Encoding: gzip, deflate, br, zstd
 Accept-Language: en-US,en;q=0.9 \r\n
 \r\n
-------WebKitFormBoundary1XN99skGpOHP8Og8
+------WebKitFormBoundary1XN99skGpOHP8Og8   \r\n
 Content-Disposition: form-data; name="file1"; filename="fr.subject.pdf" \r\n
 Content-Type: application/pdf \r\n
-\r\n\
-<BINARY DATA>
+\r\n
+<BINARY DATA>  \r\n
 ------WebKitFormBoundary1XN99skGpOHP8Og8--

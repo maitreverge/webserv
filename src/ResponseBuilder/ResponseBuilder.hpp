@@ -181,6 +181,8 @@ class ResponseBuilder
 	void	checkCGI( void );
 
 	// POST
+	bool	isLineDelim( vector< char >& curLine, vector< char >& nextLine);
+
 	void	boundarySetBodyPost( Client & client, bool eof );
 	void	initBoundaryTokens( void );
 	// ! TO DELETE, serves as a blueprint

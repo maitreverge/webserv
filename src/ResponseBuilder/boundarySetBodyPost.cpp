@@ -12,6 +12,30 @@ void	ResponseBuilder::initBoundaryTokens( void ){
 	_tokenEnd = _tokenDelim + "--";
 }
 
+bool	ResponseBuilder::isLineDelim( vector< char >& curLine, vector< char >& nextLine ){
+
+	// (void)(curLine);
+	string temp(curLine.begin(), curLine.end());
+
+	std::string::size_type posSeparator;
+
+	posSeparator = temp.find(HTTP_HEADER_SEPARATOR);
+	if (posSeparator == std::string::npos)
+		return false;
+	
+	// Does the curLine ends with a trailing \r\n ONLY
+	if (posSeparator + 2 == *temp.end())
+		return true;
+	else // in the opposite case, we need to trim the curLine and append the rest to nextLine
+	{
+		posSeparator += 2;
+		nextLine.insert(nextLine.end(), temp.begin() + posSeparator, temp.end());
+		curLine.erase(curLine.begin() + posSeparator);
+	}
+
+	return true;
+}
+
 void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 
 	usleep(50000);
@@ -21,14 +45,24 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 		return this->_cgi.setBody(client, eof);
 
 	vector< char > recVector;
-	static vector< char > savingVector;
+	static vector< char > curLine;
+	static vector< char > nextLine;
 
 	initBoundaryTokens();
 
-	if (not this->_ofs.is_open())
+	if ( !this->_ofs.is_open() )
 	{
+		if (!nextLine.empty())
+		{
+			curLine.insert(curLine.end(), nextLine.begin(), nextLine.end());
+			nextLine.clear();
+		}
+
 		recVector = client.messageRecv;
-		savingVector.insert(savingVector.end(), recVector.begin(), recVector.end());
+		curLine.insert(curLine.end(), recVector.begin(), recVector.end());
+		// ! WORK NEEDLE
+		if (not isLineDelim(curLine, nextLine))
+			return;
 		
 
 	}
