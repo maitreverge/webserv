@@ -2,17 +2,17 @@
 #include "ConfigFileParser.hpp"
 #include "master.hpp"
 
-Config::Config(char *path) : index(0)
+Config::Config(char *path) : maxBodySize(5000000), maxServerNbr(8)
 {
 	intitializeVars(1);
 	ConfigFileParser parser;
 	parser.parseConfigFile(*this, path);
 	int i = 0;
-	for (i = 0; i < 8; i++)
-		initializeServer((uint16_t)std::atoi(_serverStruct[i].port.c_str()), sockAddress, i);
+	for (i = 0; i < maxServerNbr; i++)
+		initializeServer((uint16_t)std::atoi(_serverStruct[i].port.c_str()), sockAddress);
 }
 
-Config::Config()
+Config::Config() : maxBodySize(5000000), maxServerNbr(8)
 {
 	intitializeVars(0);
 }
@@ -56,10 +56,10 @@ void	Config::initializeServers()
 	_serverStruct[3].host = "0.0.0.0";
 	_serverStruct[3].port = "80";
 	_serverStruct[3].serverName = "server4";
-	initializeServer((uint16_t)std::atoi(_serverStruct[0].port.c_str()), sockAddress, 0);
-	initializeServer((uint16_t)std::atoi(_serverStruct[1].port.c_str()), sockAddress, 1);
-	initializeServer((uint16_t)std::atoi(_serverStruct[2].port.c_str()), sockAddress, 2);
-	initializeServer(80, sockAddress, 3);
+	initializeServer((uint16_t)std::atoi(_serverStruct[0].port.c_str()), sockAddress);
+	initializeServer((uint16_t)std::atoi(_serverStruct[1].port.c_str()), sockAddress);
+	initializeServer((uint16_t)std::atoi(_serverStruct[2].port.c_str()), sockAddress);
+	initializeServer(80, sockAddress);
 }
 
 /**========================================================================
@@ -67,7 +67,7 @@ void	Config::initializeServers()
  * ? ugly dirty check added: do I need to default open port 80?
  * ? now I need to decide were to add the serverName in the data struct...
  *========================================================================**/
-void	Config::initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddress, int i)
+void	Config::initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddress)
 {
 	//! logic to be inserted here
 
@@ -80,5 +80,4 @@ void	Config::initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddre
 		server.sin_port = htons(port);
 		sockAddress.push_back(server);
 	}
-	my_routes[i] = &_serverStruct[i].routesData;
 }

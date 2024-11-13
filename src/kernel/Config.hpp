@@ -16,7 +16,6 @@ struct server
 	std::string	serverName;
 	std::vector<std::string> allowedRoutes;
 	RoutesData routesData;
-	int	serverId;
 };
  
 /**========================================================================
@@ -29,6 +28,8 @@ struct server
 struct Config
 {
 	int								index;
+	size_t							maxBodySize;
+	int								maxServerNbr;
 	struct server					_serverStruct[8];
 	short int						maxClient;
 	std::vector<struct sockaddr_in> sockAddress;
@@ -38,11 +39,10 @@ struct Config
 	map<string, string>				redirection;
 	std::string						errorPagesPath;
 	RoutesData						routes;
-	RoutesData*						my_routes[8];
 
 	Config();
 	Config(char* path);
 	void	initializeServers();
-	void	initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddress, int i);
+	void	initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddress);
 	void	intitializeVars(bool withConfigFile);
 };

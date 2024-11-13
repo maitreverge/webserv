@@ -7,7 +7,7 @@ typedef std::vector< string >::iterator vectorIterator;
 void ResponseBuilder::clearingRoutes( vector< string >&routeNames, vector< string >&routeURIS ){
 
 	vector < string > toClear;
-	RoutesData *routes = _config->my_routes[_config->index];
+	RoutesData *routes = &_config->_serverStruct[_config->index].routesData;
 
 	// extracting all uris
 	for (mapIterator it = routes->begin(); it != routes->end(); ++it)
@@ -42,7 +42,7 @@ void ResponseBuilder::clearingRoutes( vector< string >&routeNames, vector< strin
 }
 
 void	ResponseBuilder::buildRouteConfig( string path ){
-	RoutesData *routes = _config->my_routes[_config->index];
+	RoutesData *routes = &_config->_serverStruct[_config->index].routesData;
 	try
 	{
 		_myconfig.uri = *routes->at(path).at("uri").begin();
