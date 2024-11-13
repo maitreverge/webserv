@@ -1,7 +1,7 @@
 #include "Cgi.hpp"
 #include "Logger.hpp"
 
-void errnoHandle(); //! a suppr
+// void errnoHandle(); //! a suppr
 
 Cgi::Cgi()
 {
@@ -117,12 +117,11 @@ bool Cgi::retHandle(Client & client, ssize_t ret, std::string err,
     else if (ret < 0)
     {		
         Logger::getInstance().log(ERROR, err);
-        errnoHandle();		
-        client.ping = 2;
-		// FD_CLR(this->_fds[1], &Kernel::_actualSet);//! err 4..
-        // close(this->_fds[1]);
-        // this->_fds[1] = -1;
-
+        // errnoHandle();		
+   
+		FD_CLR(this->_fds[1], &Kernel::_actualSet);
+        close(this->_fds[1]);
+        this->_fds[1] = -1;
         client.exitRequired = true;
         return true;
     }
