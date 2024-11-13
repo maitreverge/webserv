@@ -24,13 +24,13 @@ bool	ResponseBuilder::isLineDelim( vector< char >& curLine, vector< char >& next
 		return false;
 	
 	// Does the curLine ends with a trailing \r\n ONLY
-	if (posSeparator + 2 == *temp.end())
+	if (posSeparator + 2 == temp.size())
 		return true;
 	else // in the opposite case, we need to trim the curLine and append the rest to nextLine
 	{
 		posSeparator += 2;
 		nextLine.insert(nextLine.end(), temp.begin() + posSeparator, temp.end());
-		curLine.erase(curLine.begin() + posSeparator);
+		curLine.erase(curLine.begin() + posSeparator, curLine.end());
 	}
 
 	return true;
