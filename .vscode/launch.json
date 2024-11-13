@@ -9,7 +9,9 @@
 			"type": "cppdbg",
 			"request": "launch",
 			"program": "${workspaceFolder}/debug_webserv",
-			"args": ["_configs/POST.ini"], // Need to add args when it's time to process a config file
+			"args": ["_configs/missing_error_pages/listingdirectory_fail_1(404).ini"],
+			// "args": ["_configs/racine_test/racine_ok_1(listing_festival).ini"],
+			// "args": ["_configs/racine_test/racine_ok_1(listing_festival).ini"],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}",
 			"environment": [],

@@ -16,7 +16,6 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 	extractRouteConfig();
 	// printMyConfig();
 	
-
 	try
 	{
 		extractMethod();
@@ -24,22 +23,33 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 		checkMethod();
 
 		if (_method == DELETE)
-			setError(CODE_204_NO_CONTENT); // does not throw exception
-		else // if (_method != DELETE)
-			checkCGI(inputClient);
+		{
+			setError(CODE_204_NO_CONTENT, true); // does not throw exception
+		}
+		else
+		{
+			checkCGI();
+		}
+
 		if (_method == POST and !_isCGI)
+		{
 			uploadCheck();
+		}
 		
 		resolveURI();
 		checkAutho();
 		checkNature();
 		
+		if (_isCGI)
+		{
+			_cgi.launch(_realURI, _pathInfo);
+		}
+
 		// ! WORK NEEDLE
 		if (_isDirectory and (_method == GET) and (not _isCGI))
 		{
 			generateListingHTML();
 		}
-
 	}
 	catch(const CodeErrorRaised& e)
 	{
@@ -51,28 +61,31 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 	} 
 
 	if (not isErrorRedirect())
-		setContentLenght();
+	{
+		setContentLenght(); // Sets up body.lenghts
+	}
 	
 	
 	if (_method == DELETE and _errorType < CODE_400_BAD_REQUEST)
+	{
 		deleteEngine();	
+	}
 
 	buildHeaders();
 
 
-	inputClient.headerRespons = Headers.masterHeader;
-	
-		// Copying the build Headers in headerRespons
+	// Copying the build Headers in headerRespons
 	// ! Si on mixe les headers du CGI + de ResponseBuilder
 	if (!_isCGI)
+	{
 		inputClient.headerRespons = Headers.masterHeader;
+	}
 	else
+	{
 		inputClient.headerRespons.clear();
-
-	// Headers.masterHeader.clear();//!
+	}
 
 	printAllHeaders();
-
 }
 
 void	ResponseBuilder::setBodyPost( Client & client, bool eof ){

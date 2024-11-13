@@ -16,7 +16,7 @@ void	ResponseBuilder::buildHeaders(){
 	
 	// -------------- Madatory Headers --------------  
 
-	// ✅ GET FRIENDLY ✅ POST FRIENDLY ✅ DELETE FRIENDLY
+	// ! Status Line
 	streamStatusLine	<< HTTP_PROTOCOL
 						<< SPACE
 						<< _errorType
@@ -25,14 +25,16 @@ void	ResponseBuilder::buildHeaders(){
 						<< HTTP_HEADER_SEPARATOR;
 	Headers.statusLine = streamStatusLine.str();
 
-	// ✅ GET FRIENDLY ✅ POST FRIENDLY ✅ DELETE FRIENDLY
+	
+	// ! Date:
 	streamTimeStamp		<< "Date:"
 						<< SPACE 
 						<< timeStamp::getTime()
 						<< HTTP_HEADER_SEPARATOR;
 	Headers.timeStamp = streamTimeStamp.str();
 	
-	// ✅ GET FRIENDLY ✅ POST FRIENDLY ✅ DELETE FRIENDLY
+	
+	// ! Content-Length
 	if (not isErrorRedirect())
 	{
 		uint64_t result = (_errorType == CODE_204_NO_CONTENT ) ? 0 : Headers.bodyLenght;
@@ -45,8 +47,7 @@ void	ResponseBuilder::buildHeaders(){
 
 	
 	// --------------  Optionals Headers --------------  
-	// ✅ GET FRIENDLY ✅ POST FRIENDLY ⛔ DELETE FRIENDLY
-	// if (Headers.bodyLenght > 0 and _method == GET) //! ERROR
+	// ! Content-Type
 	if (Headers.bodyLenght > 0)
 	{
 		stringstream streamContentType;
@@ -61,38 +62,24 @@ void	ResponseBuilder::buildHeaders(){
 		Headers.contentType = streamContentType.str();
 	}
 
-	// ✅ REDIRECTION ONLY
+	// ! Location:
 	if (isErrorRedirect())
 	{
 		stringstream streamLocation;
 		streamLocation	<< "Location:"
 						<< SPACE
 						<< _realURI
-						// << "http://www.github.com/maitreverge"
 						<< HTTP_HEADER_SEPARATOR;
 		Headers.location = streamLocation.str();
 	}
 
-	// ======================== POST HEADERS ========================
-	// TODO : Implement a redirection logic for a POST request, for avoiding getting stuck
-	// if (_method == POST and _errorType == CODE_201_CREATED)
-	// {
-	// 	stringstream streamLocation;
-	// 	streamLocation	<< "Location:"
-	// 					<< SPACE
-	// 					<< // ! NEEDLE WORK
-	// 					<< HTTP_HEADER_SEPARATOR;
-	// 	Headers.location = streamLocation.str();
-	// }
-
-
-	// ======================== POST HEADERS ========================
-
 
 	// ======================== BONUS METHODS ========================
+
 	// TODO : Coockie and session generator
 	{
 	}
+
 	// ======================== BONUS METHODS ========================
 
 	
@@ -100,17 +87,15 @@ void	ResponseBuilder::buildHeaders(){
 
 	streamMasterHeader	<< Headers.statusLine
 						<< Headers.timeStamp
-						<< Headers.contentType 
-						// Optionals
-						<< Headers.location
-						// << (Headers.bodyLenght ? Headers.contentLenght : Headers.transfertEncoding)
 						<< Headers.contentLenght
-						<< HTTP_HEADER_SEPARATOR; // HEADER / BODY SEPARATOR
+						// Optionals
+						<< Headers.contentType 
+						<< Headers.location
+						// Separator
+						<< HTTP_HEADER_SEPARATOR;
 	
 	string tempAllHeaders = streamMasterHeader.str();
 
 	// Insert all headers in a vector char
 	Headers.masterHeader.insert(Headers.masterHeader.end(), tempAllHeaders.begin(), tempAllHeaders.end());
-
-	// sleep(4);
 }
