@@ -70,7 +70,7 @@ void Cgi::launch(Client & client)
 		char *argv[] = {NULL};
         //!FLAG ANTI HERITAGE FD OU CLOSE
         Logger::getInstance().~Logger();
-		Kernel::getInstance(NULL).callExit();
+		Kernel::getInstance(NULL).~Kernel();
         // if (client.responseBuilder._fileExtension == "out")
         //     execve(client.responseBuilder._fileName.c_str(), argv, env);  //!     
         // execve("/home/svidot/42_am/webserv/cgi/main_errout.out", argv, env); 

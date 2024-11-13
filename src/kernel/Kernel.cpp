@@ -20,6 +20,12 @@ Kernel::Kernel(char* path) : _conf(path)
 	this->setup();
 }
 
+Kernel::~Kernel()
+{
+	for (size_t i = 0; i < this->_servers.size(); i++)
+		this->_servers[i].exitServer();
+}
+
 Kernel & Kernel::getInstance(char *path)
 {
 	static Kernel * kernel_ptr;
@@ -63,12 +69,6 @@ short int Kernel::countClients()
 	return nClients;
 }
 
-void Kernel::callExit()
-{
-	for (size_t i = 0; i < this->_servers.size(); i++)
-		this->_servers[i].exitServer();
-}
-
 void Kernel::setup()
 {	
 	for (size_t i = 0; i < this->_conf.sockAddress.size(); i++)
@@ -82,6 +82,7 @@ void Kernel::setup()
 void Kernel::launch()
 {
 	ConfigFileParser::printRoutesData(_conf.routes);
+	
 	while (true)
 	{
 		struct timeval timeout = {SLCT_TIMEOUT, 0};
@@ -102,5 +103,4 @@ void Kernel::launch()
 			this->callReply);
 		usleep(100);	
 	}
-	this->callExit();
 }
