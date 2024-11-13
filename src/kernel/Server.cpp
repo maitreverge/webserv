@@ -7,7 +7,11 @@ fd_set & actualSet, fd_set & readSet, fd_set & writeSet, Config & conf)
 	: _sockAddr(sockAddr), _maxFd(maxFd),
 	_actualSet(actualSet), _readSet(readSet), _writeSet(writeSet), _conf(conf)
 {		
+	static int i = 0;
 	this->_conf = conf;
+	this->_conf.index = i++;
+	printColorNoEndl(BOLD_CYAN, "SERVER CONSTRUCTOR: ");
+	printColor(BOLD_CYAN, this->_conf.index);
 	this->_clients.reserve(MAX_CLIENTS);
 	this->_readBuffer.reserve(RECV_BUFF_SIZE);	
 	this->_writeBuffer.reserve(SEND_BUFF_SIZE);

@@ -28,6 +28,7 @@ struct server
  *========================================================================**/
 struct Config
 {
+	int								index;
 	struct server					_serverStruct[8];
 	short int						maxClient;
 	std::vector<struct sockaddr_in> sockAddress;
@@ -42,6 +43,7 @@ struct Config
 
 	Config();
 	Config(char* path);
+	void	initializeConfigStructs();
 	void	initializeServers();
 	void	initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddress, int i);
 	void	intitializeVars(bool withConfigFile);

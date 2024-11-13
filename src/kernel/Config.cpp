@@ -2,8 +2,9 @@
 #include "ConfigFileParser.hpp"
 #include "master.hpp"
 
-Config::Config(char *path)
+Config::Config(char *path) : index(0)
 {
+	printColor(BOLD_BLUE, "CONFIG CONSTRUCTOR CALLED");
 	// std::cout << "test" << this->maxClient << std::endl;
 	intitializeVars(1);
 	// std::cout << "test2" << this->maxClient << std::endl;
@@ -15,7 +16,7 @@ Config::Config(char *path)
 	// toto.printConfig(*this);
 	// print("in Config func: ");
 	// ConfigFileParser::printRoutesData(this->routes);
-	
+
 }
 
 Config::Config()
@@ -81,9 +82,14 @@ void	Config::initializeServers()
 void	Config::initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddress, int i)
 {
 	//! logic to be inserted here
-	// print("toto");
-	// if (!this->_serverStruct[i].serverStructName.empty())
-	// 	printColor(RED, "SERVER NAME: " + this->_serverStruct[i].serverStructName);
+
+	printColor(BOLD_GREEN, "toto");
+	printColor(BOLD_GREEN, i);
+	if (this->index == 0)
+		this->index = i;
+	printColor(BOLD_GREEN, this->index);
+	if (!this->_serverStruct[i].serverStructName.empty())
+		printColor(RED, "SERVER NAME: " + this->_serverStruct[i].serverStructName);
 	if (port)
 	{
 		struct sockaddr_in server;	
