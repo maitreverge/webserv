@@ -7,27 +7,26 @@ typedef std::vector< string >::iterator vectorIterator;
 void ResponseBuilder::clearingRoutes( vector< string >&routeNames, vector< string >&routeURIS ){
 
 	vector < string > toClear;
-	int id = _config->_serverStruct->serverId;
+	// int id = _config->_serverStruct->serverId;
 
 	printColor(BLUE, "extractRouteConfig: serverStruct");
 	ConfigFileParser::printServerData(_config->_serverStruct, 4);
-	printColor(BLUE, "extractRouteConfig: Config");
-	ConfigFileParser::printRoutesData(*_config->my_routes[id]);
+	printColor(MAGENTA, "extractRouteConfig: Config");
+	ConfigFileParser::printRoutesData(*_config->my_routes[_config->_serverStruct->serverId]);
 	for (int i = 0; i < 4; i++)
 	{
 		printColor(YELLOW, "THERE!");
-		printColor(BLUE, id);
+		// printColor(BLUE, id);
 		ConfigFileParser::printRoutesData(*_config->my_routes[i]);
 	}
 
 	// extracting all uris
-	for (mapIterator it = _config->my_routes[id]->begin(); it != _config->my_routes[id]->end(); ++it)
-	_config->_serverStruct->routesData.begin()
+	for (mapIterator it = _config->_serverStruct->routesData.begin(); it != _config->_serverStruct->routesData.end(); ++it)
 	{
 		vector< string > curVector;
 		try
 		{
-			curVector =  _config->my_routes[id]->at(it->first).at("uri");
+			curVector =  _config->_serverStruct->routesData.at(it->first).at("uri");
 			if (curVector.empty())
 				throw std::bad_exception();
 			routeURIS.push_back(curVector[0]);
@@ -44,7 +43,7 @@ void ResponseBuilder::clearingRoutes( vector< string >&routeNames, vector< strin
 	// clear nodes without the URI
 	// for (vectorIterator it = toClear.begin(); it != toClear.end(); ++it)
 	// {
-	// 	_config->my_routes[id]->erase(*it); // erase only in ResponseBuilder scope
+	// 	_config->_serverStruct->routesData.erase(*it); // erase only in ResponseBuilder scope
 	// }
 
 	// TODO : Delete duplicates nodes with the same URI
@@ -55,11 +54,11 @@ void ResponseBuilder::clearingRoutes( vector< string >&routeNames, vector< strin
 
 void	ResponseBuilder::buildRouteConfig( string path ){
 
-	int id = _config->_serverStruct->serverId;
+	// int id = _config->_serverStruct->serverId;
 
 	try
 	{
-		_myconfig.uri = *_config->my_routes[id]->at(path).at("uri").begin();
+		_myconfig.uri = *_config->_serverStruct->routesData.at(path).at("uri").begin();
 	}
 	catch(const std::exception& e)
 	{
@@ -69,7 +68,7 @@ void	ResponseBuilder::buildRouteConfig( string path ){
 	// ! allowedMethods
 	try
 	{
-		_myconfig.allowedMethods = _config->my_routes[id]->at(path).at("allowedMethods");
+		_myconfig.allowedMethods = _config->_serverStruct->routesData.at(path).at("allowedMethods");
 	}
 	catch(const std::exception& e)
 	{
@@ -79,7 +78,7 @@ void	ResponseBuilder::buildRouteConfig( string path ){
 	// ! redirection
 	try
 	{
-		_myconfig.redirection = *_config->my_routes[id]->at(path).at("redirection").begin();
+		_myconfig.redirection = *_config->_serverStruct->routesData.at(path).at("redirection").begin();
 	}
 	catch(const std::exception& e)
 	{
@@ -89,7 +88,7 @@ void	ResponseBuilder::buildRouteConfig( string path ){
 	// ! root
 	try
 	{
-		_myconfig.root = *_config->my_routes[id]->at(path).at("root").begin();
+		_myconfig.root = *_config->_serverStruct->routesData.at(path).at("root").begin();
 	}
 	catch(const std::exception& e)
 	{
@@ -99,7 +98,7 @@ void	ResponseBuilder::buildRouteConfig( string path ){
 	// ! listingDirectory
 	try
 	{
-		string myString = *_config->my_routes[id]->at(path).at("listingDirectory").begin();
+		string myString = *_config->_serverStruct->routesData.at(path).at("listingDirectory").begin();
 		_myconfig.listingDirectory = (myString[0] == '0') ? false : true;
 	}
 	catch(const std::exception& e)
@@ -110,7 +109,7 @@ void	ResponseBuilder::buildRouteConfig( string path ){
 	// ! index
 	try
 	{
-		_myconfig.index = *_config->my_routes[id]->at(path).at("index").begin();
+		_myconfig.index = *_config->_serverStruct->routesData.at(path).at("index").begin();
 	}
 	catch(const std::exception& e)
 	{
@@ -120,7 +119,7 @@ void	ResponseBuilder::buildRouteConfig( string path ){
 	// ! cgiAllowed
 	try
 	{
-		_myconfig.cgiAllowed = _config->my_routes[id]->at(path).at("cgiAllowed");
+		_myconfig.cgiAllowed = _config->_serverStruct->routesData.at(path).at("cgiAllowed");
 	}
 	catch(const std::exception& e)
 	{
@@ -130,7 +129,7 @@ void	ResponseBuilder::buildRouteConfig( string path ){
 	// ! uploadAllowed
 	try
 	{
-		string myString = *_config->my_routes[id]->at(path).at("uploadAllowed").begin();
+		string myString = *_config->_serverStruct->routesData.at(path).at("uploadAllowed").begin();
 		_myconfig.uploadAllowed = (myString[0] == '0') ? false : true;
 	}
 	catch(const std::exception& e)
@@ -141,7 +140,7 @@ void	ResponseBuilder::buildRouteConfig( string path ){
 	// ! uploadDirectory
 	try
 	{
-		_myconfig.uploadDirectory = *_config->my_routes[id]->at(path).at("uploadDirectory").begin();
+		_myconfig.uploadDirectory = *_config->_serverStruct->routesData.at(path).at("uploadDirectory").begin();
 	}
 	catch(const std::exception& e)
 	{
