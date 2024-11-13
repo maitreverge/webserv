@@ -10,8 +10,6 @@ fd_set & actualSet, fd_set & readSet, fd_set & writeSet, Config & conf)
 	static int i = 0;
 	this->_conf = conf;
 	this->_conf.index = i++;
-	printColorNoEndl(BOLD_CYAN, "SERVER CONSTRUCTOR: ");
-	printColor(BOLD_CYAN, this->_conf.index);
 	this->_clients.reserve(MAX_CLIENTS);
 	this->_readBuffer.reserve(RECV_BUFF_SIZE);	
 	this->_writeBuffer.reserve(SEND_BUFF_SIZE);
@@ -46,8 +44,6 @@ bool Server::setup()
 		this->exitServer();
 		return false;
 	}
-	// printColor(RED, this->_conf._serverStruct[2].serverName);
-	// ConfigFileParser::printRoutesData(this->_conf.routes);
 	return true;
 }
 
