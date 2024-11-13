@@ -5,7 +5,7 @@
 /**========================================================================
  *                           CONSTRUCTOR && DESTRUCTOR
  *========================================================================**/
-Logger::Logger() : logToStdOut(0)
+Logger::Logger() : logToStdOut(1)
 {
 	_logLevel[INFO] = 		1;
 	_logLevel[DEBUG] = 		1;
