@@ -47,56 +47,48 @@ void Cgi::launch(Client & client)
 	if (setsockopt(this->_fds[1], SOL_SOCKET, SO_SNDTIMEO, &timeout,
 		sizeof(timeout)) < 0)
 	  	return Logger::getInstance().log(ERROR, "cgi send timeout"); //!exit client req + error page
-
-    FD_SET(this->_fds[1], &Kernel::_actualSet);
-    
+    FD_SET(this->_fds[1], &Kernel::_actualSet);    
     this->_pid = fork();
     if (this->_pid < 0)
         Logger::getInstance().log(ERROR, "fork failed");//!exit client req + error page
     else if (!this->_pid)
-    {       
-        dup2(this->_fds[0], STDIN_FILENO); 
-        dup2(this->_fds[0], STDOUT_FILENO); 
-        close(this->_fds[0]);
-        close(this->_fds[1]);
-          
-        chdir(client.responseBuilder._folderCGI.c_str());
-        std::string envPathInfo("PATH_INFO=" + client.responseBuilder._pathInfo);
-      
-        char *env[] = 
-        {
-            const_cast<char *>(envPathInfo.c_str()), NULL
-        };
-		char *argv[] = {NULL};
-        //!FLAG ANTI HERITAGE FD OU CLOSE
-        Logger::getInstance().~Logger();
-		Kernel::getInstance(NULL).~Kernel();
-        // if (client.responseBuilder._fileExtension == "out")
-        //     execve(client.responseBuilder._fileName.c_str(), argv, env);  //!     
-        execve("/home/svidot/42_am/webserv/cgi/main_errout.out", argv, env); 
-        // execve("/home/seblin/42/42_webserv/cgi/main_errout.out", argv, env); 
-		    
-        // execve(client.responseBuilder., argv, env);   
-		std::cerr << "\e[1;31mexecve failed\e[0m" << std::endl;    
-      	Logger::getInstance().log(ERROR, "execve failed");//§§§!!
-         
-		// Logger::getInstance().~Logger();
-		_exit(1);
-		// Kernel::_exit = true;
-	    //! LEAKS 
-		//! Kernel exit
-	    //!exit client req + error page
-    } 
+        child(client);
     else
         close(this->_fds[0]);
 }
 
+void Cgi::child(Client & client)
+{
+    dup2(this->_fds[0], STDIN_FILENO); 
+    dup2(this->_fds[0], STDOUT_FILENO); 
+    close(this->_fds[0]);
+    close(this->_fds[1]);
+        
+    chdir(client.responseBuilder._folderCGI.c_str());
+    std::string envPathInfo
+        ("PATH_INFO=" + client.responseBuilder._pathInfo);
+    
+    char *env[] = {const_cast<char *>(envPathInfo.c_str()), NULL};
+    char *argv[] = {NULL};
+
+    if (client.responseBuilder._fileExtension == "out")
+    {
+        std::string path = client.responseBuilder._fileName;
+        Logger::getInstance().~Logger();
+        Kernel::getInstance(NULL).~Kernel();
+        execve(path.c_str(), argv, env);  //!     
+    }
+    // execve("/home/svidot/42_am/webserv/cgi/main_inout.out", argv, env); 
+    // execve("/home/seblin/42/42_webserv/cgi/main_inout.out", argv, env); 		    
+    // execve(client.responseBuilder., argv, env);   
+    std::cerr << "\e[1;31mexecve failed\e[0m" << std::endl;
+    _exit(1);
+}
+
 bool Cgi::retHandle(Client & client, ssize_t ret, std::string err,
 	std::string info)
-{
-	static ssize_t gret;
-	gret += ret;
-	stringstream ss; ss << "ret: " << ret << " gret: " << gret;
+{		
+	stringstream ss; ss << "ret: " << ret;
 	Logger::getInstance().log(DEBUG, ss.str());
 
     if (!ret)    

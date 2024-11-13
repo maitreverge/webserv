@@ -4,7 +4,7 @@
 #include <string>
 #include <ctime>
 
-#define TIMEOUT_CGI 10
+#define TIMEOUT_CGI 20
 
 struct Client;
 
@@ -19,12 +19,14 @@ class Cgi
 
     public:
     
+        int _fds[2];
+
         Cgi();
 		Cgi & operator=(const Cgi &);
         ~Cgi();  
 
-        int     _fds[2];
-        void    launch(Client & client);  
+        void    launch(Client & client); 
+        void    child(Client & client);
         bool 	getBody(Client & client);
 		void 	setBody(Client & client, bool eof);
 };
