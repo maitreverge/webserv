@@ -29,11 +29,20 @@ bool	ResponseBuilder::isLineDelim( vector< char >& curLine, vector< char >& next
 	else // in the opposite case, we need to trim the curLine and append the rest to nextLine
 	{
 		posSeparator += 2;
-		nextLine.insert(nextLine.end(), temp.begin() + posSeparator, temp.end());
-		curLine.erase(curLine.begin() + posSeparator, curLine.end());
+		nextLine.insert(nextLine.end(), (temp.begin() + static_cast<long>(posSeparator)), temp.end());
+		curLine.erase(curLine.begin() + static_cast<long>(posSeparator), curLine.end());
 	}
 
 	return true;
+}
+
+e_lineNature	ResponseBuilder::processCurrentLine( vector< char >& curLine ){
+
+	// This function serves the purpose of extracting the filename
+	string temp(curLine.begin(), curLine.end());
+
+	return TOKEN_END;
+
 }
 
 void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
@@ -48,7 +57,10 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 	static vector< char > curLine;
 	static vector< char > nextLine;
 
-	initBoundaryTokens();
+	// if (!_tokenEnd.empty()) // ! if this condition might overlap on others functions calls ?
+	{
+		initBoundaryTokens();
+	}
 
 	if ( !this->_ofs.is_open() )
 	{
@@ -60,9 +72,10 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 
 		recVector = client.messageRecv;
 		curLine.insert(curLine.end(), recVector.begin(), recVector.end());
-		// ! WORK NEEDLE
 		if (not isLineDelim(curLine, nextLine))
 			return;
+		// ! WORK NEEDLE 🪡🪡🪡🪡🪡🪡🪡🪡
+		processCurrentLine(curLine);
 		
 
 	}

@@ -95,6 +95,15 @@ class ResponseBuilder
 		DELETE
 	} e_method;
 
+	typedef enum
+	{
+		TOKEN_DELIM,
+		TOKEN_END,
+		LINE_SEPARATOR,
+		BINARY_DATA,
+		CONTENT_DISPOSITION
+	} e_lineNature;
+
 	// ------------- Priv Variables
 	
 	map<string, string> _mimeTypes;
@@ -182,6 +191,7 @@ class ResponseBuilder
 
 	// POST
 	bool	isLineDelim( vector< char >& curLine, vector< char >& nextLine);
+	e_lineNature	processCurrentLine( vector< char >& curLine );
 
 	void	boundarySetBodyPost( Client & client, bool eof );
 	void	initBoundaryTokens( void );
