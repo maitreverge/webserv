@@ -20,7 +20,7 @@ Kernel::Kernel(char* path) : _conf(path)
 	this->setup();
 }
 
-Kernel::~Kernel()
+void Kernel::callExit()
 {
 	for (size_t i = 0; i < this->_servers.size(); i++)
 		this->_servers[i].exitServer();
@@ -103,4 +103,5 @@ void Kernel::launch()
 			this->callReply);
 		usleep(100);	
 	}
+	callExit();
 }
