@@ -50,8 +50,8 @@
 		"streambuf": "cpp",
 		"typeinfo": "cpp",
 		"csignal": "cpp",
-		"ctime": "cpp",
-		"list": "cpp"
+		"list": "cpp",
+		"ctime": "cpp"
 	},
 	"editor.rulers": [80],
     "workbench.colorCustomizations": {

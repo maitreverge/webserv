@@ -36,11 +36,28 @@ bool	ResponseBuilder::isLineDelim( vector< char >& curLine, vector< char >& next
 	return true;
 }
 
-e_lineNature	ResponseBuilder::processCurrentLine( vector< char >& curLine ){
+ResponseBuilder::e_lineNature ResponseBuilder::processCurrentLine(vector< char >& curLine) {
 
 	// This function serves the purpose of extracting the filename
 	string temp(curLine.begin(), curLine.end());
 
+	if (temp == _tokenEnd)
+		return TOKEN_END;
+	else
+	{
+		
+	}
+	else if()
+
+	/*
+	typedef enum
+	{
+		TOKEN_DELIM,
+		LINE_SEPARATOR,
+		BINARY_DATA,
+		CONTENT_DISPOSITION
+	} e_lineNature;
+	*/
 	return TOKEN_END;
 
 }
