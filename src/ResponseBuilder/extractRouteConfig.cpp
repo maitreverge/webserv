@@ -13,9 +13,16 @@ void ResponseBuilder::clearingRoutes( vector< string >&routeNames, vector< strin
 	ConfigFileParser::printServerData(_config->_serverStruct, 4);
 	printColor(BLUE, "extractRouteConfig: Config");
 	ConfigFileParser::printRoutesData(*_config->my_routes[id]);
+	for (int i = 0; i < 4; i++)
+	{
+		printColor(YELLOW, "THERE!");
+		printColor(BLUE, id);
+		ConfigFileParser::printRoutesData(*_config->my_routes[i]);
+	}
 
 	// extracting all uris
 	for (mapIterator it = _config->my_routes[id]->begin(); it != _config->my_routes[id]->end(); ++it)
+	_config->_serverStruct->routesData.begin()
 	{
 		vector< string > curVector;
 		try
@@ -35,10 +42,10 @@ void ResponseBuilder::clearingRoutes( vector< string >&routeNames, vector< strin
 	}
 
 	// clear nodes without the URI
-	for (vectorIterator it = toClear.begin(); it != toClear.end(); ++it)
-	{
-		_config->my_routes[id]->erase(*it); // erase only in ResponseBuilder scope
-	}
+	// for (vectorIterator it = toClear.begin(); it != toClear.end(); ++it)
+	// {
+	// 	_config->my_routes[id]->erase(*it); // erase only in ResponseBuilder scope
+	// }
 
 	// TODO : Delete duplicates nodes with the same URI
 	{

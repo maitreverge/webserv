@@ -80,7 +80,6 @@ void	Config::initializeServers()
  *========================================================================**/
 void	Config::initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddress, int i)
 {
-	(void)i;
 	//! logic to be inserted here
 	// print("toto");
 	// if (!this->_serverStruct[i].serverStructName.empty())
