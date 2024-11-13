@@ -10,8 +10,7 @@ Kernel::Kernel(void) : _conf()
 {
 	this->_servers.reserve(300);//!
 	FD_ZERO(&this->_actualSet);
-	this->setup();
-	this->launch();
+	this->setup();	
 }
 
 Kernel::Kernel(char* path) : _conf(path)
@@ -19,43 +18,44 @@ Kernel::Kernel(char* path) : _conf(path)
 	this->_servers.reserve(300);//!
 	FD_ZERO(&this->_actualSet);
 	this->setup();
-	this->launch();
+}
+
+Kernel & Kernel::getInstance(char *path)
+{
+	std::cerr << "GET INSTANCEEEEEEEE" << std::endl;
+	static Kernel * kernel_ptr;
+	if (!path)
+	{
+		std::cerr << "GET INSTANCEEEEEEEE PATH NULL" << std::endl;
+		if (kernel_ptr)
+		{
+			std::cerr << "GET INSTANCEEEEEEEE return PTR" << std::endl;
+			return *kernel_ptr;
+		}
+		std::cerr << "GET INSTANCEEEEEEEE le pointeur est null" << std::endl;
+		static Kernel kernel;
+		kernel_ptr = &kernel;
+		kernel.launch();		
+		return kernel;
+	}	
+
+	static Kernel kernel(path);
+	kernel_ptr = &kernel;
+	kernel.launch();
+	std::cerr << "GET INSTANCEEEEEEEE le PATH est null" << std::endl;
+	return kernel;	
 }
 
 // Kernel & Kernel::getInstance(char *path)
 // {
 // 	std::cerr << "GET INSTANCEEEEEEEE" << std::endl;
-// 	static Kernel * kernel_ptr;
-// 	if (!path)
-// 	{
-// 		std::cerr << "GET INSTANCEEEEEEEE PATH NULL" << std::endl;
-// 		if (kernel_ptr)
-// 		{
-// 			std::cerr << "GET INSTANCEEEEEEEE return PTR" << std::endl;
-// 			return *kernel_ptr;
-// 		}
-// 		std::cerr << "GET INSTANCEEEEEEEE le pointeur est null" << std::endl;
-// 		static Kernel kernel;
-// 		kernel_ptr = &kernel;
-// 		return kernel;
-// 	}	
-
+	
+// 	if (path)
 // 	static Kernel kernel(path);
-// 	kernel_ptr = &kernel;
+	
 // 	std::cerr << "GET INSTANCEEEEEEEE le PATH est null" << std::endl;
 // 	return kernel;	
 // }
-
-Kernel & Kernel::getInstance(char *path)
-{
-	std::cerr << "GET INSTANCEEEEEEEE" << std::endl;
-	
-	if (path)
-	static Kernel kernel(path);
-	
-	std::cerr << "GET INSTANCEEEEEEEE le PATH est null" << std::endl;
-	return kernel;	
-}
 
 void Kernel::callCatch()
 {

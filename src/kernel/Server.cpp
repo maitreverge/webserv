@@ -42,16 +42,16 @@ bool Server::setup()
 	return true;
 }
 
-bool noFdLegacy(int fd)
-{
-	int flags = fcntl(fd, F_GETFD);
-	if (flags < 0)
-		return Logger::getInstance().log(ERROR, "get flag fcntl"), true;	
-	flags |= FD_CLOEXEC; 
-	if (fcntl(fd, F_SETFD, flags) < 0)
-		return Logger::getInstance().log(ERROR, "set flag fcntl"), true;
-	return false;
-}
+// bool noFdLegacy(int fd)
+// {
+// 	int flags = fcntl(fd, F_GETFD);
+// 	if (flags < 0)
+// 		return Logger::getInstance().log(ERROR, "get flag fcntl"), true;	
+// 	flags |= FD_CLOEXEC; 
+// 	if (fcntl(fd, F_SETFD, flags) < 0)
+// 		return Logger::getInstance().log(ERROR, "set flag fcntl"), true;
+// 	return false;
+// }
 
 void Server::catchClients(Kernel & kernel)
 {
@@ -62,14 +62,14 @@ void Server::catchClients(Kernel & kernel)
 			(&client.address), &client.addressLen);			
 		if (client.fd < 0)		
 			return Logger::getInstance().log(ERROR, "accept"); //! close fd
-		if(noFdLegacy(client.fd))
-		{
-			close(client.fd);
-			return ;
-		}
-		// int flags = fcntl(client.fd, F_GETFD);
-		// flags |= FD_CLOEXEC; 
-		// fcntl(client.fd, F_SETFD, flags); //! close fd
+		// if(noFdLegacy(client.fd))
+		// {
+		// 	close(client.fd);
+		// 	return ;
+		// }
+		// // int flags = fcntl(client.fd, F_GETFD);
+		// // flags |= FD_CLOEXEC; 
+		// // fcntl(client.fd, F_SETFD, flags); //! close fd
 		if (kernel.countClients() >= this->_conf.maxClient)
 		{
 			Logger::getInstance().log(ERROR, "max client reached", client);	
@@ -115,11 +115,11 @@ void Server::exitClients()
 		FD_CLR(this->_clients[i].fd, &Kernel::_actualSet);
 		close(this->_clients[i].fd);	
 	}
+	this->_clients.clear();
 }
 
 void Server::exitServer()
 {
-	std::cerr << "exit client" << std::endl;
 	this->exitClients();
 	FD_CLR(this->_fd, &Kernel::_actualSet);
 	close(this->_fd);	
