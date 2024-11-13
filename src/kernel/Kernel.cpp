@@ -8,14 +8,14 @@ fd_set Kernel::_writeSet;
 
 Kernel::Kernel(void) : _conf()
 {
-	this->_servers.reserve(300);//!
+	this->_servers.reserve(this->_conf.sockAddress.size());
 	FD_ZERO(&this->_actualSet);
 	this->setup();	
 }
 
 Kernel::Kernel(char* path) : _conf(path)
 {
-	this->_servers.reserve(300);//!
+	this->_servers.reserve(this->_conf.sockAddress.size());
 	FD_ZERO(&this->_actualSet);
 	this->setup();
 }

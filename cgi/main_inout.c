@@ -7,7 +7,7 @@ int main()
 {  
     char buff[20] ={0};
     ssize_t ret;
-	  write(2, "START\n", 6);
+	
     while ((ret = read(STDIN_FILENO, buff, 20)) > 0)
     {
         buff[ret] = 0;
@@ -15,7 +15,7 @@ int main()
     }
     if (ret < 0)    
         printf("error read\n");    
-   write(2, "MIDDLE\n", 7);
+
     char * body = "<html>\
 <head><title>My Styled Page</title></head>\
 <body style=\"background-color: #f0f0f0; text-align: center; padding: 50px;\">\

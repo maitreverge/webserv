@@ -50,7 +50,7 @@ void Cgi::launch(Client & client)
     FD_SET(this->_fds[1], &Kernel::_actualSet);    
     this->_pid = fork();
     if (this->_pid < 0)
-        Logger::getInstance().log(ERROR, "fork failed");//!exit client req + error page
+        Logger::getInstance().log(ERROR, "fork failed"); //!exit client req + error page
     else if (!this->_pid)
         child(client);
     else
@@ -69,17 +69,27 @@ void Cgi::child(Client & client)
         ("PATH_INFO=" + client.responseBuilder._pathInfo);
     
     char *env[] = {const_cast<char *>(envPathInfo.c_str()), NULL};
-    char *argv[] = {NULL};
 
-    if (client.responseBuilder._fileExtension == "out")
-    {
-        std::string path = client.responseBuilder._fileName;
-        Logger::getInstance().~Logger();
-        Kernel::getInstance(NULL).~Kernel();
-        execve(path.c_str(), argv, env);  //!     
-    }
-    // execve("/home/svidot/42_am/webserv/cgi/main_inout.out", argv, env); 
+    std::string path = client.responseBuilder._fileName;
+    Logger::getInstance().~Logger();
+    Kernel::getInstance(NULL).~Kernel();
+    // if (client.responseBuilder._fileExtension == "out")    
+    // {
+	// 	char *argv[] = {NULL};
+    //     execve(path.c_str(), argv, env); //!
+	// }
+	// else 
+	// if (client.responseBuilder._fileExtension == "py")
+	// {
+		// char *argv[] = {const_cast<char *>("/usr/bin/python3"),
+		// 	const_cast<char *>(path.c_str()), NULL};
+				char *argv[] = {const_cast<char *>("/home/seblin/42/42_webserv/cgi/main_inout.py"),
+			const_cast<char *>("/home/seblin/42/42_webserv/cgi/main_inout.py"), NULL};
+        execve("/usr/bin/python3", argv, env); //!
+	// }
+		// execve(path.c_str(), argv, env);
     // execve("/home/seblin/42/42_webserv/cgi/main_inout.out", argv, env); 		    
+    // execve("/home/svidot/42_am/webserv/cgi/main_inout.out", argv, env); 
     // execve(client.responseBuilder., argv, env);   
     std::cerr << "\e[1;31mexecve failed\e[0m" << std::endl;
     _exit(1);
