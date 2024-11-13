@@ -82,7 +82,7 @@ void Kernel::setup()
 void Kernel::launch()
 {
 	ConfigFileParser::printRoutesData(_conf.routes);
-	
+
 	while (true)
 	{
 		struct timeval timeout = {SLCT_TIMEOUT, 0};

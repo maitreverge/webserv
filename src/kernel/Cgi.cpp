@@ -79,6 +79,7 @@ void Cgi::launch(Client & client)
         // execve(client.responseBuilder., argv, env);   
 		std::cerr << "EXEC FAILLLLLLLEEEEEEEED" << std::endl;    
       	Logger::getInstance().log(ERROR, "execve failed");//§§§!!
+		 Logger::getInstance().~Logger();
 	    //! LEAKS 
 		//! Kernel exit
 	    //!exit client req + error page
@@ -133,11 +134,6 @@ bool Cgi::isTimeout(Client & client, std::string err)
 	if (span > TIMEOUT_CGI)
 	{	
         Logger::getInstance().log(ERROR, err);   	//!errpage!!
-
-		// FD_CLR(this->_fds[1], &Kernel::_actualSet);
-		// close(this->_fds[1]);
-		// this->_fds[1] = -1;
-
         kill(this->_pid, SIGTERM);
 		this->_start = 0;
         client.exitRequired = true;
@@ -153,11 +149,9 @@ void Cgi::setBody(Client & client, bool eof)
 
 	if (isTimeout(client, "Timeout Cgi Set Body is over"))
 		return ;//! true 	
-    if (!FD_ISSET(this->_fds[1], &Kernel::_writeSet))
-    {
-        Logger::getInstance().log(DEBUG, "not ready to send");
-        return;
-    }
+    if (!FD_ISSET(this->_fds[1], &Kernel::_writeSet))    
+        return Logger::getInstance().log(DEBUG, "not ready to send");
+     
     Logger::getInstance().log(DEBUG, "ready to send");
  	ssize_t ret = send(this->_fds[1], client.messageRecv.data(),
         client.messageRecv.size(), MSG_NOSIGNAL);

@@ -42,17 +42,6 @@ bool Server::setup()
 	return true;
 }
 
-// bool noFdLegacy(int fd)
-// {
-// 	int flags = fcntl(fd, F_GETFD);
-// 	if (flags < 0)
-// 		return Logger::getInstance().log(ERROR, "get flag fcntl"), true;	
-// 	flags |= FD_CLOEXEC; 
-// 	if (fcntl(fd, F_SETFD, flags) < 0)
-// 		return Logger::getInstance().log(ERROR, "set flag fcntl"), true;
-// 	return false;
-// }
-
 void Server::catchClients(Kernel & kernel)
 {
 	if (FD_ISSET(this->_fd, &Kernel::_readSet))
@@ -61,27 +50,16 @@ void Server::catchClients(Kernel & kernel)
 		client.fd = accept(this->_fd, reinterpret_cast<sockaddr *>
 			(&client.address), &client.addressLen);			
 		if (client.fd < 0)		
-			return Logger::getInstance().log(ERROR, "accept"); //! close fd
-		// if(noFdLegacy(client.fd))
-		// {
-		// 	close(client.fd);
-		// 	return ;
-		// }
-		// // int flags = fcntl(client.fd, F_GETFD);
-		// // flags |= FD_CLOEXEC; 
-		// // fcntl(client.fd, F_SETFD, flags); //! close fd
-		if (kernel.countClients() >= this->_conf.maxClient)
-		{
-			Logger::getInstance().log(ERROR, "max client reached", client);	
-			close(client.fd);
-			return ;
-		}		
+			return Logger::getInstance().log(ERROR, "accept");		
+		if (kernel.countClients() >= this->_conf.maxClient)		
+			return close(client.fd),
+				Logger::getInstance().log(ERROR, "max client reached", client);					
 		Logger::getInstance().log(INFO, "\e[30;101mnew client\e[0m", client);
 		struct timeval timeout = {SND_TIMEOUT, 0};	
 		if (setsockopt(client.fd, SOL_SOCKET, SO_SNDTIMEO, &timeout,
 			sizeof(timeout)) < 0)
-	  		return Logger::getInstance().log(ERROR, "send timeout", client); //! close fd	
-
+	  		return close(client.fd),
+				Logger::getInstance().log(ERROR, "send timeout", client);
 		FD_SET(client.fd, &Kernel::_actualSet);
 		Kernel::_maxFd = std::max(Kernel::_maxFd, client.fd);
 		this->_clients.push_back(client);				
