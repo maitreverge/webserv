@@ -115,11 +115,11 @@ void	ResponseBuilder::checkAutho( void ){
 void	ResponseBuilder::extractFileNature( string &target){
 
 	// TODO : Handle shitty names files and put default values
-	if (_method == POST)
-	{
-		_fileName = target;
-	}
-	else
+	// if (_method == POST)
+	// {
+	// 	_fileName = target;
+	// }
+	// else
 	{
 		_fileName = target.substr(target.find_last_of("/") + 1); // extract file name // DOUBT for POST
 	}
@@ -149,7 +149,13 @@ void	ResponseBuilder::checkNature( void ){
 			else
 			{
 				// POST AND DELETE
-				extractFileNature( _config->errorPaths.at(_errorType) );
+				if (!_isCGI)
+				{
+					// ! ne pas ecraser l'URI si c'est un CGI
+					extractFileNature( _config->errorPaths.at(_errorType) );
+				}
+				else
+					extractFileNature( _realURI );
 			}
 		}
 		else

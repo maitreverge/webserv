@@ -31,6 +31,7 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 			checkCGI();
 		}
 
+		// if (_method == POST) //! pertinent ou pas
 		if (_method == POST and !_isCGI)
 		{
 			uploadCheck();
