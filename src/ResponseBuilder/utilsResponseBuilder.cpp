@@ -180,7 +180,6 @@ void	ResponseBuilder::checkNature( void ){
 void ResponseBuilder::setError(e_errorCodes code, bool skip){
 
 	_errorType = code;
-	_isCGI = false;
 
 	_isCGI = false;
 	if (isErrorRedirect())

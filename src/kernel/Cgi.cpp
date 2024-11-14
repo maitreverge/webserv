@@ -43,6 +43,10 @@ void Cgi::launch(Client & client)
     socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, this->_fds);  
 	
     Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fds[1]);
+	// client.ping = 2;
+	// client.exitRequired = true; 
+	// client.responseBuilder.setError(CODE_508_LOOP_DETECTED); 
+
     struct timeval timeout = {SND_TIMEOUT, 0};	
 	if (setsockopt(this->_fds[1], SOL_SOCKET, SO_SNDTIMEO, &timeout,
 		sizeof(timeout)) < 0)
@@ -149,7 +153,9 @@ bool Cgi::isTimeout(Client & client, std::string err)
         kill(this->_pid, SIGTERM);
 		this->_start = 0;
         client.exitRequired = true;
-		client.ping = 2;	
+		client.ping = 2;
+		// client.responseBuilder.setError(CODE_508_LOOP_DETECTED);
+		// Return true will never happen
         return true;
     } 
 	return false;

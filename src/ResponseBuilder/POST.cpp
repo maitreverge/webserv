@@ -1,13 +1,14 @@
 #include "ResponseBuilder.hpp"
 #include "Logger.hpp"
 
-void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
+void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig, e_errorCodes codeInput ){
 
 	Logger::getInstance().log(DEBUG, "ResponseBuilder->getHeader", inputClient);
 		
 	_client = &inputClient;
 	_config = &inputConfig;
 	
+
 	_realURI = _client->headerRequest.getURI();
 	_originalURI = _realURI;
 
@@ -16,6 +17,8 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 	extractRouteConfig();
 	// printMyConfig();
 	
+	if (codeInput != CODE_200_OK)
+		setError(codeInput, true);
 	try
 	{
 		extractMethod();

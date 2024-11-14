@@ -138,7 +138,6 @@ class ResponseBuilder
 	void	buildHeaders( void );
 	void	setContentLenght( void ); // not a regular setter
 	void	extractMethod( void );
-	void	setError( e_errorCodes, bool skip = false );
 	string	extractType( const string& extension ) const;
 	void	initMimes( void );
 	void	checkAutho( void );
@@ -205,12 +204,12 @@ public:
 	ResponseBuilder & operator=( const ResponseBuilder & rhs);
 
 	// ✅ GET ONLY
-	void	getHeader( Client &, Config& );
+	void	getHeader( Client &, Config&, e_errorCodes codeInput = CODE_200_OK );
 	bool	getBody( Client &inputClient );
 	Cgi		_cgi;//! provisoire sinon private
 
 	// ✅ POST ONLY
-	void	getHeaderPost( Client &inputClient, Config &inputConfig );
+	void	getHeaderPost( Client &, Config &, e_errorCodes codeInput = CODE_200_OK );
 	void	setBodyPost( Client & client, bool eof );
 
 
@@ -228,4 +227,7 @@ public:
 				return ("CODE ERROR RAISED");
 			}
 	};
+
+	// Public method for CGI error timeout
+	void	setError( e_errorCodes, bool skip = false );
 };

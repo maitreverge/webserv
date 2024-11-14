@@ -172,7 +172,8 @@ void Server::shortCircuit(e_errorCodes err, size_t i)
 
 bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
 {
-	if (it - this->_clients[i].messageRecv.begin() > MAX_HDR_SIZE)
+	// if (it - this->_clients[i].messageRecv.begin() > MAX_HDR_SIZE)
+	if(true)
 	{		
 		stringstream ss;
 		ss << "header size" << " Actual-Size: "
