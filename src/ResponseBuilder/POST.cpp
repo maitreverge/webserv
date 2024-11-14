@@ -5,13 +5,13 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 
 	Logger::getInstance().log(DEBUG, "ResponseBuilder->getHeader", inputClient);
 		
-	_client = &inputClient; // init client
-	_config = &inputConfig; // init config
+	_client = &inputClient;
+	_config = &inputConfig;
 	
 	_realURI = _client->headerRequest.getURI();
-	_originalURI = _client->headerRequest.getURI();
+	_originalURI = _realURI;
 
-	_errorType = CODE_201_CREATED;
+	_errorType = CODE_201_CREATED; // CODE_201 specific for POST
 
 	extractRouteConfig();
 	// printMyConfig();
@@ -39,9 +39,10 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 		resolveURI();
 		checkAutho();
 		checkNature();
+		
 		if (_isCGI)
 			_cgi.launch(inputClient);
-		// ! WORK NEEDLE
+		
 		if (_isDirectory and (_method == GET) and (not _isCGI))
 		{
 			generateListingHTML();
@@ -81,7 +82,7 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 		inputClient.headerRespons.clear();
 	}
 
-	printAllHeaders();
+	// printAllHeaders();
 }
 
 void	ResponseBuilder::setBodyPost( Client & client, bool eof ){

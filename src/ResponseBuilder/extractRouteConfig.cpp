@@ -128,6 +128,9 @@ void	ResponseBuilder::buildRouteConfig( string path ){
 	try
 	{
 		_myconfig.uploadDirectory = *routes->at(path).at("uploadDirectory").begin();
+		// Delete first '/' char from the path if so
+		if (!_myconfig.uploadDirectory.empty() && (*_myconfig.uploadDirectory.begin() == '/') )
+			_myconfig.uploadDirectory.erase(_myconfig.uploadDirectory.begin());
 	}
 	catch(const std::exception& e)
 	{
