@@ -1,4 +1,5 @@
 <?php
+ini_set('default_mimetype', '');
 // Lire l'entrée standard en morceaux de 20 caractères
 while ($input = fread(fopen("php://stdin", "r"), 20)) {
     // Écrire l'entrée standard vers la sortie d'erreur
