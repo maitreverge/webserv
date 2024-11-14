@@ -9,6 +9,10 @@ void ResponseBuilder::clearingRoutes( vector< string >&routeNames, vector< strin
 	vector < string > toClear;
 	RoutesData *routes = &_config->_serverStruct[_config->index].routesData;
 
+	print("=============================");
+	printColor(BOLD_YELLOW, _config->_serverStruct->port);
+	print("=============================");
+
 	// extracting all uris
 	for (mapIterator it = routes->begin(); it != routes->end(); ++it)
 	{

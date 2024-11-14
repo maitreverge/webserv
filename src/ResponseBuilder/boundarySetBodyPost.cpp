@@ -74,7 +74,9 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 	static vector< char > curLine;
 	static vector< char > nextLine;
 
-	// if (!_tokenEnd.empty()) // ! if this condition might overlap on others functions calls ?
+	initBoundaryTokens();
+
+	if ( !this->_ofs.is_open() )
 	{
 		initBoundaryTokens();
 	}
