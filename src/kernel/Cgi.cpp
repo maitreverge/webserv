@@ -59,6 +59,10 @@ void Cgi::launch(Client & client)
 
 void Cgi::child(Client & client)
 {
+    Logger::getInstance().log(INFO, "Child", client);
+    Logger::getInstance().log(DEBUG, client.responseBuilder._fileExtension,
+        client);
+    std::cout << std::flush;
     dup2(this->_fds[0], STDIN_FILENO); 
     dup2(this->_fds[0], STDOUT_FILENO); 
     close(this->_fds[0]);
@@ -69,28 +73,27 @@ void Cgi::child(Client & client)
         ("PATH_INFO=" + client.responseBuilder._pathInfo);
     
     char *env[] = {const_cast<char *>(envPathInfo.c_str()), NULL};
-
     std::string path = client.responseBuilder._fileName;
     Logger::getInstance().~Logger();
     Kernel::getInstance(NULL).~Kernel();
-    // if (client.responseBuilder._fileExtension == "out")    
-    // {
-	// 	char *argv[] = {NULL};
-    //     execve(path.c_str(), argv, env); //!
-	// }
+    if (client.responseBuilder._fileExtension == "out")    
+    {
+		char *argv[] = {NULL};
+        execve(path.c_str(), argv, env); //!
+	}
 	// else 
-	if (client.responseBuilder._fileExtension == "py")
-	{	
-		char *argv[] = {const_cast<char *>("/usr/bin/python3"),
-			const_cast<char *>(path.c_str()), NULL};
-        execve("/usr/bin/python3", argv, env); //!
-	}
-    else if (client.responseBuilder._fileExtension == "php")
-	{	
-		char *argv[] = {const_cast<char *>("/usr/bin/php-cgi"),
-			const_cast<char *>(path.c_str()), NULL};
-        execve("/usr/bin/php-cgi", argv, env); //!
-	}
+	// if (client.responseBuilder._fileExtension == "py")
+	// {	
+	// 	char *argv[] = {const_cast<char *>("/usr/bin/python3"),
+	// 		const_cast<char *>(path.c_str()), NULL};
+    //     execve("/usr/bin/python3", argv, env); //!
+	// }
+    // else if (client.responseBuilder._fileExtension == "php")
+	// {	
+	// 	char *argv[] = {const_cast<char *>("/usr/bin/php-cgi"),
+	// 		const_cast<char *>(path.c_str()), NULL};
+    //     execve("/usr/bin/php-cgi", argv, env); //!
+	// }
 		// execve(path.c_str(), argv, env);
     // execve("/home/seblin/42/42_webserv/cgi/main_inout.out", argv, env); 		    
     // execve("/home/svidot/42_am/webserv/cgi/main_inout.out", argv, env); 
@@ -111,7 +114,7 @@ bool Cgi::retHandle(Client & client, ssize_t ret, std::string err,
     {		
         Logger::getInstance().log(ERROR, err);
         errnoHandle();		
-
+        client.ping = 2;
 		// FD_CLR(this->_fds[1], &Kernel::_actualSet);//! err 4..
         // close(this->_fds[1]);
         // this->_fds[1] = -1;

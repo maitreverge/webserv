@@ -138,7 +138,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	_errorType = CODE_200_OK;
 
 	extractRouteConfig();
-	// printMyConfig();
+	printMyConfig();
 	
 	try
 	{
