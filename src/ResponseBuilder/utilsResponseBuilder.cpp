@@ -54,6 +54,15 @@ void	ResponseBuilder::uploadCheck( void ){
 	else if (_myconfig.uploadDirectory.empty())
 	{
 		// ? Pertinent d'upload dans la meme URI si il n'y a pas d'UploadDirectory ?
+		// TODO : Which directory to choose if the targeted one is empty ?
+		
+		/*
+		If such directory isn't in the config file, we can take the upload directory by default
+		! AND INFORM THE USER
+		If the upload have any proble, we create it
+		*/
+		
+		// ! From now, no specified uploadDirectory raise a 403
 		setError(CODE_403_FORBIDDEN);
 	}
 	else if ( access(_myconfig.uploadDirectory.c_str(), W_OK) == -1 )
@@ -61,6 +70,9 @@ void	ResponseBuilder::uploadCheck( void ){
 		//!  we can't write on the destination 
 		setError(CODE_401_UNAUTHORIZED);
 	}
+
+	// Refresh URI
+	_realURI = _config->errorPaths.at(_errorType);
 }
 
 void	ResponseBuilder::checkAutho( void ){
@@ -103,11 +115,11 @@ void	ResponseBuilder::checkAutho( void ){
 void	ResponseBuilder::extractFileNature( string &target){
 
 	// TODO : Handle shitty names files and put default values
-	if (_method == POST)
-	{
-		_fileName = target;
-	}
-	else
+	// if (_method == POST)
+	// {
+	// 	_fileName = target;
+	// }
+	// else
 	{
 		_fileName = target.substr(target.find_last_of("/") + 1); // extract file name // DOUBT for POST
 	}
@@ -137,7 +149,13 @@ void	ResponseBuilder::checkNature( void ){
 			else
 			{
 				// POST AND DELETE
-				extractFileNature( _config->errorPaths.at(_errorType) );
+				if (!_isCGI)
+				{
+					// ! ne pas ecraser l'URI si c'est un CGI
+					extractFileNature( _config->errorPaths.at(_errorType) );
+				}
+				else
+					extractFileNature( _realURI );
 			}
 		}
 		else
