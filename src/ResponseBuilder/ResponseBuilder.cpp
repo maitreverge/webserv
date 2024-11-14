@@ -125,12 +125,13 @@ void	ResponseBuilder::checkMethod( void ){
 	setError(CODE_405_METHOD_NOT_ALLOWED);
 }
 
-void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
+void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_errorCodes codeInput ){
 
 	Logger::getInstance().log(DEBUG, "ResponseBuilder->getHeader", inputClient);
 		
 	_client = &inputClient; // init client
 	_config = &inputConfig; // init config
+
 	
 	_realURI = _client->headerRequest.getURI();
 	_originalURI = _client->headerRequest.getURI();
@@ -138,8 +139,10 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	_errorType = CODE_200_OK;
 
 	extractRouteConfig();
-	printMyConfig();
+	// printMyConfig();
 	
+	if (codeInput != CODE_200_OK)
+		setError(codeInput, true);
 	try
 	{
 		extractMethod();
@@ -181,6 +184,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	}
 	catch(const std::exception& e)
 	{
+		return;
 		Logger::getInstance().log(INFO, "Another kind or error has been raised in the getHeader process", inputClient);
 	} 
 
