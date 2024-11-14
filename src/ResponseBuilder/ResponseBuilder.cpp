@@ -62,15 +62,15 @@ void	ResponseBuilder::slashManip( string &target ){
 	{
 
 	}
-	else if (target == "/")
-	{
-		return;
-	}
-	else
+	else if (target != "/")
 	{
 		if (beginWithSlash)
 			target.erase(target.begin());
 	}
+	// else if (target == "/")
+	// {
+	// 	// return;
+	// }
 
 	if ( isDirectory(target) )
 	{
@@ -81,7 +81,7 @@ void	ResponseBuilder::slashManip( string &target ){
 		
 		// Refresh the bool
 		beginWithSlash = !target.empty() && (*target.begin() == '/');
-		if (beginWithSlash)
+		if (beginWithSlash and target != "/")
 			target.erase(target.begin());
     }
 }
