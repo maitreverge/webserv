@@ -79,14 +79,12 @@ void Cgi::child(Client & client)
     //     execve(path.c_str(), argv, env); //!
 	// }
 	// else 
-	// if (client.responseBuilder._fileExtension == "py")
-	// {
-		// char *argv[] = {const_cast<char *>("/usr/bin/python3"),
-		// 	const_cast<char *>(path.c_str()), NULL};
-				char *argv[] = {const_cast<char *>("/home/seblin/42/42_webserv/cgi/main_inout.py"),
-			const_cast<char *>("/home/seblin/42/42_webserv/cgi/main_inout.py"), NULL};
+	if (client.responseBuilder._fileExtension == "py")
+	{	
+		char *argv[] = {const_cast<char *>("/usr/bin/python3"),
+			const_cast<char *>(path.c_str()), NULL};
         execve("/usr/bin/python3", argv, env); //!
-	// }
+	}
 		// execve(path.c_str(), argv, env);
     // execve("/home/seblin/42/42_webserv/cgi/main_inout.out", argv, env); 		    
     // execve("/home/svidot/42_am/webserv/cgi/main_inout.out", argv, env); 
