@@ -14,7 +14,12 @@ Config::Config(char *path) : maxBodySize(5000000), maxServerNbr(8)
 
 Config::Config() : maxBodySize(5000000), maxServerNbr(8)
 {
-	intitializeVars(0);
+	intitializeVars(1);
+	ConfigFileParser parser;
+	parser.parseConfigFile(*this, (char *)("_configs/base_test/base_test_ok_1.ini"));
+	int i = 0;
+	for (i = 0; i < maxServerNbr; i++)
+		initializeServer((uint16_t)std::atoi(_serverStruct[i].port.c_str()), sockAddress);
 }
 
 void	Config::intitializeVars(bool withConfigFile)
@@ -56,6 +61,35 @@ void	Config::initializeServers()
 	_serverStruct[3].host = "0.0.0.0";
 	_serverStruct[3].port = "80";
 	_serverStruct[3].serverName = "server4";
+
+	std::vector<std::string> innerVector;
+	innerVector.push_back("index.html");
+	std::vector<std::string> innerVector2;
+	innerVector.push_back("GET");
+	std::vector<std::string> innerVector3;
+	innerVector.push_back("/");
+
+	std::map< std::string, std::vector<std::string> >innerMap;
+
+	innerMap.insert(std::make_pair("index", innerVector));
+	innerMap.insert(std::make_pair("allowedMethods", innerVector2));
+	innerMap.insert(std::make_pair("uri", innerVector3));
+
+	// std::map < std::string, std::map< std::string, std::vector<std::string> > >outterMap;
+
+	_serverStruct[0].routesData.insert(std::make_pair("route1", innerMap));
+	_serverStruct[1].routesData.insert(std::make_pair("route1", innerMap));
+	_serverStruct[2].routesData.insert(std::make_pair("route1", innerMap));
+
+	
+	
+
+
+
+	
+
+
+
 	initializeServer((uint16_t)std::atoi(_serverStruct[0].port.c_str()), sockAddress);
 	initializeServer((uint16_t)std::atoi(_serverStruct[1].port.c_str()), sockAddress);
 	initializeServer((uint16_t)std::atoi(_serverStruct[2].port.c_str()), sockAddress);
