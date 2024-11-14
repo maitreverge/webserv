@@ -10,6 +10,9 @@ void Server::replyClients()
 				continue;	
 		if (!this->_clients[i].headerRespons.empty())
 		{
+			std::cout << "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ" << std::endl;
+			printResponse(this->_clients[i].headerRespons);
+			std::cout << "ZWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW" << std::endl;
 			if (replyClient(i, this->_clients[i].headerRespons))
 				break ;	
 		}

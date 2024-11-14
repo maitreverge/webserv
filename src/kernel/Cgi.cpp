@@ -85,6 +85,12 @@ void Cgi::child(Client & client)
 			const_cast<char *>(path.c_str()), NULL};
         execve("/usr/bin/python3", argv, env); //!
 	}
+    else if (client.responseBuilder._fileExtension == "php")
+	{	
+		char *argv[] = {const_cast<char *>("/usr/bin/php-cgi"),
+			const_cast<char *>(path.c_str()), NULL};
+        execve("/usr/bin/php-cgi", argv, env); //!
+	}
 		// execve(path.c_str(), argv, env);
     // execve("/home/seblin/42/42_webserv/cgi/main_inout.out", argv, env); 		    
     // execve("/home/svidot/42_am/webserv/cgi/main_inout.out", argv, env); 
