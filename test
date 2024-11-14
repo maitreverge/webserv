@@ -1,0 +1,325 @@
+
+[34mWed, 13 Nov 2024 08:39:44 GMT: [32m[INFO] [0m[32m[1;3;36mServer is Online![0m[0m
+
+ROUTES:
+Route: route1
+  Key: allowedMethods
+    Value/Values: GET POST DELETE 
+  Key: cgiAllowed
+    Value/Values: .php .out 
+  Key: index
+    Value/Values: index.html 
+  Key: uploadAllowed
+    Value/Values: 1 
+  Key: uploadDirectory
+    Value/Values: uploads 
+  Key: uri
+    Value/Values: / 
+[34mWed, 13 Nov 2024 08:39:51 GMT: [32m[INFO] [0m[32m[30;101mnew client[0m [35mClient: 127.0.0.1 [33m41238 [32m8[0m
+[34mWed, 13 Nov 2024 08:39:51 GMT: [32m[INFO] [0m[32mreceiv client request 747 bytes [35mClient: 127.0.0.1 [33m41238 [32m8[0m
+[34mWed, 13 Nov 2024 08:39:51 GMT: [34m[DEBUG] [0m[32mheader terminated [35mClient: 127.0.0.1 [33m41238 [32m8[0m
+GET /cgi/main_errout.out HTTP/1.1
+Host: localhost:1610
+Connection: keep-alive
+Pragma: no-cache
+Cache-Control: no-cache
+sec-ch-ua: "Chromium";v="130", "Google Chrome";v="130", "Not?A_Brand";v="99"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Windows"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7
+
+
+[34mWed, 13 Nov 2024 08:39:51 GMT: [32m[INFO] [0m[32mRequest parsing started [35mClient: 127.0.0.1 [33m41238 [32m8[0m
+------ ATTRIBUTES ------
+Method: GET
+URI: /cgi/main_errout.out
+HTTP_VERSION: HTTP/1.1
+_isValid: 1
+-------- HEADERS -------
+Connection: keep-alive
+Host: localhost:1610
+Accept: 
+	text/html
+	application/xhtml+xml
+	application/xml;q=0.9
+	image/avif
+	image/webp
+	image/apng
+	*/*;q=0.8
+	application/signed-exchange;v=b3;q=0.7
+ContentLength: 0
+[34mWed, 13 Nov 2024 08:39:51 GMT: [34m[DEBUG] [0m[32mResponseBuilder->getHeader [35mClient: 127.0.0.1 [33m41238 [32m8[0m
+[36m================= PRINT MY CONFIG =============
+[0m
+ALLOWED METHODS =
+[1;31mGET[0m
+[1;31mPOST[0m
+[1;31mDELETE[0m
+REDIRECTION =
+[1;31m[0m
+ROOT =
+[1;31m[0m
+LISTING-DIRECTORY =
+[1;31mfalse[0m
+INDEX =
+[1;31mindex.html[0m
+CGI ALLOWED =
+[1;31m.php[0m
+[1;31m.out[0m
+UPLOAD ALLOWED =
+[1;31mtrue[0m
+UPLOAD DIRECTORY =
+[1;31muploads[0m
+[36m================= PRINT MY CONFIG =============[0m
+[34mWed, 13 Nov 2024 08:39:51 GMT: [34m[DEBUG] [0m[32mLaunch Cgi[0m
+[34mWed, 13 Nov 2024 08:39:51 GMT: [34m[DEBUG] [0m[32mResponseBuilder->buildHeader [35mClient: 127.0.0.1 [33m41238 [32m8[0m
+=========== printAllHeaders ========
+[1;31mREAL URI : [0mcgi/main_errout.out
+[1;32mStatus Line :[0mHTTP/1.1 200 OK
+
+[1;36mTimeStamp :[0mDate: Wed, 13 Nov 2024 08:39:51 GMT
+
+[1;36mContent Type :[0mContent-Type: application/octet-stream
+
+[1;36mLocation :[0m
+[1;36mContent Lenght : (header)[0mContent-Length: 16224
+
+[1;34mBody Lenght (uint64_t)[0m16224
+=========== printAllHeaders ========
+[34mWed, 13 Nov 2024 08:39:51 GMT: [32m[INFO] [0m[32mResponse Builder Get Body [35mClient: 127.0.0.1 [33m41238 [32m8[0m
+[34mWed, 13 Nov 2024 08:39:51 GMT: [32m[INFO] [0m[32mCgi Get Body[0m
+[34mWed, 13 Nov 2024 08:39:52 GMT: [34m[DEBUG] [0m[32mnot ready to recev[0m
+[34mWed, 13 Nov 2024 08:39:52 GMT: [32m[INFO] [0m[32m[30;101mnew client[0m [35mClient: 127.0.0.1 [33m41250 [32m9[0m
+[34mWed, 13 Nov 2024 08:39:52 GMT: [32m[INFO] [0m[32mResponse Builder Get Body [35mClient: 127.0.0.1 [33m41238 [32m8[0m
+[34mWed, 13 Nov 2024 08:39:52 GMT: [32m[INFO] [0m[32mCgi Get Body[0m
+[34mWed, 13 Nov 2024 08:39:53 GMT: [34m[DEBUG] [0m[32mnot ready to recev[0m
+[34mWed, 13 Nov 2024 08:39:53 GMT: [32m[INFO] [0m[32mResponse Builder Get Body [35mClient: 127.0.0.1 [33m41238 [32m8[0m
+[34mWed, 13 Nov 2024 08:39:53 GMT: [32m[INFO] [0m[32mCgi Get Body[0m
+[34mWed, 13 Nov 2024 08:39:53 GMT: [33m[WARNING] [0m[32mTimeout - start: 7313 end: 8878 diff: 1565 sec: 7.825/10
+ [35mClient: 127.0.0.1 [33m41238 [32m8[0m
+[34mWed, 13 Nov 2024 08:39:53 GMT: [34m[DEBUG] [0m[32mret: 73 gret: 73[0m
+[34mWed, 13 Nov 2024 08:39:53 GMT: [32m[INFO] [0m[32mReply Client [35mClient: 127.0.0.1 [33m41238 [32m8[0m
+
+[34mPrint Vector: [31m
+-[34mWed, 13 Nov 2024 08:39:51 GMT: [34m[DEBUG] [0m[32mLaunch Cgi[0m
+-[0m
+
+[34mWed, 13 Nov 2024 08:39:53 GMT: [34m[DEBUG] [0m[32mdata sent to client: -[34mWed, 13 Nov 2024 08:39:51 GMT: [34m[DEBUG] [0m[32mLaunch Cgi[0m
+- [35mClient: 127.0.0.1 [33m41238 [32m8[0m
+[34mWed, 13 Nov 2024 08:39:53 GMT: [32m[INFO] [0m[32mResponse Builder Get Body [35mClient: 127.0.0.1 [33m41238 [32m8[0m
+[34mWed, 13 Nov 2024 08:39:53 GMT: [32m[INFO] [0m[32mCgi Get Body[0m
+[34mWed, 13 Nov 2024 08:39:53 GMT: [34m[DEBUG] [0m[32mret: 0 gret: 73[0m
+[34mWed, 13 Nov 2024 08:39:53 GMT: [32m[INFO] [0m[32mend cgi[0m
+[34mWed, 13 Nov 2024 08:39:53 GMT: [34m[DEBUG] [0m[32mEnd Reply [35mClient: 127.0.0.1 [33m41238 [32m8[0m
+[34mWed, 13 Nov 2024 08:39:53 GMT: [32m[INFO] [0m[32m[30;101mclient exited[0m [35mClient: 127.0.0.1 [33m41238 [32m8[0m
+[34mWed, 13 Nov 2024 08:39:54 GMT: [32m[INFO] [0m[32mreceiv client request 747 bytes [35mClient: 127.0.0.1 [33m41250 [32m9[0m
+[34mWed, 13 Nov 2024 08:39:54 GMT: [34m[DEBUG] [0m[32mheader terminated [35mClient: 127.0.0.1 [33m41250 [32m9[0m
+GET /cgi/main_errout.out HTTP/1.1
+Host: localhost:1610
+Connection: keep-alive
+Pragma: no-cache
+Cache-Control: no-cache
+sec-ch-ua: "Chromium";v="130", "Google Chrome";v="130", "Not?A_Brand";v="99"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Windows"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7
+
+
+[34mWed, 13 Nov 2024 08:39:54 GMT: [32m[INFO] [0m[32mRequest parsing started [35mClient: 127.0.0.1 [33m41250 [32m9[0m
+------ ATTRIBUTES ------
+Method: GET
+URI: /cgi/main_errout.out
+HTTP_VERSION: HTTP/1.1
+_isValid: 1
+-------- HEADERS -------
+Connection: keep-alive
+Host: localhost:1610
+Accept: 
+	text/html
+	application/xhtml+xml
+	application/xml;q=0.9
+	image/avif
+	image/webp
+	image/apng
+	*/*;q=0.8
+	application/signed-exchange;v=b3;q=0.7
+ContentLength: 0
+[34mWed, 13 Nov 2024 08:39:54 GMT: [34m[DEBUG] [0m[32mResponseBuilder->getHeader [35mClient: 127.0.0.1 [33m41250 [32m9[0m
+[36m================= PRINT MY CONFIG =============
+[0m
+ALLOWED METHODS =
+[1;31mGET[0m
+[1;31mPOST[0m
+[1;31mDELETE[0m
+REDIRECTION =
+[1;31m[0m
+ROOT =
+[1;31m[0m
+LISTING-DIRECTORY =
+[1;31mfalse[0m
+INDEX =
+[1;31mindex.html[0m
+CGI ALLOWED =
+[1;31m.php[0m
+[1;31m.out[0m
+UPLOAD ALLOWED =
+[1;31mtrue[0m
+UPLOAD DIRECTORY =
+[1;31muploads[0m
+[36m================= PRINT MY CONFIG =============[0m
+[34mWed, 13 Nov 2024 08:39:54 GMT: [34m[DEBUG] [0m[32mLaunch Cgi[0m
+[34mWed, 13 Nov 2024 08:39:54 GMT: [34m[DEBUG] [0m[32mResponseBuilder->buildHeader [35mClient: 127.0.0.1 [33m41250 [32m9[0m
+=========== printAllHeaders ========
+[1;31mREAL URI : [0mcgi/main_errout.out
+[1;32mStatus Line :[0mHTTP/1.1 200 OK
+
+[1;36mTimeStamp :[0mDate: Wed, 13 Nov 2024 08:39:54 GMT
+
+[1;36mContent Type :[0mContent-Type: application/octet-stream
+
+[1;36mLocation :[0m
+[1;36mContent Lenght : (header)[0mContent-Length: 16224
+
+[1;34mBody Lenght (uint64_t)[0m16224
+=========== printAllHeaders ========
+[34mWed, 13 Nov 2024 08:39:54 GMT: [32m[INFO] [0m[32mResponse Builder Get Body [35mClient: 127.0.0.1 [33m41250 [32m9[0m
+[34mWed, 13 Nov 2024 08:39:54 GMT: [32m[INFO] [0m[32mCgi Get Body[0m
+[34mWed, 13 Nov 2024 08:39:55 GMT: [34m[DEBUG] [0m[32mnot ready to recev[0m
+[34mWed, 13 Nov 2024 08:39:55 GMT: [32m[INFO] [0m[32mResponse Builder Get Body [35mClient: 127.0.0.1 [33m41250 [32m9[0m
+[34mWed, 13 Nov 2024 08:39:55 GMT: [32m[INFO] [0m[32mCgi Get Body[0m
+[34mWed, 13 Nov 2024 08:39:55 GMT: [34m[DEBUG] [0m[32mret: 73 gret: 146[0m
+[34mWed, 13 Nov 2024 08:39:55 GMT: [32m[INFO] [0m[32mReply Client [35mClient: 127.0.0.1 [33m41250 [32m9[0m
+
+[34mPrint Vector: [31m
+-[34mWed, 13 Nov 2024 08:39:54 GMT: [34m[DEBUG] [0m[32mLaunch Cgi[0m
+-[0m
+
+[34mWed, 13 Nov 2024 08:39:55 GMT: [34m[DEBUG] [0m[32mdata sent to client: -[34mWed, 13 Nov 2024 08:39:54 GMT: [34m[DEBUG] [0m[32mLaunch Cgi[0m
+- [35mClient: 127.0.0.1 [33m41250 [32m9[0m
+[34mWed, 13 Nov 2024 08:39:55 GMT: [32m[INFO] [0m[32mResponse Builder Get Body [35mClient: 127.0.0.1 [33m41250 [32m9[0m
+[34mWed, 13 Nov 2024 08:39:55 GMT: [32m[INFO] [0m[32mCgi Get Body[0m
+[34mWed, 13 Nov 2024 08:39:55 GMT: [34m[DEBUG] [0m[32mret: 0 gret: 146[0m
+[34mWed, 13 Nov 2024 08:39:55 GMT: [32m[INFO] [0m[32mend cgi[0m
+[34mWed, 13 Nov 2024 08:39:55 GMT: [34m[DEBUG] [0m[32mEnd Reply [35mClient: 127.0.0.1 [33m41250 [32m9[0m
+[34mWed, 13 Nov 2024 08:39:55 GMT: [32m[INFO] [0m[32m[30;101mclient exited[0m [35mClient: 127.0.0.1 [33m41250 [32m9[0m
+[34mWed, 13 Nov 2024 08:40:01 GMT: [32m[INFO] [0m[32m[30;101mnew client[0m [35mClient: 127.0.0.1 [33m55784 [32m8[0m
+[34mWed, 13 Nov 2024 08:40:01 GMT: [32m[INFO] [0m[32mreceiv client request 747 bytes [35mClient: 127.0.0.1 [33m55784 [32m8[0m
+[34mWed, 13 Nov 2024 08:40:01 GMT: [34m[DEBUG] [0m[32mheader terminated [35mClient: 127.0.0.1 [33m55784 [32m8[0m
+GET /cgi/main_errout.out HTTP/1.1
+Host: localhost:1610
+Connection: keep-alive
+Pragma: no-cache
+Cache-Control: no-cache
+sec-ch-ua: "Chromium";v="130", "Google Chrome";v="130", "Not?A_Brand";v="99"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Windows"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7
+
+
+[34mWed, 13 Nov 2024 08:40:01 GMT: [32m[INFO] [0m[32mRequest parsing started [35mClient: 127.0.0.1 [33m55784 [32m8[0m
+------ ATTRIBUTES ------
+Method: GET
+URI: /cgi/main_errout.out
+HTTP_VERSION: HTTP/1.1
+_isValid: 1
+-------- HEADERS -------
+Connection: keep-alive
+Host: localhost:1610
+Accept: 
+	text/html
+	application/xhtml+xml
+	application/xml;q=0.9
+	image/avif
+	image/webp
+	image/apng
+	*/*;q=0.8
+	application/signed-exchange;v=b3;q=0.7
+ContentLength: 0
+[34mWed, 13 Nov 2024 08:40:01 GMT: [34m[DEBUG] [0m[32mResponseBuilder->getHeader [35mClient: 127.0.0.1 [33m55784 [32m8[0m
+[36m================= PRINT MY CONFIG =============
+[0m
+ALLOWED METHODS =
+[1;31mGET[0m
+[1;31mPOST[0m
+[1;31mDELETE[0m
+REDIRECTION =
+[1;31m[0m
+ROOT =
+[1;31m[0m
+LISTING-DIRECTORY =
+[1;31mfalse[0m
+INDEX =
+[1;31mindex.html[0m
+CGI ALLOWED =
+[1;31m.php[0m
+[1;31m.out[0m
+UPLOAD ALLOWED =
+[1;31mtrue[0m
+UPLOAD DIRECTORY =
+[1;31muploads[0m
+[36m================= PRINT MY CONFIG =============[0m
+[34mWed, 13 Nov 2024 08:40:01 GMT: [34m[DEBUG] [0m[32mLaunch Cgi[0m
+[34mWed, 13 Nov 2024 08:40:01 GMT: [34m[DEBUG] [0m[32mResponseBuilder->buildHeader [35mClient: 127.0.0.1 [33m55784 [32m8[0m
+=========== printAllHeaders ========
+[1;31mREAL URI : [0mcgi/main_errout.out
+[1;32mStatus Line :[0mHTTP/1.1 200 OK
+
+[1;36mTimeStamp :[0mDate: Wed, 13 Nov 2024 08:40:01 GMT
+
+[1;36mContent Type :[0mContent-Type: application/octet-stream
+
+[1;36mLocation :[0m
+[1;36mContent Lenght : (header)[0mContent-Length: 16224
+
+[1;34mBody Lenght (uint64_t)[0m16224
+=========== printAllHeaders ========
+[34mWed, 13 Nov 2024 08:40:01 GMT: [32m[INFO] [0m[32mResponse Builder Get Body [35mClient: 127.0.0.1 [33m55784 [32m8[0m
+[34mWed, 13 Nov 2024 08:40:01 GMT: [32m[INFO] [0m[32mCgi Get Body[0m
+[34mWed, 13 Nov 2024 08:40:02 GMT: [34m[DEBUG] [0m[32mnot ready to recev[0m
+[34mWed, 13 Nov 2024 08:40:02 GMT: [32m[INFO] [0m[32m[30;101mnew client[0m [35mClient: 127.0.0.1 [33m55796 [32m9[0m
+[34mWed, 13 Nov 2024 08:40:02 GMT: [32m[INFO] [0m[32mResponse Builder Get Body [35mClient: 127.0.0.1 [33m55784 [32m8[0m
+[34mWed, 13 Nov 2024 08:40:02 GMT: [32m[INFO] [0m[32mCgi Get Body[0m
+[34mWed, 13 Nov 2024 08:40:02 GMT: [33m[WARNING] [0m[32mTimeout - start: 299465 end: 300747 diff: 1282 sec: 6.41/10
+ [35mClient: 127.0.0.1 [33m55784 [32m8[0m
+[34mWed, 13 Nov 2024 08:40:02 GMT: [34m[DEBUG] [0m[32mret: 73 gret: 219[0m
+[34mWed, 13 Nov 2024 08:40:02 GMT: [32m[INFO] [0m[32mReply Client [35mClient: 127.0.0.1 [33m55784 [32m8[0m
+
+[34mPrint Vector: [31m
+-[34mWed, 13 Nov 2024 08:40:01 GMT: [34m[DEBUG] [0m[32mLaunch Cgi[0m
+-[0m
+
+[34mWed, 13 Nov 2024 08:40:02 GMT: [34m[DEBUG] [0m[32mdata sent to client: -[34mWed, 13 Nov 2024 08:40:01 GMT: [34m[DEBUG] [0m[32mLaunch Cgi[0m
+- [35mClient: 127.0.0.1 [33m55784 [32m8[0m
+[34mWed, 13 Nov 2024 08:40:02 GMT: [32m[INFO] [0m[32mResponse Builder Get Body [35mClient: 127.0.0.1 [33m55784 [32m8[0m
+[34mWed, 13 Nov 2024 08:40:02 GMT: [32m[INFO] [0m[32mCgi Get Body[0m
+[34mWed, 13 Nov 2024 08:40:02 GMT: [34m[DEBUG] [0m[32mret: 0 gret: 219[0m
+[34mWed, 13 Nov 2024 08:40:02 GMT: [32m[INFO] [0m[32mend cgi[0m
+[34mWed, 13 Nov 2024 08:40:02 GMT: [34m[DEBUG] [0m[32mEnd Reply [35mClient: 127.0.0.1 [33m55784 [32m8[0m
+[34mWed, 13 Nov 2024 08:40:02 GMT: [32m[INFO] [0m[32m[30;101mclient exited[0m [35mClient: 127.0.0.1 [33m55784 [32m8[0m
+
+[34mWed, 13 Nov 2024 08:40:10 GMT: [32m[INFO] [0m[32m[1;3;91mServer is Offline.[0m[0m
+

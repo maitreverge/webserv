@@ -6,7 +6,7 @@ void ResponseBuilder::checkCGI( void ){
 
     // Define the file extensions for Python and PHP scripts
     string extensionPHP = ".php";
-    string extensionPython = ".out";
+    string extensionPython = ".py";
 	string extensionTarget;
 
     // Find the first positions of the Python and PHP extensions in the URI
@@ -28,7 +28,6 @@ void ResponseBuilder::checkCGI( void ){
 	else
 		targetLoc = pythonLoc;
 	
-
 	extensionTarget = (targetLoc == phpLoc) ? extensionPHP : extensionPython;
 
 	// if the extensionTarget has not been found within the cgiAllowed vector.
@@ -55,6 +54,4 @@ void ResponseBuilder::checkCGI( void ){
 	_folderCGI = _realURI.substr(0, _realURI.find_last_of('/') + 1);
 
 	_folderCGI.insert(0, ".");
-
-	// client.headerRespons.clear();
 }

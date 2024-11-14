@@ -12,24 +12,20 @@
 #include "errorCode.hpp"
 #include "ResponseBuilder.hpp"
 
-#define RECV_BUFF_SIZE 3000
-#define SEND_BUFF_SIZE 4000
+#define RECV_BUFF_SIZE 300
+#define SEND_BUFF_SIZE 300
 
 #define MAX_HDR_SIZE 8192
 #define MAX_CNT_SIZE 30000000
 
+class Kernel;
 class Server
 {
 	sockaddr_in 		_sockAddr;
-	std::vector<Client> _clients;
 	std::vector<char>	_writeBuffer;
 	std::vector<char>	_readBuffer;
 	int					_fd;
-
-	int	&				_maxFd;
-	fd_set &			_actualSet;
-	fd_set &			_readSet;
-	fd_set &			_writeSet;
+	
 	Config 				_conf;
 
 	void clientMessage(size_t i, ssize_t ret);
@@ -54,13 +50,14 @@ class Server
 
 	public:
 
-		Server(sockaddr_in & sockaddr, int & maxFd, fd_set & actualSet,
-			fd_set & readSet, fd_set & writeSet, Config & conf);
+		std::vector<Client> _clients;
+
+		Server(sockaddr_in & sockaddr, Config & conf);
 
 		const sockaddr_in & getSockAdress() const;
 
 		bool setup();
-		void catchClients();
+		void catchClients(Kernel & kernel);
 		void listenClients();
 		void replyClients();
 		void exitServer();

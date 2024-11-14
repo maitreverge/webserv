@@ -27,8 +27,8 @@ Logger::~Logger()
 
 Logger& Logger::getInstance()
 {
-static Logger instance;
-return instance;
+	static Logger instance;
+	return instance;
 }
 
 /**========================================================================

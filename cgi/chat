@@ -1,0 +1,10 @@
+-Content-type: text/html; charset=UTF-8
+
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 303
+
+<html>
+<head><title>My Styled Page</title></head>
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+<h1 style="color: #ff5733; font-family: Arial, sans-serif;">Hello,-

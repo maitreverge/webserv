@@ -6,10 +6,10 @@ void Server::replyClients()
 	for (size_t i = 0; i < this->_clients.size(); i++)
 	{		
 		if (this->_clients[i].ping < 2 
-			|| !FD_ISSET(this->_clients[i].fd, &this->_writeSet))
+			|| !FD_ISSET(this->_clients[i].fd, &Kernel::_writeSet))
 				continue;	
 		if (!this->_clients[i].headerRespons.empty())
-		{
+		{	
 			if (replyClient(i, this->_clients[i].headerRespons))
 				break ;	
 		}
@@ -60,8 +60,8 @@ void Server::printResponse(const std::vector<char> & response)
 bool Server::replyClient(size_t i, std::vector<char> & response)
 {	
 	Logger::getInstance().log(INFO, "Reply Client", this->_clients[i]);
-	// printResponse(response);
-			
+	printResponse(response);
+
 	ssize_t ret = send(this->_clients[i].fd, response.data(), response.size(),
 		MSG_NOSIGNAL);		
 	if (ret <= 0)

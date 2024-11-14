@@ -39,12 +39,8 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 		resolveURI();
 		checkAutho();
 		checkNature();
-		
 		if (_isCGI)
-		{
-			_cgi.launch(_realURI, _pathInfo);
-		}
-
+			_cgi.launch(inputClient);
 		// ! WORK NEEDLE
 		if (_isDirectory and (_method == GET) and (not _isCGI))
 		{
@@ -90,7 +86,7 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig ){
 
 void	ResponseBuilder::setBodyPost( Client & client, bool eof ){
 
-	usleep(50000);
+	usleep(500000);
     Logger::getInstance().log(DEBUG, "setBodyPost");
 
 	if (this->_isCGI)	

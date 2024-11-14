@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include <fcntl.h>
 
 int main()
 {  
@@ -14,23 +13,9 @@ int main()
         buff[ret] = 0;
 		write(2, buff, strlen(buff));        
     }
-    if (ret < 0)    
-        printf("error read\n");
-    
-    if (getenv("PATH_INFO"))
-        write(2, getenv("PATH_INFO"), strlen(getenv("PATH_INFO")));
-    int fd = open("local", O_RDONLY);
-    if (fd < 0)
-        printf("error open\n");
-    else
-    {
-        while ((ret = read(fd, buff, 20)) > 0)
-        {
-            buff[ret] = 0;
-            write(2, buff, strlen(buff));        
-        }
-    }
-    
+    if (ret < 0)
+        printf("error read\n");    
+   
     char * body = "<html>\
 <head><title>My Styled Page</title></head>\
 <body style=\"background-color: #f0f0f0; text-align: center; padding: 50px;\">\
@@ -46,6 +31,8 @@ Content-Length: ";
 
     printf("%s", header);
     printf("%d", len);
+    fflush(stdout);
+    while (1);
     printf("%s", end);
     printf("%s", body);
     

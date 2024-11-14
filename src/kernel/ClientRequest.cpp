@@ -10,7 +10,7 @@ void Server::listenClients()
 		if (this->_clients[i].headerRequest.getHeaders().ContentLength
 			&& !this->_clients[i].messageRecv.empty())
 			reSend(i);
-		else if (FD_ISSET(this->_clients[i].fd, &this->_readSet))
+		else if (FD_ISSET(this->_clients[i].fd, &Kernel::_readSet))
 		{
 			this->_readBuffer.clear();
 			this->_readBuffer.resize(RECV_BUFF_SIZE);
@@ -32,9 +32,15 @@ void Server::listenClients()
 void Server::reSend(size_t i)
 {
 	Logger::getInstance().log(INFO, "Re Send", this->_clients[i]);
-	// std::cout << this->_clients[i].headerRequest.getHeaders().ContentLength
-	// 	<< " " << this->_clients[i].messageRecv.size() << std::endl;
+	stringstream ss;
+	ss << "Content-Length: "
+		<< this->_clients[i].headerRequest.getHeaders().ContentLength
+		<< " MessageRecv-Size: " << this->_clients[i].messageRecv.size()
+		<< std::endl;		
+	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
 	
+	if (this->_clients[i].headerRequest.getMethod() != "POST")
+		return this->_clients[i].messageRecv.clear();
 	if (this->_clients[i].ping >= 1)
 	{
 		Logger::getInstance().log(INFO, "Re Send True", this->_clients[i]);
@@ -184,7 +190,7 @@ bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
 bool Server::isContentLengthValid(size_t i)
 {	
 	if (this->_clients[i].headerRequest.getHeaders().ContentLength
-		> MAX_CNT_SIZE)
+		> MAX_CNT_SIZE)// ->_conf.maxBodySize)
 	{			
 		stringstream ss;
 		ss << "max content size reached" << " - Content-Lenght: "

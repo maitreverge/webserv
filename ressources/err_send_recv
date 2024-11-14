@@ -1,0 +1,12 @@
+Bloquant		recv	Aucune donnée disponible	Bloque	-
+Bloquant		recv	Erreur réelle				-1	ECONNRESET, etc.
+Bloquant		recv	Déconnexion propre (EOF)	0	-
+Non-bloquant	recv	Aucune donnée disponible	-1	EAGAIN ou EWOULDBLOCK
+Non-bloquant	recv	Erreur réelle				-1	ECONNRESET, etc.
+Non-bloquant	recv	Déconnexion propre (EOF)	0	-
+Bloquant		send	Buffer plein				Bloque	-
+Bloquant		send	Erreur réelle				-1	EPIPE, ECONNRESET, etc.
+Bloquant		send	Déconnexion propre (EOF)	N/A (n’a pas d’EOF)	N/A
+Non-bloquant	send	Buffer plein				-1	EAGAIN ou EWOULDBLOCK
+Non-bloquant	send	Erreur réelle				-1	EPIPE, ECONNRESET, etc.
+Non-bloquant	send	Déconnexion propre (EOF)	N/A (n’a pas d’EOF)

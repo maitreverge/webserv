@@ -165,14 +165,11 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 		checkAutho();
 		
 		checkNature();
-
-		// ! CGI BY SEB, DO NOT FUCKING TOUCH
-		if (_isCGI)
-		{
-			_cgi.launch(_realURI, _pathInfo);
-
-		}
 		
+		if (_isCGI)
+			_cgi.launch(inputClient);
+		
+		// ! WORK NEEDLE
 		if (_isDirectory and (_method == GET) and (not _isCGI))
 		{
 			generateListingHTML();
