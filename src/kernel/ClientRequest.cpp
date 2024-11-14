@@ -190,7 +190,7 @@ bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
 bool Server::isContentLengthValid(size_t i)
 {	
 	if (this->_clients[i].headerRequest.getHeaders().ContentLength
-		> MAX_CNT_SIZE)// ->_conf.maxBodySize)
+		> MAX_CNT_SIZE)// ->_conf.maxBodySize)//!
 	{			
 		stringstream ss;
 		ss << "max content size reached" << " - Content-Lenght: "

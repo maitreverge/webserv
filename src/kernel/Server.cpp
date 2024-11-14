@@ -27,10 +27,8 @@ bool Server::setup()
 	FD_SET(this->_fd, &Kernel::_actualSet);
 	if (bind(this->_fd, reinterpret_cast<const sockaddr *>
 		(&this->_sockAddr), sizeof(this->_sockAddr)) < 0)
-	{
-		std::stringstream ss;
-		ss << "bind from socket: " << ntohs(this->_sockAddr.sin_port);
-		Logger::getInstance().log(ERROR, ss.str());
+	{		
+		Logger::getInstance().log(ERROR, "bind", *this);
 
 		this->exitServer();		
 		return false;		
@@ -42,6 +40,7 @@ bool Server::setup()
 		this->exitServer();
 		return false;
 	}
+	Logger::getInstance().log(INFO, "listen", *this);
 	return true;
 }
 
