@@ -2,20 +2,11 @@
 #include "Logger.hpp"
 
 
-void ResponseBuilder::launchCGI( void ){
+void ResponseBuilder::checkCGI( void ){
 
-	// ! STEP 1 : Export PATH_INFO
-	std::cout << "LAUNCH" << std::endl;
-	// ! LAST STEP : UNSET PATH_INFO
-	this->_cgi.launch(); 
-}
-
-void ResponseBuilder::checkCGI( Client &client ){
-
-	(void)(client);
     // Define the file extensions for Python and PHP scripts
     string extensionPHP = ".php";
-    string extensionPython = ".py";
+    string extensionPython = ".out";
 	string extensionTarget;
 
     // Find the first positions of the Python and PHP extensions in the URI
@@ -52,8 +43,6 @@ void ResponseBuilder::checkCGI( Client &client ){
     // If either extension is found, set _isCGI to true
     _isCGI = true;
     
-    // std::string::size_type realLoc = ( phpLoc == std::string::npos ) ? pythonLoc : phpLoc;
-
     // Adjust the position to the end of the extension
 	targetLoc += extensionTarget.length();
 
@@ -62,6 +51,10 @@ void ResponseBuilder::checkCGI( Client &client ){
 
     // Update _realURI to only include the part up to and including the script extension
     _realURI = _realURI.substr(0, targetLoc);
+
+	_folderCGI = _realURI.substr(0, _realURI.find_last_of('/') + 1);
+
+	_folderCGI.insert(0, ".");
 
 	// client.headerRespons.clear();
 }

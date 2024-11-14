@@ -59,6 +59,7 @@ void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
 				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_502", CODE_502_BAD_GATEWAY);
 				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_503", CODE_503_SERVICE_UNAVAILABLE);
 				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_504", CODE_504_GATEWAY_TIMEOUT);
+				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_508", CODE_508_LOOP_DETECTED);
 				// category server
 				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].host, "host");
 				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].port, "port");

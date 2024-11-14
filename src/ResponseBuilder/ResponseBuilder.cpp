@@ -3,7 +3,7 @@
 
 // ------------------------- METHODS ---------------------------------
 
-void ResponseBuilder::sanatizeURI( string &oldURI ){ // ⛔ NOT OKAY FUNCTION
+void ResponseBuilder::sanatizeURI( string &oldURI ){
 
 	// TODO : refactor this function to avoid trimming usefull "../", as long as we don't escape the root webserv
 	string needle = "../";
@@ -17,79 +17,83 @@ void ResponseBuilder::sanatizeURI( string &oldURI ){ // ⛔ NOT OKAY FUNCTION
 	}
 }
 
-bool ResponseBuilder::redirectURI( void ){ // ✅ OKAY FUNCTION
+bool ResponseBuilder::redirectURI( void ){
 
 	if (_myconfig.redirection.empty())
 		return false;
 
-	_realURI = _myconfig.redirection;
-
-	_client->headerRequest.setURI(_myconfig.redirection);
+	// Client keeps asking the same redirection over and over
+	if (_realURI == _myconfig.redirection)
+		setError(CODE_508_LOOP_DETECTED);
 	
-	setError(CODE_307_TEMPORARY_REDIRECT);
+	_realURI = _myconfig.redirection + _myconfig.indexRedirection;
+	
+	setError(CODE_302_FOUND);
 	return true;
 }
 
-void ResponseBuilder::rootMapping( void ){ // ✅ OKAY FUNCTION
+void ResponseBuilder::rootMapping( void ){
 
 	if (_myconfig.root.empty())
 		return;
+	
+	slashManip(_myconfig.root);
+	
+	if (_realURI.find(_myconfig.root) == std::string::npos)
+		_realURI.replace(0, _myconfig.uri.size(), _myconfig.root);
 
-	// if (*_myconfig.root.rbegin() != '/')
-	// 	_myconfig.root += "/";
-
-	_realURI.replace(0, _myconfig.uri.size(), _myconfig.root);
 }
 
 bool ResponseBuilder::isDirectory(string &uri) {
 	
-	if (stat(uri.c_str(), &_fileInfo) != 0)
-		return false;
-	else if (_fileInfo.st_mode & S_IFDIR)
+	if ( (stat(uri.c_str(), &_fileInfo) == 0) and (_fileInfo.st_mode & S_IFDIR))
+	{
 		return true;
-	else
-		return false;
+	}
+	return false;
 }
 
-void	ResponseBuilder::slashManip( void ){
+void	ResponseBuilder::slashManip( string &target ){
 
-	// turn a regular URI ("/index.html" into "index.html")
-	bool beginWithSlash = !_realURI.empty() && (*_realURI.begin() == '/');
-	bool endWithSlash = !_realURI.empty() && (*_realURI.rbegin() == '/');
+	bool beginWithSlash = !target.empty() && (*target.begin() == '/');
+	bool endWithSlash = !target.empty() && (*target.rbegin() == '/');
 	
-	if (_realURI.empty())
+	if (target.empty())
 	{
 
 	}
-	else if (_realURI == "/")
-	{
-
-	}
-	else
+	else if (target != "/")
 	{
 		if (beginWithSlash)
-			_realURI.erase(_realURI.begin());
+			target.erase(target.begin());
 	}
+	// else if (target == "/")
+	// {
+	// 	// return;
+	// }
 
-	if (isDirectory(_realURI) and _myconfig.listingDirectory == false)
+	if ( isDirectory(target) )
 	{
 		if (!endWithSlash)
-			_realURI += "/";
-		if (_method == GET)
-			_realURI += _myconfig.index; // after checking the nature
-		beginWithSlash = !_realURI.empty() && (*_realURI.begin() == '/');
-		if (beginWithSlash)
-			_realURI.erase(_realURI.begin());
+			target += "/";
+		if (_method == GET and _myconfig.listingDirectory == false)
+			target += _myconfig.index; // after checking the nature
+		
+		// Refresh the bool
+		beginWithSlash = !target.empty() && (*target.begin() == '/');
+		if (beginWithSlash and target != "/")
+			target.erase(target.begin());
     }
 }
 
-void ResponseBuilder::resolveURI( void ) {// ⛔ NOT OKAY FUNCTION
+void ResponseBuilder::resolveURI( void ) {
 	
 	// ! STEP 1 : Check the rootMapping
 	rootMapping();
 
 	// Step 2: Handle redirection
-    if (redirectURI()) {
+    if (redirectURI())
+	{
         return;
     }
 	
@@ -97,14 +101,16 @@ void ResponseBuilder::resolveURI( void ) {// ⛔ NOT OKAY FUNCTION
 	// sanatizeURI(_realURI); // ! STAY COMMENTED until refactoring for better "../" erasing process
 
 	// ! STEP 3  : Deleting URI first 
-	slashManip();
+	slashManip(_realURI);
 
 }
 
 void	ResponseBuilder::checkMethod( void ){
 
 	if (_myconfig.allowedMethods.empty())
+	{
 		return;
+	}
 	
 	for (std::vector<string>::iterator it = _myconfig.allowedMethods.begin(); it != _myconfig.allowedMethods.end(); ++it)
 	{
@@ -118,41 +124,6 @@ void	ResponseBuilder::checkMethod( void ){
 	
 	setError(CODE_405_METHOD_NOT_ALLOWED);
 }
-
-// void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
-
-// 	Logger::getInstance().log(DEBUG, "Response Builder Get Header", inputClient);
-		
-// 	_client = &inputClient; // init client
-// 	_config = &inputConfig; // init config
-	
-// 	_realURI = _client->headerRequest.getURI();
-
-// 	extractMethod();
-// 	if ( not redirectURI())
-// 	{
-		
-// 		resolveURI();
-// 		validateURI();
-		
-// 		if (_isCGI and _errorType <= CODE_400_BAD_REQUEST) // or potentially another adress
-// 			launchCGI();
-		
-// 		checkNatureAndAuthoURI();
-// 		setContentLenght();
-
-// 	}
-	
-// 	buildHeaders();
-
-
-// 	// Copying the build Headers in headerRespons
-// 	inputClient.headerRespons = Headers.masterHeader;
-	
-// 	// Headers.masterHeader.clear();//!
-
-// 	// printAllHeaders();
-// }
 
 void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 
@@ -169,7 +140,6 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	extractRouteConfig();
 	// printMyConfig();
 	
-
 	try
 	{
 		extractMethod();
@@ -177,24 +147,36 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 		checkMethod();
 
 		if (_method == DELETE)
-			setError(CODE_204_NO_CONTENT); // does not throw exception
-		else // if (_method != DELETE)
-			checkCGI(inputClient);
+		{
+			setError(CODE_204_NO_CONTENT, true); // does not throw exception
+		}
+		else
+		{
+			checkCGI();
+		}
+
 		if (_method == POST and !_isCGI)
+		{
 			uploadCheck();
+		}
 		
 		resolveURI();
+		
 		checkAutho();
+		
 		checkNature();
+
+		// ! CGI BY SEB, DO NOT FUCKING TOUCH
+		if (_isCGI)
+		{
+			_cgi.launch(_realURI, _pathInfo);
+
+		}
 		
-		_cgi.launch();
-		
-		// ! WORK NEEDLE
 		if (_isDirectory and (_method == GET) and (not _isCGI))
 		{
 			generateListingHTML();
 		}
-
 	}
 	catch(const CodeErrorRaised& e)
 	{
@@ -206,11 +188,17 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	} 
 
 	if (not isErrorRedirect())
-		setContentLenght();
+	{
+		setContentLenght(); // Sets up body.lenghts
+	}
 	
 	
 	if (_method == DELETE and _errorType < CODE_400_BAD_REQUEST)
+	{
 		deleteEngine();	
+	}
+
+	
 
 	buildHeaders();
 
@@ -218,9 +206,13 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig ){
 	// Copying the build Headers in headerRespons
 	// ! Si on mixe les headers du CGI + de ResponseBuilder
 	if (!_isCGI)
+	{
 		inputClient.headerRespons = Headers.masterHeader;
+	}
 	else
+	{
 		inputClient.headerRespons.clear();
+	}
 
 	// printAllHeaders();
 }

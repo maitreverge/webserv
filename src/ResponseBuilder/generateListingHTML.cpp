@@ -23,6 +23,21 @@ bool ResponseBuilder::foundDefaultPath( void ){
 	return false;
 }
 
+static bool isFileIgnored( string &str ){
+
+	if (	str == "." or
+			str == ".." or
+			str == ".git" or
+			str == ".gitignore" or
+			str == "webserv" or
+			str == "debug_webserv" or
+			str == ".gitmodules")
+	{
+		return true;
+	}
+	return false;
+}
+
 void	ResponseBuilder::listingHTMLBuilder( void ){
 
 	// TODO  EDGE CASE TO HANDLE :  what is we can't write in the directory
@@ -35,12 +50,18 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 	*/
 	char cwd[1024];
 
+	if (*_realURI.rbegin() != '/')
+		_realURI += '/';
+	
 	string path;
 
-	path = getcwd(cwd, sizeof(cwd)) + _originalURI;
+	path = getcwd(cwd, sizeof(cwd));
 
 	if (*path.rbegin() != '/')
 		path += "/";
+	
+	if (_realURI != "/")
+		path += _realURI;
 
 	// ! STEP 1 : Opens the directory
 	DIR *dir = opendir(path.c_str());
@@ -68,31 +89,63 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 			<< "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
 			<< "<title>"
 			<< documentTitle.str()
-			<< "</title>\n"
-			<< "</head>\n";
+			<< "</title>\n<style>"
+			// ! ADD ICONS STYLING
+			<<	"ul li a[href$=\"/\"]::before {\n"
+			<<	"\tcontent: \"\\1F4C1\";\n"
+			<<	"\tmargin-right: 8px;\n"
+			<<	"}\n"
+			<<	"ul li a:not([href$=\"/\"])::before {\n"
+			<<	"\tcontent: \"\\1F4C4\";\n"
+			<<	"\tmargin-right: 8px;\n"
+			<<	"}\n"
+			<<	"ul li a {\n"
+			<<	"\ttext-decoration: none;\n"
+			<<	"\tcolor: inherit;\n"
+			<<	"}\n"
+			<<	"ul li a span {\n"
+			<<	"\ttext-decoration: underline;\n"
+			<<	"\tcolor: blue;\n"
+			<<	"}\n";
+			// ! ADD ICONS STYLING
 
-	result	<< "<body>\n<ul>";
+	result	<< "</style>\n</head>\n<body>\n<ul>";
 
 	// Build Body for each entry
+	vector< string > paths;
+
+	// Appending every path to a vector
     while ((listing = readdir(dir)) != NULL)
 	{
 		string curFile = listing->d_name;
-		// string curPath = "/";
-		string curPath = listing->d_name;
-		if (curFile != "." and curFile != "..") // do not list either "." or ".."
+		if (!isFileIgnored(curFile))
 		{
 			if (listing->d_type == DT_DIR)
-				curPath += "/"; // Append trailing slash for directories
-		
-			// <a href="test.html">Go to Test Page</a>
-			result << "<li>";
-			result << "<a href=\"";
-			result << curPath;
-			result << "\">";
-			result << listing->d_name;
-			result << "</a>";
-			result << "</li>\n";
+				curFile += "/"; // Append trailing slash for directories
+			if ( !_myconfig.root.empty() and curFile.find(_myconfig.root) == std::string::npos)
+			{
+				curFile.insert(0, _myconfig.root);
+			}
+			
+			paths.push_back(curFile);
 		}
+	}
+
+	// Alphabetically sorting paths
+	std::sort(paths.begin(), paths.end());
+
+	// Build every tag for every path
+	for(std::vector< string >::iterator it = paths.begin(); it != paths.end(); ++it)
+	{
+		// <a href="test.html">Go to Test Page</a>
+		result << "<li>";
+		result << "<a href=\"";
+		result << *it;
+		result << "\">";
+		result << *it;
+		// result << listing->d_name;
+		result << "</a>";
+		result << "</li>\n";
 	}
 	
 	// End on the body and the file
@@ -106,7 +159,12 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 
 	string listingName = "listing.html";
 
-	string defautFile = path + listingName;
+	string defautFile = path;
+
+	if (*defautFile.rbegin() != '/')
+		defautFile += "/";
+
+	defautFile += listingName;
 
 	ofstream listingFile(defautFile.c_str());
 
@@ -115,7 +173,7 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 
 	listingFile << result.str();
 
-	_realURI = _originalURI + listingName;
+	_realURI += listingName;
 
 	if (*_realURI.begin() == '/')
 		_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
@@ -123,15 +181,13 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 	closedir(dir);
 
 	listingFile.close();
-	// test
-	// localhost:1510/testResponseBuilder/listingDirectory
 }
 
 void ResponseBuilder::generateListingHTML( void ){
 
 	// ! STEP 0 : check if we can read in the directory
 	if ( _myconfig.listingDirectory == false and _myconfig.index.empty())
-		setError(CODE_401_UNAUTHORIZED);
+		setError(CODE_404_NOT_FOUND);
 	
 	// if (foundDefaultPath())
 	// {

@@ -55,6 +55,7 @@ struct MyConfig
 
 	// ========== my stuff ==========
 	bool				samePathWrite;
+	string				indexRedirection;
 
 	MyConfig()
 	{
@@ -72,6 +73,8 @@ struct MyConfig
 
 	// ========== my stuff ==========
 		samePathWrite = true;
+		indexRedirection.clear();
+
 	}
 };
 
@@ -105,12 +108,15 @@ class ResponseBuilder
 	bool _isDirectory;
 	bool _isFile;
 
+	// errorNotFoundGenerator
 	bool _errorNotFound;
+	const string _backupNameFile;
 
 	// CGI Stuff
 	bool _isCGI;
 	e_errorCodes _errorType;
 	string _pathInfo;
+	string _folderCGI;
 
 	// Struct for File Info
 	struct stat _fileInfo; // ! PAS DANS LES CONSTRUCTEURS
@@ -119,8 +125,10 @@ class ResponseBuilder
 	bool _isROK;
 	bool _isWOK;
 	bool _isXOK;
+
 	string _fileName;
 	string _fileExtension;
+
 
 	Client* _client;
 	Config* _config;
@@ -128,7 +136,6 @@ class ResponseBuilder
 	MyConfig _myconfig;
 
 	ResponseHeaders Headers;
-	// bool test;
 
 	// ------------- Priv Methods
 	void	resolveURI( void );
@@ -157,8 +164,11 @@ class ResponseBuilder
 	
 	bool	isDirectory(string &uri);
 
-	void	slashManip( void );
+	void	slashManip( string& target );
 	
+	void extractRedirectionIndex( vector< string >&routeNames, vector< string >&routeURIS );
+
+	void	errorNotFoundGenerator( void );
 
 
 
@@ -174,14 +184,12 @@ class ResponseBuilder
 
 
 	// CGI.cpp
-	void	checkCGI( Client &client );
-	void	launchCGI( void );
+	void	checkCGI( void );
 
 	// POST
 
 	// DELETE
 	void	deleteEngine( void );
-
 
 
 
