@@ -29,6 +29,7 @@ struct Config
 {
 	int								index;
 	size_t							maxBodySize;
+	ssize_t							maxHeaderSize;
 	int								maxServerNbr;
 	struct server					_serverStruct[8];
 	short int						maxClient;

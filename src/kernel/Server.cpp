@@ -8,7 +8,7 @@ Server::Server(sockaddr_in & sockAddr, Config & conf)
 	static int i = 0;
 	this->_conf = conf;
 	this->_conf.index = i++;
-	this->_clients.reserve(MAX_CLIENTS);
+	this->_clients.reserve(static_cast<size_t>(this->_conf.maxClient));
 	this->_readBuffer.reserve(RECV_BUFF_SIZE);	
 	this->_writeBuffer.reserve(SEND_BUFF_SIZE);
 }

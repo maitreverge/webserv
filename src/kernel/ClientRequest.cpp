@@ -172,7 +172,7 @@ void Server::shortCircuit(e_errorCodes err, size_t i)
 
 bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
 {
-	// if (it - this->_clients[i].messageRecv.begin() > MAX_HDR_SIZE)	
+	if (it - this->_clients[i].messageRecv.begin() > this->_conf.maxHeaderSize)	
 	{		
 		stringstream ss;
 		ss << "header size" << " Actual-Size: "
@@ -190,12 +190,12 @@ bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
 bool Server::isContentLengthValid(size_t i)
 {	
 	if (this->_clients[i].headerRequest.getHeaders().ContentLength
-		> MAX_CNT_SIZE)// ->_conf.maxBodySize)//!
+		> this->_conf.maxBodySize)
 	{			
 		stringstream ss;
 		ss << "max content size reached" << " - Content-Lenght: "
 			<< this->_clients[i].headerRequest.getHeaders().ContentLength
-			<< " - Max content size: " << MAX_CNT_SIZE << std::endl;
+			<< " - Max content size: " << this->_conf.maxBodySize << std::endl;
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
 			//! 413 Payload Too Large
 		this->shortCircuit(static_cast<e_errorCodes>(413), i);

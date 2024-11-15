@@ -12,12 +12,6 @@
 #include "errorCode.hpp"
 #include "ResponseBuilder.hpp"
 
-#define RECV_BUFF_SIZE 30000
-#define SEND_BUFF_SIZE 30000
-
-#define MAX_HDR_SIZE 8192
-#define MAX_CNT_SIZE 30000000
-
 class Kernel;
 class Server
 {

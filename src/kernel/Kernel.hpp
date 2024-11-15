@@ -9,12 +9,12 @@
 #include "Logger.hpp"
 #include "ConfigFileParser.hpp"
 
-#define MAX_SERVERS 42
-#define MAX_CLIENTS 1000
-#define SLCT_TIMEOUT 1
+#define RECV_BUFF_SIZE 30000
+#define SEND_BUFF_SIZE 30000
 #define SND_TIMEOUT 1
-
-class Server;
+#define SLCT_TIMEOUT 1
+#define MAX_HDR_SIZE 8192
+#define TIMEOUT_CGI 20
 
 class Kernel
 {
