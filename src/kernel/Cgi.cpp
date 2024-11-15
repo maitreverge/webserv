@@ -79,7 +79,7 @@ void Cgi::child(Client & client)
     char *env[] = {const_cast<char *>(envPathInfo.c_str()), NULL};
     std::string path = client.responseBuilder._fileName;
     Logger::getInstance().~Logger();
-    Kernel::getInstance(NULL).~Kernel();
+    Kernel::getInstance().~Kernel();
     if (client.responseBuilder._fileExtension == "out")    
     {
 		char *argv[] = {NULL};

@@ -155,7 +155,7 @@ void Server::shortCircuit(e_errorCodes err, size_t i)
 
 	std::vector<char> errVector = Error::getInstance().
 		handleError(err, this->_clients[i]);
-	std::string errStr(errVector.begin(), errVector.end());
+	std::string errStr(errVector.begin(), errVector.end());//! impossible de sortir 
 
 	std::stringstream ss;
 	ss << err << " " << errStr;
@@ -172,8 +172,7 @@ void Server::shortCircuit(e_errorCodes err, size_t i)
 
 bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
 {
-	// if (it - this->_clients[i].messageRecv.begin() > MAX_HDR_SIZE)
-	if(true)
+	// if (it - this->_clients[i].messageRecv.begin() > MAX_HDR_SIZE)	
 	{		
 		stringstream ss;
 		ss << "header size" << " Actual-Size: "

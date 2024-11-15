@@ -37,7 +37,7 @@ class Kernel
 		Kernel(char* path);
 		~Kernel();
 
-		static Kernel & getInstance(char *);
+		static Kernel & getInstance(char * = NULL);
 	
 		void		setup();
 		void 		launch();

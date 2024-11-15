@@ -49,9 +49,9 @@
 		"stdexcept": "cpp",
 		"streambuf": "cpp",
 		"typeinfo": "cpp",
-		"csignal": "cpp"
-		
-
+		"csignal": "cpp",
+		"ctime": "cpp",
+		"list": "cpp"
 	},
 	"editor.rulers": [80],
     "workbench.colorCustomizations": {
