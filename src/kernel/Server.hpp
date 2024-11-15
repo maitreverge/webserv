@@ -16,7 +16,7 @@ class Kernel;
 
 class Server
 {
-	sockaddr_in 		_sockAddr;
+	sockaddr_in			_sockAddr;
 	Config *			_conf;
 	std::vector<char>	_writeBuffer;
 	std::vector<char>	_readBuffer;
