@@ -4,8 +4,6 @@
 #include <string>
 #include <ctime>
 
-
-
 struct Client;
 
 class Cgi

@@ -13,14 +13,15 @@
 #include "ResponseBuilder.hpp"
 
 class Kernel;
+
 class Server
 {
 	sockaddr_in 		_sockAddr;
+	Config *			_conf;
 	std::vector<char>	_writeBuffer;
 	std::vector<char>	_readBuffer;
 	int					_fd;
 	
-	Config 				_conf;
 
 	void clientMessage(size_t i, ssize_t ret);
 	void displayClient(Client & client) const;
@@ -46,7 +47,7 @@ class Server
 
 		std::vector<Client> _clients;
 
-		Server(sockaddr_in & sockaddr, Config & conf);
+		Server(sockaddr_in & sockaddr, Config * conf);
 
 		const sockaddr_in & getSockAdress() const;
 

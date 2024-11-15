@@ -7,6 +7,7 @@
 
 struct Client
 {
+	Config *			conf;
 	int					fd;
 	sockaddr_in 		address;
 	socklen_t 			addressLen;
@@ -23,7 +24,5 @@ struct Client
 	bool 				pongHeader;
 	bool				exitRequired;
 	
-	Client();
-	Client(const Client &);
-	~Client();
+	Client(Config *);	
 };

@@ -2,7 +2,7 @@
 #include "ConfigFileParser.hpp"
 #include "master.hpp"
 
-Config::Config(char *path) : maxBodySize(5000000), maxHeaderSize(8000), maxServerNbr(8)
+Config::Config(char *path)
 {
 	intitializeVars(1);
 	ConfigFileParser parser;
@@ -12,7 +12,7 @@ Config::Config(char *path) : maxBodySize(5000000), maxHeaderSize(8000), maxServe
 		initializeServer((uint16_t)std::atoi(_serverStruct[i].port.c_str()), sockAddress);
 }
 
-Config::Config() : maxBodySize(5000000), maxHeaderSize(8000), maxServerNbr(8)
+Config::Config()
 {
 	intitializeVars(1);
 	ConfigFileParser parser;

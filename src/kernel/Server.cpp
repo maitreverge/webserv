@@ -2,13 +2,12 @@
 #include "Logger.hpp" 
 #include "ConfigFileParser.hpp"
 
-Server::Server(sockaddr_in & sockAddr, Config & conf)
+Server::Server(sockaddr_in & sockAddr, Config * conf)
 	: _sockAddr(sockAddr), _conf(conf)
 {		
-	static int i = 0;
-	this->_conf = conf;
-	this->_conf.index = i++;
-	this->_clients.reserve(static_cast<size_t>(this->_conf.maxClient));
+	static int i;	
+	this->_conf->index = i++;
+	this->_clients.reserve(static_cast<size_t>(this->_conf->maxClient));
 	this->_readBuffer.reserve(RECV_BUFF_SIZE);	
 	this->_writeBuffer.reserve(SEND_BUFF_SIZE);
 }
@@ -33,7 +32,7 @@ bool Server::setup()
 		this->exitServer();		
 		return false;		
 	}	
-	if (listen(this->_fd, this->_conf.maxClient) < 0)
+	if (listen(this->_fd, this->_conf->maxClient) < 0)
 	{
 		Logger::getInstance().log(ERROR, "listen", *this);
 
@@ -48,12 +47,12 @@ void Server::catchClients(Kernel & kernel)
 {
 	if (FD_ISSET(this->_fd, &Kernel::_readSet))
 	{	
-		Client client;			
+		Client client(&kernel._conf);			
 		client.fd = accept(this->_fd, reinterpret_cast<sockaddr *>
 			(&client.address), &client.addressLen);			
 		if (client.fd < 0)		
 			return Logger::getInstance().log(ERROR, "accept");		
-		if (kernel.countClients() >= this->_conf.maxClient)		
+		if (kernel.countClients() >= this->_conf->maxClient)		
 			return close(client.fd),
 				Logger::getInstance().log(ERROR, "max client reached", client);					
 		Logger::getInstance().log(INFO, "\e[30;101mnew client\e[0m", client);

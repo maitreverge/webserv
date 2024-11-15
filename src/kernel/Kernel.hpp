@@ -13,12 +13,9 @@
 #define SEND_BUFF_SIZE 30000
 #define SND_TIMEOUT 1
 #define SLCT_TIMEOUT 1
-#define MAX_HDR_SIZE 8192
-#define TIMEOUT_CGI 20
 
 class Kernel
 {
-	Config 				_conf;
 	std::vector<Server> _servers;
 
 	void		callCatch();
@@ -27,6 +24,7 @@ class Kernel
 
 	public:
 
+		Config			_conf;
 		static bool		_exit;
 		static int		_maxFd; 
 		static fd_set	_actualSet;

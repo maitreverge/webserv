@@ -1,7 +1,7 @@
 #include "Client.hpp"
 #include "Logger.hpp"
 
-Client::Client()
+Client::Client(Config * _conf) : conf(_conf)
 {
 	// Logger::getInstance().log(INFO, "\e[30;101mclient created\e[0m", *this);
 	
@@ -9,27 +9,13 @@ Client::Client()
 	memset(&address, 0, sizeof(address));
 	addressLen = sizeof(address);
 	
-	messageRecv.reserve(MAX_HDR_SIZE); 
+	messageRecv.reserve(static_cast<size_t>(_conf->maxHeaderSize)); 
 	bodySize = 0;
 
-	headerRespons.reserve(MAX_HDR_SIZE); 
+	headerRespons.reserve(static_cast<size_t>(_conf->maxHeaderSize)); 
 	messageSend.reserve(SEND_BUFF_SIZE);
 	
 	ping = 0;	
 	pongHeader = false;
 	exitRequired = false;
-}
-
-Client::Client(const Client & src)
-{
-	// Logger::getInstance().log(INFO, "\e[30;101mclient copy created\e[0m",
-		// *this);
-
-	*this = src;
-}
-
-Client::~Client()
-{
-	// Logger::getInstance().log(INFO, "\e[30;101mclient deleted\e[0m",
-		// *this);
 }

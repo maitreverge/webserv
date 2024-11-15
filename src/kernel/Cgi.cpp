@@ -139,15 +139,15 @@ bool Cgi::isTimeout(Client & client, std::string err)
         / CLOCKS_PER_SEC;
     if (span < 0)
         this->_start = 0;
-    if (span > TIMEOUT_CGI / 2.0)
+    if (span > client.conf->timeoutCgi / 2.0)
     { 
         std::stringstream ss; ss << "Timeout - start: "
             << this->_start << " end: " << end << " diff: "
             << static_cast<double>(end - this->_start) << " sec: "
-            << span << "/" << TIMEOUT_CGI << std::endl;
+            << span << "/" << client.conf->timeoutCgi << std::endl;
         Logger::getInstance().log(WARNING, ss.str(), client);	
     }
-	if (span > TIMEOUT_CGI)
+	if (span > client.conf->timeoutCgi)
 	{	
         Logger::getInstance().log(ERROR, err);   	//!errpage!!
         kill(this->_pid, SIGTERM);

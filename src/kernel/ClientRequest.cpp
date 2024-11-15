@@ -121,16 +121,16 @@ void Server::getRespHeader(size_t i)
 {
 	if (this->_clients[i].headerRequest.getMethod() == "GET")		
 		this->_clients[i].responseBuilder.getHeader(this->_clients[i],
-			this->_conf);
+			*this->_conf);
 	else if (this->_clients[i].headerRequest.getMethod() == "POST")		
 		this->_clients[i].responseBuilder.getHeaderPost(this->_clients[i],
-			this->_conf);
+			*this->_conf);
 	else if (this->_clients[i].headerRequest.getMethod() == "DELETE")		
 		this->_clients[i].responseBuilder.getHeader(this->_clients[i],
-			this->_conf);
+			*this->_conf);
 	else
 		this->_clients[i].responseBuilder.getHeader(this->_clients[i],
-			this->_conf); 
+			*this->_conf); 
 }
 
 void Server::handleClientBody(size_t i, ssize_t ret)
@@ -164,7 +164,7 @@ void Server::shortCircuit(e_errorCodes err, size_t i)
 	this->_clients[i].headerRequest.setURI(errStr);
 	this->_clients[i].responseBuilder = ResponseBuilder();
 	this->_clients[i].responseBuilder.getHeader(this->_clients[i],
-		this->_conf);
+		*this->_conf);
 	this->_clients[i].messageRecv.clear();
 	this->_clients[i].ping = 2;
 	this->_clients[i].exitRequired = true;
@@ -172,12 +172,12 @@ void Server::shortCircuit(e_errorCodes err, size_t i)
 
 bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
 {
-	if (it - this->_clients[i].messageRecv.begin() > this->_conf.maxHeaderSize)	
+	if (it - this->_clients[i].messageRecv.begin() > this->_conf->maxHeaderSize)	
 	{		
 		stringstream ss;
 		ss << "header size" << " Actual-Size: "
             << it - this->_clients[i].messageRecv.begin()
-            << " - Max-Header-Size : "	<< MAX_HDR_SIZE;
+            << " - Max-Header-Size : " << this->_conf->maxHeaderSize;
 
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);		
 			//! 431 Request Header Fields Too Large !!
@@ -190,12 +190,12 @@ bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
 bool Server::isContentLengthValid(size_t i)
 {	
 	if (this->_clients[i].headerRequest.getHeaders().ContentLength
-		> this->_conf.maxBodySize)
+		> this->_conf->maxBodySize)
 	{			
 		stringstream ss;
 		ss << "max content size reached" << " - Content-Lenght: "
 			<< this->_clients[i].headerRequest.getHeaders().ContentLength
-			<< " - Max content size: " << this->_conf.maxBodySize << std::endl;
+			<< " - Max content size: " << this->_conf->maxBodySize << std::endl;
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
 			//! 413 Payload Too Large
 		this->shortCircuit(static_cast<e_errorCodes>(413), i);

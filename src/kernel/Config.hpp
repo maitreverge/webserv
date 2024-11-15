@@ -31,6 +31,7 @@ struct Config
 	size_t							maxBodySize;
 	ssize_t							maxHeaderSize;
 	int								maxServerNbr;
+	int								timeoutCgi;
 	struct server					_serverStruct[8];
 	short int						maxClient;
 	std::vector<struct sockaddr_in> sockAddress;

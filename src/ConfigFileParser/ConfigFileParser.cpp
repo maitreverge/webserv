@@ -43,6 +43,10 @@ void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
 			{
 				// Category "global"
 				setConfigValue(catIt, itemIt, configStruct.maxClient, "maxClient");
+				setConfigValue(catIt, itemIt, configStruct.maxHeaderSize, "maxHeaderSize");
+				setConfigValue(catIt, itemIt, configStruct.maxServerNbr, "maxServerNbr");
+				setConfigValue(catIt, itemIt, configStruct.maxBodySize, "maxBodySize");
+				setConfigValue(catIt, itemIt, configStruct.timeoutCgi, "timeoutCgi");
 				setConfigValue(catIt, itemIt, configStruct.listingDirectories, "listingDirectories");
 				setConfigValue(catIt, itemIt, valIt, configStruct.indexFiles, "indexFiles");
 				// category "errorPages"
@@ -158,6 +162,19 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, server& serv
 	(void)i;
 }
 
+void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, size_t& field, const char str[])
+{
+	if (catIt->first == "global" && itemIt->first == str)
+		if (!itemIt->second[0].empty())
+			field = (size_t)std::atoi(itemIt->second[0].c_str());
+}
+
+void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, ssize_t& field, const char str[])
+{
+	if (catIt->first == "global" && itemIt->first == str)
+		if (!itemIt->second[0].empty())
+			field = (ssize_t)std::atoi(itemIt->second[0].c_str());
+}
 
 //? maxClient
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, short& field, const char str[])
@@ -165,6 +182,13 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, short& field
 	if (catIt->first == "global" && itemIt->first == str)
 		if (!itemIt->second[0].empty())
 			field = (short)std::atoi(itemIt->second[0].c_str());
+}
+
+void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, int& field, const char str[])
+{
+	if (catIt->first == "global" && itemIt->first == str)
+		if (!itemIt->second[0].empty())
+			field = (int)std::atoi(itemIt->second[0].c_str());
 }
 
 //? listingDirectories
