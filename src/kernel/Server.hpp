@@ -16,7 +16,7 @@ class Kernel;
 
 class Server
 {
-	Config *			_conf;
+	Config 				_conf;
 	sockaddr_in			_sockAddr;
 	std::vector<char>	_writeBuffer;
 	std::vector<char>	_readBuffer;
@@ -46,7 +46,7 @@ class Server
 
 		std::vector<Client> _clients;
 
-		Server(sockaddr_in & sockaddr, Config * conf);
+		Server(sockaddr_in & sockaddr, Config & conf);
 
 		const sockaddr_in & getSockAdress() const;
 
