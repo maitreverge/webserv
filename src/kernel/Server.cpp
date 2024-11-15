@@ -2,11 +2,12 @@
 #include "Logger.hpp" 
 #include "ConfigFileParser.hpp"
 
-Server::Server(sockaddr_in & sockAddr, Config * conf)
-	: _sockAddr(sockAddr), _conf(conf)
-{		
-	static int i;	
+Server::Server(sockaddr_in & sockAddr, Config * conf)	
+{
+	static int i;		
+	this->_conf = conf;		
 	this->_conf->index = i++;
+	this->_sockAddr = sockAddr;
 	this->_clients.reserve(static_cast<size_t>(this->_conf->maxClient));
 	this->_readBuffer.reserve(RECV_BUFF_SIZE);	
 	this->_writeBuffer.reserve(SEND_BUFF_SIZE);

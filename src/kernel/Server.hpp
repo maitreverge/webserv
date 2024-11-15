@@ -16,13 +16,12 @@ class Kernel;
 
 class Server
 {
-	sockaddr_in			_sockAddr;
 	Config *			_conf;
+	sockaddr_in			_sockAddr;
 	std::vector<char>	_writeBuffer;
 	std::vector<char>	_readBuffer;
 	int					_fd;
 	
-
 	void clientMessage(size_t i, ssize_t ret);
 	void displayClient(Client & client) const;
 	void reSend(size_t i);
