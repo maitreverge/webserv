@@ -58,6 +58,7 @@ ResponseBuilder::ResponseBuilder( void ) :
 	this->_ifsStreamHead = 0; // ! NE PAS TOUCHER	
 
 	_writeReady = false;
+	_parsedBoundaryToken = false;
 
 }
 
@@ -107,6 +108,7 @@ ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 	this->Headers = rhs.Headers;
 
 	this->_writeReady = rhs._writeReady;
+	this->_parsedBoundaryToken = rhs._parsedBoundaryToken;
 
 
 	// ! DO NOT FUCKING TOUCH (Kernel copy stuff)

@@ -10,6 +10,8 @@ void	ResponseBuilder::initBoundaryTokens( void ){
 	_tokenDelim.insert(0, "--");
 
 	_tokenEnd = _tokenDelim + "--";
+
+	_parsedBoundaryToken = true;
 }
 
 bool	ResponseBuilder::isLineDelim( vector< char >& curLine, vector< char >& nextLine ){
@@ -43,6 +45,7 @@ void	ResponseBuilder::extractFileBodyName( vector< char >& curLine ){
 	size_t startPos = temp.find(needle);
 	size_t endPos;
 
+	// TODO : edge case file names
 	if (startPos != std::string::npos)
 	{
 		startPos += needle.length();
@@ -58,15 +61,14 @@ void	ResponseBuilder::extractFileBodyName( vector< char >& curLine ){
 
 ResponseBuilder::e_lineNature ResponseBuilder::processCurrentLine(vector< char >& curLine) {
 
+	// Trimm last two trailing character from the current line
+	curLine.erase(curLine.end() - 2, curLine.end());
+
 	// This function serves the purpose of extracting the filename
 	string temp(curLine.begin(), curLine.end());
 
 	if (_writeReady)
-	{
-		// trim two chars from the back to the buffer
-		curLine.erase(curLine.end() - 2, curLine.end());
 		return BINARY_DATA;
-	}
 	else if (temp == _tokenEnd)
 		return TOKEN_END;
 	else if (temp == _tokenDelim)
@@ -91,7 +93,8 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 	static vector< char > nextLine;
 	e_lineNature lineNature;
 
-	initBoundaryTokens();
+	if (not _parsedBoundaryToken) // skip useless stack calls for each HTTP package
+		initBoundaryTokens();
 
 	// Copy the nextLine content within the currentLine
 	if (!nextLine.empty())
@@ -121,17 +124,17 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 		case TOKEN_DELIM or TOKEN_END: // end of previous stream
 			if (_ofs.is_open())
 				_ofs.close();
-			curLine.clear(); // put in another scope to avoid boilerplate code
+			// curLine.clear(); // put in another scope to avoid boilerplate code
 			_fileStreamName.clear();
 			break;
 
 		case CONTENT_DISPOSITION:
 			extractFileBodyName(curLine);
-			curLine.clear();
+			// curLine.clear();
 			break;
 		
 		case OTHER:
-			curLine.clear();
+			// curLine.clear();
 			break;
 		
 		case LINE_SEPARATOR: // next packages need to be the bnary data
@@ -139,21 +142,30 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 			{
 				this->_ofs.open(_fileStreamName.c_str(), std::ios::binary);
 			}
-			_writeReady = true;
-			curLine.clear();
+			_writeReady = true; // TODO : empty file names or shitty ones ?
+			// curLine.clear();
 			break;
+
 		case BINARY_DATA:
 			this->_ofs.seekp(0, std::ios::end);
-			_ofs.write(curLine.data(), static_cast<std::streamsize>(curLine.size())); 
-			
-			curLine.clear();
+			_ofs.write(curLine.data(), static_cast<std::streamsize>(curLine.size()));
+			if (!_ofs)
+			{
+				// error CODE_500 ??
+				//Utile de rappeller getHeader ou renvoyer une exception a Seb pour qu'il puisse me rappeller avec un getHeader(.., .., CODE_500)
+			}
+			break;
+
+		default:
+			break;
 	}
+	curLine.clear();
 		
 
-    if (_ofs.is_open())
-	{
+    // if (_ofs.is_open())
+	// {
 
-	}
+	// }
 	// _postFileName // ! Variable to init during reception
 
 	// ! STEP 1 : Extract the current line until I met \r\n

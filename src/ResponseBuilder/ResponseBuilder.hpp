@@ -200,13 +200,12 @@ class ResponseBuilder
 
 	void	boundarySetBodyPost( Client & client, bool eof );
 	void	initBoundaryTokens( void );
+
 	// ! TO DELETE, serves as a blueprint
 	void	_setBodyPost( Client & client, bool eof );
 
 	void	extractFileBodyName( vector< char >& curLine );
 
-
-	
 	string _tokenDelim;
 	string _tokenEnd;
 	string _postFileName;
@@ -214,6 +213,7 @@ class ResponseBuilder
 	string _fileStreamName;
 
 	bool _writeReady;
+	bool _parsedBoundaryToken;
 
 	// DELETE
 	void	deleteEngine( void );
