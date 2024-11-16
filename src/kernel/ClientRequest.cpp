@@ -153,18 +153,18 @@ void Server::shortCircuit(e_errorCodes err, size_t i)
 {
 	Logger::getInstance().log(INFO, "Short Circuit", this->_clients[i]);
 
-	std::vector<char> errVector = Error::getInstance().
-		handleError(err, this->_clients[i]);
-	std::string errStr(errVector.begin(), errVector.end());//! impossible de sortir 
+	// std::vector<char> errVector = Error::getInstance().
+		// handleError(err, this->_clients[i]);
+	// std::string errStr(errVector.begin(), errVector.end());//! impossible de sortir 
 
-	std::stringstream ss;
-	ss << err << " " << errStr;
-	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);	
+	// std::stringstream ss;
+	// ss << err << " " << errStr;
+	// Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);	
 
-	this->_clients[i].headerRequest.setURI(errStr);
+	// this->_clients[i].headerRequest.setURI(errStr);
 	this->_clients[i].responseBuilder = ResponseBuilder();
 	this->_clients[i].responseBuilder.getHeader(this->_clients[i],
-		this->_conf);
+		this->_conf, err);
 	this->_clients[i].messageRecv.clear();
 	this->_clients[i].ping = 2;
 	this->_clients[i].exitRequired = true;

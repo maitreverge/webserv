@@ -43,7 +43,7 @@ bool ResponseBuilder::getBody( Client &inputClient ){
 			Logger::getInstance().log(INFO, "file end", inputClient);						
 			this->_ifs.close();		
 			
-			if (_errorNotFound)
+			if (_errorNotFound) // ! Potentially delete my shit
 				std::remove(_realURI.c_str());
 		}
 

@@ -132,17 +132,24 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	_client = &inputClient; // init client
 	_config = &inputConfig; // init config
 
+	if (codeInput != CODE_200_OK)
+	{
+		setError(codeInput, true);
+		setContentLenght();
+		buildHeaders();
+		inputClient.headerRespons = Headers.masterHeader;
+		return;
+	}
 	
 	_realURI = _client->headerRequest.getURI();
-	_originalURI = _client->headerRequest.getURI();
+	_originalURI = _realURI;
+
 
 	_errorType = CODE_200_OK;
 
 	extractRouteConfig();
 	// printMyConfig();
 	
-	if (codeInput != CODE_200_OK)
-		setError(codeInput, true);
 	try
 	{
 		extractMethod();

@@ -7,8 +7,16 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig, e
 		
 	_client = &inputClient;
 	_config = &inputConfig;
-	
 
+	if (codeInput != CODE_200_OK)
+	{
+		setError(codeInput, true);
+		setContentLenght();
+		buildHeaders();
+		inputClient.headerRespons = Headers.masterHeader;
+		return;
+	}
+	
 	_realURI = _client->headerRequest.getURI();
 	_originalURI = _realURI;
 
@@ -17,8 +25,6 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig, e
 	extractRouteConfig();
 	// printMyConfig();
 	
-	if (codeInput != CODE_200_OK)
-		setError(codeInput, true);
 	try
 	{
 		extractMethod();
