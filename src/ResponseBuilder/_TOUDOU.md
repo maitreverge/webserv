@@ -50,7 +50,5 @@
 - Implement a Authorization token checker in combinaison with the coockie && session checker
 
 ## HOTFIX :
-
-Retour de page IMAGES foireux ✅ => image_chat.jpeg was an empty file
-
-Refactorer le timestamp path access to a higher scope, accessible to all clients (needs a generic function for CGI as well)
+- Segfault sur les 404 non trouvees
+- Chercher le `std::remove` qui me kill des fichiers errorPages/*.html
