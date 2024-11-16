@@ -29,7 +29,8 @@ class Server
 	void getRespHeader(size_t i);
 	void bodyCheckin(size_t i);
 	void handleClientBody(size_t i, ssize_t ret);
-	bool isDelimiterFind(size_t i, std::vector<char>::iterator & it);
+	bool isDelimiterFind(std::string delimiter, size_t i,
+		std::vector<char>::iterator & it);
 	void shortCircuit(e_errorCodes err, size_t i);
 	bool isMaxHeaderSize(std::vector<char>::iterator it, size_t i);
 	bool isContentLengthValid(size_t i);

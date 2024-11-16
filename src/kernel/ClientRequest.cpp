@@ -70,9 +70,9 @@ void Server::clientMessage(size_t i, ssize_t ret)
 		this->handleClientBody(i, ret);	
 }
 
-bool Server::isDelimiterFind(size_t i, std::vector<char>::iterator & it)
-{
-	std::string delimiter = "\r\n\r\n";
+bool Server::isDelimiterFind(std::string delimiter, size_t i,
+	std::vector<char>::iterator & it)
+{	
 	it = std::search
 		(this->_clients[i].messageRecv.begin(),
 		this->_clients[i].messageRecv.end(),
@@ -88,7 +88,7 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
 		
 	std::vector<char>::iterator it;		
-	if (isDelimiterFind(i, it))		
+	if (isDelimiterFind("\r\n\r\n", i, it))		
 	{	
 		Logger::getInstance().log(DEBUG, "header terminated",
 			this->_clients[i]);
