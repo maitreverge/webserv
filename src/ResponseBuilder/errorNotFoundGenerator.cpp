@@ -24,9 +24,9 @@ void	ResponseBuilder::errorNotFoundGenerator( void ){
 			<< "This is a backup self-generated webpage.";
 	
 	// Image source because life is fun
-	image	<< "<img src=\""
+	image   << "<img src=\""
 			<< imageURL
-			<< "\" alt=\"Description of image\">";
+			<< "\" alt=\"Description of image\" style=\"width:50%;\">";
 
 	// Assemble all parts
 	result	<< "<!DOCTYPE html>"
@@ -53,8 +53,8 @@ void	ResponseBuilder::errorNotFoundGenerator( void ){
 	backupStream << result.str();
 	
 	// ! Modify the _realURI
-	_realURI = _backupNameFile;
-	_errorNotFound = true;
+	this->_realURI = _backupNameFile;
+	this->_errorNotFound = true;
 	
 	backupStream.close();
 }

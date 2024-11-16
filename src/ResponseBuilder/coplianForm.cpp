@@ -37,8 +37,7 @@ void ResponseBuilder::initMimes( void ){
 
 // ------------------------- COPLIAN FORM -----------------------------
 
-ResponseBuilder::ResponseBuilder( void ) :
-	_backupNameFile("backup.html"){
+ResponseBuilder::ResponseBuilder( void ){
 	
 	// SEB UTILS
 	// Logger::getInstance().log(INFO, "ResponseBuilder constructor");
@@ -52,6 +51,7 @@ ResponseBuilder::ResponseBuilder( void ) :
 	_isROK = false;
 	_isWOK = false;
 	_isXOK = false;
+	_backupNameFile = "backup.html";
 
 	_errorNotFound = false;
 
@@ -67,11 +67,8 @@ ResponseBuilder::ResponseBuilder( const ResponseBuilder & src)
 
 ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 {
-	// Logger::getInstance().log(INFO, "ResponseBuilder operator=");
-
 	initMimes();
 	
-	// Init priv variables
 	_isDirectory = rhs._isDirectory;
 	_isFile = rhs._isFile;
 	_isCGI = rhs._isCGI;
@@ -79,9 +76,6 @@ ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 	_isROK = rhs._isROK;
 	_isWOK = rhs._isWOK;
 	_isXOK = rhs._isXOK;
-
-	_errorNotFound = rhs._errorNotFound;
-
 
 	// TODO : actualiser les variables
 	this->_mimeTypes = rhs._mimeTypes;
@@ -98,6 +92,8 @@ ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 	this->_fileName = rhs._fileName;
 	this->_fileExtension = rhs._fileExtension;
 	this->_folderCGI = rhs._folderCGI;
+	this->_backupNameFile = rhs._backupNameFile;
+	this->_errorNotFound = rhs._errorNotFound;
 
 	this->_client = rhs._client;
 	this->_config = rhs._config;
