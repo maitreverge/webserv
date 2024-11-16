@@ -101,7 +101,8 @@ class ResponseBuilder
 		TOKEN_END,
 		LINE_SEPARATOR,
 		BINARY_DATA,
-		CONTENT_DISPOSITION
+		CONTENT_DISPOSITION,
+		OTHER
 	} e_lineNature;
 
 	// ------------- Priv Variables
@@ -189,7 +190,11 @@ class ResponseBuilder
 	// CGI.cpp
 	void	checkCGI( void );
 
+
 	// POST
+
+	// ! WORK NEEDLE 🪡🪡🪡🪡🪡🪡🪡🪡
+
 	bool	isLineDelim( vector< char >& curLine, vector< char >& nextLine);
 	e_lineNature	processCurrentLine( vector< char >& curLine );
 
@@ -198,12 +203,17 @@ class ResponseBuilder
 	// ! TO DELETE, serves as a blueprint
 	void	_setBodyPost( Client & client, bool eof );
 
+	void	extractFileBodyName( vector< char >& curLine );
+
+
 	
 	string _tokenDelim;
 	string _tokenEnd;
 	string _postFileName;
 
 	string _fileStreamName;
+
+	bool _writeReady;
 
 	// DELETE
 	void	deleteEngine( void );

@@ -14,7 +14,6 @@ void	ResponseBuilder::initBoundaryTokens( void ){
 
 bool	ResponseBuilder::isLineDelim( vector< char >& curLine, vector< char >& nextLine ){
 
-	// (void)(curLine);
 	string temp(curLine.begin(), curLine.end());
 
 	std::string::size_type posSeparator;
@@ -26,14 +25,35 @@ bool	ResponseBuilder::isLineDelim( vector< char >& curLine, vector< char >& next
 	// Does the curLine ends with a trailing \r\n ONLY
 	if (posSeparator + 2 == temp.size())
 		return true;
-	else // in the opposite case, we need to trim the curLine and append the rest to nextLine
-	{
-		posSeparator += 2;
-		nextLine.insert(nextLine.end(), (temp.begin() + static_cast<long>(posSeparator)), temp.end());
-		curLine.erase(curLine.begin() + static_cast<long>(posSeparator), curLine.end());
-	}
+
+	// in the opposite case, we need to trim the curLine and append the rest to nextLine
+	posSeparator += 2;
+	nextLine.insert(nextLine.end(), (temp.begin() + static_cast<long>(posSeparator)), temp.end());
+	curLine.erase(curLine.begin() + static_cast<long>(posSeparator), curLine.end());
 
 	return true;
+}
+
+void	ResponseBuilder::extractFileBodyName( vector< char >& curLine ){
+
+	string temp(curLine.begin(), curLine.end());
+
+	string needle = "filename=\"";
+
+	size_t startPos = temp.find(needle);
+	size_t endPos;
+
+	if (startPos != std::string::npos)
+	{
+		startPos += needle.length();
+
+		endPos = temp.find("\"", startPos);
+
+		_fileStreamName = temp.substr(startPos, endPos - startPos);
+
+		// TODO : check the uploadDirectory authorizations
+		_fileStreamName.insert(0, _myconfig.uploadDirectory);
+	}
 }
 
 ResponseBuilder::e_lineNature ResponseBuilder::processCurrentLine(vector< char >& curLine) {
@@ -41,42 +61,21 @@ ResponseBuilder::e_lineNature ResponseBuilder::processCurrentLine(vector< char >
 	// This function serves the purpose of extracting the filename
 	string temp(curLine.begin(), curLine.end());
 
-	if (temp == _tokenEnd)
-		return TOKEN_END;
-	else if(temp == _tokenDelim)
-		return TOKEN_DELIM;
-	else if(temp == HTTP_HEADER_SEPARATOR)
-		return LINE_SEPARATOR;
-	
-	if (temp.find("Content-Disposition: ") != std::string::npos)
+	if (_writeReady)
 	{
-		string needle = "filename=\"";
-
-		size_t startPos = temp.find(needle);
-		size_t endPos;
-
-		if (startPos != std::string::npos)
-		{
-			startPos += needle.length();
-
-			endPos = temp.find("\"", startPos);
-
-			_fileStreamName = temp.substr(startPos, endPos - startPos);
-
-			_fileStreamName.insert(0, _myconfig.uploadDirectory);
-		}
-		return CONTENT_DISPOSITION;
+		// trim two chars from the back to the buffer
+		curLine.erase(curLine.end() - 2, curLine.end());
+		return BINARY_DATA;
 	}
-
-	/*
-	typedef enum
-	{
-		BINARY_DATA,
-		CONTENT_DISPOSITION
-	} e_lineNature;
-	*/
-	return TOKEN_END;
-
+	else if (temp == _tokenEnd)
+		return TOKEN_END;
+	else if (temp == _tokenDelim)
+		return TOKEN_DELIM;
+	else if (temp == HTTP_HEADER_SEPARATOR)
+		return LINE_SEPARATOR;
+	else if (temp.rfind("Content-Disposition: ", 0) == 0) // does the beggining of the line starts with the needle
+		return CONTENT_DISPOSITION;
+	return OTHER;
 }
 
 void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
@@ -104,35 +103,52 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 	// Assign the current response...
 	recVector = client.messageRecv;
 
-	// Clearn the buffer from the client
-	client.messageRecv.clear();
-
 	// ... and append it to the end of curLine
 	curLine.insert(curLine.end(), recVector.begin(), recVector.end());
+
+	// Clearn the buffer from the client
+	client.messageRecv.clear();
 	
+	// While we didn't process a whole line, we write it within the buffer
 	if (not isLineDelim(curLine, nextLine))
 		return;
 		
-	// ! WORK NEEDLE 🪡🪡🪡🪡🪡🪡🪡🪡
 	lineNature = processCurrentLine(curLine);
 
+	// ! WIP NEEDLE 🪡🪡🪡🪡🪡🪡🪡🪡
 	switch (lineNature)
 	{
 		case TOKEN_DELIM or TOKEN_END: // end of previous stream
 			if (_ofs.is_open())
 				_ofs.close();
+			curLine.clear(); // put in another scope to avoid boilerplate code
+			_fileStreamName.clear();
 			break;
+
+		case CONTENT_DISPOSITION:
+			extractFileBodyName(curLine);
+			curLine.clear();
+			break;
+		
+		case OTHER:
+			curLine.clear();
+			break;
+		
 		case LINE_SEPARATOR: // next packages need to be the bnary data
 			if (!this->_ofs.is_open())
 			{
 				this->_ofs.open(_fileStreamName.c_str(), std::ios::binary);
 			}
-
+			_writeReady = true;
+			curLine.clear();
+			break;
 		case BINARY_DATA:
-		case CONTENT_DISPOSITION:
+			this->_ofs.seekp(0, std::ios::end);
+			_ofs.write(curLine.data(), static_cast<std::streamsize>(curLine.size())); 
+			
+			curLine.clear();
 	}
 		
-
 
     if (_ofs.is_open())
 	{
