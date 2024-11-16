@@ -58,18 +58,3 @@ void	ResponseBuilder::errorNotFoundGenerator( void ){
 	
 	backupStream.close();
 }
-
-/*
-
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Basic HTML Page</title>
-</head>
-<body>
-    <h1>Hello, World!</h1>
-</body>
-</html>
-
-
-*/

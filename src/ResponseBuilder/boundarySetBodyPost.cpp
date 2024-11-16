@@ -176,7 +176,7 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 	// ? CASE 2 : Is the current neither a _tokenDelim or a _tokenEnd
 }
 
-// Blueprint function
+// ! Blueprint function, to delete later
 void	ResponseBuilder::_setBodyPost( Client & client, bool eof ){
 
 	usleep(50000);

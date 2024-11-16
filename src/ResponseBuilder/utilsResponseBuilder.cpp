@@ -63,11 +63,13 @@ void	ResponseBuilder::uploadCheck( void ){
 		*/
 		
 		// ! From now, no specified uploadDirectory raise a 403
+		Logger::getInstance().log(ERROR, "Upload directory is not specified");
 		setError(CODE_403_FORBIDDEN);
 	}
 	else if ( access(_myconfig.uploadDirectory.c_str(), W_OK) == -1 )
 	{
 		//!  we can't write on the destination 
+		Logger::getInstance().log(ERROR, "Upload directory does not have right access");
 		setError(CODE_401_UNAUTHORIZED);
 	}
 
@@ -108,6 +110,7 @@ void	ResponseBuilder::checkAutho( void ){
 	}
 	else
 	{
+		Logger::getInstance().log(ERROR, "Check-Autho : File not Found");
 		setError(CODE_404_NOT_FOUND);
 	}
 }
@@ -136,6 +139,7 @@ void	ResponseBuilder::checkNature( void ){
 			_isDirectory = true;
 			if (_method == DELETE) // ! I decided to reject DELETE methods on folders.
 			{
+				Logger::getInstance().log(ERROR, "Delete Method for a folder detected");
 				setError(CODE_403_FORBIDDEN);
 			}
 		}
@@ -197,6 +201,7 @@ void ResponseBuilder::setError(e_errorCodes code, bool skip){
 	}
 	catch(const std::exception& e)
 	{
+		Logger::getInstance().log(INFO, "Asked error page is self generated");
 		errorNotFoundGenerator();
 		setContentLenght();
 	}

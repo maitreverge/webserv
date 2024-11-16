@@ -72,7 +72,7 @@ struct MyConfig
 		uploadDirectory.clear();
 
 	// ========== my stuff ==========
-		samePathWrite = true;
+		samePathWrite = true; // need to use this one
 		indexRedirection.clear();
 
 	}
@@ -95,6 +95,8 @@ class ResponseBuilder
 		DELETE
 	} e_method;
 
+	e_method _method;
+
 	typedef enum
 	{
 		TOKEN_DELIM,
@@ -106,104 +108,87 @@ class ResponseBuilder
 	} e_lineNature;
 
 	// ------------- Priv Variables
+	Client* _client;
+	Config* _config;
 	
+	MyConfig _myconfig;
+	ResponseHeaders Headers;
+
+	struct stat _fileInfo; // ! PAS DANS LES CONSTRUCTEURS
+
 	map<string, string> _mimeTypes;
-
+	
 	string _realURI;
-
 	string _originalURI;
-	e_method _method;
+
 
 	// Nature File
 	bool _isDirectory;
 	bool _isFile;
-
-	// errorNotFoundGenerator
-	bool _errorNotFound;
-	const string _backupNameFile;
-
-	// CGI Stuff
 	bool _isCGI;
-	e_errorCodes _errorType;
-
-	// Struct for File Info
-	struct stat _fileInfo; // ! PAS DANS LES CONSTRUCTEURS
 
 	// File Characteristics
 	bool _isROK;
 	bool _isWOK;
 	bool _isXOK;
 
+	// errorNotFoundGenerator
+	bool _errorNotFound;
+	const string _backupNameFile;
 
-	Client* _client;
-	Config* _config;
+	// CGI Stuff
+	e_errorCodes _errorType;
 
-	MyConfig _myconfig;
 
-	ResponseHeaders Headers;
+	// ===================== METHODS ==================
 
-	// ------------- Priv Methods
-	void	resolveURI( void );
-	void	sanatizeURI( string & );
+	// boundarySetBodyPost.cpp
+	bool	isLineDelim( vector< char >& , vector< char >& );
+	e_lineNature	processCurrentLine( vector< char >&  );
+	void	initBoundaryTokens( void );
+	void	extractFileBodyName( vector< char >& );
+	// ! TO DELETE, serves as a blueprint
+	void	_setBodyPost( Client &, bool );
+
+	// buildHeaders.cpp
 	void	buildHeaders( void );
-	void	setContentLenght( void ); // not a regular setter
-	void	extractMethod( void );
-	string	extractType( const string& extension ) const;
-	void	initMimes( void );
-	void	checkAutho( void );
-	void	checkNature( void );
-	bool 	redirectURI( void );
-	void 	rootMapping( void );
-	bool	isErrorRedirect( void );
-	void	extractFileNature( string &target);
-	void	checkMethod( void );
-	void	uploadCheck( void );
-
-
-	// extractRouteConfig
-	void	extractRouteConfig( void );
-	void	clearingRoutes( vector< string >&routeNames, vector< string >&routeURIS );
-	void	buildRouteConfig( string path );
-	void	printMyConfig( void );
-	
-	bool	isDirectory(string &uri);
-
-	void	slashManip( string& target );
-	
-	void extractRedirectionIndex( vector< string >&routeNames, vector< string >&routeURIS );
-
-	void	errorNotFoundGenerator( void );
-
-
-
-	// generateListingHTML.cpp
-	/*
-		map<string, timespec> _lastDir_M_Time;
-		map<string, timespec> _lastDir_C_Time;
-		bool	isDirectoryUnchanged( void );
-	*/
-	void	generateListingHTML( void );
-	bool	foundDefaultPath( void );
-	void	listingHTMLBuilder( void);
-
 
 	// CGI.cpp
 	void	checkCGI( void );
 
+	// cookies.cpp
 
-	// POST
+	// coplianForm.cpp
+	void	initMimes( void );
 
-	// ! WORK NEEDLE 🪡🪡🪡🪡🪡🪡🪡🪡
+	// deleteEngine.cpp
+	void	deleteEngine( void );
 
-	bool	isLineDelim( vector< char >& curLine, vector< char >& nextLine);
-	e_lineNature	processCurrentLine( vector< char >& curLine );
+	// errorNotFoundGenerator.cpp
+	void	errorNotFoundGenerator( void );
 
-	void	initBoundaryTokens( void );
+	// generateListingHTML.cpp
+	bool	foundDefaultPath( void );
+	bool	isFileIgnored( string & );
+	void	listingHTMLBuilder( void);
+	void	generateListingHTML( void );
 
-	// ! TO DELETE, serves as a blueprint
-	void	_setBodyPost( Client & client, bool eof );
+	// ResponseBuilder.cpp
+	void	resolveURI( void );
+	void	sanatizeURI( string & );
+	bool 	redirectURI( void );
+	void 	rootMapping( void );
+	void	checkMethod( void );
 
-	void	extractFileBodyName( vector< char >& curLine );
+	// utilsResponseBuilder.cpp
+	string	extractType( const string& ) const;
+	void	extractMethod( void );
+	void	setContentLenght( void ); // ! not a regular setter
+	void	uploadCheck( void );
+	void	checkAutho( void );
+	void	extractFileNature( string &);
+	void	checkNature( void );
+	bool	isErrorRedirect( void );
 
 	string _tokenDelim;
 	string _tokenEnd;
@@ -214,8 +199,18 @@ class ResponseBuilder
 	bool _writeReady;
 	bool _parsedBoundaryToken;
 
-	// DELETE
-	void	deleteEngine( void );
+	// extractRouteConfig
+	void	extractRouteConfig( void );
+	void	clearingRoutes( vector< string >&, vector< string >& );
+	void	buildRouteConfig( string );
+	void	printMyConfig( void );
+	
+	bool	isDirectory(string &);
+
+	void	slashManip( string& );
+	
+	void extractRedirectionIndex( vector< string >&, vector< string >& );
+
 
 
 public:

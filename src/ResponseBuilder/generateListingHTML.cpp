@@ -23,7 +23,7 @@ bool ResponseBuilder::foundDefaultPath( void ){
 	return false;
 }
 
-static bool isFileIgnored( string &str ){
+bool ResponseBuilder::isFileIgnored( string &str ){
 
 	if (	str == "." or
 			str == ".." or
@@ -154,9 +154,6 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 			<< "</html>\n";
 	
 
-	// TODO : Get from config the default file name for listing directories
-
-
 	string listingName = "listing.html";
 
 	string defautFile = path;
@@ -167,9 +164,6 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 	defautFile += listingName;
 
 	ofstream listingFile(defautFile.c_str());
-
-	
-	
 
 	listingFile << result.str();
 
@@ -189,19 +183,9 @@ void ResponseBuilder::generateListingHTML( void ){
 	if ( _myconfig.listingDirectory == false and _myconfig.index.empty())
 		setError(CODE_404_NOT_FOUND);
 	
-	// if (foundDefaultPath())
-	// {
-	// }
 	listingHTMLBuilder();
-	checkNature();
-	checkAutho();
-
-	// if (_myconfig.index.empty())
 	
-	// if (not _myconfig.listingDirectory or not _isWOK or _isROK)
-	// {
-	// }
-	// 	return;
-
-
+	checkNature();
+	
+	checkAutho();
 }
