@@ -121,7 +121,8 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 	// ! WIP NEEDLE 🪡🪡🪡🪡🪡🪡🪡🪡
 	switch (lineNature)
 	{
-		case TOKEN_DELIM or TOKEN_END: // end of previous stream
+		case TOKEN_DELIM:
+		case TOKEN_END: // end of previous stream
 			if (_ofs.is_open())
 				_ofs.close();
 			// curLine.clear(); // put in another scope to avoid boilerplate code

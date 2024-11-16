@@ -198,7 +198,6 @@ class ResponseBuilder
 	bool	isLineDelim( vector< char >& curLine, vector< char >& nextLine);
 	e_lineNature	processCurrentLine( vector< char >& curLine );
 
-	void	boundarySetBodyPost( Client & client, bool eof );
 	void	initBoundaryTokens( void );
 
 	// ! TO DELETE, serves as a blueprint
@@ -220,6 +219,8 @@ class ResponseBuilder
 
 
 public:
+	// multipart function
+	void	boundarySetBodyPost( Client & client, bool eof );
 
 	std::ifstream 	_ifs; // ! PAS DANS LES CONSTRUCTEURS
 	std::streampos	_ifsStreamHead; // ! ABSOLUMENT METTRE DANS LES CONSTRUCTEURS
