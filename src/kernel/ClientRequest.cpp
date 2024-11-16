@@ -31,28 +31,31 @@ void Server::listenClients()
 
 void Server::reSend(size_t i)
 {
-	Logger::getInstance().log(INFO, "Re Send", this->_clients[i]);
-	stringstream ss;
-	ss << "Content-Length: "
+	Logger::getInstance().log(INFO, "Re Send", this->_clients[i]);	
+	stringstream ss; ss << "Content-Length: "
 		<< this->_clients[i].headerRequest.getHeaders().ContentLength
 		<< " MessageRecv-Size: " << this->_clients[i].messageRecv.size()
 		<< std::endl;		
-	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
-	
+	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);	
 	if (this->_clients[i].headerRequest.getMethod() != "POST")
 		return this->_clients[i].messageRecv.clear();
-	if (this->_clients[i].ping >= 1)
-	{
-		Logger::getInstance().log(INFO, "Re Send True", this->_clients[i]);
-		this->_clients[i].responseBuilder.setBodyPost(this->_clients[i], true);	
-		if (this->_clients[i].messageRecv.empty())
-			this->_clients[i].ping++; 
-	}
-	else
-	{
-		Logger::getInstance().log(INFO, "Re Send False", this->_clients[i]);
-		this->_clients[i].responseBuilder.setBodyPost(this->_clients[i], false);
-	}
+	try {
+		if (this->_clients[i].ping >= 1)
+		{
+			Logger::getInstance().log(INFO, "Re Send True", this->_clients[i]);
+			this->_clients[i].responseBuilder.setBodyPost(this->_clients[i],
+				true);	
+			if (this->_clients[i].messageRecv.empty())
+				this->_clients[i].ping++; 
+		}
+		else
+		{
+			Logger::getInstance().log(INFO, "Re Send False", this->_clients[i]);
+			this->_clients[i].responseBuilder.setBodyPost(this->_clients[i],
+				false);
+		}}		
+	catch(const std::exception& e)
+	{	this->shortCircuit(CODE_508_LOOP_DETECTED, i);	}
 }
 
 void Server::clientMessage(size_t i, ssize_t ret)
@@ -143,7 +146,13 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 	if (this->isBodyTooLarge(i) || this->isBodyTerminated(i))
 		return ;
 	if (this->_clients[i].headerRequest.getMethod() == "POST")
-		this->_clients[i].responseBuilder.setBodyPost(this->_clients[i], false);
+	{
+		try {
+			this->_clients[i].responseBuilder.
+				setBodyPost(this->_clients[i], false);	}
+		catch(const std::exception& e)
+		{	this->shortCircuit(CODE_508_LOOP_DETECTED, i);	}
+	}
 	else
 		this->_clients[i].messageRecv.clear();		
 }
@@ -222,20 +231,23 @@ bool Server::isBodyTooLarge(size_t i)
 	return false;
 }
 
-bool Server::isBodyTerminated(size_t i)
+bool Server::isBodyTerminated(size_t i) //!26 lines!!!
 {
 	if (this->_clients[i].bodySize ==
 		this->_clients[i].headerRequest.getHeaders().ContentLength)
 	{
-		stringstream ss;
-		ss << "client body terminated" << " - Body-Size: "
+		stringstream ss; ss << "client body terminated" << " - Body-Size: "
 		<< this->_clients[i].bodySize << " Content-Lenght: "
 		<< this->_clients[i].headerRequest.getHeaders().ContentLength;
-		Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
-	
+		Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);	
 		if (this->_clients[i].headerRequest.getMethod() == "POST")
-			this->_clients[i].responseBuilder.
-				setBodyPost(this->_clients[i], true);			
+		{
+			try {
+				this->_clients[i].responseBuilder.
+				setBodyPost(this->_clients[i], true);	}
+			catch(const std::exception& e)
+			{	this->shortCircuit(CODE_508_LOOP_DETECTED, i);	}
+		}					
 		else
 		{
 			this->_clients[i].messageRecv.clear();

@@ -154,6 +154,7 @@ bool Cgi::isTimeout(Client & client, std::string err)
 		this->_start = 0;
         client.exitRequired = true;
 		client.ping = 2;
+        throw std::runtime_error("timeout");
 		// client.responseBuilder.setError(CODE_508_LOOP_DETECTED);
 		// Return true will never happen
         return true;
