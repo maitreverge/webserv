@@ -1,7 +1,6 @@
 #include "ResponseBuilder.hpp"
 #include "Logger.hpp"
 
-
 void ResponseBuilder::checkCGI( void ){
 
     // Define the file extensions for Python and PHP scripts

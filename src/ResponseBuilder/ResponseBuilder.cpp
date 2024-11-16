@@ -24,7 +24,10 @@ bool ResponseBuilder::redirectURI( void ){
 
 	// Client keeps asking the same redirection over and over
 	if (_realURI == _myconfig.redirection)
+	{
+		Logger::getInstance().log(ERROR, "Redirection Loop Detected");
 		setError(CODE_508_LOOP_DETECTED);
+	}
 	
 	_realURI = _myconfig.redirection + _myconfig.indexRedirection;
 	
@@ -67,10 +70,6 @@ void	ResponseBuilder::slashManip( string &target ){
 		if (beginWithSlash)
 			target.erase(target.begin());
 	}
-	// else if (target == "/")
-	// {
-	// 	// return;
-	// }
 
 	if ( isDirectory(target) )
 	{
@@ -121,19 +120,18 @@ void	ResponseBuilder::checkMethod( void ){
 		else if (*(it) == "DELETE" and _method == DELETE)
 			return;
 	}
-	
+	Logger::getInstance().log(DEBUG, "Method not found");
 	setError(CODE_405_METHOD_NOT_ALLOWED);
 }
 
 void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_errorCodes codeInput ){
 
-	Logger::getInstance().log(DEBUG, "ResponseBuilder->getHeader", inputClient);
-		
-	_client = &inputClient; // init client
-	_config = &inputConfig; // init config
+	_client = &inputClient;
+	_config = &inputConfig;
 
 	if (codeInput != CODE_200_OK)
 	{
+		Logger::getInstance().log(INFO, "getHeader invoked with an error code");
 		setError(codeInput, true);
 		setContentLenght();
 		buildHeaders();
@@ -141,6 +139,8 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 		return;
 	}
 	
+	Logger::getInstance().log(DEBUG, "ResponseBuilder->getHeader", inputClient);
+
 	_realURI = _client->headerRequest.getURI();
 	_originalURI = _realURI;
 
@@ -206,12 +206,9 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 		deleteEngine();	
 	}
 
-	
-
 	buildHeaders();
 
-
-	// Copying the build Headers in headerRespons
+	// Copying the build Headers in headerResponse
 	// ! Si on mixe les headers du CGI + de ResponseBuilder
 	if (!_isCGI)
 	{

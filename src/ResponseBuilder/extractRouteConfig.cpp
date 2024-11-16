@@ -9,6 +9,10 @@ void ResponseBuilder::clearingRoutes( vector< string >&routeNames, vector< strin
 	vector < string > toClear;
 	RoutesData *routes = &_config->_serverStruct[_config->index].routesData;
 
+	// print("=============================");
+	// printColor(BOLD_YELLOW, _config->_serverStruct->port);
+	// print("=============================");
+
 	// extracting all uris
 	for (mapIterator it = routes->begin(); it != routes->end(); ++it)
 	{
@@ -29,7 +33,8 @@ void ResponseBuilder::clearingRoutes( vector< string >&routeNames, vector< strin
 		curVector.clear();
 	}
 
-	// clear nodes without the URI
+	// TODO : clear nodes without the URI
+	
 	// for (vectorIterator it = toClear.begin(); it != toClear.end(); ++it)
 	// {
 	// 	routes->erase(*it); // erase only in ResponseBuilder scope

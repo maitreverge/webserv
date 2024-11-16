@@ -7,23 +7,22 @@
 
 // int main() {
 
-// 	string _realURI = "/";
+// 	string foo = "Content-Disposition: form-data; name=\"file1\"; filename=\"fr.subject.pdf\" \r\n";
+	
+// 	string needle = "filename=\"";
 
+// 	size_t startPos = foo.find(needle);
+// 	size_t endPos;
 
-// 	string root;
+// 	if (startPos != std::string::npos)
+// 	{
+// 		startPos += needle.length();
 
-// 	// root.erase();
+// 		endPos = foo.find("\"", startPos);
 
-// 	root = "/cyborg_gaming";
+// 		string hey = foo.substr(startPos, endPos - startPos);
 
-
-
-// 	if (root.empty())
-// 		return;
-
-// 	// if (*_myconfig.root.rbegin() != '/')
-// 	// 	_myconfig.root += "/";
-
-// 	_realURI.replace(0, _myconfig.uri.size(), root);
+// 		std::cout << hey << std::endl;
+// 	}
 
 // }

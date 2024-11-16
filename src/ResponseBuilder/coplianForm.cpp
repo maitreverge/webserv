@@ -56,6 +56,10 @@ ResponseBuilder::ResponseBuilder( void ){
 	_errorNotFound = false;
 
 	this->_ifsStreamHead = 0; // ! NE PAS TOUCHER	
+
+	_writeReady = false;
+	_parsedBoundaryToken = false;
+
 }
 
 ResponseBuilder::ResponseBuilder( const ResponseBuilder & src)
@@ -98,6 +102,10 @@ ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 	this->_client = rhs._client;
 	this->_config = rhs._config;
 	this->Headers = rhs.Headers;
+
+	this->_writeReady = rhs._writeReady;
+	this->_parsedBoundaryToken = rhs._parsedBoundaryToken;
+
 
 	// ! DO NOT FUCKING TOUCH (Kernel copy stuff)
 	this->_ifsStreamHead = rhs._ifsStreamHead;
