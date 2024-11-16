@@ -7,7 +7,7 @@ void Server::listenClients()
 	{
 		if (this->_clients[i].ping >= 2)
 			continue ;
-		if (this->_clients[i].headerRequest.getHeaders().ContentLength
+		if ((this->_clients[i].headerRequest.getHeaders().ContentLength || this->_clients[i].headerRequest.getHeaders().TransferEncoding == "chunked")
 			&& !this->_clients[i].messageRecv.empty())
 			reSend(i);
 		else if (FD_ISSET(this->_clients[i].fd, &Kernel::_readSet))
@@ -64,7 +64,7 @@ void Server::clientMessage(size_t i, ssize_t ret)
 	insert(this->_clients[i].messageRecv.end(), 
 	this->_readBuffer.begin(),
 	this->_readBuffer.begin() + ret);				
-	if (!this->_clients[i].headerRequest.getHeaders().ContentLength)
+	if (!this->_clients[i].headerRequest.getHeaders().ContentLength && this->_clients[i].headerRequest.getHeaders().TransferEncoding != "chunked")
 		this->handleClientHeader(i, ret);
 	else
 		this->handleClientBody(i, ret);	
@@ -86,25 +86,27 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 	stringstream ss;
 	ss << "receiv client request" << " " << ret << " bytes";
 	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
-		
+	this->printResponse(this->_clients[i].messageRecv);	
 	std::vector<char>::iterator it;		
-	if (isDelimiterFind("\r\n\r\n", i, it))		
+	if (this->isDelimiterFind("\r\n\r\n", i, it))		
 	{	
 		Logger::getInstance().log(DEBUG, "header terminated",
 			this->_clients[i]);
 		
-		if (isMaxHeaderSize(it + 4, i))
+		if (this->isMaxHeaderSize(it + 4, i))
 			return ;				
 		this->_clients[i].headerRequest.parse(this->_clients[i]);								
 		this->_clients[i].headerRequest.displayParsingResult();
-		getRespHeader(i);
+		this->getRespHeader(i);
 		this->_clients[i].messageRecv.
             erase(this->_clients[i].messageRecv.begin(), it + 4);	
 		this->_clients[i].bodySize += this->_clients[i].messageRecv.size();
-		bodyCheckin(i);						
+		if (this->isChunked(i))//!
+			return;
+		this->bodyCheckin(i);						
 	}
 	else
-		isMaxHeaderSize(it + 1, i);
+		this->isMaxHeaderSize(it + 1, i);
 }
 
 void Server::bodyCheckin(size_t i)
@@ -141,8 +143,10 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 	stringstream ss;
 	ss << "Handle Client Body - receive " << ret << " bytes";
 	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
-
+	this->printResponse(this->_clients[i].messageRecv);
 	this->_clients[i].bodySize += static_cast<size_t>(ret);
+	if (this->isChunked(i))//!
+		return ;
 	if (this->isBodyTooLarge(i) || this->isBodyTerminated(i))
 		return ;
 	if (this->_clients[i].headerRequest.getMethod() == "POST")
@@ -257,6 +261,56 @@ bool Server::isBodyTerminated(size_t i) //!26 lines!!!
 		if (this->_clients[i].messageRecv.empty())
 		 	this->_clients[i].ping++;	
 		return true;
+	}
+	return false;
+}
+
+bool Server::isChunked(size_t i)
+{
+	std::vector<char>::iterator it;
+	if (this->_clients[i].headerRequest.getHeaders().TransferEncoding
+		== "chunked")
+	{	
+		if (this->isDelimiterFind("\r\n", i, it))
+		{
+			std::string hexaLen(this->_clients[i].messageRecv.begin(), it);
+			std::stringstream ss; ss << hexaLen;
+			int len;
+			ss >> len;
+			if (!ss)
+				Logger::getInstance().log(ERROR, "hexadecimal conversion",
+					this->_clients[i]);//!
+			else
+				Logger::getInstance().log(WARNING, "hexadecimal succes",
+					this->_clients[i]);//!
+			this->_clients[i].messageRecv.
+				erase(this->_clients[i].messageRecv.begin(), it + 2);
+			
+			if (!len)
+			{
+				stringstream ss; ss << "client body terminated" << " - Body-Size: "
+				<< this->_clients[i].bodySize << " Content-Lenght: "
+				<< this->_clients[i].headerRequest.getHeaders().ContentLength;
+				Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);	
+				if (this->_clients[i].headerRequest.getMethod() == "POST")
+				{
+					try {
+						this->_clients[i].responseBuilder.
+						setBodyPost(this->_clients[i], true);	}
+					catch(const std::exception& e)
+					{	this->shortCircuit(CODE_508_LOOP_DETECTED, i);	}
+				}					
+				else
+				{
+					this->_clients[i].messageRecv.clear();
+					shutdown(this->_clients[i].responseBuilder._cgi._fds[1], SHUT_WR);
+				}
+				this->_clients[i].ping++;
+				if (this->_clients[i].messageRecv.empty())
+					this->_clients[i].ping++;	
+			}
+		}
+		return true;	
 	}
 	return false;
 }

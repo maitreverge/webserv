@@ -36,6 +36,7 @@ class Server
 	bool isContentLengthValid(size_t i);
 	bool isBodyTerminated(size_t i);
 	bool isBodyTooLarge(size_t i);
+	bool isChunked(size_t i);
 	void printResponse(const std::vector<char> & response);
 	bool replyClient(size_t i, std::vector<char> & response);
 	bool fillMessageSend(size_t i);
