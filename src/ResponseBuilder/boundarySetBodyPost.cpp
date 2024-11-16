@@ -43,17 +43,34 @@ ResponseBuilder::e_lineNature ResponseBuilder::processCurrentLine(vector< char >
 
 	if (temp == _tokenEnd)
 		return TOKEN_END;
-	else
+	else if(temp == _tokenDelim)
+		return TOKEN_DELIM;
+	else if(temp == HTTP_HEADER_SEPARATOR)
+		return LINE_SEPARATOR;
+	
+	if (temp.find("Content-Disposition: ") != std::string::npos)
 	{
-		
+		string needle = "filename=\"";
+
+		size_t startPos = temp.find(needle);
+		size_t endPos;
+
+		if (startPos != std::string::npos)
+		{
+			startPos += needle.length();
+
+			endPos = temp.find("\"", startPos);
+
+			_fileStreamName = temp.substr(startPos, endPos - startPos);
+
+			_fileStreamName.insert(0, _myconfig.uploadDirectory);
+		}
+		return CONTENT_DISPOSITION;
 	}
-	else if()
 
 	/*
 	typedef enum
 	{
-		TOKEN_DELIM,
-		LINE_SEPARATOR,
 		BINARY_DATA,
 		CONTENT_DISPOSITION
 	} e_lineNature;
@@ -73,31 +90,49 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 	vector< char > recVector;
 	static vector< char > curLine;
 	static vector< char > nextLine;
+	e_lineNature lineNature;
 
 	initBoundaryTokens();
 
-	if ( !this->_ofs.is_open() )
+	// Copy the nextLine content within the currentLine
+	if (!nextLine.empty())
 	{
-		initBoundaryTokens();
+		curLine.insert(curLine.end(), nextLine.begin(), nextLine.end());
+		nextLine.clear();
 	}
 
-	if ( !this->_ofs.is_open() )
-	{
-		if (!nextLine.empty())
-		{
-			curLine.insert(curLine.end(), nextLine.begin(), nextLine.end());
-			nextLine.clear();
-		}
+	// Assign the current response...
+	recVector = client.messageRecv;
 
-		recVector = client.messageRecv;
-		curLine.insert(curLine.end(), recVector.begin(), recVector.end());
-		if (not isLineDelim(curLine, nextLine))
-			return;
-		// ! WORK NEEDLE 🪡🪡🪡🪡🪡🪡🪡🪡
-		processCurrentLine(curLine);
+	// Clearn the buffer from the client
+	client.messageRecv.clear();
+
+	// ... and append it to the end of curLine
+	curLine.insert(curLine.end(), recVector.begin(), recVector.end());
+	
+	if (not isLineDelim(curLine, nextLine))
+		return;
+		
+	// ! WORK NEEDLE 🪡🪡🪡🪡🪡🪡🪡🪡
+	lineNature = processCurrentLine(curLine);
+
+	switch (lineNature)
+	{
+		case TOKEN_DELIM or TOKEN_END: // end of previous stream
+			if (_ofs.is_open())
+				_ofs.close();
+			break;
+		case LINE_SEPARATOR: // next packages need to be the bnary data
+			if (!this->_ofs.is_open())
+			{
+				this->_ofs.open(_fileStreamName.c_str(), std::ios::binary);
+			}
+
+		case BINARY_DATA:
+		case CONTENT_DISPOSITION:
+	}
 		
 
-	}
 
     if (_ofs.is_open())
 	{

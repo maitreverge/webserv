@@ -203,6 +203,8 @@ class ResponseBuilder
 	string _tokenEnd;
 	string _postFileName;
 
+	string _fileStreamName;
+
 	// DELETE
 	void	deleteEngine( void );
 
