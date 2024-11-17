@@ -34,7 +34,9 @@ class Server
 	void shortCircuit(e_errorCodes err, size_t i);
 	bool isMaxHeaderSize(std::vector<char>::iterator it, size_t i);
 	bool isContentLengthValid(size_t i);
-	bool isBodyTerminated(size_t i);
+	bool isBodyEnd(size_t i);
+	void sendBodyPart(size_t i);
+	void sendBodyEnd(size_t i);
 	bool isBodyTooLarge(size_t i);
 	bool isChunked(size_t i);
 	void printResponse(const std::vector<char> & response);

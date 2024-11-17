@@ -15,6 +15,7 @@ struct Client
 	std::vector<char>	messageRecv;
 	RequestParser		headerRequest;
 	size_t				bodySize;
+	size_t				chunkedSize;
 
 	ResponseBuilder		responseBuilder;
 	std::vector<char>	headerRespons;
