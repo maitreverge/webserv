@@ -102,8 +102,8 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 		this->getRespHeader(i);
 		this->_clients[i].messageRecv.
             erase(this->_clients[i].messageRecv.begin(), it + 4);	
-		this->_clients[i].bodySize += this->_clients[i].messageRecv.size();
-		if (this->isChunked(i))//!
+		this->_clients[i].bodySize += this->_clients[i].messageRecv.size();	
+		if (this->isChunked(i))
 			return;
 		this->bodyCheckin(i);						
 	}
@@ -150,7 +150,7 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
 	this->printResponse(this->_clients[i].messageRecv);
 	this->_clients[i].bodySize += static_cast<size_t>(ret);
-	if (this->isChunked(i))//!
+	if (this->isChunked(i))
 		return ;
 	if (this->isBodyTooLarge(i))
 		return ;
