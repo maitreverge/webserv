@@ -20,7 +20,7 @@ void	ResponseBuilder::getHeaderPost( Client &inputClient, Config &inputConfig, e
 	_realURI = _client->headerRequest.getURI();
 	_originalURI = _realURI;
 
-	_errorType = CODE_201_CREATED; // CODE_201 specific for POST
+	_errorType = CODE_400_BAD_REQUEST; // CODE_201 specific for POST
 
 	extractRouteConfig();
 	// printMyConfig();
