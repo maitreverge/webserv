@@ -55,8 +55,10 @@ void	ResponseBuilder::extractFileBodyName( vector< char >& curLine ){
 
 		_fileStreamName = temp.substr(startPos, endPos - startPos);
 
+		string uploadFolder = _myconfig.uploadDirectory + "/";
+
 		// TODO : check the uploadDirectory authorizations
-		_fileStreamName.insert(0, _myconfig.uploadDirectory);
+		_fileStreamName.insert(0, uploadFolder);
 	}
 }
 
@@ -84,7 +86,7 @@ ResponseBuilder::e_lineNature ResponseBuilder::processCurrentLine(vector< char >
 void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 
 	usleep(50000);
-    Logger::getInstance().log(DEBUG, "setBodyPost");
+    // Logger::getInstance().log(DEBUG, "Flo_multipart_setbody");
 
 	if (this->_isCGI)	
 		return this->_cgi.setBody(client, eof);
@@ -96,7 +98,10 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 
 	if (not _parsedBoundaryToken) // skip useless stack calls for each HTTP package
 		initBoundaryTokens();
+	
 
+	string next(nextLine.begin(), nextLine.end());
+    printColor(BOLD_HIGH_INTENSITY_MAGENTA, "NEXT LINE = " + next);
 	// Copy the nextLine content within the currentLine
 	if (!nextLine.empty())
 	{
@@ -110,12 +115,20 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 	// ... and append it to the end of curLine
 	curLine.insert(curLine.end(), recVector.begin(), recVector.end());
 
+
 	// Clearn the buffer from the client
 	client.messageRecv.clear();
 	
 	// While we didn't process a whole line, we write it within the buffer
 	if (not isLineDelim(curLine, nextLine))
+	{
+		printColor(BOLD_CYAN, "Unfinished line");
 		return;
+	}
+
+	string curent(curLine.begin(), curLine.end());
+    printColor(BOLD_GREEN, "CURRENT LINE = " + curent);
+	sleep(5);
 		
 	lineNature = processCurrentLine(curLine);
 
@@ -126,20 +139,25 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 		case TOKEN_END: // end of previous stream
 			if (_ofs.is_open())
 				_ofs.close();
+			printColor(BOLD_CYAN, "Token Delim or END detected, closing stream");
 			// curLine.clear(); // put in another scope to avoid boilerplate code
 			_fileStreamName.clear();
 			break;
 
 		case CONTENT_DISPOSITION:
+			printColor(BOLD_CYAN, "Content Disposition Detected");
 			extractFileBodyName(curLine);
+			printColor(BOLD_CYAN, "_fileStreamName =" + _fileStreamName);
 			// curLine.clear();
 			break;
 		
 		case OTHER:
+			printColor(BOLD_CYAN, "Other Line detected");
 			// curLine.clear();
 			break;
 		
 		case LINE_SEPARATOR: // next packages need to be the bnary data
+			printColor(BOLD_CYAN, "Line separator detected");
 			if (!this->_ofs.is_open())
 			{
 				this->_ofs.open(_fileStreamName.c_str(), std::ios::binary);
@@ -149,6 +167,7 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 			break;
 
 		case BINARY_DATA:
+			printColor(BOLD_CYAN, "Binary data detected, writting");
 			this->_ofs.seekp(0, std::ios::end);
 			_ofs.write(curLine.data(), static_cast<std::streamsize>(curLine.size()));
 			if (!_ofs)
