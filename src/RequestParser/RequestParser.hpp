@@ -16,6 +16,8 @@ struct Headers
 	size_t								ContentLength;
 	std::map<std::string, std::string>	Cookie;
 	
+	// ! FLO ADD
+	
 	void	reset();
 
 	bool operator==(const Headers& other) const {
@@ -51,6 +53,7 @@ class RequestParser
 		std::map<std::string, std::vector<std::string> >	_tmpHeaders;
 		Headers												_Headers;
 		Client*												_Client;
+		std::string											_WebToken;
 		// utils
 		void		trim(std::string& str);
 		std::string	charVectorToString(const std::vector<char>& vector);
@@ -68,6 +71,9 @@ class RequestParser
 							(std::vector<std::string> vec);
 		void	displayHeaders() const;
 		void	reset_values();
+		
+		void	extractWebToken( const std::vector<std::string>& key);
+
 
 	public:
 		//coplien
@@ -83,6 +89,9 @@ class RequestParser
 		Client*		getClient() const;
 		Headers		getHeaders() const;
 		std::map<std::string, std::vector<std::string> >		getTmpHeaders() const;
+
+		std::string	getWebToken() const; // ! FLO
+
 
 		// display methods
 		void	displayParsingResult() const;

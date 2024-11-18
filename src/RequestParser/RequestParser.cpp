@@ -10,7 +10,8 @@ RequestParser::RequestParser() : 	_method(""),
 									_URI(""),
 									_HTTP_version(""),
 									_isValid(true),
-									_Client(NULL)
+									_Client(NULL),
+									_WebToken("") // ! FLO
 {
 	_Headers.reset();
 }
@@ -38,6 +39,8 @@ std::map<std::string, std::vector<std::string> >		RequestParser::getTmpHeaders()
 {
 	return (_tmpHeaders);
 }
+
+std::string	RequestParser::getWebToken() const		{return (_WebToken);} // ! FLO
 
 /**========================================================================
  *                           UTILS
@@ -162,14 +165,53 @@ void	RequestParser::extractHeaders()
 /**========================================================================
  *                           ASSIGNHEADERS OVERLOADS
  *========================================================================**/
+void RequestParser::extractWebToken(const std::vector<std::string>& key){
+
+	string target("");
+
+	string needle = "boundary=";
+
+	for (std::vector<std::string>::const_iterator it = key.begin(); it != key.end(); ++it)
+	{
+		// if (it->find)
+		if (it->find(needle) != std::string::npos)
+		{
+			target = *it;
+			break;
+		}
+	}
+
+	// If "boundary=" needle has not been found
+	if (target.empty())
+		return;
+
+	size_t startPos = target.find(needle);
+	
+	size_t endPos;
+
+	startPos += needle.length();
+
+	// Extract to the next space, or the end of the line
+	endPos = target.find(" ", startPos);
+
+	_WebToken = target.substr(startPos, endPos - startPos);
+}
+
 void RequestParser::assignHeader(const std::string& key, std::string& headerField)
 {
 	std::map<std::string, std::vector<std::string> >::const_iterator it = _tmpHeaders.find(key);
 
+
 	if (it != _tmpHeaders.end())
 	{
 		if (!it->second.empty())
+		{
 			headerField = it->second[0];
+			if (key == "Content-Type")
+			{
+				extractWebToken(it->second);
+			}
+		}
 		else
 			Logger::getInstance().log(WARNING, "Header found but has no values for key: " + key, *this);
 	}

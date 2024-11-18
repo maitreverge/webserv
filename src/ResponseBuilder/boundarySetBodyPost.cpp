@@ -4,7 +4,8 @@
 void	ResponseBuilder::initBoundaryTokens( void ){
 
 	// To replace with Dan future parsed token.
-	string parsedBoundary = "----WebKitFormBoundary1XN99skGpOHP8Og8";
+	string parsedBoundary = _client->headerRequest.getWebToken();
+	// string parsedBoundary = "----WebKitFormBoundary1XN99skGpOHP8Og8";
 
 	_tokenDelim = parsedBoundary;
 	_tokenDelim.insert(0, "--");
