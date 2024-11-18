@@ -64,11 +64,14 @@ void	ResponseBuilder::extractFileBodyName( vector< char >& curLine ){
 
 ResponseBuilder::e_lineNature ResponseBuilder::processCurrentLine(vector< char >& curLine) {
 
-	// Trimm last two trailing character from the current line
-	curLine.erase(curLine.end() - 2, curLine.end());
-
 	// This function serves the purpose of extracting the filename
 	string temp(curLine.begin(), curLine.end());
+
+	if (temp == HTTP_HEADER_SEPARATOR)
+		return LINE_SEPARATOR;
+	
+	// Trimm last two trailing character from the current line
+	curLine.erase(curLine.end() - 2, curLine.end());
 
 	if (_writeReady)
 		return BINARY_DATA;
@@ -76,8 +79,6 @@ ResponseBuilder::e_lineNature ResponseBuilder::processCurrentLine(vector< char >
 		return TOKEN_END;
 	else if (temp == _tokenDelim)
 		return TOKEN_DELIM;
-	else if (temp == HTTP_HEADER_SEPARATOR)
-		return LINE_SEPARATOR;
 	else if (temp.rfind("Content-Disposition: ", 0) == 0) // does the beggining of the line starts with the needle
 		return CONTENT_DISPOSITION;
 	return OTHER;
@@ -175,6 +176,7 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 				// error CODE_500 ??
 				//Utile de rappeller getHeader ou renvoyer une exception a Seb pour qu'il puisse me rappeller avec un getHeader(.., .., CODE_500)
 			}
+			_writeReady = false;
 			break;
 
 		default:
