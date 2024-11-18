@@ -21,12 +21,12 @@ bool	ResponseBuilder::isLineDelim( vector< char >& curLine, vector< char >& next
 
 	std::string::size_type posSeparator;
 
-	posSeparator = temp.find(HTTP_HEADER_SEPARATOR);
+	posSeparator = temp.find_first_of(HTTP_HEADER_SEPARATOR);
 	if (posSeparator == std::string::npos)
 		return false;
 	
 	// Does the curLine ends with a trailing \r\n ONLY
-	if (posSeparator + 2 == temp.size())
+	if (posSeparator + 2 == temp.length())
 		return true;
 
 	// in the opposite case, we need to trim the curLine and append the rest to nextLine
@@ -64,14 +64,13 @@ void	ResponseBuilder::extractFileBodyName( vector< char >& curLine ){
 
 ResponseBuilder::e_lineNature ResponseBuilder::processCurrentLine(vector< char >& curLine) {
 
-	// This function serves the purpose of extracting the filename
-	string temp(curLine.begin(), curLine.end());
+	if (curLine.size() > 2)
+	{
+        curLine.erase(curLine.end() - 2, curLine.end());
+    }
 
-	if (temp == HTTP_HEADER_SEPARATOR)
-		return LINE_SEPARATOR;
-	
+	string temp(curLine.begin(), curLine.end());
 	// Trimm last two trailing character from the current line
-	curLine.erase(curLine.end() - 2, curLine.end());
 
 	if (_writeReady)
 		return BINARY_DATA;
@@ -79,6 +78,8 @@ ResponseBuilder::e_lineNature ResponseBuilder::processCurrentLine(vector< char >
 		return TOKEN_END;
 	else if (temp == _tokenDelim)
 		return TOKEN_DELIM;
+	else if (temp == HTTP_HEADER_SEPARATOR)
+		return LINE_SEPARATOR;
 	else if (temp.rfind("Content-Disposition: ", 0) == 0) // does the beggining of the line starts with the needle
 		return CONTENT_DISPOSITION;
 	return OTHER;
@@ -97,7 +98,7 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 	static vector< char > nextLine;
 	e_lineNature lineNature;
 
-	if (not _parsedBoundaryToken) // skip useless stack calls for each HTTP package
+	// if (not _parsedBoundaryToken) // skip useless stack calls for each HTTP package
 		initBoundaryTokens();
 	
 
@@ -129,7 +130,7 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 
 	string curent(curLine.begin(), curLine.end());
     printColor(BOLD_GREEN, "CURRENT LINE = " + curent);
-	sleep(5);
+	// sleep(6);
 		
 	lineNature = processCurrentLine(curLine);
 
@@ -169,7 +170,7 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 
 		case BINARY_DATA:
 			printColor(BOLD_CYAN, "Binary data detected, writting");
-			this->_ofs.seekp(0, std::ios::end);
+			// this->_ofs.seekp(0, std::ios::end);
 			_ofs.write(curLine.data(), static_cast<std::streamsize>(curLine.size()));
 			if (!_ofs)
 			{
@@ -177,6 +178,7 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 				//Utile de rappeller getHeader ou renvoyer une exception a Seb pour qu'il puisse me rappeller avec un getHeader(.., .., CODE_500)
 			}
 			_writeReady = false;
+			_fileStreamName.clear();
 			break;
 
 		default:
