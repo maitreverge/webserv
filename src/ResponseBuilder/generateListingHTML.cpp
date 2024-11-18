@@ -38,6 +38,44 @@ bool ResponseBuilder::isFileIgnored( string &str ){
 	return false;
 }
 
+void ResponseBuilder::makeHeaderListing(std::stringstream &result) {
+	
+	stringstream documentTitle;
+
+	documentTitle << "Listing Directory of URL "
+				  << _realURI;
+
+	// Build Head
+	result << "<!DOCTYPE html>\n"
+		   << "<html lang=\"en\">\n"
+		   << "<head>\n"
+		   << "<meta charset=\"UTF-8\">\n"
+		   << "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
+		   << "<title>"
+		   << documentTitle.str()
+		   << "</title>\n<style>"
+		   // ! ADD ICONS STYLING
+		   << "ul li a[href$=\"/\"]::before {\n"
+		   << "\tcontent: \"\\1F4C1\";\n"
+		   << "\tmargin-right: 8px;\n"
+		   << "}\n"
+		   << "ul li a:not([href$=\"/\"])::before {\n"
+		   << "\tcontent: \"\\1F4C4\";\n"
+		   << "\tmargin-right: 8px;\n"
+		   << "}\n"
+		   << "ul li a {\n"
+		   << "\ttext-decoration: none;\n"
+		   << "\tcolor: inherit;\n"
+		   << "}\n"
+		   << "ul li a span {\n"
+		   << "\ttext-decoration: underline;\n"
+		   << "\tcolor: blue;\n"
+		   << "}\n";
+	// ! ADD ICONS STYLING
+
+	result << "</style>\n</head>\n<body>\n<ul>";
+}
+
 void	ResponseBuilder::listingHTMLBuilder( void ){
 
 	// TODO  EDGE CASE TO HANDLE :  what is we can't write in the directory
@@ -76,40 +114,7 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 
 	stringstream result;
 
-	stringstream documentTitle;
-	
-	documentTitle	<< "Listing Directory of URL "
-					<< _realURI;
-
-	// Build Head							
-	result	<< "<!DOCTYPE html>\n"
-			<< "<html lang=\"en\">\n"
-			<< "<head>\n"
-			<< "<meta charset=\"UTF-8\">\n"
-			<< "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
-			<< "<title>"
-			<< documentTitle.str()
-			<< "</title>\n<style>"
-			// ! ADD ICONS STYLING
-			<<	"ul li a[href$=\"/\"]::before {\n"
-			<<	"\tcontent: \"\\1F4C1\";\n"
-			<<	"\tmargin-right: 8px;\n"
-			<<	"}\n"
-			<<	"ul li a:not([href$=\"/\"])::before {\n"
-			<<	"\tcontent: \"\\1F4C4\";\n"
-			<<	"\tmargin-right: 8px;\n"
-			<<	"}\n"
-			<<	"ul li a {\n"
-			<<	"\ttext-decoration: none;\n"
-			<<	"\tcolor: inherit;\n"
-			<<	"}\n"
-			<<	"ul li a span {\n"
-			<<	"\ttext-decoration: underline;\n"
-			<<	"\tcolor: blue;\n"
-			<<	"}\n";
-			// ! ADD ICONS STYLING
-
-	result	<< "</style>\n</head>\n<body>\n<ul>";
+	makeHeaderListing(result);
 
 	// Build Body for each entry
 	vector< string > paths;
@@ -168,6 +173,9 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 	listingFile << result.str();
 
 	_realURI += listingName;
+
+	// Comment this to make listing.html
+	_deleteURI = true;
 
 	if (*_realURI.begin() == '/')
 		_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")

@@ -53,7 +53,7 @@ ResponseBuilder::ResponseBuilder( void ){
 	_isXOK = false;
 	_backupNameFile = "backup.html";
 
-	_errorNotFound = false;
+	_deleteURI = false;
 
 	this->_ifsStreamHead = 0; // ! NE PAS TOUCHER	
 
@@ -97,7 +97,7 @@ ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 	this->_fileExtension = rhs._fileExtension;
 	this->_folderCGI = rhs._folderCGI;
 	this->_backupNameFile = rhs._backupNameFile;
-	this->_errorNotFound = rhs._errorNotFound;
+	this->_deleteURI = rhs._deleteURI;
 
 	this->_client = rhs._client;
 	this->_config = rhs._config;

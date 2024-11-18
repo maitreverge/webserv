@@ -54,7 +54,7 @@ void	ResponseBuilder::errorNotFoundGenerator( void ){
 	
 	// ! Modify the _realURI
 	this->_realURI = _backupNameFile;
-	this->_errorNotFound = true;
+	this->_deleteURI = true;
 	
 	backupStream.close();
 }

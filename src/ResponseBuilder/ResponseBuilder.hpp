@@ -135,8 +135,8 @@ class ResponseBuilder
 	bool _isXOK;
 
 	// errorNotFoundGenerator
-	bool _errorNotFound;
-	const string _backupNameFile;
+	bool _deleteURI; // used for auto generated errors or listing.html
+	string _backupNameFile;
 
 	// CGI Stuff
 	e_errorCodes _errorType;
@@ -172,7 +172,8 @@ class ResponseBuilder
 	// generateListingHTML.cpp
 	bool	foundDefaultPath( void );
 	bool	isFileIgnored( string & );
-	void	listingHTMLBuilder( void);
+	void listingHTMLBuilder(void);
+	void makeHeaderListing(std::stringstream &result);
 	void	generateListingHTML( void );
 
 	// ResponseBuilder.cpp
