@@ -59,4 +59,5 @@ class Server
 		void listenClients();
 		void replyClients();
 		void exitServer();
+		void cleanDeadClients();
 };

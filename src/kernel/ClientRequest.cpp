@@ -5,6 +5,17 @@ void Server::listenClients()
 {	
 	for (size_t i = 0; i < this->_clients.size(); i++)
 	{
+			// for (int fd = 0; fd <=Kernel::_maxFd; ++fd) {
+			// 	if (FD_ISSET(fd, &Kernel::_readSet)
+			// 		|| FD_ISSET(fd, &Kernel::_writeSet))
+			// 	{				
+					// if (fcntl(this->_clients[i].fd, F_GETFD) == -1 && errno == EBADF)
+					// {
+					// 	std::cerr << "FD invalide détecté dans listen: " << this->_clients[i].fd << std::endl;
+					// 	this->exitClient(i);
+					// 	break;										
+					// }
+				// }
 		if (this->_clients[i].ping >= 2)
 			continue ;
 		if ((this->_clients[i].headerRequest.getHeaders().ContentLength)
@@ -13,9 +24,9 @@ void Server::listenClients()
 		else if (FD_ISSET(this->_clients[i].fd, &Kernel::_readSet))
 		{
 			this->_readBuffer.clear();
-			this->_readBuffer.resize(RECV_BUFF_SIZE);
+			this->_readBuffer.resize(RECV_BUFF_SIZE);		
 			ssize_t ret = recv(this->_clients[i].fd, this->_readBuffer.data(),
-				this->_readBuffer.size(), 0);
+				this->_readBuffer.size(), 0);		
 			if (ret <= 0)
 			{
 				if (ret < 0)
