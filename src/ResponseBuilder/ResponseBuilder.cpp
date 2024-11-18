@@ -96,12 +96,15 @@ void ResponseBuilder::resolveURI( void ) {
         return;
     }
 	
-	// ! STEP 2 : Trim all "../" from the URI for transversal path attacks
+	// ! STEP 3 : Trim all "../" from the URI for transversal path attacks
 	// sanatizeURI(_realURI); // ! STAY COMMENTED until refactoring for better "../" erasing process
 
-	// ! STEP 3  : Deleting URI first 
+	// ! STEP 4  : Deleting URI first 
 	slashManip(_realURI);
 
+	// ! STEP 5 : Check for DELETE + webserv
+	if (_method == DELETE and _realURI == "webserv")
+		setError(CODE_403_FORBIDDEN);
 }
 
 void	ResponseBuilder::checkMethod( void ){
@@ -201,7 +204,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	}
 	
 	
-	if (_method == DELETE and _errorType < CODE_400_BAD_REQUEST)
+	if (_method == DELETE and _errorType == CODE_204_NO_CONTENT)
 	{
 		deleteEngine();	
 	}

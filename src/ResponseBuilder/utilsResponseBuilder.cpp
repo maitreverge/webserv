@@ -26,10 +26,12 @@ void	ResponseBuilder::extractMethod( void ){
 	{
 		_method = POST;
 	}
-	else
+	else if (tempMethod == "DELETE")
 	{
 		_method = DELETE;
 	}
+	else
+		setError(CODE_405_METHOD_NOT_ALLOWED, true);
 }
 
 void	ResponseBuilder::setContentLenght(){
@@ -195,9 +197,12 @@ void ResponseBuilder::setError(e_errorCodes code, bool skip){
 	try
 	{
 		if (_errorType != CODE_204_NO_CONTENT)
+		{
 			_realURI = _config->errorPaths.at(_errorType);
-		if (access(_realURI.c_str(), F_OK) == -1 or access(_realURI.c_str(), R_OK) )
-			throw exception();
+
+			if (access(_realURI.c_str(), F_OK) == -1 or access(_realURI.c_str(), R_OK) )
+				throw exception();
+		}
 	}
 	catch(const std::exception& e)
 	{
@@ -206,8 +211,12 @@ void ResponseBuilder::setError(e_errorCodes code, bool skip){
 		setContentLenght();
 	}
 	
-	extractFileNature(_realURI);
-	extractType(_realURI);
+	
+	if (_errorType != CODE_204_NO_CONTENT)
+	{
+		extractFileNature(_realURI);
+		extractType(_realURI);
+	}
 	
 	// Allows the setError function to raise an exception, and skip the useless others checks
 	if (!skip)
