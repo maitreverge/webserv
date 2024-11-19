@@ -93,13 +93,17 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 	if (this->_isCGI)	
 		return this->_cgi.setBody(client, eof);
 
+	printColor(BOLD_HIGH_INTENSITY_BLUE, "FUNCTION CALED");
+
 	vector< char > recVector;
 	static vector< char > curLine;
 	static vector< char > nextLine;
 	e_lineNature lineNature;
 
-	// if (not _parsedBoundaryToken) // skip useless stack calls for each HTTP package
+	if (not _parsedBoundaryToken) // skip useless stack calls for each HTTP package
 		initBoundaryTokens();
+	
+	// printColor(BOLD_HIGH_INTENSITY_YELLOW, "WEBTOKEN = " + _client->headerRequest.getWebToken());
 	
 
 	string next(nextLine.begin(), nextLine.end());
@@ -117,6 +121,8 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 	// ... and append it to the end of curLine
 	curLine.insert(curLine.end(), recVector.begin(), recVector.end());
 
+	string clientMessage(client.messageRecv.begin(), client.messageRecv.end());
+    printColor(BOLD_HIGH_INTENSITY_YELLOW, "CLIENT MESSAGE = " + clientMessage);
 
 	// Clearn the buffer from the client
 	client.messageRecv.clear();
@@ -129,8 +135,8 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 	}
 
 	string curent(curLine.begin(), curLine.end());
-    printColor(BOLD_GREEN, "CURRENT LINE = " + curent);
-	// sleep(6);
+    printColor(BOLD_HIGH_INTENSITY_GREEN, "CURRENT LINE = " + curent);
+	sleep(6);
 		
 	lineNature = processCurrentLine(curLine);
 
