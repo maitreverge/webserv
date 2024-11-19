@@ -20,7 +20,6 @@ class Server
 	sockaddr_in			_sockAddr;
 	std::vector<char>	_writeBuffer;
 	std::vector<char>	_readBuffer;
-	int					_fd;
 	
 	void clientMessage(size_t i, ssize_t ret);
 	void displayClient(Client & client) const;
@@ -48,6 +47,7 @@ class Server
 
 	public:
 
+		int					_fd;
 		std::vector<Client> _clients;
 
 		Server(sockaddr_in & sockaddr, Config & conf);

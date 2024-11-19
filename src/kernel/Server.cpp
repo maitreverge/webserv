@@ -40,9 +40,7 @@ bool Server::setup()
 		this->exitServer();
 		return false;
 	}
-	Logger::getInstance().log(INFO, "listen", *this);
-	stringstream ss; ss << "fd: " << this->_fd;
-	Logger::getInstance().log(INFO, ss.str());
+	Logger::getInstance().log(INFO, "listen", *this);	
 	return true;
 }
 

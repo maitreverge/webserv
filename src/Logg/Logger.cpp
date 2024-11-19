@@ -209,6 +209,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 							+ GREEN + "Server: "
 							+ MAGENTA + ipToString(server.getSockAdress()) + " "
 							+ YELLOW + intToString(portToInt(server.getSockAdress())) + " "
+							+ GREEN + intToString(server._fd) + " "
 							+ RESET + "\n";
 	logOut(logLevel, logEntry);
 }
@@ -257,6 +258,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const Server&ser
 							+ GREEN + "Server: "
 							+ MAGENTA + ipToString(server.getSockAdress()) + " "
 							+ YELLOW + intToString(portToInt(server.getSockAdress())) + " "
+							+ GREEN + intToString(server._fd) + " "
 							+ RESET + "\n";
 	logOut(logLevel, logEntry);
 }
