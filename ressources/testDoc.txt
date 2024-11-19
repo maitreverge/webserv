@@ -17,7 +17,7 @@ docker run --rm -t jstarcher/siege -c1 -r5 10.12.6.8:1512
 
 docker run --rm -t -v $(pwd)/siege_urls.txt:/siege_urls.txt jstarcher/siege -f /siege_urls.txt -c1 -r5
 
-valgrind --trace-children=yes --track-fds=yes ./webserv
+valgrind --trace-children=yes --track-fds=yes --leak-check=full --show-leak-kinds=all ./webserv
 kill ` ps | grep webserv | cut -d' ' -f1 `
 gcc main.c -o main.out &&
 gcc main_errin.c -o main_errin.out &&
