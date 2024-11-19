@@ -99,20 +99,20 @@ void Kernel::launch()
 		{	
 			if (!this->_exit)
 				Logger::getInstance().log(ERROR, "select");
-			for (int fd = 0; fd <= this->_maxFd; ++fd)
-			{
-				if (FD_ISSET(fd, &this->_readSet)
-					|| FD_ISSET(fd, &this->_writeSet))
-				{				
-					if (fcntl(fd, F_GETFD) == -1 && errno == EBADF)
-					{
-						std::cerr << "FD invalide détecté : " << fd << std::endl;	
-						// FD_CLR(fd, &Kernel::_actualSet);				
-					}
-				}
-			}
+			// for (int fd = 0; fd <= this->_maxFd; ++fd)
+			// {
+			// 	if (FD_ISSET(fd, &this->_readSet)
+			// 		|| FD_ISSET(fd, &this->_writeSet))
+			// 	{				
+			// 		if (fcntl(fd, F_GETFD) == -1 && errno == EBADF)
+			// 		{
+			// 			std::cerr << "FD invalide détecté : " << fd << std::endl;	
+			// 			// FD_CLR(fd, &Kernel::_actualSet);				
+			// 		}
+			// 	}
+			// }
 			std::cerr << "je vais appelr call clean" << std::endl;	
-			this->callClean();
+			// this->callClean();
 			
 			continue;
 		}		

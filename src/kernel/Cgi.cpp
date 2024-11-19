@@ -20,11 +20,13 @@ Cgi & Cgi::operator=(const Cgi & rhs)
 	{
 		FD_CLR(this->_fds[1], &Kernel::_actualSet);
 		close(this->_fds[1]);
+		this->_fds[1] = dup(rhs._fds[1]);
+		std::cout << "\e[30;101mFD SET\e[0m" << this->_fds[1] << std::endl;//!
+		FD_SET(this->_fds[1], &Kernel::_actualSet);
 	}
-	this->_fds[1] = dup(rhs._fds[1]);
-	std::cout << "\e[30;101mFD SET\e[0m" << this->_fds[1] << std::endl;//!
+	else
+		this->_fds[1] = rhs._fds[1];
 		
-	FD_SET(this->_fds[1], &Kernel::_actualSet);
 	Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fds[1]);
 	return *this;
 }
