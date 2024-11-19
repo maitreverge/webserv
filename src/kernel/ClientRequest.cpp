@@ -386,7 +386,7 @@ bool Server::isChunked(size_t i)
 					stringstream ss; ss << "hexadecimal succes - len: " << len;
 					Logger::getInstance().log(DEBUG, ss.str(), 
 						this->_clients[i]);//!
-					this->_clients[i].chunkedSize = len;
+					this->_clients[i].chunkedSize = (long)len;
 				}
 				this->_clients[i].messageRecv.
 					erase(this->_clients[i].messageRecv.begin(), it + 2);
