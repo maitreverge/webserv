@@ -21,7 +21,6 @@ class Kernel
 	void		callCatch();
 	static void callListen(Server & server);
 	static void callReply(Server & server);
-	void 		callClean();
 	
 	public:
 

@@ -69,14 +69,6 @@ short int Kernel::countClients()
 	return nClients;
 }
 
-void Kernel::callClean()
-{
-	Logger::getInstance().log(INFO, "Call Clean");	
-
-	for (size_t i = 0; i < this->_servers.size(); i++)
-		this->_servers[i].cleanDeadClients();
-}
-
 void Kernel::setup()
 {	
 	for (size_t i = 0; i < this->_conf.sockAddress.size(); i++)
@@ -92,28 +84,12 @@ void Kernel::launch()
 	while (true)
 	{
 		struct timeval timeout = {SLCT_TIMEOUT, 0};
-		// this->_readSet = this->_writeSet = this->_actualSet;		
 		Kernel::_readSet = Kernel::_writeSet = Kernel::_actualSet;		
 		if (select(Kernel::_maxFd + 1, &Kernel::_readSet, &Kernel::_writeSet,
 			0, &timeout) < 0) 
 		{	
 			if (!this->_exit)
-				Logger::getInstance().log(ERROR, "select");
-			// for (int fd = 0; fd <= this->_maxFd; ++fd)
-			// {
-			// 	if (FD_ISSET(fd, &this->_readSet)
-			// 		|| FD_ISSET(fd, &this->_writeSet))
-			// 	{				
-			// 		if (fcntl(fd, F_GETFD) == -1 && errno == EBADF)
-			// 		{
-			// 			std::cerr << "FD invalide détecté : " << fd << std::endl;	
-			// 			// FD_CLR(fd, &Kernel::_actualSet);				
-			// 		}
-			// 	}
-			// }
-			std::cerr << "je vais appelr call clean" << std::endl;	
-			// this->callClean();
-			
+				Logger::getInstance().log(ERROR, "select");					
 			continue;
 		}		
 		if (this->_exit)

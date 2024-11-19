@@ -24,7 +24,6 @@ bool Server::setup()
 	if (this->_fd < 0)	
 		return Logger::getInstance().log(ERROR, "socket"), false;
 	Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fd);
-	std::cout << "\e[30;101mFD SET SETUP\e[0m" <<this->_fd << std::endl;//!
 	FD_SET(this->_fd, &Kernel::_actualSet);
 	if (bind(this->_fd, reinterpret_cast<const sockaddr *>
 		(&this->_sockAddr), sizeof(this->_sockAddr)) < 0)
@@ -65,7 +64,6 @@ void Server::catchClients(Kernel & kernel)
 			sizeof(timeout)) < 0)
 	  		return close(client.fd),
 				Logger::getInstance().log(ERROR, "send timeout", client);
-		std::cout << "\e[30;101mFD SET CATCH\e[0m" << client.fd << std::endl;//!
 		FD_SET(client.fd, &Kernel::_actualSet);
 		Kernel::_maxFd = std::max(Kernel::_maxFd, client.fd);
 		this->_clients.push_back(client);
@@ -107,37 +105,4 @@ void Server::exitServer()
 	this->exitClients();
 	FD_CLR(this->_fd, &Kernel::_actualSet);
 	close(this->_fd);	
-}
-
-void Server::cleanDeadClients()
-{
-	Logger::getInstance().log(INFO, "Clean Dead Clients", *this);
-
-	short int n = 0;
-	for (size_t i = 0; i < this->_clients.size(); i++)
-	{
-		// if (FD_ISSET(this->_clients[i].fd, &Kernel::_readSet)
-		// 	|| FD_ISSET(this->_clients[i].fd, &Kernel::_writeSet))
-		// {
-			// if (fcntl(this->_clients[i].fd, F_GETFD) == -1 && errno == EBADF)
-			if (this->_clients[i].fd == 63)
-			{
-				std::cerr << "FD invalide détecté dans listen: " << this->_clients[i].fd << std::endl;
-				this->exitClient(i);
-				n++;
-															
-			}
-		// }
-	}
-	std::cout << "nombre de clients defectueux trouve: " << n << std::endl;
-	std::cout << "nombre de clients defectueux trouve: " << n << std::endl;
-	std::cout << "nombre de clients defectueux trouve: " << n << std::endl;
-	std::cout << "nombre de clients defectueux trouve: " << n << std::endl;
-	std::cout << "nombre de clients defectueux trouve: " << n << std::endl;
-	std::cout << "nombre de clients defectueux trouve: " << n << std::endl;
-	std::cout << "nombre de clients defectueux trouve: " << n << std::endl;
-	std::cout << "nombre de clients defectueux trouve: " << n << std::endl;
-	std::cout << "nombre de clients defectueux trouve: " << n << std::endl;
-	std::cout << "nombre de clients defectueux trouve: " << n << std::endl;
-	sleep(10);
 }

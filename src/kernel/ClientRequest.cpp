@@ -4,18 +4,7 @@
 void Server::listenClients()
 {	
 	for (size_t i = 0; i < this->_clients.size(); i++)
-	{
-			// for (int fd = 0; fd <=Kernel::_maxFd; ++fd) {
-			// 	if (FD_ISSET(fd, &Kernel::_readSet)
-			// 		|| FD_ISSET(fd, &Kernel::_writeSet))
-			// 	{				
-					// if (fcntl(this->_clients[i].fd, F_GETFD) == -1 && errno == EBADF)
-					// {
-					// 	std::cerr << "FD invalide détecté dans listen: " << this->_clients[i].fd << std::endl;
-					// 	this->exitClient(i);
-					// 	break;										
-					// }
-				// }
+	{			
 		if (this->_clients[i].ping >= 2)
 			continue ;
 		if ((this->_clients[i].headerRequest.getHeaders().ContentLength)

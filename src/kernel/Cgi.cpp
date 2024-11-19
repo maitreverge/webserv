@@ -21,7 +21,6 @@ Cgi & Cgi::operator=(const Cgi & rhs)
 		FD_CLR(this->_fds[1], &Kernel::_actualSet);
 		close(this->_fds[1]);
 		this->_fds[1] = dup(rhs._fds[1]);
-		std::cout << "\e[30;101mFD SET\e[0m" << this->_fds[1] << std::endl;//!
 		FD_SET(this->_fds[1], &Kernel::_actualSet);
 	}
 	else
@@ -55,7 +54,6 @@ void Cgi::launch(Client & client)
 	if (setsockopt(this->_fds[1], SOL_SOCKET, SO_SNDTIMEO, &timeout,
 		sizeof(timeout)) < 0)
 	  	return Logger::getInstance().log(ERROR, "cgi send timeout"); //!exit client req + error page
-	std::cout << "\e[30;101mLAUNCH FD SET\e[0m" << this->_fds[1] << std::endl;//!
     FD_SET(this->_fds[1], &Kernel::_actualSet);    
     this->_pid = fork();
     if (this->_pid < 0)
