@@ -99,7 +99,7 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 		this->_clients[i].headerRequest.parse(this->_clients[i]);								
 		this->_clients[i].headerRequest.displayParsingResult();
 		if (!this->_clients[i].headerRequest.getIsValid())		
-			return this->shortCircuit(static_cast<e_errorCodes>(431), i);			
+			return this->shortCircuit(static_cast<e_errorCodes>(431), i);//! FIND REAL ERROR			
 		this->getRespHeader(i);
 		this->_clients[i].messageRecv.
             erase(this->_clients[i].messageRecv.begin(), it + 4);	
