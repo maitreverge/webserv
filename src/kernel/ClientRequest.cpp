@@ -38,8 +38,8 @@ void Server::retrySend(size_t i)
 		<< this->_clients[i].headerRequest.getHeaders().ContentLength
 		<< " MessageRecv-Size: " << this->_clients[i].messageRecv.size()
 		<< std::endl;
-
-	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);	
+	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
+	
 	if (this->isBodyEnd(i))
 		this->sendBodyEnd(i);
 	else
