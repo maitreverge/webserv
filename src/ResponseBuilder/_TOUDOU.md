@@ -2,7 +2,11 @@
 - Wait for Dan to parse de boundary Token
 
 ## HOTFIX :
--
+- Stabilize simple GET / DELETE REQUESTS
+- Exploit the Content-Type header for post requests
+- If there is `Content-Type: multipart/form-data;`, then activate the
+unfinished branch
+IF NOT : Need to generate a random 10 lenghts string + an extension to save the file
 -
 
 
