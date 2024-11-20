@@ -93,12 +93,13 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 	if (this->isDelimiterFind("\r\n\r\n", i, it))		
 	{	
 		Logger::getInstance().log(DEBUG, "header terminated",
-			this->_clients[i]);
-		
+			this->_clients[i]);		
 		if (this->isMaxHeaderSize(it + 4, i))
 			return ;				
 		this->_clients[i].headerRequest.parse(this->_clients[i]);								
 		this->_clients[i].headerRequest.displayParsingResult();
+		if (!this->_clients[i].headerRequest.getIsValid())		
+			return this->shortCircuit(static_cast<e_errorCodes>(431), i);			
 		this->getRespHeader(i);
 		this->_clients[i].messageRecv.
             erase(this->_clients[i].messageRecv.begin(), it + 4);	
@@ -203,7 +204,7 @@ bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
 
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);		
 			//! 431 Request Header Fields Too Large !!
-		this->shortCircuit(static_cast<e_errorCodes>(431), i);
+			
 		return true;	
 	}
 	return false;
