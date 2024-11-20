@@ -5,7 +5,7 @@ void Server::listenClients()
 {	
 	for (size_t i = 0; i < this->_clients.size(); i++)
 	{			
-		if (this->_clients[i].ping >= 2)
+		if (!this->_clients[i].ping)
 			continue ;
 		if ((this->_clients[i].headerRequest.getHeaders().ContentLength)
 			&& !this->_clients[i].messageRecv.empty())
@@ -37,27 +37,13 @@ void Server::reSend(size_t i)
 	stringstream ss; ss << "Content-Length: "
 		<< this->_clients[i].headerRequest.getHeaders().ContentLength
 		<< " MessageRecv-Size: " << this->_clients[i].messageRecv.size()
-		<< std::endl;		
+		<< std::endl;
+
 	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);	
-	if (this->_clients[i].headerRequest.getMethod() != "POST")
-		return this->_clients[i].messageRecv.clear();
-	try {
-		if (this->_clients[i].ping >= 1)
-		{
-			Logger::getInstance().log(INFO, "Re Send True", this->_clients[i]);
-			this->_clients[i].responseBuilder.setBodyPost(this->_clients[i],
-				true);	
-			if (this->_clients[i].messageRecv.empty())
-				this->_clients[i].ping++; 
-		}
-		else
-		{
-			Logger::getInstance().log(INFO, "Re Send False", this->_clients[i]);
-			this->_clients[i].responseBuilder.setBodyPost(this->_clients[i],
-				false);
-		}}		
-	catch(const std::exception& e)
-	{	this->shortCircuit(CODE_508_LOOP_DETECTED, i);	}
+		if (this->isBodyEnd(i))
+		this->sendBodyEnd(i);
+	else
+		this->sendBodyPart(i);
 }
 
 void Server::clientMessage(size_t i, ssize_t ret)
@@ -116,7 +102,7 @@ void Server::bodyCheckin(size_t i)
 {
 	if (!this->_clients[i].headerRequest.getHeaders().ContentLength)
 	{
-		this->_clients[i].ping = 2;
+		this->_clients[i].ping = false;
 		this->isBodyTooLarge(i);		
 	}
 	else if (!this->isContentLengthValid(i)
@@ -189,7 +175,7 @@ void Server::shortCircuit(e_errorCodes err, size_t i)
 	this->_clients[i].responseBuilder.getHeader(this->_clients[i],
 		this->_conf, err);
 	this->_clients[i].messageRecv.clear();
-	this->_clients[i].ping = 2;
+	this->_clients[i].ping = false;
 	this->_clients[i].exitRequired = true;
 }
 
@@ -280,9 +266,8 @@ void Server::sendBodyEnd(size_t i)
 		this->_clients[i].messageRecv.clear();
 		shutdown(this->_clients[i].responseBuilder._cgi._fds[1], SHUT_WR);
 	}
-	this->_clients[i].ping++;
 	if (this->_clients[i].messageRecv.empty())
-		this->_clients[i].ping++;		
+		this->_clients[i].ping = false;	
 }
 
 bool Server::isBodyEnd(size_t i)

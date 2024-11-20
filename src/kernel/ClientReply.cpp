@@ -5,7 +5,7 @@ void Server::replyClients()
 {
 	for (size_t i = 0; i < this->_clients.size(); i++)
 	{		
-		if (this->_clients[i].ping < 2 
+		if (this->_clients[i].ping 
 			|| !FD_ISSET(this->_clients[i].fd, &Kernel::_writeSet))
 				continue;	
 		if (!this->_clients[i].headerRespons.empty())
@@ -44,7 +44,7 @@ bool Server::endReply(size_t i)
 	this->_clients[i].responseBuilder = ResponseBuilder();
 	this->_clients[i].chunkedSize = -1;
 	this->_clients[i].bodySize = 0;
-	this->_clients[i].ping = 0;		
+	this->_clients[i].ping = true;		
 	this->_clients[i].messageSend.clear();
 	return false;
 }

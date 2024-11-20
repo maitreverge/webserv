@@ -15,7 +15,7 @@ Client::Client(Config * _conf) : conf(_conf)
 	headerRespons.reserve(static_cast<size_t>(_conf->maxHeaderSize)); 
 	messageSend.reserve(SEND_BUFF_SIZE);
 	
-	ping = 0;	
+	ping = true;	
 	pongHeader = false;
 	exitRequired = false;
 }

@@ -121,7 +121,7 @@ bool Cgi::retHandle(Client & client, ssize_t ret, std::string err,
     {		
         Logger::getInstance().log(ERROR, err);
         errnoHandle();		
-        client.ping = 2;
+        client.ping = false;;
 		// FD_CLR(this->_fds[1], &Kernel::_actualSet);//! err 4..
         // close(this->_fds[1]);
         // this->_fds[1] = -1;
@@ -156,7 +156,7 @@ bool Cgi::isTimeout(Client & client, std::string err)
         kill(this->_pid, SIGTERM);
 		this->_start = 0;
         client.exitRequired = true;
-		client.ping = 2;
+		client.ping = false;
         throw std::runtime_error("timeout");
 		// client.responseBuilder.setError(CODE_508_LOOP_DETECTED);
 		// Return true will never happen
