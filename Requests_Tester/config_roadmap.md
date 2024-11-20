@@ -22,10 +22,15 @@
 - Setup MISSING(s) Error Pages ✅ => config_007.ini
 - Limit the client body ✅ => config_008.ini
 - Setup routes in a server to different directories ✅ => config_009.ini
+- Setup a default file index ✅ => config_010.ini
+- Setup a list of methods accepted ✅ => config_011.ini
 
 # ============= PORT ISSUES =============
+- Setup Multiples Ports and use differents websites ✅ => config_012.ini
+- Setup the Same Port Multiple Times ✅ => config_013.ini
+-  ✅ => config_011.ini
+-  ✅ => config_011.ini
 
-# ============= PORT ISSUES =============
 
 # ============= CHECK WITH A BROWSER =============
 
