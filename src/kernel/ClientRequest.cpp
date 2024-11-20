@@ -281,8 +281,7 @@ void Server::sendBodyEnd(size_t i)
 	}
 	this->_clients[i].ping++;
 	if (this->_clients[i].messageRecv.empty())
-		this->_clients[i].ping++;	
-	
+		this->_clients[i].ping++;		
 }
 
 bool Server::isBodyEnd(size_t i)
@@ -399,8 +398,7 @@ bool Server::isChunked(size_t i)
 						sendBodyEnd(i);
 					else
 						sendBodyPart(i);
-					this->_clients[i].messageRecv.assign(tmp.begin() + 2, tmp.end()); //! ne marchera pas avec resend
-					
+					this->_clients[i].messageRecv.assign(tmp.begin() + 2, tmp.end()); //! ne marchera pas avec resend					
 				}
 				else if (std::distance(this->_clients[i].messageRecv.begin(), it) > static_cast<std::ptrdiff_t>(this->_clients[i].chunkedSize))
 				{
@@ -410,7 +408,6 @@ bool Server::isChunked(size_t i)
 				else
 					Logger::getInstance().log(DEBUG, "chunk part inferior",
 						this->_clients[i]);//!
-
 			}
 			else
 				Logger::getInstance().log(INFO, "second delim not found",
