@@ -27,7 +27,9 @@
 
 # ============= PORT ISSUES =============
 - Setup Multiples Ports and use differents websites ✅ => config_012.ini
-- Setup the Same Port Multiple Times ✅ => config_013.ini
+-  Listing Directory Case 1 ✅ => config_014.ini
+-  Listing Directory Case 2 ✅ => config_015.ini
+- Setup the Same Por Case 3t Multiple Time6 ✅ => config_013.ini
 -  ✅ => config_011.ini
 -  ✅ => config_011.ini
 
