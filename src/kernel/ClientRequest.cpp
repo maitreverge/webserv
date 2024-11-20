@@ -248,7 +248,7 @@ void Server::sendBodyPart(size_t i)
 {
 	Logger::getInstance().log(INFO, "send Body Part", this->_clients[i]);
 	this->printResponse(this->_clients[i].messageRecv);
-	this->_clients[i].chunkedSize = -1;
+	
 	if (this->_clients[i].headerRequest.getMethod() == "POST")
 	{
 		try {
@@ -265,7 +265,7 @@ void Server::sendBodyEnd(size_t i)
 {	
 	Logger::getInstance().log(INFO, "Send Body End", this->_clients[i]);
 	this->printResponse(this->_clients[i].messageRecv);
-	this->_clients[i].chunkedSize = -1;
+	
 	if (this->_clients[i].headerRequest.getMethod() == "POST")
 	{
 		try {
@@ -394,6 +394,7 @@ bool Server::isChunked(size_t i)
 						this->_clients[i]);//!
 					std::vector<char> tmp(it, this->_clients[i].messageRecv.end());
 					this->_clients[i].messageRecv.erase(it, this->_clients[i].messageRecv.end());
+					this->_clients[i].chunkedSize = -1;
 					if (this->isBodyEnd(i))
 						sendBodyEnd(i);
 					else
