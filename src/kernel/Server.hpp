@@ -23,7 +23,7 @@ class Server
 	
 	void clientMessage(size_t i, ssize_t ret);
 	void displayClient(Client & client) const;
-	void reSend(size_t i);
+	void retrySend(size_t i);
 	void handleClientHeader(size_t i, ssize_t ret);
 	void getRespHeader(size_t i);
 	void bodyCheckin(size_t i);

@@ -9,7 +9,7 @@ void Server::listenClients()
 			continue ;
 		if ((this->_clients[i].headerRequest.getHeaders().ContentLength)
 			&& !this->_clients[i].messageRecv.empty())
-			reSend(i);
+			retrySend(i);
 		else if (FD_ISSET(this->_clients[i].fd, &Kernel::_readSet))
 		{
 			this->_readBuffer.clear();
@@ -31,7 +31,7 @@ void Server::listenClients()
 	}
 }
 
-void Server::reSend(size_t i)
+void Server::retrySend(size_t i)
 {
 	Logger::getInstance().log(INFO, "Re Send", this->_clients[i]);	
 	stringstream ss; ss << "Content-Length: "
@@ -40,7 +40,7 @@ void Server::reSend(size_t i)
 		<< std::endl;
 
 	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);	
-		if (this->isBodyEnd(i))
+	if (this->isBodyEnd(i))
 		this->sendBodyEnd(i);
 	else
 		this->sendBodyPart(i);
@@ -85,7 +85,7 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 		this->_clients[i].headerRequest.parse(this->_clients[i]);								
 		this->_clients[i].headerRequest.displayParsingResult();
 		if (!this->_clients[i].headerRequest.getIsValid())		
-			return this->shortCircuit(static_cast<e_errorCodes>(431), i);//! FIND REAL ERROR			
+			return this->shortCircuit(static_cast<e_errorCodes>(400), i);//! FIND REAL ERROR			
 		this->getRespHeader(i);
 		this->_clients[i].messageRecv.
             erase(this->_clients[i].messageRecv.begin(), it + 4);	
@@ -136,6 +136,7 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 	ss << "Handle Client Body - receive " << ret << " bytes";
 	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
 	this->printResponse(this->_clients[i].messageRecv);
+
 	this->_clients[i].bodySize += static_cast<size_t>(ret);
 	if (this->isChunked(i))
 		return ;
@@ -144,33 +145,13 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 	if (this->isBodyEnd(i))
 		this->sendBodyEnd(i);
 	else
-		this->sendBodyPart(i);
-	// if (this->_clients[i].headerRequest.getMethod() == "POST")
-	// {
-	// 	try {
-	// 		this->_clients[i].responseBuilder.
-	// 			setBodyPost(this->_clients[i], false);	}
-	// 	catch(const std::exception& e)
-	// 	{	this->shortCircuit(CODE_508_LOOP_DETECTED, i);	}
-	// }
-	// else
-	// 	this->_clients[i].messageRecv.clear();		
+		this->sendBodyPart(i);	
 }
 
-#include "Error.hpp"//!
 void Server::shortCircuit(e_errorCodes err, size_t i)
 {
 	Logger::getInstance().log(INFO, "Short Circuit", this->_clients[i]);
 
-	// std::vector<char> errVector = Error::getInstance().
-		// handleError(err, this->_clients[i]);
-	// std::string errStr(errVector.begin(), errVector.end());//! impossible de sortir 
-
-	// std::stringstream ss;
-	// ss << err << " " << errStr;
-	// Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);	
-
-	// this->_clients[i].headerRequest.setURI(errStr);
 	this->_clients[i].responseBuilder = ResponseBuilder();
 	this->_clients[i].responseBuilder.getHeader(this->_clients[i],
 		this->_conf, err);
@@ -190,7 +171,7 @@ bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
 
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);		
 			//! 431 Request Header Fields Too Large !!
-			
+		this->shortCircuit(static_cast<e_errorCodes>(431), i);	
 		return true;	
 	}
 	return false;
@@ -291,46 +272,6 @@ bool Server::isBodyEnd(size_t i)
 	}
 	return false;
 }
-
-// bool Server::isBodyTerminated(size_t i) //!26 lines!!!
-// {
-// 	if (this->_clients[i].bodySize ==
-// 		this->_clients[i].headerRequest.getHeaders().ContentLength)
-// 	{
-// 		stringstream ss; ss << "client body terminated" << " - Body-Size: "
-// 		<< this->_clients[i].bodySize << " Content-Lenght: "
-// 		<< this->_clients[i].headerRequest.getHeaders().ContentLength;
-// 		Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);	
-// 		if (this->_clients[i].headerRequest.getMethod() == "POST")
-// 		{
-// 			try {
-// 				this->_clients[i].responseBuilder.
-// 				setBodyPost(this->_clients[i], true);	}
-// 			catch(const std::exception& e)
-// 			{	this->shortCircuit(CODE_508_LOOP_DETECTED, i);	}
-// 		}					
-// 		else
-// 		{
-// 			this->_clients[i].messageRecv.clear();
-// 			shutdown(this->_clients[i].responseBuilder._cgi._fds[1], SHUT_WR);
-// 		}
-// 		this->_clients[i].ping++;
-// 		if (this->_clients[i].messageRecv.empty())
-// 		 	this->_clients[i].ping++;	
-// 		return true;
-// 	}
-// 	if (this->_clients[i].headerRequest.getMethod() == "POST")
-// 	{
-// 		try {
-// 			this->_clients[i].responseBuilder.
-// 				setBodyPost(this->_clients[i], false);	}
-// 		catch(const std::exception& e)
-// 		{	this->shortCircuit(CODE_508_LOOP_DETECTED, i);	}
-// 	}
-// 	else
-// 		this->_clients[i].messageRecv.clear();	
-// 	return false;
-// }
 
 bool Server::isChunked(size_t i)
 {	
