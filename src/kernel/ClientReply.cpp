@@ -5,9 +5,8 @@ void Server::replyClients()
 {
 	for (size_t i = 0; i < this->_clients.size(); i++)
 	{		
-		if (this->_clients[i].ping 
-			|| !FD_ISSET(this->_clients[i].fd, &Kernel::_writeSet))
-				continue;	
+		if (this->_clients[i].ping)
+			continue;	
 		if (!this->_clients[i].headerRespons.empty())
 		{	
 			if (replyClient(i, this->_clients[i].headerRespons))
@@ -62,9 +61,14 @@ bool Server::replyClient(size_t i, std::vector<char> & response)
 {	
 	Logger::getInstance().log(INFO, "Reply Client", this->_clients[i]);
 	this->printResponse(response);
-
+	if (!FD_ISSET(this->_clients[i].fd, &Kernel::_writeSet))
+		return Logger::getInstance().log(DEBUG, "not ready to reply Client",
+			this->_clients[i]), false;
+	Logger::getInstance().log(WARNING, "ready to reply Client",
+		this->_clients[i]);
 	ssize_t ret = send(this->_clients[i].fd, response.data(), response.size(),
-		MSG_NOSIGNAL);		
+		MSG_NOSIGNAL);
+	Kernel::cleanFdSet(this->_clients[i]);	
 	if (ret <= 0)
 	{
 		if (ret < 0)
@@ -72,7 +76,6 @@ bool Server::replyClient(size_t i, std::vector<char> & response)
 		this->exitClient(i);
 		return true;
 	}
-
 	std::string str(response.data(), response.data()
 		+ static_cast<size_t>(ret));      
 	std::stringstream ss; ss << "data sent to client: -" << str << "-";	

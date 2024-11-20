@@ -13,9 +13,12 @@ void Server::listenClients()
 		else if (FD_ISSET(this->_clients[i].fd, &Kernel::_readSet))
 		{
 			this->_readBuffer.clear();
-			this->_readBuffer.resize(RECV_BUFF_SIZE);		
+			this->_readBuffer.resize(RECV_BUFF_SIZE);	
+			Logger::getInstance().log(WARNING, "ready to recv",
+				this->_clients[i]);		
 			ssize_t ret = recv(this->_clients[i].fd, this->_readBuffer.data(),
-				this->_readBuffer.size(), 0);		
+				this->_readBuffer.size(), 0);
+			Kernel::cleanFdSet(this->_clients[i]);		
 			if (ret <= 0)
 			{
 				if (ret < 0)
@@ -26,7 +29,8 @@ void Server::listenClients()
 			else
 				clientMessage(i, ret);			
 		}	
-		else if (this->_clients[i].headerRequest.getHeaders().TransferEncoding == "chunked" && !this->_clients[i].messageRecv.empty())
+		else if (this->_clients[i].headerRequest.getHeaders().TransferEncoding
+			== "chunked" && !this->_clients[i].messageRecv.empty())
 			this->isChunked(i);
 	}
 }

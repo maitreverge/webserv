@@ -79,12 +79,28 @@ void Kernel::setup()
 	}	
 }
 
+void Kernel::cleanFdSet(Client & client)
+{
+	if (client.fd > 0)
+	{
+		FD_CLR(client.fd, &Kernel::_writeSet);
+		FD_CLR(client.fd, &Kernel::_readSet);
+	}
+	if (client.responseBuilder._cgi._fds[1] > 0)
+	{
+		FD_CLR(client.responseBuilder._cgi._fds[1], &Kernel::_writeSet);
+		FD_CLR(client.responseBuilder._cgi._fds[1], &Kernel::_readSet);	
+	}
+}
+
 void Kernel::launch()
 {
 	while (true)
 	{
+		sleep(1);
 		struct timeval timeout = {SLCT_TIMEOUT, 0};
-		Kernel::_readSet = Kernel::_writeSet = Kernel::_actualSet;		
+		Kernel::_readSet = Kernel::_writeSet = Kernel::_actualSet;	
+		// Logger::getInstance().log(WARNING, "\e[31;43mSELECT\e[0m");	
 		if (select(Kernel::_maxFd + 1, &Kernel::_readSet, &Kernel::_writeSet,
 			0, &timeout) < 0) 
 		{	

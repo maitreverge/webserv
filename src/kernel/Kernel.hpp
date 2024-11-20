@@ -30,12 +30,13 @@ class Kernel
 		static fd_set	_actualSet;
 		static fd_set 	_readSet;
 		static fd_set 	_writeSet;
-
+		
 		Kernel(void);
 		Kernel(char* path);
 		~Kernel();
 
 		static Kernel & getInstance(char * = NULL);
+		static void		cleanFdSet(Client & client);
 	
 		void		setup();
 		void 		launch();

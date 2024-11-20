@@ -167,19 +167,21 @@ bool Cgi::isTimeout(Client & client, std::string err)
 
 void Cgi::setBody(Client & client, bool eof)
 {
-    Logger::getInstance().log(INFO, "Cgi Set Body");
+    Logger::getInstance().log(INFO, "Cgi Set Body", client);
 
 	if (isTimeout(client, "Timeout Cgi Set Body is over"))
 		return ;//! true 	
     if (!FD_ISSET(this->_fds[1], &Kernel::_writeSet))    
-        return Logger::getInstance().log(DEBUG, "not ready to send");
+        return Logger::getInstance().log(DEBUG, "cgi not ready to send");
      
-    Logger::getInstance().log(DEBUG, "ready to send");
+    Logger::getInstance().log(WARNING, "cgi ready to send");
  	ssize_t ret = send(this->_fds[1], client.messageRecv.data(),
         client.messageRecv.size(), MSG_NOSIGNAL);
+	FD_CLR(this->_fds[1], &Kernel::_readSet);
+	FD_CLR(this->_fds[1], &Kernel::_writeSet);
 	if (retHandle(client, ret, "send", "cgi exited"))
         ret = static_cast<ssize_t>(client.messageRecv.size());			
-    
+    Kernel::cleanFdSet(client);
 	std::string str(client.messageRecv.data(), client.messageRecv.data()
 		+ static_cast<size_t>(ret));      
 	std::stringstream ss; ss << "data sent to cgi: -" << str << "-";	
@@ -193,7 +195,7 @@ void Cgi::setBody(Client & client, bool eof)
 
 bool Cgi::getBody(Client & client)
 {
-    Logger::getInstance().log(INFO, "Cgi Get Body");
+    Logger::getInstance().log(INFO, "Cgi Get Body", client);
 
 	if (isTimeout(client, "Timeout Cgi Get Body is over"))
 		return false;
@@ -203,13 +205,15 @@ bool Cgi::getBody(Client & client)
     if (!FD_ISSET(this->_fds[1], &Kernel::_readSet))
     {
         sleep(1);
-        Logger::getInstance().log(DEBUG, "not ready to recev");
+        Logger::getInstance().log(DEBUG, "cgi not ready to recev", client);
         return true;
     }
     client.messageSend.clear();
     client.messageSend.resize(SEND_BUFF_SIZE);
+	Logger::getInstance().log(WARNING, "cgi ready to recev", client);
     ssize_t ret = recv(this->_fds[1], client.messageSend.data(),
-        client.messageSend.size(), 0);  
+        client.messageSend.size(), 0);
+	Kernel::cleanFdSet(client);
 	if (retHandle(client, ret, "recv", "end cgi"))
         ret = 0;  
 	client.messageSend.erase(client.messageSend.begin() + ret,
