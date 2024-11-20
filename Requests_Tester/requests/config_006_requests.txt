@@ -1,4 +1,2 @@
 http GET localhost:3006/index.html
 --END-REQUEST--
-http GET localhost:3006/index.html
---END-REQUEST--

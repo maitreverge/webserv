@@ -30,7 +30,11 @@
 -  Listing Directory Case 1 ✅ => config_014.ini
 -  Listing Directory Case 2 ✅ => config_015.ini
 - Setup the Same Por Case 3t Multiple Time6 ✅ => config_013.ini
--  ✅ => config_011.ini
+-  Redirect URL CASE 1 ✅ => config_017.ini
+-  Redirect URL CASE 2 ✅ => config_018.ini
+-  Redirect URL CASE 3 ✅ => config_019.ini
+-  Redirect URL CASE 4 ✅ => config_020.ini
+-  Redirect URL CASE 5 ✅ => config_021.ini
 -  ✅ => config_011.ini
 
 
