@@ -39,7 +39,7 @@ void Server::retrySend(size_t i)
 		<< " MessageRecv-Size: " << this->_clients[i].messageRecv.size()
 		<< std::endl;
 	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
-	
+
 	if (this->isBodyEnd(i))
 		this->sendBodyEnd(i);
 	else
@@ -345,7 +345,7 @@ bool Server::isChunked(size_t i)
 				this->_clients[i]);//!
 		return true;	
 	}
-	Logger::getInstance().log(INFO, "not chunked",
-			this->_clients[i]);//!
+	// Logger::getInstance().log(INFO, "not chunked",
+	// 		this->_clients[i]);//!
 	return false;
 }
