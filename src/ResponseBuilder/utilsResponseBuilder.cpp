@@ -188,14 +188,11 @@ void ResponseBuilder::setError(e_errorCodes code, bool skip){
 		throw CodeErrorRaised();
 	}
 
-	try
-	{
-		if (_errorType != CODE_204_NO_CONTENT)
-			_realURI = _config->errorPaths.at(_errorType);
-		if (access(_realURI.c_str(), F_OK) == -1 or access(_realURI.c_str(), R_OK) )
-			throw exception();
-	}
-	catch(const std::exception& e)
+	// try
+	// {
+	if (_errorType != CODE_204_NO_CONTENT)
+		_realURI = _config->errorPaths.at(_errorType);
+	if (access(_realURI.c_str(), F_OK) == -1 or access(_realURI.c_str(), R_OK) == -1 )
 	{
 		errorNotFoundGenerator();
 		setContentLenght();

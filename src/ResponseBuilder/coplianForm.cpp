@@ -37,8 +37,7 @@ void ResponseBuilder::initMimes( void ){
 
 // ------------------------- COPLIAN FORM -----------------------------
 
-ResponseBuilder::ResponseBuilder( void ) :
-	_backupNameFile("backup.html"){
+ResponseBuilder::ResponseBuilder( void ){
 	
 	// SEB UTILS
 	// Logger::getInstance().log(INFO, "ResponseBuilder constructor");
@@ -54,6 +53,8 @@ ResponseBuilder::ResponseBuilder( void ) :
 	_isXOK = false;
 
 	_errorNotFound = false;
+
+	_backupNameFile = "backup.html";
 
 	this->_ifsStreamHead = 0; // ! NE PAS TOUCHER	
 }
@@ -98,6 +99,8 @@ ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 	this->_fileName = rhs._fileName;
 	this->_fileExtension = rhs._fileExtension;
 	this->_folderCGI = rhs._folderCGI;
+
+	this->_backupNameFile = rhs._backupNameFile;
 
 	this->_client = rhs._client;
 	this->_config = rhs._config;

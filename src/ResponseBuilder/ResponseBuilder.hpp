@@ -110,7 +110,7 @@ class ResponseBuilder
 
 	// errorNotFoundGenerator
 	bool _errorNotFound;
-	const string _backupNameFile;
+	string _backupNameFile;
 
 	// CGI Stuff
 	bool _isCGI;
