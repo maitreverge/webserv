@@ -51,7 +51,7 @@ bool Server::endReply(size_t i)
 bool Server::replyClient(size_t i, std::vector<char> & response)
 {	
 	Logger::getInstance().log(INFO, "Reply Client", this->_clients[i]);
-	this->printVector(response);
+	Server::printVector(response);
 	if (!FD_ISSET(this->_clients[i].fd, &Kernel::_writeSet))
 		return Logger::getInstance().log(DEBUG, "not ready to reply Client",
 			this->_clients[i]), false;
@@ -71,7 +71,7 @@ bool Server::replyClient(size_t i, std::vector<char> & response)
 		+ static_cast<size_t>(ret));      
 	std::stringstream ss; ss << "data sent to client: ";	
 	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]); 
-	this->printVector(str);
+	Server::printVector(str);
 	response.erase(response.begin(), response.begin() + ret);
 	return false;
 }

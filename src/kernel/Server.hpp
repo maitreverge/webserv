@@ -38,9 +38,7 @@ class Server
 	void sendBodyPart(size_t i);
 	void sendBodyEnd(size_t i);
 	bool isBodyTooLarge(size_t i);
-	bool isChunked(size_t i);
-	void printVector(const std::vector<char> & response,
-		std::string color = GREEN);
+	bool isChunked(size_t i);	
 	bool replyClient(size_t i, std::vector<char> & response);
 	bool fillMessageSend(size_t i);
 	bool endReply(size_t i);
@@ -54,6 +52,8 @@ class Server
 
 		Server(sockaddr_in & sockaddr, Config & conf);
 
+		static void printVector(const std::vector<char> & response,
+		std::string color = GREEN);
 		const sockaddr_in & getSockAdress() const;
 
 		bool setup();

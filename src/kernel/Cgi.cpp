@@ -182,11 +182,10 @@ void Cgi::setBody(Client & client, bool eof)
 	if (retHandle(client, ret, "send", "cgi exited"))
         ret = static_cast<ssize_t>(client.messageRecv.size());			
     Kernel::cleanFdSet(client);
-	std::string str(client.messageRecv.data(), client.messageRecv.data()
-		+ static_cast<size_t>(ret));      
-	std::stringstream ss; ss << "data sent to cgi: -" << str << "-";	
-	Logger::getInstance().log(DEBUG, ss.str(), client);	
-
+	std::vector<char> str(client.messageRecv.data(), client.messageRecv.data()
+		+ static_cast<size_t>(ret));
+	Logger::getInstance().log(DEBUG, "data sent to cgi", client);	
+	Server::printVector(str);
 	client.messageRecv.erase(client.messageRecv.begin(),
         client.messageRecv.begin() + ret);
 	if (eof && client.messageRecv.empty())	
