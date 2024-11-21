@@ -76,8 +76,7 @@ void Kernel::setup()
 		Server server(this->_conf.sockAddress[i], this->_conf);
 		if (server.setup())
 			this->_servers.push_back(server);	
-	}
-	std::cout << std::endl;		
+	}	
 }
 
 void Kernel::cleanFdSet(Client & client)

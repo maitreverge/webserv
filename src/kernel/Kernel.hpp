@@ -9,8 +9,8 @@
 #include "Logger.hpp"
 #include "ConfigFileParser.hpp"
 
-#define RECV_BUFF_SIZE 3000//30000
-#define SEND_BUFF_SIZE 3000//0000
+#define RECV_BUFF_SIZE 10//30000
+#define SEND_BUFF_SIZE 10//0000
 #define SND_TIMEOUT 1
 #define SLCT_TIMEOUT 1
 
@@ -30,7 +30,7 @@ class Kernel
 		static fd_set	_actualSet;
 		static fd_set 	_readSet;
 		static fd_set 	_writeSet;
-		
+	
 		Kernel(void);
 		Kernel(char* path);
 		~Kernel();

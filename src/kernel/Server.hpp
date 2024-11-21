@@ -20,6 +20,7 @@ class Server
 	sockaddr_in			_sockAddr;
 	std::vector<char>	_writeBuffer;
 	std::vector<char>	_readBuffer;
+	static bool			_nl;
 	
 	void clientMessage(size_t i, ssize_t ret);
 	void displayClient(Client & client) const;

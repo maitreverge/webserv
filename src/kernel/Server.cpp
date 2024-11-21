@@ -2,6 +2,8 @@
 #include "Logger.hpp" 
 #include "ConfigFileParser.hpp"
 
+bool Server::_nl = false;
+
 Server::Server(sockaddr_in & sockAddr, Config & conf)	
 {
 	static int i;		
@@ -48,6 +50,7 @@ void Server::catchClients(Kernel & kernel)
 {
 	if (FD_ISSET(this->_fd, &Kernel::_readSet))
 	{	
+		Server::_nl = !Server::_nl ? std::cout << std::endl, true : true;		
 		Client client(&kernel._conf);			
 		client.fd = accept(this->_fd, reinterpret_cast<sockaddr *>
 			(&client.address), &client.addressLen);			
