@@ -10,31 +10,74 @@ void Server::listenClients()
 		if (!this->_clients[i].messageRecv.empty())
 		{
 			if (this->_clients[i].headerRequest.getHeaders().ContentLength)
-				this->retrySend(i);			
-			else if (this->_clients[i].chunkedSize > 0)
-				this->isChunked(i);
-		}
-		else if (FD_ISSET(this->_clients[i].fd, &Kernel::_readSet))
-		{
-			this->_readBuffer.clear();
-			this->_readBuffer.resize(RECV_BUFF_SIZE);	
-			Logger::getInstance().log(WARNING, "ready to recv",
-				this->_clients[i]);		
-			ssize_t ret = recv(this->_clients[i].fd, this->_readBuffer.data(),
-				this->_readBuffer.size(), 0);
-			Kernel::cleanFdSet(this->_clients[i]);		
-			if (ret <= 0)
 			{
-				if (ret < 0)
-					Logger::getInstance().log(ERROR, "recv", this->_clients[i]);
-				this->exitClient(i);
-				break ;
-			}				
-			else
-				clientMessage(i, ret);			
+				this->retrySend(i);		
+				continue ;
+			}
+			else if (this->_clients[i].chunkedSize >= 0)
+			{
+				this->isChunked(i);
+				continue ;	
+			}
 		}
+		if (recevData(i))
+			break ;
 	}
 }
+
+bool Server::recevData(size_t i)
+{
+	if (FD_ISSET(this->_clients[i].fd, &Kernel::_readSet))
+	{
+		this->_readBuffer.clear();
+		this->_readBuffer.resize(RECV_BUFF_SIZE);	
+		Logger::getInstance().log(WARNING, "ready to recv",
+			this->_clients[i]);		
+		ssize_t ret = recv(this->_clients[i].fd, this->_readBuffer.data(),
+			this->_readBuffer.size(), 0);
+		Kernel::cleanFdSet(this->_clients[i]);		
+		if (ret <= 0)
+		{
+			if (ret < 0)
+				Logger::getInstance().log(ERROR, "recv", this->_clients[i]);
+			this->exitClient(i);
+			return true;
+		}				
+		else
+			clientMessage(i, ret);			
+	}
+	return false;
+}
+
+// void Server::listenClients()
+// {	
+// 	for (size_t i = 0; i < this->_clients.size(); i++)
+// 	{			
+// 		if (!this->_clients[i].ping)
+// 			continue ;
+// 		if ((this->_clients[i].headerRequest.getHeaders().ContentLength)
+// 			&& !this->_clients[i].messageRecv.empty())
+// 			retrySend(i);
+// 		else if (FD_ISSET(this->_clients[i].fd, &Kernel::_readSet))
+// 		{
+// 			this->_readBuffer.clear();
+// 			this->_readBuffer.resize(RECV_BUFF_SIZE);		
+// 			ssize_t ret = recv(this->_clients[i].fd, this->_readBuffer.data(),
+// 				this->_readBuffer.size(), 0);		
+// 			if (ret <= 0)
+// 			{
+// 				if (ret < 0)
+// 					Logger::getInstance().log(ERROR, "recv", this->_clients[i]);
+// 				this->exitClient(i);
+// 				break ;
+// 			}				
+// 			else
+// 				clientMessage(i, ret);			
+// 		}	
+// 		else if (this->_clients[i].headerRequest.getHeaders().TransferEncoding == "chunked" && !this->_clients[i].messageRecv.empty())
+// 			this->isChunked(i);
+// 	}
+// }
 
 void Server::retrySend(size_t i)
 {

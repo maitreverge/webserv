@@ -22,6 +22,7 @@ class Server
 	std::vector<char>	_readBuffer;
 	static bool			_nl;
 	
+	bool recevData(size_t i);
 	void clientMessage(size_t i, ssize_t ret);
 	void displayClient(Client & client) const;
 	void retrySend(size_t i);

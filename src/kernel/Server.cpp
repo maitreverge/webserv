@@ -110,8 +110,8 @@ void Server::exitServer()
 
 void Server::printVector(const std::vector<char> & response, std::string color)
 {
-	std::cout << std::endl << CYAN << "Print Vector: " << response.size()
-		<< " bytes" << color << std::endl;
+	std::cout << std::endl << CYAN << "Print Vector: " << YELLOW
+		<< response.size() << " bytes" << color << std::endl;
 	std::cout << "-";		
 	for (size_t i = 0; i < response.size(); i++)				
 		std::cout << response[i];
