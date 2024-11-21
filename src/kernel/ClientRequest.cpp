@@ -81,7 +81,7 @@ void Server::headerCheckin(size_t i, ssize_t ret)
 	stringstream ss;
 	ss << "Header Checkin - recv " << ret << " bytes";
 	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
-	this->printResponse(this->_clients[i].messageRecv);
+	this->printVector(this->_clients[i].messageRecv);
 
 	std::vector<char>::iterator it;		
 	if (this->isDelimiterFind("\r\n\r\n", i, it))		
@@ -108,7 +108,7 @@ void Server::bodyCheckin(size_t i, size_t addBodysize)
 	stringstream ss;
 	ss << "Body Checkin - recv " << addBodysize << " bytes";
 	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
-	this->printResponse(this->_clients[i].messageRecv);
+	this->printVector(this->_clients[i].messageRecv);
 
 	this->_clients[i].bodySize += addBodysize;
 	if (this->isChunked(i))
@@ -142,7 +142,7 @@ void Server::getRespHeader(size_t i)
 // 	stringstream ss;
 // 	ss << "Handle Client Body - receive " << ret << " bytes";
 // 	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
-// 	this->printResponse(this->_clients[i].messageRecv);
+// 	this->printVector(this->_clients[i].messageRecv);
 
 // 	this->_clients[i].bodySize += static_cast<size_t>(ret);
 // 	if (this->isChunked(i))
@@ -246,7 +246,7 @@ bool Server::isBodyEnd(size_t i)
 void Server::sendBodyPart(size_t i)
 {
 	Logger::getInstance().log(INFO, "Send Body Part", this->_clients[i]);
-	this->printResponse(this->_clients[i].messageRecv);
+	this->printVector(this->_clients[i].messageRecv);
 	
 	if (this->_clients[i].headerRequest.getMethod() == "POST")
 	{
@@ -263,7 +263,7 @@ void Server::sendBodyPart(size_t i)
 void Server::sendBodyEnd(size_t i)
 {	
 	Logger::getInstance().log(INFO, "Send Body End", this->_clients[i]);
-	this->printResponse(this->_clients[i].messageRecv);
+	this->printVector(this->_clients[i].messageRecv);
 	
 	if (this->_clients[i].headerRequest.getMethod() == "POST")
 	{

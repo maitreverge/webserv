@@ -37,7 +37,8 @@ class Server
 	void sendBodyEnd(size_t i);
 	bool isBodyTooLarge(size_t i);
 	bool isChunked(size_t i);
-	void printResponse(const std::vector<char> & response);
+	void printVector(const std::vector<char> & response,
+		std::string color = GREEN);
 	bool replyClient(size_t i, std::vector<char> & response);
 	bool fillMessageSend(size_t i);
 	bool endReply(size_t i);

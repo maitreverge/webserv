@@ -48,19 +48,10 @@ bool Server::endReply(size_t i)
 	return false;
 }
 
-void Server::printResponse(const std::vector<char> & response)
-{
-	std::cout << std::endl << "\e[34mPrint Vector: \e[31m" << std::endl;
-	std::cout << "-";		
-	for (size_t i = 0; i < response.size(); i++)				
-		std::cout << response[i];
-	std::cout << "-\e[0m" << std::endl << std::endl;
-}
-
 bool Server::replyClient(size_t i, std::vector<char> & response)
 {	
 	Logger::getInstance().log(INFO, "Reply Client", this->_clients[i]);
-	this->printResponse(response);
+	this->printVector(response);
 	if (!FD_ISSET(this->_clients[i].fd, &Kernel::_writeSet))
 		return Logger::getInstance().log(DEBUG, "not ready to reply Client",
 			this->_clients[i]), false;
@@ -76,11 +67,11 @@ bool Server::replyClient(size_t i, std::vector<char> & response)
 		this->exitClient(i);
 		return true;
 	}
-	std::string str(response.data(), response.data()
+	std::vector<char> str(response.data(), response.data()
 		+ static_cast<size_t>(ret));      
-	std::stringstream ss; ss << "data sent to client: -" << str << "-";	
+	std::stringstream ss; ss << "data sent to client: ";	
 	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]); 
-
+	this->printVector(str);
 	response.erase(response.begin(), response.begin() + ret);
 	return false;
 }
