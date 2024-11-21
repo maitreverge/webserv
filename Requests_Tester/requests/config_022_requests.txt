@@ -1,4 +1,8 @@
-curl -v http://localhost:3022/index.html
+curl -v --connect-timeout 2 --max-time 2 http://localhost:3022/cgi/a.out
 --END-REQUEST--
-curl -v http://localhost:3022/index.html
+curl -X --connect-timeout 2 --max-time 2 POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3022/cgi/a.out
+--END-REQUEST--
+curl -v --connect-timeout 2 --max-time 2 http://localhost:3122/cgi/a.out
+--END-REQUEST--
+curl -X --connect-timeout 2 --max-time 2 POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3122/cgi/a.out
 --END-REQUEST--

@@ -1,4 +1,6 @@
-curl -v http://localhost:3016/index.html
+curl -v --connect-timeout 2 --max-time 2  http://festival.localhost:3016/index.html
 --END-REQUEST--
-curl -v http://localhost:3016/index.html
+curl -v --connect-timeout 2 --max-time 2  http://cyborg.localhost:3016/index.html
+--END-REQUEST--
+curl -v --connect-timeout 2 --max-time 2  http://villa.localhost:3016/index.html
 --END-REQUEST--

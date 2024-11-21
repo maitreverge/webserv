@@ -1,4 +1,0 @@
-http GET localhost:3005/index.html
---END-REQUEST--
-http GET localhost:3005/index.html
---END-REQUEST--

@@ -1,63 +1,55 @@
-curl -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3002
+curl --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3002
 --END-REQUEST--
-curl -X GET http://localhost:3002/uploads/file.json
+curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.json
 --END-REQUEST--
-curl -X DELETE http://localhost:3002/uploads/file.json
+curl --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3002/uploads/file.json
 --END-REQUEST--
-curl -X GET http://localhost:3002/uploads/file.json
+curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.json
 --END-REQUEST--
-
-curl -X POST -H "Content-Type: text/txt" -d 'Hello, World!' http://localhost:3002
+curl --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: text/txt" -d 'Hello, World!' http://localhost:3002
 --END-REQUEST--
-curl -X GET http://localhost:3002/uploads/file.txt
+curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.txt
 --END-REQUEST--
-curl -X DELETE http://localhost:3002/uploads/file.txt
+curl --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3002/uploads/file.txt
 --END-REQUEST--
-curl -X GET http://localhost:3002/uploads/file.txt
+curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.txt
 --END-REQUEST--
-
-curl -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3002/index.html
+curl --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3002/index.html
 --END-REQUEST--
-curl -X GET http://localhost:3002/uploads/file.json
+curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.json
 --END-REQUEST--
-
-curl -X POST -H "Content-Type: text/txt" -d 'Hello, World!' http://localhost:3002/index.html
+curl --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: text/txt" -d 'Hello, World!' http://localhost:3002/index.html
 --END-REQUEST--
-curl -X GET http://localhost:3002/uploads/file.txt
+curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.txt
 --END-REQUEST--
-
-curl -X POST http://localhost:3002
+curl --connect-timeout 2 --max-time 2 -X POST http://localhost:3002
 --END-REQUEST--
-
-curl -X POST http://localhost:3002/index.html
+curl --connect-timeout 2 --max-time 2 -X POST http://localhost:3002/index.html
 --END-REQUEST--
-
-curl -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3002/uploads
+curl --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3002/uploads
 --END-REQUEST--
-curl -X GET http://localhost:3002/uploads/file.json
+curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.json
 --END-REQUEST--
-curl -X DELETE http://localhost:3002/uploads/file.json
+curl --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3002/uploads/file.json
 --END-REQUEST--
-curl -X GET http://localhost:3002/uploads/file.json
+curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.json
 --END-REQUEST--
-
-curl -X POST -H "Content-Type: text/txt" -d 'Hello, World!' http://localhost:3002/uploads
+curl --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: text/txt" -d 'Hello, World!' http://localhost:3002/uploads
 --END-REQUEST--
-curl -X GET http://localhost:3002/uploads/file.txt
+curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.txt
 --END-REQUEST--
-curl -X DELETE http://localhost:3002/uploads/file.txt
+curl --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3002/uploads/file.txt
 --END-REQUEST--
-curl -X GET http://localhost:3002/uploads/file.txt
+curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.txt
 --END-REQUEST--
-
-curl -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3002/process_body_post
+curl --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3002/process_body_post
 --END-REQUEST--
-curl -X POST -H "Content-Type: text/txt" -d 'Hello, World!' http://localhost:3002/process_body_post
+curl --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: text/txt" -d 'Hello, World!' http://localhost:3002/process_body_post
 --END-REQUEST--
-curl -X GET http://localhost:3002/
+curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/
 --END-REQUEST--
-curl -X GET http://localhost:3002/index.html
+curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/index.html
 --END-REQUEST--
-curl -X DELETE http://localhost:3002/
+curl --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3002/
 --END-REQUEST--
-curl -X DELETE http://localhost:3002/index.html
+curl --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3002/index.html

@@ -1,4 +1,2 @@
-curl -v http://localhost:3018/index.html
---END-REQUEST--
-curl -v http://localhost:3018/index.html
+curl -v --connect-timeout 2 --max-time 2http://localhost:3018
 --END-REQUEST--

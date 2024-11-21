@@ -1,4 +1,8 @@
-curl -v http://localhost:3009/index.html
+curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3009/
 --END-REQUEST--
-curl -v http://localhost:3009/index.html
+curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3009/_websites/festival
+--END-REQUEST--
+curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3009/_websites/cyborg_gaming
+--END-REQUEST--
+curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3009/_websites/villa_agency
 --END-REQUEST--

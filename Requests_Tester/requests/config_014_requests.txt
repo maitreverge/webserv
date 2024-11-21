@@ -1,4 +1,6 @@
-curl -v http://localhost:3014/index.html
+curl -v http://festival.localhost:3014/index.html
 --END-REQUEST--
-curl -v http://localhost:3014/index.html
+curl -v http://cyborg.localhost:3014/index.html
+--END-REQUEST--
+curl -v http://villa.localhost:3014/index.html
 --END-REQUEST--

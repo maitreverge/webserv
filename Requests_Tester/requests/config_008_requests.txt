@@ -1,4 +1,6 @@
-curl -v http://localhost:3008/index.html
+curl -X POST -H "Content-Type: application/json" -d '{"key1":"a", "key2":"b"}' http://localhost:3008
 --END-REQUEST--
-curl -v http://localhost:3008/index.html
+curl -X POST -H "Content-Type: application/json" -d '{"key1":"1234567890123", "key2":"4567890123"}' http://localhost:3008
+--END-REQUEST--
+curl -X POST -H "Content-Type: application/json" -d '{"key1":"1234567890123", "key2":"4567890123", "key3":"7890123"}' http://localhost:3008
 --END-REQUEST--
