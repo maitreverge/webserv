@@ -7,7 +7,7 @@
 	<link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
-	<h1>INDEX 1</h1>
+	<h1>Welcome to FABULOUS WEBSITE Page</h1>
 	<p>This is a paragraph of text on my simple HTML page.</p>
 	<a href="test.html">Go to Test Page</a>
 	<p></p>

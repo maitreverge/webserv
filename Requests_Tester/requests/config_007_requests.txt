@@ -1,4 +1,4 @@
-curl --connect-timeout 2 --max-time 2 -X GET --connect-timeout 2 --max-time 2  http://localhost:3007/
+curl --connect-timeout 2 --max-time 2 -X GET  http://localhost:3007/
 --END-REQUEST--
-curl --connect-timeout 2 --max-time 2 -X POST --connect-timeout 2 --max-time 2  http://localhost:3007/
+curl --connect-timeout 2 --max-time 2 -X POST  http://localhost:3007/
 --END-REQUEST--

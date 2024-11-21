@@ -1,4 +1,13 @@
-curl --connect-timeout 2 --max-time 2 -v http://localhost:3013/index.html
+curl --connect-timeout 2 --max-time 2 -X GET http://festival.localhost:3012/
 --END-REQUEST--
-curl --connect-timeout 2 --max-time 2 -v http://localhost:3013/index.html
+curl --connect-timeout 2 --max-time 2 -X GET http://cyborg.localhost:3112/
+--END-REQUEST--
+curl --connect-timeout 2 --max-time 2 -X GET http://villa.localhost:3212/
+--END-REQUEST--
+
+curl --connect-timeout 2 --max-time 2 -X GET http://festival.localhost:3012/index.html
+--END-REQUEST--
+curl --connect-timeout 2 --max-time 2 -X GET http://cyborg.localhost:3112/index.html
+--END-REQUEST--
+curl --connect-timeout 2 --max-time 2 -X GET http://villa.localhost:3212/index.html
 --END-REQUEST--

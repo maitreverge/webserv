@@ -1,17 +1,1 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Simple HTML Page</title>
-	<link rel="icon" href="favicon.ico" type="image/x-icon">
-</head>
-<body>
-	<h1>INDEX 1</h1>
-	<p>This is a paragraph of text on my simple HTML page.</p>
-	<a href="test.html">Go to Test Page</a>
-	<p></p>
-	<p></p>
-	<a href="testResponseBuilder/upload/uploadEntryPoint.html">Go to UPLOADING FILE Page</a>
-</body>
-</html>
+<html><head><title>My Styled Page</title></head><body style="background-color: #f0f0f0; text-align: center; padding: 50px;"><h1 style="color: #ff5733; font-family: Arial, sans-serif;">Hello, World!</h1><p style="color: #555; font-size: 18px;">This is a simple page with inline CSS.</p></body></html>
