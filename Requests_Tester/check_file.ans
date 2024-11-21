@@ -317,3 +317,114 @@ allowedMethods = DELETE
 #uploadAllowed = 1
 #uploadDirectory = /uploads[0m
 
+[31m--- Requête : http GET localhost:3003/index.html[0m
+
+[34m--- Expected Answer :[0m
+[32m<html>
+
+<head>
+	<title>405</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">405 Method Not Allowed</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
+
+[34m--- Actual Answer :[0m
+
+[36m<html>
+
+<head>
+	<title>405</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">405 Method Not Allowed</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
+
+
+[31m--- Requête : http GET localhost:3003/index.html[0m
+
+[34m--- Expected Answer :[0m
+[32m<html>
+
+<head>
+	<title>405</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">405 Method Not Allowed</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
+
+[34m--- Actual Answer :[0m
+
+[36m<html>
+
+<head>
+	<title>405</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">405 Method Not Allowed</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
+
+
+[34m=== Configuration : Requests_Tester/config_files/config_004.ini[0m
+
+[33m#############################  Base config for UNKNOWN #########################
+
+################################    RESUME     #################################
+#				
+#	Ports Used :  3004			
+#
+# 	Any Request 	=>	CODE_405_METHOD_NOT_ALLOWED
+#
+################################################################################
+[global]
+maxClient			= 1024
+maxHeaderSize       = 8192
+maxBodySize         = 5000000
+maxServerNbr        = 8
+timeoutCgi          = 10
+errorPagesPath		= errorPages/
+
+[errorPages]
+
+errorPage_201 = 201.html
+errorPage_204 = 204.html
+errorPage_400 = 400.html
+errorPage_401 = 401.html
+errorPage_403 = 403.html
+errorPage_404 = 404.html
+errorPage_405 = 405.html
+errorPage_413 = 413.html
+errorPage_422 = 422.html
+errorPage_431 = 431.html
+errorPage_500 = 500.html
+errorPage_502 = 502.html
+errorPage_503 = 503.html
+errorPage_504 = 504.html
+errorPage_508 = 508.html
+
+[server1]
+host				= 0.0.0.0
+port				= 3004
+serverName			= "server1"
+allowedRoutes		= route1
+
+[route1]
+uri = /
+allowedMethods = POUETPOUETPOUET[0m
+

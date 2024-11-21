@@ -68,6 +68,8 @@ for config_file in "$CONFIG_DIR"/*.ini; do
 		# echo "$http_response" > "$expected_answer_file"
 		#TODO &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
+		#! il faudra remplacer par la comande effectuée lorsque la logique httpie aura été remplacée par curl
+		# curl -v http://localhost:3001 2>&1 | grep "^>"
 
 		# Vérification et colorisation des résultats
 		echo -e "${RED}--- Requête : $request${NC}" >> "$CHECK_FILE"

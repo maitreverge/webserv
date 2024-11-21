@@ -26,7 +26,10 @@
 - Setup a list of methods accepted ✅ => config_011.ini
 
 # ============= PORT ISSUES =============
+
 - Setup Multiples Ports and use differents websites ✅ => config_012.ini
+
+# ============= CHECK WITH A BROWSER =============
 -  Listing Directory Case 1 ✅ => config_014.ini
 -  Listing Directory Case 2 ✅ => config_015.ini
 - Setup the Same Por Case 3t Multiple Time6 ✅ => config_013.ini
@@ -35,10 +38,10 @@
 -  Redirect URL CASE 3 ✅ => config_019.ini
 -  Redirect URL CASE 4 ✅ => config_020.ini
 -  Redirect URL CASE 5 ✅ => config_021.ini
--  ✅ => config_011.ini
 
+# ============= CHECK CGI =============
 
-# ============= CHECK WITH A BROWSER =============
+- The server is working fine with a CGI ✅ => config_022.ini
 
 # ============= BONUS PARTS =============
 
