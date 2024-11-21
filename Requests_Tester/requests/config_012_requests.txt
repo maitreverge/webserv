@@ -1,4 +1,4 @@
-http GET localhost:3012/index.html
+curl -v http://localhost:3012/index.html
 --END-REQUEST--
-http GET localhost:3012/index.html
+curl -v http://localhost:3012/index.html
 --END-REQUEST--

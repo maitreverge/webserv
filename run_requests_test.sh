@@ -56,7 +56,8 @@ for config_file in "$CONFIG_DIR"/*.ini; do
 
 		# Envoi de la requête à Webserv et enregistrement de la réponse
 		response_file="$ANSWERS_DIR/config_${config_number}_test_${test_counter}_actual.txt"
-		http_response=$(echo "$request" | http --ignore-stdin --timeout=2 "localhost:3${config_number}")
+		# http_response=$(echo "$request" | http --ignore-stdin --timeout=2 "localhost:3${config_number}")
+		http_response=$(curl -s --max-time 2 -K "$request_file" "localhost:3${config_number}")
 
 		# Sauvegarde de la réponse
 		echo "$http_response" > "$response_file"
@@ -65,11 +66,11 @@ for config_file in "$CONFIG_DIR"/*.ini; do
 		
 		
 		#TODO && UNCOMMENT TO FILL EXPECTED_ANSWER_FILES &&&&&&&&&&
-		# echo "$http_response" > "$expected_answer_file"
+		echo "$http_response" > "$expected_answer_file"
 		#TODO &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-		#! il faudra remplacer par la comande effectuée lorsque la logique httpie aura été remplacée par curl
-		# curl -v http://localhost:3001 2>&1 | grep "^>"
+		#TODO UNCOMMENT TO HAVE HTTP REQUEST
+		# curl -v "localhost:3${config_number}" -d @"$request_file" 2>&1 | grep "^>"
 
 		# Vérification et colorisation des résultats
 		echo -e "${RED}--- Requête : $request${NC}" >> "$CHECK_FILE"
@@ -86,9 +87,9 @@ for config_file in "$CONFIG_DIR"/*.ini; do
 		diff_file="$DIFF_DIR/config_${config_number}_test_${test_counter}.diff"
 		
 		if diff -q "$response_file" "$expected_answer_file" > /dev/null; then
-			echo "config_$config_number, test $test_counter : $request ✅ Success"
+			echo -e "${GREEN}config_$config_number, test $test_counter : $request ✅ Success${NC}"
 		else
-			echo "config_$config_number, test $test_counter : $request ❌ Failure"
+			echo -e "${GREEN}config_$config_number, test $test_counter : $request ❌ Failure${NC}"
 			# Enregistrer le diff dans un fichier
 			diff "$response_file" "$expected_answer_file" > "$diff_file"
 			cat "$diff_file"

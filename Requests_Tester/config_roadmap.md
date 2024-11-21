@@ -42,8 +42,12 @@
 # ============= CHECK CGI =============
 
 - The server is working fine with a CGI ✅ => config_022.ini
+- CGI Not Allowed, or incorrect formated ✅ => config_023.ini
+- CGIs for relative Path file access ✅ => config_024.ini
+- Infinite Loop or Error CGIs ✅ => config_025.ini
 
 # ============= BONUS PARTS =============
+- Coockies and session ❌ => config_???.ini
 
 
 
