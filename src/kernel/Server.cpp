@@ -40,7 +40,7 @@ bool Server::setup()
 		this->exitServer();
 		return false;
 	}
-	Logger::getInstance().log(INFO, "listen", *this);	
+	Logger::getInstance().log(INFO, "listen", *this);
 	return true;
 }
 

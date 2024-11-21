@@ -7,12 +7,13 @@ void Server::listenClients()
 	{			
 		if (!this->_clients[i].ping)
 			continue ;
-		if ((this->_clients[i].headerRequest.getHeaders().ContentLength)
-			&& !this->_clients[i].messageRecv.empty())
-			retrySend(i);
-		else if (this->_clients[i].headerRequest.getHeaders().TransferEncoding
-			== "chunked" && this->_clients[i].chunkedSize > 0 && !this->_clients[i].messageRecv.empty())
-			this->isChunked(i);
+		if (!this->_clients[i].messageRecv.empty())
+		{
+			if (this->_clients[i].headerRequest.getHeaders().ContentLength)
+				this->retrySend(i);			
+			else if (this->_clients[i].chunkedSize > 0)
+				this->isChunked(i);
+		}
 		else if (FD_ISSET(this->_clients[i].fd, &Kernel::_readSet))
 		{
 			this->_readBuffer.clear();
@@ -31,16 +32,13 @@ void Server::listenClients()
 			}				
 			else
 				clientMessage(i, ret);			
-		}	
-		// else if (this->_clients[i].headerRequest.getHeaders().TransferEncoding
-		// 	== "chunked" && !this->_clients[i].messageRecv.empty())
-		// 	this->isChunked(i);
+		}
 	}
 }
 
 void Server::retrySend(size_t i)
 {
-	Logger::getInstance().log(INFO, "Re Send", this->_clients[i]);	
+	Logger::getInstance().log(INFO, "Retry Send", this->_clients[i]);	
 	stringstream ss; ss << "Content-Length: "
 		<< this->_clients[i].headerRequest.getHeaders().ContentLength
 		<< " MessageRecv-Size: " << this->_clients[i].messageRecv.size()
@@ -62,9 +60,9 @@ void Server::clientMessage(size_t i, ssize_t ret)
 	if (!this->_clients[i].headerRequest.getHeaders().ContentLength
 		&& this->_clients[i].headerRequest.getHeaders().TransferEncoding
 		!= "chunked")
-		this->handleClientHeader(i, ret);
+		this->headerCheckin(i, ret);
 	else
-		this->handleClientBody(i, ret);	
+		this->bodyCheckin(i, ret);	
 }
 
 bool Server::isDelimiterFind(std::string delimiter, size_t i,
@@ -78,12 +76,13 @@ bool Server::isDelimiterFind(std::string delimiter, size_t i,
 	return (it != this->_clients[i].messageRecv.end());	
 }
 
-void Server::handleClientHeader(size_t i, ssize_t ret)
+void Server::headerCheckin(size_t i, ssize_t ret)
 {
 	stringstream ss;
-	ss << "Handle Client Header - receiv client request " << ret << " bytes";
+	ss << "Header Checkin - recv " << ret << " bytes";
 	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
-	this->printResponse(this->_clients[i].messageRecv);	
+	this->printResponse(this->_clients[i].messageRecv);
+
 	std::vector<char>::iterator it;		
 	if (this->isDelimiterFind("\r\n\r\n", i, it))		
 	{	
@@ -97,26 +96,24 @@ void Server::handleClientHeader(size_t i, ssize_t ret)
 			return this->shortCircuit(static_cast<e_errorCodes>(400), i);//! FIND REAL ERROR			
 		this->getRespHeader(i);
 		this->_clients[i].messageRecv.
-            erase(this->_clients[i].messageRecv.begin(), it + 4);	
-		this->_clients[i].bodySize += this->_clients[i].messageRecv.size();	
-		if (this->isChunked(i))
-			return;
-		this->bodyCheckin(i);						
+            erase(this->_clients[i].messageRecv.begin(), it + 4);					
+		this->bodyCheckin(i, this->_clients[i].messageRecv.size());						
 	}
 	else
 		this->isMaxHeaderSize(it + 1, i);
 }
 
-void Server::bodyCheckin(size_t i)
+void Server::bodyCheckin(size_t i, size_t addBodysize)
 {
-	// if (!this->_clients[i].headerRequest.getHeaders().ContentLength)
-	// {
-	// 	this->_clients[i].ping = false;
-	// 	this->isBodyTooLarge(i);		
-	// }
-	// else
-	 if (!this->isContentLengthValid(i)
-		|| this->isBodyTooLarge(i))	
+	stringstream ss;
+	ss << "Body Checkin - recv " << addBodysize << " bytes";
+	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
+	this->printResponse(this->_clients[i].messageRecv);
+
+	this->_clients[i].bodySize += addBodysize;
+	if (this->isChunked(i))
+		return;
+	 if (!this->isContentLengthValid(i)	|| this->isBodyTooLarge(i))	
 		return ;
 	if (this->isBodyEnd(i))
 		this->sendBodyEnd(i);
@@ -140,23 +137,23 @@ void Server::getRespHeader(size_t i)
 			this->_conf); 
 }
 
-void Server::handleClientBody(size_t i, ssize_t ret)
-{	
-	stringstream ss;
-	ss << "Handle Client Body - receive " << ret << " bytes";
-	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
-	this->printResponse(this->_clients[i].messageRecv);
+// void Server::handleClientBody(size_t i, ssize_t ret)
+// {	
+// 	stringstream ss;
+// 	ss << "Handle Client Body - receive " << ret << " bytes";
+// 	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
+// 	this->printResponse(this->_clients[i].messageRecv);
 
-	this->_clients[i].bodySize += static_cast<size_t>(ret);
-	if (this->isChunked(i))
-		return ;
-	if (this->isBodyTooLarge(i))
-		return ;
-	if (this->isBodyEnd(i))
-		this->sendBodyEnd(i);
-	else
-		this->sendBodyPart(i);	
-}
+// 	this->_clients[i].bodySize += static_cast<size_t>(ret);
+// 	if (this->isChunked(i))
+// 		return ;
+// 	if (this->isBodyTooLarge(i))
+// 		return ;
+// 	if (this->isBodyEnd(i))
+// 		this->sendBodyEnd(i);
+// 	else
+// 		this->sendBodyPart(i);	
+// }
 
 void Server::shortCircuit(e_errorCodes err, size_t i)
 {
@@ -222,9 +219,33 @@ bool Server::isBodyTooLarge(size_t i)
 	return false;
 }
 
+bool Server::isBodyEnd(size_t i)
+{
+	Logger::getInstance().log(INFO, "Is Body End", this->_clients[i]);
+
+	if (this->_clients[i].headerRequest.getHeaders().TransferEncoding
+		== "chunked" && !this->_clients[i].chunkedSize)
+	{
+		stringstream ss; ss << "client body terminated" << " - Chunked-Size: "
+		<< this->_clients[i].chunkedSize;
+		Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
+		return true;
+	}
+	else if (this->_clients[i].bodySize ==
+		this->_clients[i].headerRequest.getHeaders().ContentLength)
+	{
+		stringstream ss; ss << "client body terminated" << " - Body-Size: "
+		<< this->_clients[i].bodySize << " Content-Lenght: "
+		<< this->_clients[i].headerRequest.getHeaders().ContentLength;
+		Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
+		return true;
+	}
+	return false;
+}
+
 void Server::sendBodyPart(size_t i)
 {
-	Logger::getInstance().log(INFO, "send Body Part", this->_clients[i]);
+	Logger::getInstance().log(INFO, "Send Body Part", this->_clients[i]);
 	this->printResponse(this->_clients[i].messageRecv);
 	
 	if (this->_clients[i].headerRequest.getMethod() == "POST")
@@ -259,28 +280,6 @@ void Server::sendBodyEnd(size_t i)
 	}
 	if (this->_clients[i].messageRecv.empty())
 		this->_clients[i].ping = false;	
-}
-
-bool Server::isBodyEnd(size_t i)
-{
-	if (this->_clients[i].headerRequest.getHeaders().TransferEncoding
-		== "chunked" && !this->_clients[i].chunkedSize)
-	{
-		stringstream ss; ss << "client body terminated" << " - Chunked-Size: "
-		<< this->_clients[i].chunkedSize;
-		Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
-		return true;
-	}
-	else if (this->_clients[i].bodySize ==
-		this->_clients[i].headerRequest.getHeaders().ContentLength)
-	{
-		stringstream ss; ss << "client body terminated" << " - Body-Size: "
-		<< this->_clients[i].bodySize << " Content-Lenght: "
-		<< this->_clients[i].headerRequest.getHeaders().ContentLength;
-		Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
-		return true;
-	}
-	return false;
 }
 
 bool Server::isChunked(size_t i)

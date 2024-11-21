@@ -24,10 +24,9 @@ class Server
 	void clientMessage(size_t i, ssize_t ret);
 	void displayClient(Client & client) const;
 	void retrySend(size_t i);
-	void handleClientHeader(size_t i, ssize_t ret);
+	void headerCheckin(size_t i, ssize_t ret);
 	void getRespHeader(size_t i);
-	void bodyCheckin(size_t i);
-	void handleClientBody(size_t i, ssize_t ret);
+	void bodyCheckin(size_t i, size_t addBodysize);
 	bool isDelimiterFind(std::string delimiter, size_t i,
 		std::vector<char>::iterator & it);
 	void shortCircuit(e_errorCodes err, size_t i);
