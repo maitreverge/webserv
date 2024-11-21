@@ -1,4 +1,14 @@
-curl -v http://localhost:3001/index.html
+curl -X GET http://localhost:3001/index1.html
 --END-REQUEST--
-curl -v http://localhost:3001/index.html
+curl -X GET http://localhost:3001
+--END-REQUEST--
+curl -X GET http://localhost:3001/
+--END-REQUEST--
+curl -X GET http://localhost:3001/nope
+--END-REQUEST--
+curl -X GET http://localhost:3001/_websites/festival/index.html
+--END-REQUEST--
+curl -X POST http://localhost:3001/
+--END-REQUEST--
+curl -X DELETE http://localhost:3001/
 --END-REQUEST--

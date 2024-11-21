@@ -1,4 +1,2 @@
 curl -v http://localhost:3004/index.html
 --END-REQUEST--
-curl -v http://localhost:3004/index.html
---END-REQUEST--

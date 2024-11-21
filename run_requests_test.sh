@@ -57,7 +57,7 @@ for config_file in "$CONFIG_DIR"/*.ini; do
 		# Envoi de la requête à Webserv et enregistrement de la réponse
 		response_file="$ANSWERS_DIR/config_${config_number}_test_${test_counter}_actual.txt"
 		# http_response=$(echo "$request" | http --ignore-stdin --timeout=2 "localhost:3${config_number}")
-		http_response=$(curl -s --max-time 2 -K "$request_file" "localhost:3${config_number}")
+		http_response=$(curl -s --connect-timeout 2 --max-time 2 "$request_file" "localhost:3${config_number}")
 
 		# Sauvegarde de la réponse
 		echo "$http_response" > "$response_file"
