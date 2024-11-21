@@ -1,0 +1,319 @@
+[34m=== Configuration : Requests_Tester/config_files/config_001.ini[0m
+
+[33m#############################  Base config for GET #############################
+
+################################    RESUME     #################################
+#				
+#	Ports Used :  3001			
+#
+# 	GET / 3001 => index1.html	=>	CODE_200_OK
+#
+################################################################################
+[global]
+maxClient			= 1024
+maxHeaderSize       = 8192
+maxBodySize         = 5000000
+maxServerNbr        = 8
+timeoutCgi          = 10
+errorPagesPath		= errorPages/
+
+[errorPages]
+
+errorPage_201 = 201.html
+errorPage_204 = 204.html
+errorPage_400 = 400.html
+errorPage_401 = 401.html
+errorPage_403 = 403.html
+errorPage_404 = 404.html
+errorPage_405 = 405.html
+errorPage_413 = 413.html
+errorPage_422 = 422.html
+errorPage_431 = 431.html
+errorPage_500 = 500.html
+errorPage_502 = 502.html
+errorPage_503 = 503.html
+errorPage_504 = 504.html
+errorPage_508 = 508.html
+
+[server1]
+host				= 0.0.0.0
+port				= 3001
+serverName			= "server1"
+allowedRoutes		= route1
+
+[route1]
+uri = /
+allowedMethods = GET
+index = index1.html [0m
+
+[31m--- Requête : http GET localhost:3001/index.html[0m
+
+[34m--- Expected Answer :[0m
+[32m<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple HTML Page</title>
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+	<h1>INDEX 1</h1>
+	<p>This is a paragraph of text on my simple HTML page.</p>
+	<a href="test.html">Go to Test Page</a>
+	<p></p>
+	<p></p>
+	<a href="testResponseBuilder/upload/uploadEntryPoint.html">Go to UPLOADING FILE Page</a>
+</body>
+toto happy
+</html>[0m
+
+[34m--- Actual Answer :[0m
+
+[36m<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple HTML Page</title>
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+	<h1>INDEX 1</h1>
+	<p>This is a paragraph of text on my simple HTML page.</p>
+	<a href="test.html">Go to Test Page</a>
+	<p></p>
+	<p></p>
+	<a href="testResponseBuilder/upload/uploadEntryPoint.html">Go to UPLOADING FILE Page</a>
+</body>
+</html>[0m
+
+
+[31m--- Requête : http GET localhost:3001/index.html[0m
+
+[34m--- Expected Answer :[0m
+[32m<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple HTML Page</title>
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+	<h1>INDEX 1</h1>
+	<p>This is a paragraph of text on my simple HTML page.</p>
+	<a href="test.html">Go to Test Page</a>
+	<p></p>
+	<p></p>
+	<a href="testResponseBuilder/upload/uploadEntryPoint.html">Go to UPLOADING FILE Page</a>
+</body>
+</html>[0m
+
+[34m--- Actual Answer :[0m
+
+[36m<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple HTML Page</title>
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+	<h1>INDEX 1</h1>
+	<p>This is a paragraph of text on my simple HTML page.</p>
+	<a href="test.html">Go to Test Page</a>
+	<p></p>
+	<p></p>
+	<a href="testResponseBuilder/upload/uploadEntryPoint.html">Go to UPLOADING FILE Page</a>
+</body>
+</html>[0m
+
+
+[34m=== Configuration : Requests_Tester/config_files/config_002.ini[0m
+
+[33m#############################  Base config for POST #############################
+
+################################    RESUME     #################################
+#				
+#	Ports Used :  3002			
+#
+# 	POST / 3002 + Body	=>	CODE_201_CREATED + Body au bon format dans 'upload'
+#
+################################################################################
+[global]
+maxClient			= 1024
+maxHeaderSize       = 8192
+maxBodySize         = 5000000
+maxServerNbr        = 8
+timeoutCgi          = 10
+errorPagesPath		= errorPages/
+
+[errorPages]
+
+errorPage_201 = 201.html
+errorPage_204 = 204.html
+errorPage_400 = 400.html
+errorPage_401 = 401.html
+errorPage_403 = 403.html
+errorPage_404 = 404.html
+errorPage_405 = 405.html
+errorPage_413 = 413.html
+errorPage_422 = 422.html
+errorPage_431 = 431.html
+errorPage_500 = 500.html
+errorPage_502 = 502.html
+errorPage_503 = 503.html
+errorPage_504 = 504.html
+errorPage_508 = 508.html
+
+[server1]
+host				= 0.0.0.0
+port				= 3002
+serverName			= "server1"
+allowedRoutes		= route1
+
+[route1]
+uri = /
+allowedMethods = POST
+uploadAllowed = 1
+uploadDirectory = uploads/
+
+
+#########       BLUEPRINT      ##################
+#[route1]
+#uri = /
+#allowedMethods = GET, POST, DELETE
+#redirection =
+#root =      /testResponseBuilder/redirectDefaultPath1111
+#listingDirectory    = 0
+#index = index1.html 
+#cgiAllowed = .php, .out 
+#uploadAllowed = 1
+#uploadDirectory = /uploads[0m
+
+[31m--- Requête : http GET localhost:3002/index.html[0m
+
+[34m--- Expected Answer :[0m
+[32m<html>
+
+<head>
+	<title>405</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">405 Method Not Allowed</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
+
+[34m--- Actual Answer :[0m
+
+[36m<html>
+
+<head>
+	<title>405</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">405 Method Not Allowed</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
+
+
+[31m--- Requête : http GET localhost:3002/index.html[0m
+
+[34m--- Expected Answer :[0m
+[32m<html>
+
+<head>
+	<title>405</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">405 Method Not Allowed</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
+
+[34m--- Actual Answer :[0m
+
+[36m<html>
+
+<head>
+	<title>405</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">405 Method Not Allowed</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
+
+
+[34m=== Configuration : Requests_Tester/config_files/config_003.ini[0m
+
+[33m#############################  Base config for DELETE #############################
+
+################################    RESUME     #################################
+#				
+#	Ports Used :  3003			
+#
+# 	POST / 3003 	=>	CODE_201_CREATED
+#
+################################################################################
+[global]
+maxClient			= 1024
+maxHeaderSize       = 8192
+maxBodySize         = 5000000
+maxServerNbr        = 8
+timeoutCgi          = 10
+errorPagesPath		= errorPages/
+
+[errorPages]
+
+errorPage_201 = 201.html
+errorPage_204 = 204.html
+errorPage_400 = 400.html
+errorPage_401 = 401.html
+errorPage_403 = 403.html
+errorPage_404 = 404.html
+errorPage_405 = 405.html
+errorPage_413 = 413.html
+errorPage_422 = 422.html
+errorPage_431 = 431.html
+errorPage_500 = 500.html
+errorPage_502 = 502.html
+errorPage_503 = 503.html
+errorPage_504 = 504.html
+errorPage_508 = 508.html
+
+[server1]
+host				= 0.0.0.0
+port				= 3003
+serverName			= "server1"
+allowedRoutes		= route1
+
+[route1]
+uri = /
+allowedMethods = DELETE
+
+
+#########       BLUEPRINT      ##################
+#[route1]
+#uri = /
+#allowedMethods = GET, POST, DELETE
+#redirection =
+#root =      /testResponseBuilder/redirectDefaultPath1111
+#listingDirectory    = 0
+#index = index1.html 
+#cgiAllowed = .php, .out 
+#uploadAllowed = 1
+#uploadDirectory = /uploads[0m
+
