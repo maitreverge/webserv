@@ -68,9 +68,8 @@ bool Server::replyClient(size_t i, std::vector<char> & response)
 		return true;
 	}
 	std::vector<char> str(response.data(), response.data()
-		+ static_cast<size_t>(ret));      
-	std::stringstream ss; ss << "data sent to client: ";	
-	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]); 
+		+ static_cast<size_t>(ret));  		
+	Logger::getInstance().log(DEBUG, "sent to client: ", this->_clients[i]); 
 	Server::printVector(str);
 	response.erase(response.begin(), response.begin() + ret);
 	return false;

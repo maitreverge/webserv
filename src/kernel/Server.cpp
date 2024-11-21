@@ -46,8 +46,7 @@ bool Server::setup()
 	return true;
 }
 
-void Server::catchClients(Kernel & kernel)
-{
+void Server::catchClients(Kernel & kernel){
 	if (FD_ISSET(this->_fd, &Kernel::_readSet))
 	{	
 		Server::_nl = !Server::_nl ? std::cout << std::endl, true : true;		

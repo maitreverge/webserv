@@ -16,7 +16,8 @@ struct Client
 	RequestParser		headerRequest;
 	size_t				bodySize;
 	ssize_t				chunkedSize;
-
+	bool				retryChunked;
+	
 	ResponseBuilder		responseBuilder;
 	std::vector<char>	headerRespons;
 	std::vector<char>	messageSend;

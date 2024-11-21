@@ -184,7 +184,7 @@ void Cgi::setBody(Client & client, bool eof)
     Kernel::cleanFdSet(client);
 	std::vector<char> str(client.messageRecv.data(), client.messageRecv.data()
 		+ static_cast<size_t>(ret));
-	Logger::getInstance().log(DEBUG, "data sent to cgi", client);	
+	Logger::getInstance().log(DEBUG, "sent to cgi", client);	
 	Server::printVector(str);
 	client.messageRecv.erase(client.messageRecv.begin(),
         client.messageRecv.begin() + ret);

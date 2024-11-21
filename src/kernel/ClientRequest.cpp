@@ -14,13 +14,13 @@ void Server::listenClients()
 				this->retrySend(i);		
 				continue ;
 			}
-			else if (this->_clients[i].chunkedSize >= 0)
+			else if (this->_clients[i].retryChunked)
 			{
 				this->isChunked(i);
 				continue ;	
 			}
 		}
-		if (recevData(i))
+		if (this->recevData(i))
 			break ;
 	}
 }
@@ -44,8 +44,8 @@ bool Server::recevData(size_t i)
 			return true;
 		}				
 		else
-			clientMessage(i, ret);			
-	}
+			this->clientMessage(i, ret);			
+	}	
 	return false;
 }
 
@@ -88,10 +88,7 @@ void Server::retrySend(size_t i)
 		<< std::endl;
 	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
 
-	if (this->isBodyEnd(i))
-		this->sendBodyEnd(i);
-	else
-		this->sendBodyPart(i);
+	this->isBodyEnd(i) ? this->sendBodyEnd(i) :	this->sendBodyPart(i);
 }
 
 void Server::clientMessage(size_t i, ssize_t ret)
@@ -156,12 +153,9 @@ void Server::bodyCheckin(size_t i, size_t addBodysize)
 	this->_clients[i].bodySize += addBodysize;
 	if (this->isChunked(i))
 		return;
-	 if (!this->isContentLengthValid(i)	|| this->isBodyTooLarge(i))	
+	if (!this->isContentLengthValid(i)	|| this->isBodyTooLarge(i))	
 		return ;
-	if (this->isBodyEnd(i))
-		this->sendBodyEnd(i);
-	else
-		this->sendBodyPart(i);
+	this->isBodyEnd(i) ? this->sendBodyEnd(i) :	this->sendBodyPart(i);
 }
 
 void Server::getRespHeader(size_t i)
@@ -355,14 +349,29 @@ bool Server::isChunked(size_t i)
 					std::vector<char> tmp(it, this->_clients[i].messageRecv.end());
 					this->_clients[i].messageRecv.erase(it, this->_clients[i].messageRecv.end());
 					size_t tmp_size = this->_clients[i].messageRecv.size();
-					if (this->isBodyEnd(i))
-						sendBodyEnd(i);
+
+					this->isBodyEnd(i) ? this->sendBodyEnd(i) :	this->sendBodyPart(i);
+
+					std::cout << "chunkedsize: 0 " << this->_clients[i].chunkedSize << std::endl;
+					std::cout << "tmp: 0 " << tmp_size  << std::endl;
+					std::cout << "mess size: 0 " << this->_clients[i].messageRecv.size()  << std::endl;
+					std::cout << "calcul: 0 " << tmp_size - this->_clients[i].messageRecv.size() << std::endl;
+					// this->_clients[i].chunkedSize = this->_clients[i].messageRecv.empty() ? -1 : tmp_size - this->_clients[i].messageRecv.size();
+				
+					this->_clients[i].chunkedSize -= tmp_size - this->_clients[i].messageRecv.size();
+					if (!this->_clients[i].chunkedSize)
+						this->_clients[i].chunkedSize = -1;
+					std::cout << "chunkedsize: 1 " << this->_clients[i].chunkedSize << std::endl;
+					int flag = 0;
+					if (this->_clients[i].messageRecv.empty())
+					{
+						flag = 2;
+						this->_clients[i].retryChunked = false;
+					}
 					else
-						sendBodyPart(i);
-				
-					this->_clients[i].chunkedSize = this->_clients[i].messageRecv.empty() ? -1 : tmp_size - this->_clients[i].messageRecv.size();
-				
-					this->_clients[i].messageRecv.insert(this->_clients[i].messageRecv.end(), tmp.begin() + 2, tmp.end()); //! ne marchera pas avec resend					
+						this->_clients[i].retryChunked = true;
+					this->_clients[i].messageRecv.insert(this->_clients[i].messageRecv.end(), tmp.begin() + flag, tmp.end()); //! ne marchera pas avec resend	
+					Server::printVector(this->_clients[i].messageRecv);				
 				}
 				else if (std::distance(this->_clients[i].messageRecv.begin(), it) > static_cast<std::ptrdiff_t>(this->_clients[i].chunkedSize))
 				{
