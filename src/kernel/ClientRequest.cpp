@@ -7,20 +7,12 @@ void Server::listenClients()
 	{			
 		if (!this->_clients[i].ping)
 			continue ;
-		if (!this->_clients[i].messageRecv.empty())
-		{
-			if (this->_clients[i].headerRequest.getHeaders().ContentLength)
-			{
-				this->retrySend(i);		
-				continue ;
-			}
-			else if (this->_clients[i].retryChunked)
-			{
-				this->isChunked(i);
-				continue ;	
-			}
-		}
-		if (this->recevData(i))
+		if (!this->_clients[i].messageRecv.empty() 
+			&& this->_clients[i].headerRequest.getHeaders().ContentLength)				
+			this->retrySend(i);
+		else if (this->_clients[i].retryChunked)
+			this->isChunked(i);
+		else if (this->recevData(i))
 			break ;
 	}
 }
@@ -306,6 +298,7 @@ bool Server::isChunked(size_t i)
 	if (this->_clients[i].headerRequest.getHeaders().TransferEncoding
 		== "chunked")
 	{	
+		this->_clients[i].retryChunked = false;
 		Logger::getInstance().log(INFO, "chunked",
 			this->_clients[i]);//!
 		std::vector<char>::iterator it;
@@ -366,12 +359,16 @@ bool Server::isChunked(size_t i)
 					if (this->_clients[i].messageRecv.empty())
 					{
 						flag = 2;
-						this->_clients[i].retryChunked = false;
+						// this->_clients[i].retryChunked = true;
 					}
 					else
 						this->_clients[i].retryChunked = true;
+					
 					this->_clients[i].messageRecv.insert(this->_clients[i].messageRecv.end(), tmp.begin() + flag, tmp.end()); //! ne marchera pas avec resend	
-					Server::printVector(this->_clients[i].messageRecv);				
+					Server::printVector(this->_clients[i].messageRecv);	
+					if (flag == 2 && !this->_clients[i].messageRecv.empty())
+						this->_clients[i].retryChunked = true;
+
 				}
 				else if (std::distance(this->_clients[i].messageRecv.begin(), it) > static_cast<std::ptrdiff_t>(this->_clients[i].chunkedSize))
 				{
