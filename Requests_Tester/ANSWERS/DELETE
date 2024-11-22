@@ -11,6 +11,6 @@ Content-Length: 286
 </head>
 <body>
 <h1>Resource Deleted</h1>
-<p>The file <b>file1.txt</b> has been successfully deleted.</p>
+<p>The file <b>hello.txt</b> has been successfully deleted.</p>
 </body>
 </html>
