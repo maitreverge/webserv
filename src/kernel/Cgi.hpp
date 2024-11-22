@@ -13,16 +13,16 @@ class Cgi
 
     bool retHandle(Client & client, ssize_t ret, std::string err, 
     std::string info);
-    bool isTimeout(Client & client, std::string err);
-	void hasError(Client & client);
+    void isTimeout(Client & client, std::string err);
+	void hasError(Client & client, std::string err);
 
     public:
     
         int _fds[2];
 
         Cgi();
-	    Cgi & operator=(const Cgi &);
         ~Cgi();  
+	    Cgi & operator=(const Cgi &);
 
         void    launch(Client & client); 
         void    child(Client & client);

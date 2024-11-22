@@ -159,7 +159,7 @@ bool Server::isMaxHeaderSize(std::vector<char>::iterator it, size_t i)
 
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);		
 			//! 431 Request Header Fields Too Large !!
-		this->shortCircuit(static_cast<e_errorCodes>(431), i);	
+		this->shortCircuit(CODE_431_REQUEST_HEADER_FIELDS_TOO_LARGE, i);	
 		return true;	
 	}
 	return false;
@@ -176,7 +176,7 @@ bool Server::isContentLengthValid(size_t i)
 			<< " - Max content size: " << this->_conf.maxBodySize << std::endl;
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
 			//! 413 Payload Too Large
-		this->shortCircuit(static_cast<e_errorCodes>(413), i);
+		this->shortCircuit(CODE_413_PAYLOAD_TOO_LARGE, i);
 		return false;
 	}
 	return true;
@@ -194,7 +194,7 @@ bool Server::isBodyTooLarge(size_t i)
             << std::endl;
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
 			//! 413 Payload Too Large
-		this->shortCircuit(static_cast<e_errorCodes>(413), i);
+		this->shortCircuit(CODE_413_PAYLOAD_TOO_LARGE, i);
 		return true;;
 	}
 	return false;

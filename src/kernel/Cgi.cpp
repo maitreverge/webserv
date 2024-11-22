@@ -133,7 +133,7 @@ bool Cgi::retHandle(Client & client, ssize_t ret, std::string err,
     return false;	
 }
 
-bool Cgi::isTimeout(Client & client, std::string err)
+void Cgi::isTimeout(Client & client, std::string err)
 {
 	if (!this->_start)
 		this->_start = std::clock();
@@ -157,42 +157,38 @@ bool Cgi::isTimeout(Client & client, std::string err)
 		this->_start = 0;
         client.exitRequired = true;
 		client.ping = false;
-        throw std::runtime_error("timeout");
-        return true;
+        throw std::runtime_error("timeout");        
     } 
-	return false;
 }
 
-void Cgi::hasError(Client & client)
+void Cgi::hasError(Client & client, std::string err)
 {
 	int status;
 	pid_t pid = waitpid(this->_pid, &status, WNOHANG);
-
-if (pid > 0) {
-    if (WIFEXITED(status)) {
-        int exit_code = WEXITSTATUS(status);
-        if (exit_code != 0) {
-            // Générer une réponse 503 ou 500
-        }
-    } else if (WIFSIGNALED(status)) {
-        // Le CGI a été tué par un signal
-        // Générer une réponse 500
-    }
-} else if (pid == 0) {
-    // Le CGI est toujours en cours d'exécution (gestion des timeouts ?)
-} else 
-{
-	Logger::getInstance().log(ERROR, "waitpid");
-    throw std::runtime_error("waitpid");
-}
+	if (pid > 0 && WIFEXITED(status))
+	{		
+		int exitCode = WEXITSTATUS(status);
+		if (exitCode != 0)
+		{
+			Logger::getInstance().log(ERROR, err);
+			throw Server::
+				ShortCircuitException(static_cast<e_errorCodes>(exitCode)); 
+		}			
+	}
+	else if (pid < 0)
+	{
+		Logger::getInstance().log(ERROR, "waitpid");
+		throw Server::
+			ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR); //!REAL CODE
+	}
 }
 
 void Cgi::setBody(Client & client, bool eof)
 {
     Logger::getInstance().log(INFO, "Cgi Set Body", client);
 
-	if (isTimeout(client, "Timeout Cgi Set Body is over"))
-		return ;//! true 	
+	hasError(client, "timeout cgi set body has error");		
+	isTimeout(client, "timeout cgi set body is over");
     if (!FD_ISSET(this->_fds[1], &Kernel::_writeSet))    
         return Logger::getInstance().log(DEBUG, "cgi not ready to send");
      
@@ -218,9 +214,8 @@ bool Cgi::getBody(Client & client)
 {
     Logger::getInstance().log(INFO, "Cgi Get Body", client);
 
-	if (isTimeout(client, "Timeout Cgi Get Body is over"))
-		return false;
-
+	hasError(client, "timeout cgi get body has error");
+	isTimeout(client, "timeout cgi get body is over");
     if (shutdown(_fds[1], SHUT_WR) < 0)
 		Logger::getInstance().log(ERROR, "shutdown", client);//! ret ?
     if (!FD_ISSET(this->_fds[1], &Kernel::_readSet))
