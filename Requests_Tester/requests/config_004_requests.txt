@@ -1,2 +1,6 @@
- curl -i -s http://localhost:3004/index.html
+ curl -i -s -X GET http://localhost:3004/index.html
+--END-REQUEST--
+ curl -i -s -X POST http://localhost:3004/
+--END-REQUEST--
+ curl -i -s -X DELETE http://localhost:3004/index.html
 --END-REQUEST--
