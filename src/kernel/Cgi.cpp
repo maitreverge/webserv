@@ -158,11 +158,33 @@ bool Cgi::isTimeout(Client & client, std::string err)
         client.exitRequired = true;
 		client.ping = false;
         throw std::runtime_error("timeout");
-		// client.responseBuilder.setError(CODE_508_LOOP_DETECTED);
-		// Return true will never happen
         return true;
     } 
 	return false;
+}
+
+void Cgi::hasError(Client & client)
+{
+	int status;
+	pid_t pid = waitpid(this->_pid, &status, WNOHANG);
+
+if (pid > 0) {
+    if (WIFEXITED(status)) {
+        int exit_code = WEXITSTATUS(status);
+        if (exit_code != 0) {
+            // Générer une réponse 503 ou 500
+        }
+    } else if (WIFSIGNALED(status)) {
+        // Le CGI a été tué par un signal
+        // Générer une réponse 500
+    }
+} else if (pid == 0) {
+    // Le CGI est toujours en cours d'exécution (gestion des timeouts ?)
+} else 
+{
+	Logger::getInstance().log(ERROR, "waitpid");
+    throw std::runtime_error("waitpid");
+}
 }
 
 void Cgi::setBody(Client & client, bool eof)

@@ -14,6 +14,7 @@ class Cgi
     bool retHandle(Client & client, ssize_t ret, std::string err, 
     std::string info);
     bool isTimeout(Client & client, std::string err);
+	void hasError(Client & client);
 
     public:
     
