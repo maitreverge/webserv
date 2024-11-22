@@ -46,7 +46,7 @@ uri = /
 allowedMethods = GET
 index = index1.html [0m
 
-[31m--- Requête :  curl -i -s -i --connect-timeout 2 --max-time 2 -X GET http://localhost:3001/index1.html[0m
+[31m--- Requête :  curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3001/index1.html[0m
 
 [34m--- Expected Answer :[0m
 [32mHTTP/1.1 200 OK
