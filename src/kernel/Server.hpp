@@ -68,14 +68,6 @@ class Server
 
 			public:
 				ShortCircuitException(e_errorCodes code):_code(code){}
-				e_errorCodes getCode() const { return _code;}
-		};
-		// class GradeTooLowException : public std::exception
-		// {
-		// 	const Bureaucrat & _bur;
-		// 	public:
-			
-		// 		GradeTooLowException( const Bureaucrat & bur );
-		// 		virtual const char * what( void ) const throw();		
-		// };
+				e_errorCodes getCode() const { return _code;}			
+		};	
 };

@@ -20,12 +20,14 @@ docker run --rm -t -v $(pwd)/siege_urls.txt:/siege_urls.txt jstarcher/siege -f /
 valgrind --trace-children=yes --track-fds=yes --leak-check=full --show-leak-kinds=all ./webserv
 kill ` ps | grep webserv | cut -d' ' -f1 `
 gcc main.c -o main.out &&
-gcc main_errin.c -o main_errin.out &&
-gcc main_errmid.c -o main_errmid.out && 
-gcc main_errout.c -o main_errout.out && 
+gcc main_loopin.c -o main_loopin.out &&
+gcc main_loopmid.c -o main_loopmid.out && 
+gcc main_loopout.c -o main_loopout.out && 
 gcc main_in.c -o main_in.out &&
 gcc main_out.c -o main_out.out &&
 gcc main_inout.c -o main_inout.out
+
+
 
 COMMANDES HTTPie A TESTER:
 http --verbose UNKNOWN http://localhost:1510

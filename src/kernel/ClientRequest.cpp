@@ -234,8 +234,8 @@ void Server::sendBodyPart(size_t i)
 		try {
 			this->_clients[i].responseBuilder.
 				setBodyPost(this->_clients[i], false);	}
-		catch(const std::exception& e)
-		{	this->shortCircuit(CODE_508_LOOP_DETECTED, i);	}
+		catch(const Server::ShortCircuitException& e)
+		{	this->shortCircuit(e.getCode(), i);	}
 	}
 	else
 		this->_clients[i].messageRecv.clear();	
@@ -251,8 +251,8 @@ void Server::sendBodyEnd(size_t i)
 		try {
 			this->_clients[i].responseBuilder.
 				setBodyPost(this->_clients[i], true);	}
-		catch(const std::exception& e)
-		{	this->shortCircuit(CODE_508_LOOP_DETECTED, i);	}
+		catch(const Server::ShortCircuitException& e)
+		{	this->shortCircuit(e.getCode(), i);	}	
 	}					
 	else
 	{

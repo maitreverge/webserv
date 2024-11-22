@@ -156,8 +156,8 @@ void Cgi::isTimeout(Client & client, std::string err)
         kill(this->_pid, SIGTERM);
 		this->_start = 0;
         client.exitRequired = true;
-		client.ping = false;
-        throw std::runtime_error("timeout");        
+		client.ping = false;	 
+        throw Server::ShortCircuitException(CODE_508_LOOP_DETECTED);        
     } 
 }
 
@@ -170,16 +170,15 @@ void Cgi::hasError(Client & client, std::string err)
 		int exitCode = WEXITSTATUS(status);
 		if (exitCode != 0)
 		{
-			Logger::getInstance().log(ERROR, err);
+			Logger::getInstance().log(ERROR, err, client);
 			throw Server::
 				ShortCircuitException(static_cast<e_errorCodes>(exitCode)); 
 		}			
 	}
 	else if (pid < 0)
 	{
-		Logger::getInstance().log(ERROR, "waitpid");
-		throw Server::
-			ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR); //!REAL CODE
+		Logger::getInstance().log(ERROR, "waitpid", client);
+		throw Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR); //!REAL CODE
 	}
 }
 

@@ -24,8 +24,12 @@ void Server::replyClients()
 
 bool Server::fillMessageSend(size_t i)
 {
-	if (this->_clients[i].responseBuilder.getBody(this->_clients[i]))
-		return false;
+	try	{
+		if (this->_clients[i].responseBuilder.getBody(this->_clients[i]))
+			return false;	}
+	catch(const Server::ShortCircuitException& e)
+		{	return this->shortCircuit(e.getCode(), i), false;	}
+	
 	if (!this->_clients[i].messageSend.empty())									
 		return replyClient(i, this->_clients[i].messageSend);	
 	else
