@@ -1,2 +1,2 @@
-curl -v --connect-timeout 2 --max-time 2 http://localhost:3020
+curl -s --connect-timeout 2 --max-time 2 http://localhost:3020
 --END-REQUEST--

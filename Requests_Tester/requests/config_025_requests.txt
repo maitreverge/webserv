@@ -1,4 +1,4 @@
-curl -v http://localhost:3025/index.html
+curl -s http://localhost:3025/index.html
 --END-REQUEST--
-curl -v http://localhost:3025/index.html
+curl -s http://localhost:3025/index.html
 --END-REQUEST--

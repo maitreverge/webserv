@@ -46,7 +46,7 @@ uri = /
 allowedMethods = GET
 index = index1.html [0m
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 http://localhost:3001/index1.html[0m
+[31m--- RequÃªte :  curl -s  --connect-timeout 2 --max-time 2 http://localhost:3001/index1.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -88,7 +88,7 @@ index = index1.html [0m
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3001[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3001[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -130,7 +130,7 @@ index = index1.html [0m
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3001/[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3001/[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -172,7 +172,7 @@ index = index1.html [0m
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3001/nope[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3001/nope[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -204,7 +204,7 @@ index = index1.html [0m
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3001/_websites/festival/index.html[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3001/_websites/festival/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<!doctype html>
@@ -1592,7 +1592,7 @@ T e m p l a t e M o
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X POST http://localhost:3001/[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X POST http://localhost:3001/[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -1624,7 +1624,7 @@ T e m p l a t e M o
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3001/[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3001/[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -1732,7 +1732,7 @@ uploadAllowed = 0
 #uploadAllowed = 1
 #uploadDirectory = /uploads[0m
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3002[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3002[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -1742,7 +1742,7 @@ uploadAllowed = 0
 [36m[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.json[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.json[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -1774,7 +1774,7 @@ uploadAllowed = 0
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3002/uploads/file.json[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3002/uploads/file.json[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -1784,7 +1784,7 @@ uploadAllowed = 0
 [36m[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.json[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.json[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -1816,7 +1816,7 @@ uploadAllowed = 0
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: text/txt" -d 'Hello, World!' http://localhost:3002[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: text/txt" -d 'Hello, World!' http://localhost:3002[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -1878,7 +1878,7 @@ uploadAllowed = 0
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.txt[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.txt[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -1910,7 +1910,7 @@ uploadAllowed = 0
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3002/uploads/file.txt[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3002/uploads/file.txt[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -1920,7 +1920,7 @@ uploadAllowed = 0
 [36m[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.txt[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.txt[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -1952,7 +1952,7 @@ uploadAllowed = 0
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3002/index.html[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3002/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -1962,7 +1962,7 @@ uploadAllowed = 0
 [36m[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.json[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.json[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -1994,7 +1994,7 @@ uploadAllowed = 0
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: text/txt" -d 'Hello, World!' http://localhost:3002/index.html[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: text/txt" -d 'Hello, World!' http://localhost:3002/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -2056,7 +2056,7 @@ uploadAllowed = 0
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.txt[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.txt[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -2088,7 +2088,7 @@ uploadAllowed = 0
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X POST http://localhost:3002[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X POST http://localhost:3002[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -2150,7 +2150,7 @@ uploadAllowed = 0
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X POST http://localhost:3002/index.html[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X POST http://localhost:3002/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -2212,7 +2212,7 @@ uploadAllowed = 0
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3002/uploads[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3002/uploads[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -2222,7 +2222,7 @@ uploadAllowed = 0
 [36m[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.json[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.json[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -2254,7 +2254,7 @@ uploadAllowed = 0
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3002/uploads/file.json[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3002/uploads/file.json[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -2264,7 +2264,7 @@ uploadAllowed = 0
 [36m[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.json[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.json[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -2296,7 +2296,7 @@ uploadAllowed = 0
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: text/txt" -d 'Hello, World!' http://localhost:3002/uploads[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: text/txt" -d 'Hello, World!' http://localhost:3002/uploads[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -2328,7 +2328,7 @@ uploadAllowed = 0
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.txt[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.txt[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -2360,7 +2360,7 @@ uploadAllowed = 0
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3002/uploads/file.txt[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3002/uploads/file.txt[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -2370,7 +2370,7 @@ uploadAllowed = 0
 [36m[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.txt[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.txt[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -2402,7 +2402,7 @@ uploadAllowed = 0
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3002/process_body_post[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3002/process_body_post[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -2412,7 +2412,7 @@ uploadAllowed = 0
 [36m[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: text/txt" -d 'Hello, World!' http://localhost:3002/process_body_post[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: text/txt" -d 'Hello, World!' http://localhost:3002/process_body_post[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -2444,7 +2444,7 @@ uploadAllowed = 0
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -2476,7 +2476,7 @@ uploadAllowed = 0
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/index.html[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -2508,7 +2508,7 @@ uploadAllowed = 0
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3002/[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3002/[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -2600,7 +2600,7 @@ allowedMethods = DELETE, GET
 #uploadAllowed = 1
 #uploadDirectory = /uploads[0m
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3003/delete_folder[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3003/delete_folder[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -2610,7 +2610,7 @@ allowedMethods = DELETE, GET
 [36m[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3003/delete_folder/file_1.txt[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3003/delete_folder/file_1.txt[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -2620,7 +2620,7 @@ allowedMethods = DELETE, GET
 [36m[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3003/delete_folder/file_1.txt[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3003/delete_folder/file_1.txt[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -2652,7 +2652,7 @@ allowedMethods = DELETE, GET
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3003/delete_folder/file_2.txt[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3003/delete_folder/file_2.txt[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -2662,7 +2662,7 @@ allowedMethods = DELETE, GET
 [36m[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3003/delete_folder/file_2.txt[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3003/delete_folder/file_2.txt[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -2694,7 +2694,7 @@ allowedMethods = DELETE, GET
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3003/delete_folder/folder_1[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3003/delete_folder/folder_1[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -2704,7 +2704,7 @@ allowedMethods = DELETE, GET
 [36m[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3003/delete_folder/folder_1/hello.txt[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3003/delete_folder/folder_1/hello.txt[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -2761,7 +2761,7 @@ allowedRoutes		= route1
 uri = /
 allowedMethods = POUETPOUETPOUET[0m
 
-[31m--- RequÃªte : curl -v http://localhost:3004/index.html[0m
+[31m--- RequÃªte :  curl -s http://localhost:3004/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -2850,37 +2850,7 @@ uri = /uploads
 allowedMethods = GET, POST, DELETE
 uploadAllowed = 1[0m
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X POST \033[0m
-
-[34m--- Expected Answer :[0m
-[32m[0m
-
-[34m--- Actual Answer :[0m
-
-[36m[0m
-
-
-[31m--- RequÃªte : -H "Content-Length: 412" \033[0m
-
-[34m--- Expected Answer :[0m
-[32m[0m
-
-[34m--- Actual Answer :[0m
-
-[36m[0m
-
-
-[31m--- RequÃªte : -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" \033[0m
-
-[34m--- Expected Answer :[0m
-[32m[0m
-
-[34m--- Actual Answer :[0m
-
-[36m[0m
-
-
-[31m--- RequÃªte : -d '------WebKitFormBoundary7MA4YWxkTrZu0gW
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Length: 412" -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" -d '------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="file1"; filename="file1.txt"
 Content-Type: text/txt
 
@@ -2901,7 +2871,7 @@ Content-Type: application/json
 [36m[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3005/uploads/file1.txt[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3005/uploads/file1.txt[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -2933,7 +2903,7 @@ Content-Type: application/json
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3005/uploads/file1.txt[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3005/uploads/file1.txt[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -2943,7 +2913,7 @@ Content-Type: application/json
 [36m[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3005/uploads/file1.txt[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3005/uploads/file1.txt[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -2975,7 +2945,7 @@ Content-Type: application/json
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3005/uploads/file2.json[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3005/uploads/file2.json[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -3007,7 +2977,7 @@ Content-Type: application/json
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3005/uploads/file2.json[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3005/uploads/file2.json[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -3017,7 +2987,7 @@ Content-Type: application/json
 [36m[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3005/uploads/file2.json[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3005/uploads/file2.json[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -3097,7 +3067,7 @@ uri = /
 allowedMethods = GET
 index = NOPE.html # This will force a 404.html[0m
 
-[31m--- RequÃªte : curl -v http://localhost:3006/index.html[0m
+[31m--- RequÃªte :  curl -s http://localhost:3006/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -3189,7 +3159,7 @@ uri = /
 allowedMethods = GET #Missing POST Method will force a CODE_405
 index = NOPE.html # This will force a CODE_404[0m
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET  http://localhost:3007/[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET  http://localhost:3007/[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -3221,7 +3191,7 @@ index = NOPE.html # This will force a CODE_404[0m
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X POST  http://localhost:3007/[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X POST  http://localhost:3007/[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -3283,7 +3253,7 @@ uploadDirectory = uploads/
 #listingDirectory    = 0
 #cgiAllowed = .php, .out [0m
 
-[31m--- RequÃªte : curl -X POST -H "Content-Type: application/json" -d '{"key1":"a", "key2":"b"}' http://localhost:3008[0m
+[31m--- RequÃªte :  curl -s -X POST -H "Content-Type: application/json" -d '{"key1":"a", "key2":"b"}' http://localhost:3008[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -3293,7 +3263,7 @@ uploadDirectory = uploads/
 [36m[0m
 
 
-[31m--- RequÃªte : curl -X POST -H "Content-Type: application/json" -d '{"key1":"1234567890123", "key2":"4567890123"}' http://localhost:3008[0m
+[31m--- RequÃªte :  curl -s -X POST -H "Content-Type: application/json" -d '{"key1":"1234567890123", "key2":"4567890123"}' http://localhost:3008[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -3303,7 +3273,7 @@ uploadDirectory = uploads/
 [36m[0m
 
 
-[31m--- RequÃªte : curl -X POST -H "Content-Type: application/json" -d '{"key1":"1234567890123", "key2":"4567890123", "key3":"7890123"}' http://localhost:3008[0m
+[31m--- RequÃªte :  curl -s -X POST -H "Content-Type: application/json" -d '{"key1":"1234567890123", "key2":"4567890123", "key3":"7890123"}' http://localhost:3008[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -3382,7 +3352,7 @@ uri = /_websites/villa_agency
 allowedMethods = GET
 index = index.html[0m
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3009/[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3009/[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -3424,7 +3394,7 @@ index = index.html[0m
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3009/_websites/festival[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3009/_websites/festival[0m
 
 [34m--- Expected Answer :[0m
 [32m<!doctype html>
@@ -4812,7 +4782,7 @@ T e m p l a t e M o
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3009/_websites/cyborg_gaming[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3009/_websites/cyborg_gaming[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -5394,7 +5364,7 @@ https://templatemo.com/tm-579-cyborg-gaming
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3009/_websites/villa_agency[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3009/_websites/villa_agency[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -6614,7 +6584,7 @@ uri = /
 allowedMethods = GET
 index = index.html[0m
 
-[31m--- RequÃªte : curl -v http://localhost:3010/index.html[0m
+[31m--- RequÃªte :  curl -s http://localhost:3010/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -6656,16 +6626,6 @@ index = index.html[0m
 </html>[0m
 
 
-[31m--- RequÃªte : --END-REQUEST----END-REQUEST--[0m
-
-[34m--- Expected Answer :[0m
-[32m[0m
-
-[34m--- Actual Answer :[0m
-
-[36m[0m
-
-
 [34m=== Configuration : Requests_Tester/config_files/config_011.ini[0m
 
 [33m##########  Config for METHOD ACCEPTED FOR CERTAIN ROUTE ########
@@ -6682,8 +6642,8 @@ index = index.html[0m
 #	and each one only accepts ONE method.	
 #	
 #	Need to make a DELETE /_websites/festival on 3011 => CODE_405_METHOD_NOT_ALLOWED
-#	Need to make a GET /_websites/cyborg_gaming on 3111 => CODE_405_METHOD_NOT_ALLOWED
-#	Need to make a POST /_websites/villa_agency on 3211 => CODE_405_METHOD_NOT_ALLOWED
+#	Need to make a GET /_websites/cyborg_gaming on 3011 => CODE_405_METHOD_NOT_ALLOWED
+#	Need to make a POST /_websites/villa_agency on 3011 => CODE_405_METHOD_NOT_ALLOWED
 #	
 #
 ################################################################################
@@ -6734,91 +6694,7 @@ uploadDirectory = uploads/
 uri = /_websites/villa_agency
 allowedMethods = DELETE[0m
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -v http://localhost:3011/index.html[0m
-
-[34m--- Expected Answer :[0m
-[32m<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Simple HTML Page</title>
-	<link rel="icon" href="favicon.ico" type="image/x-icon">
-</head>
-<body>
-	<h1>Welcome to FABULOUS WEBSITE Page</h1>
-	<p>This is a paragraph of text on my simple HTML page.</p>
-	<a href="test.html">Go to Test Page</a>
-	<p></p>
-	<p></p>
-	<a href="testResponseBuilder/upload/uploadEntryPoint.html">Go to UPLOADING FILE Page</a>
-</body>
-</html>[0m
-
-[34m--- Actual Answer :[0m
-
-[36m<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Simple HTML Page</title>
-	<link rel="icon" href="favicon.ico" type="image/x-icon">
-</head>
-<body>
-	<h1>Welcome to FABULOUS WEBSITE Page</h1>
-	<p>This is a paragraph of text on my simple HTML page.</p>
-	<a href="test.html">Go to Test Page</a>
-	<p></p>
-	<p></p>
-	<a href="testResponseBuilder/upload/uploadEntryPoint.html">Go to UPLOADING FILE Page</a>
-</body>
-</html>[0m
-
-
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -v http://localhost:3011/index.html[0m
-
-[34m--- Expected Answer :[0m
-[32m<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Simple HTML Page</title>
-	<link rel="icon" href="favicon.ico" type="image/x-icon">
-</head>
-<body>
-	<h1>Welcome to FABULOUS WEBSITE Page</h1>
-	<p>This is a paragraph of text on my simple HTML page.</p>
-	<a href="test.html">Go to Test Page</a>
-	<p></p>
-	<p></p>
-	<a href="testResponseBuilder/upload/uploadEntryPoint.html">Go to UPLOADING FILE Page</a>
-</body>
-</html>[0m
-
-[34m--- Actual Answer :[0m
-
-[36m<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Simple HTML Page</title>
-	<link rel="icon" href="favicon.ico" type="image/x-icon">
-</head>
-<body>
-	<h1>Welcome to FABULOUS WEBSITE Page</h1>
-	<p>This is a paragraph of text on my simple HTML page.</p>
-	<a href="test.html">Go to Test Page</a>
-	<p></p>
-	<p></p>
-	<a href="testResponseBuilder/upload/uploadEntryPoint.html">Go to UPLOADING FILE Page</a>
-</body>
-</html>[0m
-
-
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3011/_websites/festival on 3011[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3011/_websites/festival[0m
 
 [34m--- Expected Answer :[0m
 [32m<html>
@@ -6850,24 +6726,68 @@ allowedMethods = DELETE[0m
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X GET http://localhost:3111/_websites/cyborg_gaming on 3111[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3011/_websites/cyborg_gaming[0m
 
 [34m--- Expected Answer :[0m
-[32m[0m
+[32m<html>
+
+<head>
+	<title>405</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">405 Method Not Allowed</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 [34m--- Actual Answer :[0m
 
-[36m[0m
+[36m<html>
+
+<head>
+	<title>405</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">405 Method Not Allowed</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -X POST http://localhost:3211/_websites/villa_agency on 3211[0m
+[31m--- RequÃªte :  curl -s --connect-timeout 2 --max-time 2 -X POST http://localhost:3011/_websites/villa_agency[0m
 
 [34m--- Expected Answer :[0m
-[32m[0m
+[32m<html>
+
+<head>
+	<title>405</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">405 Method Not Allowed</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 [34m--- Actual Answer :[0m
 
-[36m[0m
+[36m<html>
+
+<head>
+	<title>405</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">405 Method Not Allowed</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
 [34m=== Configuration : Requests_Tester/config_files/config_012.ini[0m
@@ -6940,7 +6860,7 @@ uri = /
 allowedMethods = GET
 index = index.html[0m
 
-[31m--- RequÃªte : curl -v http://festival.localhost:3012/index.html[0m
+[31m--- RequÃªte : curl -s http://festival.localhost:3012/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -6982,7 +6902,7 @@ index = index.html[0m
 </html>[0m
 
 
-[31m--- RequÃªte : curl -v http://cyborg.localhost:3112/index.html[0m
+[31m--- RequÃªte : curl -s http://cyborg.localhost:3112/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -7024,7 +6944,7 @@ index = index.html[0m
 </html>[0m
 
 
-[31m--- RequÃªte : curl -v http://villa.localhost:3212/index.html[0m
+[31m--- RequÃªte : curl -s http://villa.localhost:3212/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -7136,24 +7056,256 @@ uri = /
 allowedMethods = GET
 index = index.html[0m
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -v http://localhost:3013/index.html[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 -X GET http://festival.localhost:3012/[0m
 
 [34m--- Expected Answer :[0m
-[32m[0m
+[32m<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple HTML Page</title>
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+	<h1>Welcome to FABULOUS WEBSITE Page</h1>
+	<p>This is a paragraph of text on my simple HTML page.</p>
+	<a href="test.html">Go to Test Page</a>
+	<p></p>
+	<p></p>
+	<a href="testResponseBuilder/upload/uploadEntryPoint.html">Go to UPLOADING FILE Page</a>
+</body>
+</html>[0m
 
 [34m--- Actual Answer :[0m
 
-[36m[0m
+[36m<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple HTML Page</title>
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+	<h1>Welcome to FABULOUS WEBSITE Page</h1>
+	<p>This is a paragraph of text on my simple HTML page.</p>
+	<a href="test.html">Go to Test Page</a>
+	<p></p>
+	<p></p>
+	<a href="testResponseBuilder/upload/uploadEntryPoint.html">Go to UPLOADING FILE Page</a>
+</body>
+</html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -v http://localhost:3013/index.html[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 -X GET http://cyborg.localhost:3112/[0m
 
 [34m--- Expected Answer :[0m
-[32m[0m
+[32m<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple HTML Page</title>
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+	<h1>Welcome to FABULOUS WEBSITE Page</h1>
+	<p>This is a paragraph of text on my simple HTML page.</p>
+	<a href="test.html">Go to Test Page</a>
+	<p></p>
+	<p></p>
+	<a href="testResponseBuilder/upload/uploadEntryPoint.html">Go to UPLOADING FILE Page</a>
+</body>
+</html>[0m
 
 [34m--- Actual Answer :[0m
 
-[36m[0m
+[36m<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple HTML Page</title>
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+	<h1>Welcome to FABULOUS WEBSITE Page</h1>
+	<p>This is a paragraph of text on my simple HTML page.</p>
+	<a href="test.html">Go to Test Page</a>
+	<p></p>
+	<p></p>
+	<a href="testResponseBuilder/upload/uploadEntryPoint.html">Go to UPLOADING FILE Page</a>
+</body>
+</html>[0m
+
+
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 -X GET http://villa.localhost:3212/[0m
+
+[34m--- Expected Answer :[0m
+[32m<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple HTML Page</title>
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+	<h1>Welcome to FABULOUS WEBSITE Page</h1>
+	<p>This is a paragraph of text on my simple HTML page.</p>
+	<a href="test.html">Go to Test Page</a>
+	<p></p>
+	<p></p>
+	<a href="testResponseBuilder/upload/uploadEntryPoint.html">Go to UPLOADING FILE Page</a>
+</body>
+</html>[0m
+
+[34m--- Actual Answer :[0m
+
+[36m<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple HTML Page</title>
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+	<h1>Welcome to FABULOUS WEBSITE Page</h1>
+	<p>This is a paragraph of text on my simple HTML page.</p>
+	<a href="test.html">Go to Test Page</a>
+	<p></p>
+	<p></p>
+	<a href="testResponseBuilder/upload/uploadEntryPoint.html">Go to UPLOADING FILE Page</a>
+</body>
+</html>[0m
+
+
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 -X GET http://festival.localhost:3012/index.html[0m
+
+[34m--- Expected Answer :[0m
+[32m<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple HTML Page</title>
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+	<h1>Welcome to FABULOUS WEBSITE Page</h1>
+	<p>This is a paragraph of text on my simple HTML page.</p>
+	<a href="test.html">Go to Test Page</a>
+	<p></p>
+	<p></p>
+	<a href="testResponseBuilder/upload/uploadEntryPoint.html">Go to UPLOADING FILE Page</a>
+</body>
+</html>[0m
+
+[34m--- Actual Answer :[0m
+
+[36m<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple HTML Page</title>
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+	<h1>Welcome to FABULOUS WEBSITE Page</h1>
+	<p>This is a paragraph of text on my simple HTML page.</p>
+	<a href="test.html">Go to Test Page</a>
+	<p></p>
+	<p></p>
+	<a href="testResponseBuilder/upload/uploadEntryPoint.html">Go to UPLOADING FILE Page</a>
+</body>
+</html>[0m
+
+
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 -X GET http://cyborg.localhost:3112/index.html[0m
+
+[34m--- Expected Answer :[0m
+[32m<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple HTML Page</title>
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+	<h1>Welcome to FABULOUS WEBSITE Page</h1>
+	<p>This is a paragraph of text on my simple HTML page.</p>
+	<a href="test.html">Go to Test Page</a>
+	<p></p>
+	<p></p>
+	<a href="testResponseBuilder/upload/uploadEntryPoint.html">Go to UPLOADING FILE Page</a>
+</body>
+</html>[0m
+
+[34m--- Actual Answer :[0m
+
+[36m<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple HTML Page</title>
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+	<h1>Welcome to FABULOUS WEBSITE Page</h1>
+	<p>This is a paragraph of text on my simple HTML page.</p>
+	<a href="test.html">Go to Test Page</a>
+	<p></p>
+	<p></p>
+	<a href="testResponseBuilder/upload/uploadEntryPoint.html">Go to UPLOADING FILE Page</a>
+</body>
+</html>[0m
+
+
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 -X GET http://villa.localhost:3212/index.html[0m
+
+[34m--- Expected Answer :[0m
+[32m<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple HTML Page</title>
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+	<h1>Welcome to FABULOUS WEBSITE Page</h1>
+	<p>This is a paragraph of text on my simple HTML page.</p>
+	<a href="test.html">Go to Test Page</a>
+	<p></p>
+	<p></p>
+	<a href="testResponseBuilder/upload/uploadEntryPoint.html">Go to UPLOADING FILE Page</a>
+</body>
+</html>[0m
+
+[34m--- Actual Answer :[0m
+
+[36m<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple HTML Page</title>
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+	<h1>Welcome to FABULOUS WEBSITE Page</h1>
+	<p>This is a paragraph of text on my simple HTML page.</p>
+	<a href="test.html">Go to Test Page</a>
+	<p></p>
+	<p></p>
+	<a href="testResponseBuilder/upload/uploadEntryPoint.html">Go to UPLOADING FILE Page</a>
+</body>
+</html>[0m
 
 
 [34m=== Configuration : Requests_Tester/config_files/config_014.ini[0m
@@ -7221,7 +7373,7 @@ allowedMethods = GET
 index = index.html
 listingDirectory    = 1[0m
 
-[31m--- RequÃªte : curl -v http://festival.localhost:3014/index.html[0m
+[31m--- RequÃªte : curl -s http://festival.localhost:3014/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -7263,7 +7415,7 @@ listingDirectory    = 1[0m
 </html>[0m
 
 
-[31m--- RequÃªte : curl -v http://cyborg.localhost:3014/index.html[0m
+[31m--- RequÃªte : curl -s http://cyborg.localhost:3014/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -7305,7 +7457,7 @@ listingDirectory    = 1[0m
 </html>[0m
 
 
-[31m--- RequÃªte : curl -v http://villa.localhost:3014/index.html[0m
+[31m--- RequÃªte : curl -s http://villa.localhost:3014/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -7349,7 +7501,7 @@ listingDirectory    = 1[0m
 
 [34m=== Configuration : Requests_Tester/config_files/config_015.ini[0m
 
-[33m###############################  LISTING DIRECTORY CASE 2 #############################
+[33m############################  LISTING DIRECTORY CASE 2 #########################
 
 ################################    RESUME     #################################
 #				
@@ -7412,7 +7564,7 @@ allowedMethods = GET
 index = index.html
 listingDirectory    = 0  # When 0, needs to switch to the index logic[0m
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -v http://localhost:3015/index.html[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3015/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -7454,7 +7606,7 @@ listingDirectory    = 0  # When 0, needs to switch to the index logic[0m
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -v http://localhost:3015/index.html[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 http://localhost:3015/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -7561,7 +7713,7 @@ allowedMethods = GET
 index = index.html
 listingDirectory    = 1111111  # When shitty input, listingDirectory = false[0m
 
-[31m--- RequÃªte : curl -v --connect-timeout 2 --max-time 2  http://festival.localhost:3016/index.html[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2  http://festival.localhost:3016/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -7603,7 +7755,7 @@ listingDirectory    = 1111111  # When shitty input, listingDirectory = false[0m
 </html>[0m
 
 
-[31m--- RequÃªte : curl -v --connect-timeout 2 --max-time 2  http://cyborg.localhost:3016/index.html[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2  http://cyborg.localhost:3016/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -7645,7 +7797,7 @@ listingDirectory    = 1111111  # When shitty input, listingDirectory = false[0m
 </html>[0m
 
 
-[31m--- RequÃªte : curl -v --connect-timeout 2 --max-time 2  http://villa.localhost:3016/index.html[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2  http://villa.localhost:3016/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -7736,7 +7888,7 @@ uri = /
 redirection = _websites/festival/index.html
 allowedMethods = GET[0m
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -v --connect-timeout 2 --max-time 2  http://localhost:3017/index.html[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2  http://localhost:3017/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -7746,7 +7898,7 @@ allowedMethods = GET[0m
 [36m[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -v --connect-timeout 2 --max-time 2  http://localhost:3017/index.html[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2  http://localhost:3017/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -7814,7 +7966,7 @@ uri = /_websites/cyborg_gaming
 allowedMethods = GET
 index = index.html[0m
 
-[31m--- RequÃªte : curl -v --connect-timeout 2 --max-time 2http://localhost:3018[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 http://localhost:3018[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -7878,7 +8030,7 @@ uri = /loop2
 redirection = loop1/
 allowedMethods = GET[0m
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -v --connect-timeout 2 --max-time 2 http://localhost:3019/index.html[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 --connect-timeout 2 --max-time 2 http://localhost:3019/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -7920,7 +8072,7 @@ allowedMethods = GET[0m
 </html>[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -v --connect-timeout 2 --max-time 2 http://localhost:3019/index.html[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 --connect-timeout 2 --max-time 2 http://localhost:3019/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -8011,7 +8163,7 @@ allowedRoutes		= route1
 uri = /
 redirection = http://www.example.com[0m
 
-[31m--- RequÃªte : curl -v --connect-timeout 2 --max-time 2 http://localhost:3020[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 http://localhost:3020[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -8086,7 +8238,7 @@ allowedMethods = GET
 #uploadAllowed = 1
 #uploadDirectory = /uploads[0m
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -v --connect-timeout 2 --max-time 2 http://localhost:3021/index.html[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 --connect-timeout 2 --max-time 2 http://localhost:3021/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -8096,7 +8248,7 @@ allowedMethods = GET
 [36m[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 -v --connect-timeout 2 --max-time 2 http://localhost:3021/index.html[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 --connect-timeout 2 --max-time 2 http://localhost:3021/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -8176,7 +8328,7 @@ uploadAllowed = 1
 uploadDirectory = uploads/
 index = index1.html
 # Voir avec Seb au moment des vrais tests pour changer l'extension des CGI 
-#cgiAllowed = .php, .out
+#	 = .php, .out
 
 
 # Redirection = Cat typing on a computer
@@ -8192,7 +8344,7 @@ index = index1.html
 #uploadAllowed = 1
 #uploadDirectory = uploads/[0m
 
-[31m--- RequÃªte : curl -v --connect-timeout 2 --max-time 2 http://localhost:3022/cgi/main_inout.out[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 http://localhost:3022/cgi/main_inout.out[0m
 
 [34m--- Expected Answer :[0m
 [32m<html><head><title>My Styled Page</title></head><body style="background-color: #f0f0f0; text-align: center; padding: 50px;"><h1 style="color: #ff5733; font-family: Arial, sans-serif;">Hello, World!</h1><p style="color: #555; font-size: 18px;">This is a simple page with inline CSS.</p></body></html>[0m
@@ -8202,7 +8354,7 @@ index = index1.html
 [36m<html><head><title>My Styled Page</title></head><body style="background-color: #f0f0f0; text-align: center; padding: 50px;"><h1 style="color: #ff5733; font-family: Arial, sans-serif;">Hello, World!</h1><p style="color: #555; font-size: 18px;">This is a simple page with inline CSS.</p></body></html>[0m
 
 
-[31m--- RequÃªte : curl -X --connect-timeout 2 --max-time 2 POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3022/cgi/main_inout.out[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3022/cgi/main_inout.out[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -8212,29 +8364,17 @@ index = index1.html
 [36m[0m
 
 
-[31m--- RequÃªte : curl -v --connect-timeout 2 --max-time 2 http://localhost:3122/cgi/main_inout.out[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 --output response.bin http://localhost:3122/cgi/main_inout.out[0m
 
 [34m--- Expected Answer :[0m
-[32mELF>@x7@8@@@@ØØhhEE   tt-==€ˆ - = =ğğ88800hhhDDSåtd88800Påtd!!!44QåtdRåtd-==pp/lib64/ld-linux-x86-64.so.2 GNUÀ€ÀGNUÍ	*×{j_ö7¼’m6\¡S­GNUÑeÎm| -29J˜ § "__cxa_finalizereadwrite__libc_start_mainputsstrlen__stack_chk_failprintflibc.so.6GLIBC_2.4GLIBC_2.2.5GLIBC_2.34_ITM_deregisterTMCloneTable__gmon_start___ITM_registerTMCloneTableQii[ui	e´‘–q=à˜= @@Ø?à?è?	ğ?
-ø?¨?°?¸?À?È?Ğ?óúHƒìH‹Ù/H…ÀtÿĞHƒÄÃÿ5r/òÿ%s/óúhòéáÿÿÿóúhòéÑÿÿÿóúhòéÁÿÿÿóúhòé±ÿÿÿóúhòé¡ÿÿÿóúhòé‘ÿÿÿóúòÿ%]/Dóúòÿ%ı.Dóúòÿ%õ.Dóúòÿ%í.Dóúòÿ%å.Dóúòÿ%İ.Dóúòÿ%Õ.Dóú1íI‰Ñ^H‰âHƒäğPTE1À1ÉH=Êÿ³.ôf.„H=Ù.HÒ.H9øtH‹–.H…Àt	ÿà€Ã€H=©.H5¢.H)şH‰ğHÁî?HÁøHÆHÑştH‹e.H…ÀtÿàfDÃ€óú€=e.u+UHƒ=B.H‰åtH‹=F.èÉşÿÿèdÿÿÿÆ=.]ÃÃ€óúéwÿÿÿóúUH‰åHƒìPdH‹%(H‰Eø1ÀHÇEàHÇEèÇEğë.HUàH‹EÀHĞÆHEàH‰Çè‰şÿÿH‰ÂHEàH‰Æ¿èeşÿÿHEàºH‰Æ¿èşÿÿH‰EÀHƒ}À±Hƒ}ÀyHH‰ÇèşÿÿHH‰EÈH´H‰EĞH‹EÈH‰Çèşÿÿ‰E¼HÕH‰EØH‹EĞH‰ÆHÈH‰Ç¸èşÿÿ‹E¼‰ÆH²H‰Ç¸èúıÿÿH‹EØH‰ÆH”H‰Ç¸èßıÿÿH‹EÈH‰ÆHyH‰Ç¸èÄıÿÿ¸H‹UødH+%(tè›ıÿÿÉÃóúHƒìHƒÄÃerror read<html><head><title>My Styled Page</title></head><body style="background-color: #f0f0f0; text-align: center; padding: 50px;"><h1 style="color: #ff5733; font-family: Arial, sans-serif;">Hello, World!</h1><p style="color: #555; font-size: 18px;">This is a simple page with inline CSS.</p></body></html>HTTP/1.1 200 OK
-Content-Type: text/html
-Content-Length: 
-
-%s%d;4îÿÿhïÿÿïÿÿ¨pïÿÿPYğÿÿÀzRxïÿÿ&D$4 îÿÿpFJw€?:*3$"\hîÿÿt`îÿÿ`Œ‘ïÿÿNE†CEà Q8=˜=õşÿo°øØ
-Á?ØÀ	ûÿÿoşÿÿoØÿÿÿoğÿÿoºùÿÿo =0@P`p€@GCC: (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0ñÿ	Œ ñÿ0 `3 I@U˜=|àˆ=§ñÿñÿ´p"ñÿÂ =Ë!Ş?ô ± @->P@W8]p‹¯@¼ Ë@Ø ç@µ&ì@øéNı@	 #">Scrt1.o__abi_tagcrtstuff.cderegister_tm_clones__do_global_dtors_auxcompleted.0__do_global_dtors_aux_fini_array_entryframe_dummy__frame_dummy_init_array_entrymain_inout.c__FRAME_END___DYNAMIC__GNU_EH_FRAME_HDR_GLOBAL_OFFSET_TABLE___libc_start_main@GLIBC_2.34_ITM_deregisterTMCloneTableputs@GLIBC_2.2.5write@GLIBC_2.2.5_edata_finistrlen@GLIBC_2.2.5__stack_chk_fail@GLIBC_2.4printf@GLIBC_2.2.5read@GLIBC_2.2.5__data_start__gmon_start____dso_handle_IO_stdin_used_end__bss_startmain__TMC_END___ITM_registerTMCloneTable__cxa_finalize@GLIBC_2.2.5_init.symtab.strtab.shstrtab.interp.note.gnu.property.note.gnu.build-id.note.ABI-tag.gnu.hash.dynsym.dynstr.gnu.version.gnu.version_r.rela.dyn.rela.plt.init.plt.got.plt.sec.text.fini.rodata.eh_frame_hdr.eh_frame.init_array.fini_array.dynamic.data.bss.comment#8806hh$IŒŒ Wöÿÿo°°$aØØ iøøÁqÿÿÿoºº~şÿÿoØØ@À—BØØ¡œ  p§°  `¹7¿88Å  Í!!4ÛÈ!È!¬å=-ñ˜=˜-ı = -ğ«?/p@0@000+@0Ø	4D\6[0m
+[32m[0m
 
 [34m--- Actual Answer :[0m
 
-[36mELF>@x7@8@@@@ØØhhEE   tt-==€ˆ - = =ğğ88800hhhDDSåtd88800Påtd!!!44QåtdRåtd-==pp/lib64/ld-linux-x86-64.so.2 GNUÀ€ÀGNUÍ	*×{j_ö7¼’m6\¡S­GNUÑeÎm| -29J˜ § "__cxa_finalizereadwrite__libc_start_mainputsstrlen__stack_chk_failprintflibc.so.6GLIBC_2.4GLIBC_2.2.5GLIBC_2.34_ITM_deregisterTMCloneTable__gmon_start___ITM_registerTMCloneTableQii[ui	e´‘–q=à˜= @@Ø?à?è?	ğ?
-ø?¨?°?¸?À?È?Ğ?óúHƒìH‹Ù/H…ÀtÿĞHƒÄÃÿ5r/òÿ%s/óúhòéáÿÿÿóúhòéÑÿÿÿóúhòéÁÿÿÿóúhòé±ÿÿÿóúhòé¡ÿÿÿóúhòé‘ÿÿÿóúòÿ%]/Dóúòÿ%ı.Dóúòÿ%õ.Dóúòÿ%í.Dóúòÿ%å.Dóúòÿ%İ.Dóúòÿ%Õ.Dóú1íI‰Ñ^H‰âHƒäğPTE1À1ÉH=Êÿ³.ôf.„H=Ù.HÒ.H9øtH‹–.H…Àt	ÿà€Ã€H=©.H5¢.H)şH‰ğHÁî?HÁøHÆHÑştH‹e.H…ÀtÿàfDÃ€óú€=e.u+UHƒ=B.H‰åtH‹=F.èÉşÿÿèdÿÿÿÆ=.]ÃÃ€óúéwÿÿÿóúUH‰åHƒìPdH‹%(H‰Eø1ÀHÇEàHÇEèÇEğë.HUàH‹EÀHĞÆHEàH‰Çè‰şÿÿH‰ÂHEàH‰Æ¿èeşÿÿHEàºH‰Æ¿èşÿÿH‰EÀHƒ}À±Hƒ}ÀyHH‰ÇèşÿÿHH‰EÈH´H‰EĞH‹EÈH‰Çèşÿÿ‰E¼HÕH‰EØH‹EĞH‰ÆHÈH‰Ç¸èşÿÿ‹E¼‰ÆH²H‰Ç¸èúıÿÿH‹EØH‰ÆH”H‰Ç¸èßıÿÿH‹EÈH‰ÆHyH‰Ç¸èÄıÿÿ¸H‹UødH+%(tè›ıÿÿÉÃóúHƒìHƒÄÃerror read<html><head><title>My Styled Page</title></head><body style="background-color: #f0f0f0; text-align: center; padding: 50px;"><h1 style="color: #ff5733; font-family: Arial, sans-serif;">Hello, World!</h1><p style="color: #555; font-size: 18px;">This is a simple page with inline CSS.</p></body></html>HTTP/1.1 200 OK
-Content-Type: text/html
-Content-Length: 
-
-%s%d;4îÿÿhïÿÿïÿÿ¨pïÿÿPYğÿÿÀzRxïÿÿ&D$4 îÿÿpFJw€?:*3$"\hîÿÿt`îÿÿ`Œ‘ïÿÿNE†CEà Q8=˜=õşÿo°øØ
-Á?ØÀ	ûÿÿoşÿÿoØÿÿÿoğÿÿoºùÿÿo =0@P`p€@GCC: (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0ñÿ	Œ ñÿ0 `3 I@U˜=|àˆ=§ñÿñÿ´p"ñÿÂ =Ë!Ş?ô ± @->P@W8]p‹¯@¼ Ë@Ø ç@µ&ì@øéNı@	 #">Scrt1.o__abi_tagcrtstuff.cderegister_tm_clones__do_global_dtors_auxcompleted.0__do_global_dtors_aux_fini_array_entryframe_dummy__frame_dummy_init_array_entrymain_inout.c__FRAME_END___DYNAMIC__GNU_EH_FRAME_HDR_GLOBAL_OFFSET_TABLE___libc_start_main@GLIBC_2.34_ITM_deregisterTMCloneTableputs@GLIBC_2.2.5write@GLIBC_2.2.5_edata_finistrlen@GLIBC_2.2.5__stack_chk_fail@GLIBC_2.4printf@GLIBC_2.2.5read@GLIBC_2.2.5__data_start__gmon_start____dso_handle_IO_stdin_used_end__bss_startmain__TMC_END___ITM_registerTMCloneTable__cxa_finalize@GLIBC_2.2.5_init.symtab.strtab.shstrtab.interp.note.gnu.property.note.gnu.build-id.note.ABI-tag.gnu.hash.dynsym.dynstr.gnu.version.gnu.version_r.rela.dyn.rela.plt.init.plt.got.plt.sec.text.fini.rodata.eh_frame_hdr.eh_frame.init_array.fini_array.dynamic.data.bss.comment#8806hh$IŒŒ Wöÿÿo°°$aØØ iøøÁqÿÿÿoºº~şÿÿoØØ@À—BØØ¡œ  p§°  `¹7¿88Å  Í!!4ÛÈ!È!¬å=-ñ˜=˜-ı = -ğ«?/p@0@000+@0Ø	4D\6[0m
+[36m[0m
 
 
-[31m--- RequÃªte : curl -X --connect-timeout 2 --max-time 2 POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3122/cgi/main_inout.out[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3122/cgi/main_inout.out[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -8344,7 +8484,7 @@ cgiAllowed = .php, .out
 #uploadAllowed = 1
 #uploadDirectory = uploads/[0m
 
-[31m--- RequÃªte : curl -v --connect-timeout 2 --max-time 2 http://localhost:3023/index.html[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 http://localhost:3023/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -8386,7 +8526,7 @@ cgiAllowed = .php, .out
 </html>[0m
 
 
-[31m--- RequÃªte : curl -v --connect-timeout 2 --max-time 2 http://localhost:3023/index.html[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 http://localhost:3023/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -8501,7 +8641,17 @@ cgiAllowed = .php, .out
 #uploadAllowed = 1
 #uploadDirectory = uploads/[0m
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2-v http://localhost:3022/cgi/a.out[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 http://localhost:3022/cgi/a.out[0m
+
+[34m--- Expected Answer :[0m
+[32m<html><head><title>My Styled Page</title></head><body style="background-color: #f0f0f0; text-align: center; padding: 50px;"><h1 style="color: #ff5733; font-family: Arial, sans-serif;">Hello, World!</h1><p style="color: #555; font-size: 18px;">This is a simple page with inline CSS.</p></body></html>[0m
+
+[34m--- Actual Answer :[0m
+
+[36m<html><head><title>My Styled Page</title></head><body style="background-color: #f0f0f0; text-align: center; padding: 50px;"><h1 style="color: #ff5733; font-family: Arial, sans-serif;">Hello, World!</h1><p style="color: #555; font-size: 18px;">This is a simple page with inline CSS.</p></body></html>[0m
+
+
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3022/cgi/a.out[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -8511,7 +8661,17 @@ cgiAllowed = .php, .out
 [36m[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2-X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3022/cgi/a.out[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 http://localhost:3022/cgi/a.out[0m
+
+[34m--- Expected Answer :[0m
+[32m<html><head><title>My Styled Page</title></head><body style="background-color: #f0f0f0; text-align: center; padding: 50px;"><h1 style="color: #ff5733; font-family: Arial, sans-serif;">Hello, World!</h1><p style="color: #555; font-size: 18px;">This is a simple page with inline CSS.</p></body></html>[0m
+
+[34m--- Actual Answer :[0m
+
+[36m<html><head><title>My Styled Page</title></head><body style="background-color: #f0f0f0; text-align: center; padding: 50px;"><h1 style="color: #ff5733; font-family: Arial, sans-serif;">Hello, World!</h1><p style="color: #555; font-size: 18px;">This is a simple page with inline CSS.</p></body></html>[0m
+
+
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3022/cgi/main_errin.out[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -8521,7 +8681,7 @@ cgiAllowed = .php, .out
 [36m[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2 http://localhost:3022/cgi/a.out[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3022/cgi/main_errmid.out[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -8531,7 +8691,7 @@ cgiAllowed = .php, .out
 [36m[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2-X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3022/cgi/main_errin.out[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3022/cgi/errout/out[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -8541,7 +8701,7 @@ cgiAllowed = .php, .out
 [36m[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2-X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3022/cgi/main_errmid.out[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3022/cgi/in.out[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -8551,7 +8711,7 @@ cgiAllowed = .php, .out
 [36m[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2-X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3022/cgi/errout/out[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3022/cgi/inout.out[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -8561,7 +8721,7 @@ cgiAllowed = .php, .out
 [36m[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2-X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3022/cgi/in.out[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 --output response.bin http://localhost:3122/cgi/a.out[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -8571,27 +8731,7 @@ cgiAllowed = .php, .out
 [36m[0m
 
 
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2-X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3022/cgi/inout.out[0m
-
-[34m--- Expected Answer :[0m
-[32m[0m
-
-[34m--- Actual Answer :[0m
-
-[36m[0m
-
-
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2-v http://localhost:3122/cgi/a.out[0m
-
-[34m--- Expected Answer :[0m
-[32m[0m
-
-[34m--- Actual Answer :[0m
-
-[36m[0m
-
-
-[31m--- RequÃªte : curl --connect-timeout 2 --max-time 2-X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3122/cgi/a.out[0m
+[31m--- RequÃªte : curl -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3122/cgi/a.out[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -8674,7 +8814,7 @@ cgiAllowed = .php, .out
 #uploadAllowed = 1
 #uploadDirectory = uploads/[0m
 
-[31m--- RequÃªte : curl -v http://localhost:3025/index.html[0m
+[31m--- RequÃªte : curl -s http://localhost:3025/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>
@@ -8716,7 +8856,7 @@ cgiAllowed = .php, .out
 </html>[0m
 
 
-[31m--- RequÃªte : curl -v http://localhost:3025/index.html[0m
+[31m--- RequÃªte : curl -s http://localhost:3025/index.html[0m
 
 [34m--- Expected Answer :[0m
 [32m<!DOCTYPE html>

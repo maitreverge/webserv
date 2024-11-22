@@ -1,4 +1,4 @@
-curl --connect-timeout 2 --max-time 2 -v --connect-timeout 2 --max-time 2 http://localhost:3021/index.html
+curl -s --connect-timeout 2 --max-time 2 --connect-timeout 2 --max-time 2 http://localhost:3021/index.html
 --END-REQUEST--
-curl --connect-timeout 2 --max-time 2 -v --connect-timeout 2 --max-time 2 http://localhost:3021/index.html
+curl -s --connect-timeout 2 --max-time 2 --connect-timeout 2 --max-time 2 http://localhost:3021/index.html
 --END-REQUEST--
