@@ -9,7 +9,7 @@ void	ResponseBuilder::buildHeaders(){
 	errorCode codes;
 
 	stringstream	streamStatusLine,
-					streamTimeStamp,
+					// streamTimeStamp,
 					streamContentLenght,
 					streamMasterHeader;
 
@@ -27,11 +27,11 @@ void	ResponseBuilder::buildHeaders(){
 
 	
 	// ! Date:
-	streamTimeStamp		<< "Date:"
-						<< SPACE 
-						<< timeStamp::getTime()
-						<< HTTP_HEADER_SEPARATOR;
-	Headers.timeStamp = streamTimeStamp.str();
+	// streamTimeStamp		<< "Date:"
+	// 					<< SPACE 
+	// 					<< timeStamp::getTime()
+	// 					<< HTTP_HEADER_SEPARATOR;
+	// Headers.timeStamp = streamTimeStamp.str();
 	
 	
 	// ! Content-Length
@@ -86,7 +86,7 @@ void	ResponseBuilder::buildHeaders(){
 	// ======================== BUILDING FINAL HEADERS ========================
 
 	streamMasterHeader	<< Headers.statusLine
-						<< Headers.timeStamp
+						// << Headers.timeStamp
 						<< Headers.contentLenght
 						// Optionals
 						<< Headers.contentType 

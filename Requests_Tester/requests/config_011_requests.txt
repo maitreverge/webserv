@@ -1,6 +1,6 @@
- curl -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3011/_websites/festival
+ curl -i -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3011/_websites/festival
 --END-REQUEST--
- curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3011/_websites/cyborg_gaming
+ curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3011/_websites/cyborg_gaming
 --END-REQUEST--
- curl -s --connect-timeout 2 --max-time 2 -X POST http://localhost:3011/_websites/villa_agency
+ curl -i -s --connect-timeout 2 --max-time 2 -X POST http://localhost:3011/_websites/villa_agency
 --END-REQUEST--

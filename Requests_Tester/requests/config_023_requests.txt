@@ -1,4 +1,12 @@
-curl -s --connect-timeout 2 --max-time 2 http://localhost:3023/index.html
+curl -i -s --connect-timeout 2 --max-time 2 --output response.bin -X GET http://localhost:3023/cgi/main_inout.out
 --END-REQUEST--
-curl -s --connect-timeout 2 --max-time 2 http://localhost:3023/index.html
+curl -i -s --connect-timeout 2 --max-time 2 -X POST http://localhost:3023/cgi/main_inout.out
+--END-REQUEST--
+curl -i -s --connect-timeout 2 --max-time 2 --output response.bin -X GET http://localhost:3123/cgi/main_inout.out
+--END-REQUEST--
+curl -i -s --connect-timeout 2 --max-time 2 -X POST http://localhost:3123/cgi/main_inout.out
+--END-REQUEST--
+curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3223/cgi/main_inout.out
+--END-REQUEST--
+curl -i -s --connect-timeout 2 --max-time 2 -X POST http://localhost:3223/cgi/main_inout.out
 --END-REQUEST--

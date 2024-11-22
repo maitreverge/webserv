@@ -1,14 +1,14 @@
- curl -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3003/delete_folder
+ curl -i -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3003/delete_folder
 --END-REQUEST--
- curl -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3003/delete_folder/file_1.txt
+ curl -i -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3003/delete_folder/file_1.txt
 --END-REQUEST--
- curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3003/delete_folder/file_1.txt
+ curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3003/delete_folder/file_1.txt
 --END-REQUEST--
- curl -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3003/delete_folder/file_2.txt
+ curl -i -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3003/delete_folder/file_2.txt
 --END-REQUEST--
- curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3003/delete_folder/file_2.txt
+ curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3003/delete_folder/file_2.txt
 --END-REQUEST--
- curl -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3003/delete_folder/folder_1
+ curl -i -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3003/delete_folder/folder_1
 --END-REQUEST--
- curl -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3003/delete_folder/folder_1/hello.txt
+ curl -i -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3003/delete_folder/folder_1/hello.txt
 --END-REQUEST--

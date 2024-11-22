@@ -1,8 +1,8 @@
-curl -s --connect-timeout 2 --max-time 2 http://localhost:3022/cgi/main_inout.out
+curl -i -s --connect-timeout 2 --max-time 2 http://localhost:3022/cgi/main_inout.out
 --END-REQUEST--
-curl -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3022/cgi/main_inout.out
+curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3022/cgi/main_inout.out
 --END-REQUEST--
-curl -s --connect-timeout 2 --max-time 2 --output response.bin http://localhost:3122/cgi/main_inout.out
+curl -i -s --connect-timeout 2 --max-time 2 --output response.bin http://localhost:3122/cgi/main_inout.out
 --END-REQUEST--
-curl -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3122/cgi/main_inout.out
+curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3122/cgi/main_inout.out
 --END-REQUEST--

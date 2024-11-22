@@ -1,3 +1,7 @@
+HTTP/1.1 200 OK
+Content-Length: 32229
+Content-Type: text/html
+
 <!doctype html>
 <html lang="en">
     <head>

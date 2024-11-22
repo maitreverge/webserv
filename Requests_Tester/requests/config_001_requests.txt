@@ -1,14 +1,14 @@
- curl -s  --connect-timeout 2 --max-time 2 http://localhost:3001/index1.html
+ curl -i -s -i --connect-timeout 2 --max-time 2 -X GET http://localhost:3001/index1.html
 --END-REQUEST--
- curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3001
+ curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3001
 --END-REQUEST--
- curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3001/
+ curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3001/
 --END-REQUEST--
- curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3001/nope
+ curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3001/nope
 --END-REQUEST--
- curl -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3001/_websites/festival/index.html
+ curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3001/_websites/festival/index.html
 --END-REQUEST--
- curl -s --connect-timeout 2 --max-time 2 -X POST http://localhost:3001/
+ curl -i -s --connect-timeout 2 --max-time 2 -X POST http://localhost:3001/
 --END-REQUEST--
- curl -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3001/
+ curl -i -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3001/
 --END-REQUEST--

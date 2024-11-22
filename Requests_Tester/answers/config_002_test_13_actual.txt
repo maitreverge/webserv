@@ -1,3 +1,7 @@
+HTTP/1.1 201 Created
+Content-Length: 801
+Content-Type: text/html
+
 <!DOCTYPE html>
 <html>
 <head>
