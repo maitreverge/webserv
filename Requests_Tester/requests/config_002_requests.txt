@@ -48,9 +48,9 @@
 --END-REQUEST--
  curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/
 --END-REQUEST--
-											WORK NEEDLE
  curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/index.html
 --END-REQUEST--
  curl -i -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3002/
 --END-REQUEST--
  curl -i -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3002/index.html
+--END-REQUEST--
