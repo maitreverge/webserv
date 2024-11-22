@@ -24,3 +24,8 @@ echo "This is hello.txt content" > file_2.txt
 
 # Back to root
 cd ../../
+
+# Create a file which can't be read
+touch no_read_file.txt
+echo "Content of no_read_file.txt" > no_read_file.txt
+chmod 044 no_read_file.txt 
