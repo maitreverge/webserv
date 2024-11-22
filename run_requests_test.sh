@@ -23,83 +23,139 @@ CHECK_FILE="Requests_Tester/check_file.ans"
 mkdir -p "$ANSWERS_DIR"
 mkdir -p "$DIFF_DIR"
 
-# Boucle sur chaque fichier de configuration dans le répertoire config_files
-for config_file in "$CONFIG_DIR"/*.ini; do
-	# Extraction du numéro de configuration (par exemple, config_1.ini -> 1)
-	config_number=$(basename "$config_file" .ini | sed 's/config_//')
+# Vérifie si un fichier de configuration est passé en argument
+if [ -n "$1" ]; then
+    CONFIG_FILE="$1" # Si un fichier est spécifié, on l'utilise
+else
+    CONFIG_FILE="" # Sinon, on traite tous les fichiers
+fi
 
-	# Vérification et colorisation des résultats (conf file)
-	echo -e "${BLUE}=== Configuration : ${config_file}${NC}" >> "$CHECK_FILE"
-	echo >> "$CHECK_FILE"
-	echo -e "${YELLOW}$(cat "$config_file")${NC}" >> "$CHECK_FILE"
-	echo >> "$CHECK_FILE"
+# Si un fichier spécifique est donné, on le traite
+if [ -n "$CONFIG_FILE" ]; then
+    # Traitement d'un seul fichier de configuration
+    config_file="$CONFIG_FILE"
+    # Ton code pour traiter ce fichier unique
+    config_number=$(basename "$config_file" .ini | sed 's/config_//')
 
-	# Lancement de Webserv avec le fichier de configuration
-	./webserv "$config_file" > /dev/null 2>&1 &  # Lancement en arrière-plan de Webserv avec le fichier de configuration
-	webserv_pid=$! # Récupère le PID du processus Webserv
-	
+    echo -e "${BLUE}=== Configuration : ${config_file}${NC}" >> "$CHECK_FILE"
+    echo >> "$CHECK_FILE"
+    echo -e "${YELLOW}$(cat "$config_file")${NC}" >> "$CHECK_FILE"
+    echo >> "$CHECK_FILE"
+
+    # Lancer Webserv
+    ./webserv "$config_file" > /dev/null 2>&1 &  # Lancement en arrière-plan de Webserv
+    webserv_pid=$!  # Récupère le PID du processus Webserv
+    
+    # Attente pour permettre à Webserv de démarrer
 	#TODO&&&&&&&&&&&&&&& DELAY TO BE ADJUSTED? &&&&&&&&&&&&&&&&&&&&
-	sleep 0.2 # Laisser un peu de temps pour que Webserv démarre
+    sleep 0.2
 	#TODO&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-	# Boucle sur les fichiers de requêtes pour ce fichier de configuration
-	request_file="$REQUESTS_DIR/config_${config_number}_requests.txt"
+    # Boucle pour lire les requêtes et envoyer à Webserv
+    request_file="$REQUESTS_DIR/config_${config_number}_requests.txt"
+    test_counter=1
+    while IFS= read -r request; do
+        # Traitement des requêtes, comme dans ton code précédent
+        if [[ -z "$request" || "$request" == "--END-REQUEST--" ]]; then
+            continue
+        fi
 
-	test_counter=1
-	# Lire les requêtes dans le fichier et envoyer chaque requête individuellement
-	request_counter=1
-	while IFS= read -r request; do
-		# Si on rencontre un délimiteur de fin de requête (ligne vide ou "--END-REQUEST--"), on passe à la requête suivante
-		if [[ -z "$request" || "$request" == "--END-REQUEST--" ]]; then
-			continue
-		fi
+        response_file="$ANSWERS_DIR/config_${config_number}_test_${test_counter}_actual.txt"
+        http_response=$($request)
 
-		# Envoi de la requête à Webserv et enregistrement de la réponse
-		response_file="$ANSWERS_DIR/config_${config_number}_test_${test_counter}_actual.txt"
-		http_response=$($request)
 
-		# Sauvegarde de la réponse
-		echo "$http_response" > "$response_file"
-		# Comparaison des réponses avec les résultats attendus
-		expected_answer_file="$EXPECTED_ANSWERS_DIR/config_${config_number}_test_${test_counter}_expected.txt"
-		
-		
 		#TODO && UNCOMMENT TO FILL EXPECTED_ANSWER_FILES &&&&&&&&&&
-		#echo "$http_response" > "$expected_answer_file"
+        #echo "$http_response" > "$response_file"
 		#TODO &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-		#TODO UNCOMMENT TO HAVE HTTP REQUEST
-		# curl -v "localhost:3${config_number}" -d @"$request_file" 2>&1 | grep "^>"
+        # Comparaison et enregistrement des réponses attendues
+        expected_answer_file="$EXPECTED_ANSWERS_DIR/config_${config_number}_test_${test_counter}_expected.txt"
+        
+        # Vérification des réponses
+        echo -e "${RED}--- Requête : $request${NC}" >> "$CHECK_FILE"
+        echo >> "$CHECK_FILE"
+        echo -e "${BLUE}--- Expected Answer :${NC}" >> "$CHECK_FILE"
+        echo -e "${GREEN}$(cat "$expected_answer_file")${NC}" >> "$CHECK_FILE"
+        echo >> "$CHECK_FILE"
+        echo -e "${BLUE}--- Actual Answer :${NC}" >> "$CHECK_FILE"
+        echo >> "$CHECK_FILE"
+        echo -e "${CYAN}$(cat "$response_file")${NC}" >> "$CHECK_FILE"
+        echo >> "$CHECK_FILE"
+        echo >> "$CHECK_FILE"
 
-		# Vérification et colorisation des résultats
-		echo -e "${RED}--- Requête : $request${NC}" >> "$CHECK_FILE"
-		echo >> "$CHECK_FILE"
-		echo -e "${BLUE}--- Expected Answer :${NC}" >> "$CHECK_FILE"
-		echo -e "${GREEN}$(cat "$expected_answer_file")${NC}" >> "$CHECK_FILE"
-		echo >> "$CHECK_FILE"
-		echo -e "${BLUE}--- Actual Answer :${NC}" >> "$CHECK_FILE"
-		echo >> "$CHECK_FILE"
-		echo -e "${CYAN}$(cat "$response_file")${NC}" >> "$CHECK_FILE"
-		echo >> "$CHECK_FILE"
-		echo >> "$CHECK_FILE"
+        diff_file="$DIFF_DIR/config_${config_number}_test_${test_counter}.diff"
+        
+        if diff -q "$response_file" "$expected_answer_file" > /dev/null; then
+            echo -e "${GREEN}config_$config_number, test $test_counter : $request ✅ Success${NC}"
+        else
+            echo -e "${GREEN}config_$config_number, test $test_counter : $request ❌ Failure${NC}"
+            diff "$response_file" "$expected_answer_file" > "$diff_file"
+            cat "$diff_file"
+        fi
+        test_counter=$((test_counter + 1))
+    done < "$request_file"
 
-		diff_file="$DIFF_DIR/config_${config_number}_test_${test_counter}.diff"
-		
-		if diff -q "$response_file" "$expected_answer_file" > /dev/null; then
-			echo -e "${GREEN}config_$config_number, test $test_counter : $request ✅ Success${NC}"
-		else
-			echo -e "${GREEN}config_$config_number, test $test_counter : $request ❌ Failure${NC}"
-			# Enregistrer le diff dans un fichier
-			diff "$response_file" "$expected_answer_file" > "$diff_file"
-			cat "$diff_file"
-		fi
-		test_counter=$((test_counter + 1))
-	done < "$request_file"
+    # Arrêter Webserv une fois tous les tests effectués
+    kill "$webserv_pid"
+    wait "$webserv_pid" 2>/dev/null || {
+        kill -9 "$webserv_pid" 2>/dev/null
+    }
 
-	# Arrêter Webserv une fois tous les tests effectués
-	kill "$webserv_pid"
-	wait "$webserv_pid" 2>/dev/null || {
-		kill -9 "$webserv_pid" 2>/dev/null
-	}
+else
+    # Sinon, on parcourt tous les fichiers de configuration
+    for config_file in "$CONFIG_DIR"/*.ini; do
+        # Traitement de chaque fichier de configuration comme précédemment
+        config_number=$(basename "$config_file" .ini | sed 's/config_//')
 
-done
+        echo -e "${BLUE}=== Configuration : ${config_file}${NC}" >> "$CHECK_FILE"
+        echo >> "$CHECK_FILE"
+        echo -e "${YELLOW}$(cat "$config_file")${NC}" >> "$CHECK_FILE"
+        echo >> "$CHECK_FILE"
+
+        ./webserv "$config_file" > /dev/null 2>&1 &  # Lancer Webserv en arrière-plan
+        webserv_pid=$!
+        
+        sleep 0.2  # Laisser du temps pour démarrer Webserv
+
+        request_file="$REQUESTS_DIR/config_${config_number}_requests.txt"
+        test_counter=1
+        while IFS= read -r request; do
+            if [[ -z "$request" || "$request" == "--END-REQUEST--" ]]; then
+                continue
+            fi
+
+            response_file="$ANSWERS_DIR/config_${config_number}_test_${test_counter}_actual.txt"
+            http_response=$($request)
+            echo "$http_response" > "$response_file"
+            
+            expected_answer_file="$EXPECTED_ANSWERS_DIR/config_${config_number}_test_${test_counter}_expected.txt"
+            echo -e "${RED}--- Requête : $request${NC}" >> "$CHECK_FILE"
+            echo >> "$CHECK_FILE"
+            echo -e "${BLUE}--- Expected Answer :${NC}" >> "$CHECK_FILE"
+            echo -e "${GREEN}$(cat "$expected_answer_file")${NC}" >> "$CHECK_FILE"
+            echo >> "$CHECK_FILE"
+            echo -e "${BLUE}--- Actual Answer :${NC}" >> "$CHECK_FILE"
+            echo >> "$CHECK_FILE"
+            echo -e "${CYAN}$(cat "$response_file")${NC}" >> "$CHECK_FILE"
+            echo >> "$CHECK_FILE"
+            echo >> "$CHECK_FILE"
+
+            diff_file="$DIFF_DIR/config_${config_number}_test_${test_counter}.diff"
+            
+            if diff -q "$response_file" "$expected_answer_file" > /dev/null; then
+                echo -e "${GREEN}config_$config_number, test $test_counter : $request ✅ Success${NC}"
+            else
+                echo -e "${GREEN}config_$config_number, test $test_counter : $request ❌ Failure${NC}"
+                diff "$response_file" "$expected_answer_file" > "$diff_file"
+                cat "$diff_file"
+            fi
+            test_counter=$((test_counter + 1))
+        done < "$request_file"
+
+        kill "$webserv_pid"
+        wait "$webserv_pid" 2>/dev/null || {
+            kill -9 "$webserv_pid" 2>/dev/null
+        }
+
+    done
+fi
