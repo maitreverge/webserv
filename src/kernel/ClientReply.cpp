@@ -6,62 +6,57 @@ void Server::replyClients()
 	for (size_t i = 0; i < this->_clients.size(); i++)
 	{		
 		if (this->_clients[i].ping)
-			continue;	
-		if (!this->_clients[i].headerRespons.empty())
-		{	
-			if (replyClient(i, this->_clients[i].headerRespons))
-				break ;	
-		}
-		else if (this->_clients[i].messageSend.empty())
+			continue;
+		if (this->_clients[i].sendFlag)
 		{
-			if (fillMessageSend(i))
+			if (this->replyClient(i, this->_clients[i].sendBuffer))
 				break ;
-		}
-		else if (replyClient(i, this->_clients[i].messageSend))
-			break ;
+		}		
+		else if (!this->_clients[i].headerRespons.empty())		
+			this->sendBuffering(i, this->_clients[i].headerRespons);
+		else if (this->_clients[i].messageSend.empty())		
+			this->fillMessageSend(i);
+		else 
+			this->sendBuffering(i, this->_clients[i].messageSend);	
 	}
 }
 
-bool Server::fillMessageSend(size_t i)
+void Server::fillMessageSend(const size_t i)
 {
 	try	{
 		if (this->_clients[i].responseBuilder.getBody(this->_clients[i]))
-			return false;	}
+			return ;	}
 	catch(const Server::ShortCircuitException& e)
-		{	return this->shortCircuit(e.getCode(), i), false;	}
+	{
+		this->shortCircuit(e.getCode(), i);			
+		return ; 	
+	}	
+	if (this->_clients[i].messageSend.empty())
+		this->_clients[i].sendFlag = true;
+	else										
+		this->sendBuffering(i, this->_clients[i].messageSend);
 	
-	if (!this->_clients[i].messageSend.empty())									
-		return replyClient(i, this->_clients[i].messageSend);	
-	else
-		return endReply(i);	
 }
 
-bool Server::endReply(size_t i)
+void Server::sendBuffering(const size_t i, std::vector<char> & response)
 {
-	Logger::getInstance().log(DEBUG, "End Reply",
-		this->_clients[i]);
-
-	if (this->_clients[i].exitRequired)	
-		return this->exitClient(i), true;						
-	this->_clients[i].headerRequest = RequestParser();
-	this->_clients[i].responseBuilder = ResponseBuilder();
-	this->_clients[i].chunkedSize = -1;
-	this->_clients[i].bodySize = 0;
-	this->_clients[i].ping = true;		
-	this->_clients[i].messageSend.clear();
-	return false;
+	Logger::getInstance().log(INFO, "Send Buffering", this->_clients[i]);
+	 
+	this->_clients[i].sendBuffer.insert(this->_clients[i].sendBuffer.end(),
+		response.begin(), response.end());
+	response.clear();
 }
 
-bool Server::replyClient(size_t i, std::vector<char> & response)
+bool Server::replyClient(const size_t i, std::vector<char> & resp)
 {	
 	Logger::getInstance().log(INFO, "Reply Client", this->_clients[i]);
-	Server::printVector(response);
+	Server::printVector(resp);
 	if (!FD_ISSET(this->_clients[i].fd, &Kernel::_writeSet))
 		return Logger::getInstance().log(DEBUG, "not ready to reply Client",
 			this->_clients[i]), false;
 	Logger::getInstance().log(WARNING, "ready to reply Client",
 		this->_clients[i]);
-	ssize_t ret = send(this->_clients[i].fd, response.data(), response.size(),
+	ssize_t ret = send(this->_clients[i].fd, resp.data(), resp.size(),
 		MSG_NOSIGNAL);
 	Kernel::cleanFdSet(this->_clients[i]);	
 	if (ret <= 0)
@@ -71,10 +66,27 @@ bool Server::replyClient(size_t i, std::vector<char> & response)
 		this->exitClient(i);
 		return true;
 	}
-	std::vector<char> str(response.data(), response.data()
-		+ static_cast<size_t>(ret));  		
+	std::vector<char> str(resp.data(), resp.data() + static_cast<size_t>(ret));  		
 	Logger::getInstance().log(DEBUG, "sent to client: ", this->_clients[i]); 
 	Server::printVector(str);
-	response.erase(response.begin(), response.begin() + ret);
+	resp.erase(resp.begin(), resp.begin() + ret);
+	if (resp.empty())
+		return this->endReply(i);
+	return false;
+}
+
+bool Server::endReply(const size_t i)
+{
+	Logger::getInstance().log(INFO, "End Reply", this->_clients[i]);
+
+	if (this->_clients[i].exitRequired)	
+		return this->exitClient(i), true;						
+	this->_clients[i].headerRequest = RequestParser();
+	this->_clients[i].responseBuilder = ResponseBuilder();
+	this->_clients[i].chunkedSize = -1;
+	this->_clients[i].bodySize = 0;
+	this->_clients[i].ping = true;		
+	this->_clients[i].messageSend.clear();
+	this->_clients[i].sendFlag = false;
 	return false;
 }

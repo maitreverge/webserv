@@ -15,6 +15,8 @@ Client::Client(Config * _conf) : conf(_conf)
 	retryChunked = false;
 	headerRespons.reserve(static_cast<size_t>(_conf->maxHeaderSize)); 
 	messageSend.reserve(SEND_BUFF_SIZE);
+	sendBuffer.reserve(_conf->maxBodySize);
+	sendFlag = false;
 	
 	ping = true;	
 	pongHeader = false;

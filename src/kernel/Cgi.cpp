@@ -59,7 +59,7 @@ void Cgi::launch(Client & client)
     if (this->_pid < 0)
         Logger::getInstance().log(ERROR, "fork failed"); //!exit client req + error page
     else if (!this->_pid)
-        child(client);
+        this->child(client);
     else
         close(this->_fds[0]);
 }
@@ -155,8 +155,8 @@ void Cgi::isTimeout(Client & client, std::string err)
         Logger::getInstance().log(ERROR, err);   	//!errpage!!
         kill(this->_pid, SIGTERM);
 		this->_start = 0;
-        client.exitRequired = true;
-		client.ping = false;	 
+        client.exitRequired = true;//! en trop
+		client.ping = false;//! en trop	 
         throw Server::ShortCircuitException(CODE_508_LOOP_DETECTED);        
     } 
 }
@@ -186,8 +186,8 @@ void Cgi::setBody(Client & client, bool eof)
 {
     Logger::getInstance().log(INFO, "Cgi Set Body", client);
 
-	hasError(client, "timeout cgi set body has error");		
-	isTimeout(client, "timeout cgi set body is over");
+	this->hasError(client, "cgi get body has error");
+	this->isTimeout(client, "cgi get body timeout is over");
     if (!FD_ISSET(this->_fds[1], &Kernel::_writeSet))    
         return Logger::getInstance().log(DEBUG, "cgi not ready to send");
      
@@ -196,7 +196,7 @@ void Cgi::setBody(Client & client, bool eof)
         client.messageRecv.size(), MSG_NOSIGNAL);
 	FD_CLR(this->_fds[1], &Kernel::_readSet);
 	FD_CLR(this->_fds[1], &Kernel::_writeSet);
-	if (retHandle(client, ret, "send", "cgi exited"))
+	if (this->retHandle(client, ret, "send", "cgi exited"))
         ret = static_cast<ssize_t>(client.messageRecv.size());			
     Kernel::cleanFdSet(client);
 	std::vector<char> str(client.messageRecv.data(), client.messageRecv.data()
@@ -213,8 +213,8 @@ bool Cgi::getBody(Client & client)
 {
     Logger::getInstance().log(INFO, "Cgi Get Body", client);
 
-	hasError(client, "timeout cgi get body has error");
-	isTimeout(client, "timeout cgi get body is over");
+	this->hasError(client, "cgi get body has error");
+	this->isTimeout(client, "cgi get body timeout is over");
     if (shutdown(_fds[1], SHUT_WR) < 0)
 		Logger::getInstance().log(ERROR, "shutdown", client);//! ret ?
     if (!FD_ISSET(this->_fds[1], &Kernel::_readSet))

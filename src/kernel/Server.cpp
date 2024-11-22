@@ -46,7 +46,8 @@ bool Server::setup()
 	return true;
 }
 
-void Server::catchClients(Kernel & kernel){
+void Server::catchClients(Kernel & kernel)
+{
 	if (FD_ISSET(this->_fd, &Kernel::_readSet))
 	{	
 		Server::_nl = !Server::_nl ? std::cout << std::endl, true : true;		
@@ -115,4 +116,17 @@ void Server::printVector(const std::vector<char> & response, std::string color)
 	for (size_t i = 0; i < response.size(); i++)				
 		std::cout << response[i];
 	std::cout << "-\e[0m" << std::endl << std::endl;
+}
+
+void Server::shortCircuit(const e_errorCodes err, const size_t i)
+{
+	Logger::getInstance().log(INFO, "Short Circuit", this->_clients[i]);
+
+	this->_clients[i].sendBuffer.clear();
+	this->_clients[i].messageRecv.clear();
+	this->_clients[i].responseBuilder = ResponseBuilder();
+	this->_clients[i].responseBuilder.getHeader(this->_clients[i],
+		this->_conf, err);
+	this->_clients[i].ping = false;
+	this->_clients[i].exitRequired = true;
 }

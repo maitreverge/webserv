@@ -21,6 +21,8 @@ struct Client
 	ResponseBuilder		responseBuilder;
 	std::vector<char>	headerRespons;
 	std::vector<char>	messageSend;
+	std::vector<char>	sendBuffer;
+	bool				sendFlag;
 	
 	short int			ping;
 	bool 				pongHeader;

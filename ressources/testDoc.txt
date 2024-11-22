@@ -26,7 +26,7 @@ gcc main_loopout.c -o main_loopout.out &&
 gcc main_in.c -o main_in.out &&
 gcc main_out.c -o main_out.out &&
 gcc main_inout.c -o main_inout.out
-
+gcc main_errout.c -o main_errout.out
 
 
 COMMANDES HTTPie A TESTER:
