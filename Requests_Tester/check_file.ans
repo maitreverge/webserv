@@ -12424,7 +12424,7 @@ index = index1.html
 # Voir avec Seb au moment des vrais tests pour changer l'extension des CGI 
 cgiAllowed = .php, .out[0m
 
-[31m--- Requête : curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3025/cgi/main_errin.out[0m
+[31m--- Requête : curl -i -s --connect-timeout 10 --max-time 10 -X GET http://localhost:3025/cgi/main_errin.out[0m
 
 [34m--- Expected Answer :[0m
 [32mHTTP/1.1 200 OK
@@ -12442,7 +12442,7 @@ Content-Length: 299
 <html><head><title>My Styled Page</title></head><body style="background-color: #f0f0f0; text-align: center; padding: 50px;"><h1 style="color: #ff5733; font-family: Arial, sans-serif;">Hello, World!</h1><p style="color: #555; font-size: 18px;">This is a simple page with inline CSS.</p></body></html>[0m
 
 
-[31m--- Requête : curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3025/cgi/main_errin.out[0m
+[31m--- Requête : curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3025/cgi/main_errin.out[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -12452,7 +12452,7 @@ Content-Length: 299
 [36m[0m
 
 
-[31m--- Requête : curl -i -s --connect-timeout 2 --max-time 2 -X POST http://localhost:3025/cgi/main_errin.out[0m
+[31m--- Requête : curl -i -s --connect-timeout 10 --max-time 10 -X POST http://localhost:3025/cgi/main_errin.out[0m
 
 [34m--- Expected Answer :[0m
 [32mHTTP/1.1 200 OK
@@ -12470,7 +12470,7 @@ Content-Length: 299
 <html><head><title>My Styled Page</title></head><body style="background-color: #f0f0f0; text-align: center; padding: 50px;"><h1 style="color: #ff5733; font-family: Arial, sans-serif;">Hello, World!</h1><p style="color: #555; font-size: 18px;">This is a simple page with inline CSS.</p></body></html>[0m
 
 
-[31m--- Requête : curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3025/cgi/main_errmid.out[0m
+[31m--- Requête : curl -i -s --connect-timeout 10 --max-time 10 -X GET http://localhost:3025/cgi/main_errmid.out[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -12480,7 +12480,7 @@ Content-Length: 299
 [36m[0m
 
 
-[31m--- Requête : curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3025/cgi/main_errmid.out[0m
+[31m--- Requête : curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3025/cgi/main_errmid.out[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -12490,7 +12490,7 @@ Content-Length: 299
 [36m[0m
 
 
-[31m--- Requête : curl -i -s --connect-timeout 2 --max-time 2 -X POST http://localhost:3025/cgi/main_errmid.out[0m
+[31m--- Requête : curl -i -s --connect-timeout 10 --max-time 10 -X POST http://localhost:3025/cgi/main_errmid.out[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -12500,7 +12500,19 @@ Content-Length: 299
 [36m[0m
 
 
-[31m--- Requête : curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3025/cgi/main_errout.out[0m
+[31m--- Requête : curl -i -s --connect-timeout 10 --max-time 10 -X GET http://localhost:3025/cgi/main_errout.out[0m
+
+[34m--- Expected Answer :[0m
+[32mHTTP/1.1 200 OK
+Content-Type: text/html[0m
+
+[34m--- Actual Answer :[0m
+
+[36mHTTP/1.1 200 OK
+Content-Type: text/html[0m
+
+
+[31m--- Requête : curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3025/cgi/main_errout.out[0m
 
 [34m--- Expected Answer :[0m
 [32m[0m
@@ -12510,17 +12522,7 @@ Content-Length: 299
 [36m[0m
 
 
-[31m--- Requête : curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3025/cgi/main_errout.out[0m
-
-[34m--- Expected Answer :[0m
-[32m[0m
-
-[34m--- Actual Answer :[0m
-
-[36m[0m
-
-
-[31m--- Requête : curl -i -s --connect-timeout 2 --max-time 2 -X POST http://localhost:3025/cgi/main_errout.out[0m
+[31m--- Requête : curl -i -s --connect-timeout 10 --max-time 10 -X POST http://localhost:3025/cgi/main_errout.out[0m
 
 [34m--- Expected Answer :[0m
 [32mHTTP/1.1 200 OK

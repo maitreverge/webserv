@@ -65,7 +65,7 @@ for config_file in "$CONFIG_DIR"/*.ini; do
 		
 		
 		#TODO && UNCOMMENT TO FILL EXPECTED_ANSWER_FILES &&&&&&&&&&
-		echo "$http_response" > "$expected_answer_file"
+		#echo "$http_response" > "$expected_answer_file"
 		#TODO &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 		#TODO UNCOMMENT TO HAVE HTTP REQUEST
