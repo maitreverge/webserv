@@ -24,8 +24,7 @@ Cgi & Cgi::operator=(const Cgi & rhs)
 		FD_SET(this->_fds[1], &Kernel::_actualSet);
 	}
 	else
-		this->_fds[1] = rhs._fds[1];
-		
+		this->_fds[1] = rhs._fds[1];		
 	Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fds[1]);
 	return *this;
 }
@@ -146,6 +145,7 @@ int Cgi::getTimeSpan(Client & client) const
 		throw (Logger::getInstance().log(ERROR, "gTspan gettimeofday", client),
 			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
 }
+
 void Cgi::isTimeout(Client & client, std::string err)
 {
 	if (!this->_start.tv_sec && gettimeofday(&this->_start, NULL))
@@ -214,8 +214,8 @@ bool Cgi::getBody(Client & client)
 
 	this->hasError(client, "cgi get body has error");
 	this->isTimeout(client, "cgi get body timeout is over");
-    if (shutdown(_fds[1], SHUT_WR) < 0)
-		{}//throw (Logger::getInstance().log(ERROR, "get body shutdown", client),
+    if (shutdown(_fds[1], SHUT_WR) < 0){}
+		//throw (Logger::getInstance().log(ERROR, "get body shutdown", client),
 			//Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
     if (!FD_ISSET(this->_fds[1], &Kernel::_readSet))  
         return Logger::getInstance().
