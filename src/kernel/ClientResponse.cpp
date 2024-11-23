@@ -83,7 +83,7 @@ bool Server::endReply(const size_t i)
 		return this->exitClient(i), true;						
 	this->_clients[i].headerRequest = RequestParser();
 	this->_clients[i].responseBuilder = ResponseBuilder();
-	this->_clients[i].chunkedSize = -1;
+	this->_clients[i].chunkSize = -1;
 	this->_clients[i].bodySize = 0;
 	this->_clients[i].ping = true;		
 	this->_clients[i].messageSend.clear();
