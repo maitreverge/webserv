@@ -48,8 +48,11 @@ void Server::calculateChunkSize(const size_t i,
 		std::stringstream ss; ss << hexaLen;
 		ssize_t len; ss >> len;		
 		if (!ss)
+		{
 			Logger::getInstance().log(ERROR, "hexadecimal conversion",
 				this->_clients[i]);
+			throw Server::ShortCircuitException(CODE_400_BAD_REQUEST);
+		}
 		else
 		{
 			stringstream ss; ss << "hexadecimal succes - len: " << len;
@@ -73,9 +76,12 @@ bool Server::secondDelim(const size_t i, std::vector<char>::iterator & it)
 		if (!this->isChunkPartComplete(i, it))
 		{
 			if (std::distance(this->_clients[i].messageRecv.begin(), it)
-				> static_cast<std::ptrdiff_t>(this->_clients[i].chunkSize))			
+				> static_cast<std::ptrdiff_t>(this->_clients[i].chunkSize))
+			{
 				Logger::getInstance().log(ERROR, "chunk size",
-					this->_clients[i]);			
+					this->_clients[i]);
+				throw Server::ShortCircuitException(CODE_400_BAD_REQUEST);			
+			}			
 			else
 				Logger::getInstance().log(DEBUG, "chunk part inferior",
 					this->_clients[i]);
