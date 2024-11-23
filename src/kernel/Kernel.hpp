@@ -9,8 +9,8 @@
 #include "Logger.hpp"
 #include "ConfigFileParser.hpp"
 
-#define RECV_BUFF_SIZE 5000
-#define SEND_BUFF_SIZE 50
+#define RECV_BUFF_SIZE 4192
+#define SEND_BUFF_SIZE 4192
 #define SND_TIMEOUT 1
 #define SLCT_TIMEOUT 1
 

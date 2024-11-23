@@ -39,6 +39,7 @@ class Server
 	void sendBodyEnd(const size_t i);
 	bool isBodyTooLarge(const size_t i);
 	bool isChunked(const size_t i);
+	void calculateChunkSize(const size_t i, std::vector<char>::iterator & it);
 	void sendBuffering(const size_t i, std::vector<char> & response);
 	bool replyClient(const size_t i, std::vector<char> & response);
 	void fillMessageSend(const size_t i);

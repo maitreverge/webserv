@@ -15,7 +15,7 @@ struct Client
 	std::vector<char>	messageRecv;
 	RequestParser		headerRequest;
 	size_t				bodySize;
-	ssize_t				chunkedSize;
+	ssize_t				chunkSize;
 	bool				retryChunked;
 	
 	ResponseBuilder		responseBuilder;
