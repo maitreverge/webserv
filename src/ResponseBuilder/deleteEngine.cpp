@@ -3,6 +3,11 @@
 
 #include <cstdio> // might need to move it in a global header file
 
+void	ResponseBuilder::generateDeleteHTML( void ){
+
+	// TODO
+}
+
 void	ResponseBuilder::deleteEngine( void ){
 
 	string targetToDelete = _realURI;
@@ -13,5 +18,9 @@ void	ResponseBuilder::deleteEngine( void ){
 		setError(CODE_500_INTERNAL_SERVER_ERROR, true); // do not raise an exception
 	}
 	else
-		Logger::getInstance().log(INFO, "Target URI Successfully deleted");
+	{
+		Logger::getInstance().log(DEBUG, "Target URI Successfully deleted");
+		// TODO : Generate HTML for telling client everything deleted fine
+		generateDeleteHTML();
+	}
 }

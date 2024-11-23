@@ -119,18 +119,20 @@ void Server::bodyCheckin(size_t i)
 
 void Server::getRespHeader(size_t i)
 {
-	if (this->_clients[i].headerRequest.getMethod() == "GET")		
-		this->_clients[i].responseBuilder.getHeader(this->_clients[i],
-			this->_conf);
-	else if (this->_clients[i].headerRequest.getMethod() == "POST")		
-		this->_clients[i].responseBuilder.getHeaderPost(this->_clients[i],
-			this->_conf);
-	else if (this->_clients[i].headerRequest.getMethod() == "DELETE")		
-		this->_clients[i].responseBuilder.getHeader(this->_clients[i],
-			this->_conf);
-	else
-		this->_clients[i].responseBuilder.getHeader(this->_clients[i],
-			this->_conf); 
+	/*
+		! Note from Florian
+		J'ai pense qu'avoir une methode
+		ResponseBuilder::getHeaderPost pour les requetes POST
+		ET une seconde methode
+		ResponseBuilder::getHeader pour les requetes GET et DELETE
+
+		allait me faciliter la vie, mais au final, ca me complique la tache
+
+		Je n'ai desormais plus qu'une methode ResponseBuilder::getHeader
+		qui gere tout les cas !
+	*/
+
+	this->_clients[i].responseBuilder.getHeader(this->_clients[i], this->_conf);
 }
 
 void Server::handleClientBody(size_t i, ssize_t ret)

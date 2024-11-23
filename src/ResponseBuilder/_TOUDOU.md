@@ -1,13 +1,15 @@
 ## CURRENT WORK
 - Wait for Dan to parse de boundary Token
 
+## TOP PRIORITY ERRORS TO CHECK
+- Rework on the route config, see if the allowedRoute are correctly attributed to the corresponding server
+
 ## HOTFIX :
 - Stabilize simple GET / DELETE REQUESTS
 - Exploit the Content-Type header for post requests
 - If there is `Content-Type: multipart/form-data;`, then activate the
 unfinished branch
 IF NOT : Need to generate a random 10 lenghts string + an extension to save the file
--
 
 
 ## Mandatory Work but can wait

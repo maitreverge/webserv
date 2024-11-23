@@ -149,8 +149,8 @@ class ResponseBuilder
 	e_lineNature	processCurrentLine( vector< char >&  );
 	void	initBoundaryTokens( void );
 	void	extractFileBodyName( vector< char >& );
-	// ! TO DELETE, serves as a blueprint
-	void	_setBodyPost( Client &, bool );
+	void	setRegularPost( Client & client );
+	void	setMultiPartPost( Client & client );
 
 	// buildHeaders.cpp
 	void	buildHeaders( void );
@@ -164,6 +164,7 @@ class ResponseBuilder
 	void	initMimes( void );
 
 	// deleteEngine.cpp
+	void	generateDeleteHTML( void );
 	void	deleteEngine( void );
 
 	// errorNotFoundGenerator.cpp
@@ -214,13 +215,8 @@ class ResponseBuilder
 	
 	void extractRedirectionIndex( vector< string >&, vector< string >& );
 
-	// Priv function, Seb only needs setBody
-	void	setRegularPost( Client & client );
-	void	setMultiPartPost( Client & client );
-
 
 public:
-	// multipart function
 
 	std::ifstream 	_ifs; // ! PAS DANS LES CONSTRUCTEURS
 	std::streampos	_ifsStreamHead; // ! ABSOLUMENT METTRE DANS LES CONSTRUCTEURS
@@ -239,8 +235,6 @@ public:
 	bool	getBody( Client &inputClient );
 	
 	Cgi		_cgi;//! provisoire sinon private
-
-	void	getHeaderPost( Client &, Config &, e_errorCodes codeInput = CODE_200_OK );
 
 	void	setBody( Client & client, bool eof );
 

@@ -159,11 +159,12 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 
 		checkMethod();
 
-		if (_method == DELETE)
-		{
-			setError(CODE_204_NO_CONTENT, true); // does not throw exception
-		}
+		if (_method == POST)
+			_errorType = CODE_201_CREATED;
 		else
+			_errorType = CODE_200_OK;
+
+		if (_method != DELETE)
 		{
 			checkCGI();
 		}
@@ -204,7 +205,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	}
 	
 	
-	if (_method == DELETE and _errorType == CODE_204_NO_CONTENT)
+	if (_method == DELETE and _errorType == CODE_200_OK)
 	{
 		deleteEngine();	
 	}
