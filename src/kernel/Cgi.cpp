@@ -41,23 +41,22 @@ Cgi::~Cgi()
 
 void Cgi::launch(Client & client)
 {   
-    Logger::getInstance().log(DEBUG, "Launch Cgi");  
+    Logger::getInstance().log(INFO, "Launch Cgi");  
 	
-    socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, this->_fds);  
-	
+    if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, this->_fds) < 0)
+		throw (Logger::getInstance().log(ERROR, "socket pair", client),
+			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));	
     Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fds[1]);
-	// client.ping = 2;
-	// client.exitRequired = true; 
-	// client.responseBuilder.setError(CODE_508_LOOP_DETECTED); 
-
     struct timeval timeout = {SND_TIMEOUT, 0};	
 	if (setsockopt(this->_fds[1], SOL_SOCKET, SO_SNDTIMEO, &timeout,
-		sizeof(timeout)) < 0)
-	  	return Logger::getInstance().log(ERROR, "cgi send timeout"); //!exit client req + error page
+		sizeof(timeout)) < 0)	
+		throw (Logger::getInstance().log(ERROR, "cgi opt send timeout", client),
+			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));	  	
     FD_SET(this->_fds[1], &Kernel::_actualSet);    
     this->_pid = fork();
     if (this->_pid < 0)
-        Logger::getInstance().log(ERROR, "fork failed"); //!exit client req + error page
+        throw (Logger::getInstance().log(ERROR, "fork", client),
+			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
     else if (!this->_pid)
         this->child(client);
     else
@@ -75,7 +74,9 @@ void Cgi::child(Client & client)
     close(this->_fds[0]);
     close(this->_fds[1]);
         
-    chdir(client.responseBuilder._folderCGI.c_str());
+    if (chdir(client.responseBuilder._folderCGI.c_str()) < 0)
+		throw (Logger::getInstance().log(ERROR, "chdir", client),
+			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
     std::string envPathInfo
         ("PATH_INFO=" + client.responseBuilder._pathInfo);
     
@@ -121,13 +122,15 @@ bool Cgi::retHandle(Client & client, ssize_t ret, std::string err,
     {		
         Logger::getInstance().log(ERROR, err);
         errnoHandle();		
-        client.ping = false;;
+        // client.ping = false;;
 		// FD_CLR(this->_fds[1], &Kernel::_actualSet);//! err 4..
         // close(this->_fds[1]);
         // this->_fds[1] = -1;
 
-        client.exitRequired = true;
-        return true;
+        // client.exitRequired = true;
+        // return true;
+		throw (Logger::getInstance().log(ERROR, "ret socket", client),
+			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
     }
 	this->_start = std::clock(); 
     return false;	
@@ -151,13 +154,11 @@ void Cgi::isTimeout(Client & client, std::string err)
         Logger::getInstance().log(WARNING, ss.str(), client);	
     }
 	if (span > client.conf->timeoutCgi)
-	{	
-        Logger::getInstance().log(ERROR, err);   	//!errpage!!
+	{      
         kill(this->_pid, SIGTERM);
 		this->_start = 0;
-        client.exitRequired = true;//! en trop
-		client.ping = false;//! en trop	 
-        throw Server::ShortCircuitException(CODE_508_LOOP_DETECTED);        
+		throw (Logger::getInstance().log(ERROR, err, client),
+			Server::ShortCircuitException(CODE_508_LOOP_DETECTED));              
     } 
 }
 
@@ -168,18 +169,13 @@ void Cgi::hasError(Client & client, std::string err)
 	if (pid > 0 && WIFEXITED(status))
 	{		
 		int exitCode = WEXITSTATUS(status);
-		if (exitCode != 0)
-		{
-			Logger::getInstance().log(ERROR, err, client);
-			throw Server::
-				ShortCircuitException(static_cast<e_errorCodes>(exitCode)); 
-		}			
+		if (exitCode != 0)		
+			throw (Logger::getInstance().log(ERROR, err, client), Server::
+				ShortCircuitException(static_cast<e_errorCodes>(exitCode))); 					
 	}
 	else if (pid < 0)
-	{
-		Logger::getInstance().log(ERROR, "waitpid", client);
-		throw Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR); //!REAL CODE
-	}
+		throw (Logger::getInstance().log(ERROR, "waitpid", client),
+				Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
 }
 
 void Cgi::setBody(Client & client, bool eof)
