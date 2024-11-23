@@ -11,7 +11,7 @@ class Cgi
     std::clock_t _start;
     pid_t        _pid;
 
-    bool retHandle(Client & client, ssize_t ret, std::string err, 
+    void retHandle(Client & client, ssize_t ret, std::string err, 
     std::string info);
     void isTimeout(Client & client, std::string err);
 	void hasError(Client & client, std::string err);

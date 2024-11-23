@@ -110,7 +110,7 @@ void Cgi::child(Client & client)
     _exit(1);
 }
 
-bool Cgi::retHandle(Client & client, ssize_t ret, std::string err,
+void Cgi::retHandle(Client & client, ssize_t ret, std::string err,
 	std::string info)
 {		
 	stringstream ss; ss << "ret: " << ret;
@@ -119,8 +119,7 @@ bool Cgi::retHandle(Client & client, ssize_t ret, std::string err,
     if (!ret)    
         Logger::getInstance().log(INFO, info);
     else if (ret < 0)
-    {		
-        Logger::getInstance().log(ERROR, err);
+    {	      
         errnoHandle();		
         // client.ping = false;;
 		// FD_CLR(this->_fds[1], &Kernel::_actualSet);//! err 4..
@@ -129,11 +128,10 @@ bool Cgi::retHandle(Client & client, ssize_t ret, std::string err,
 
         // client.exitRequired = true;
         // return true;
-		throw (Logger::getInstance().log(ERROR, "ret socket", client),
+		throw (Logger::getInstance().log(ERROR, err, client),
 			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
     }
-	this->_start = std::clock(); 
-    return false;	
+	this->_start = std::clock();
 }
 
 void Cgi::isTimeout(Client & client, std::string err)
@@ -185,24 +183,21 @@ void Cgi::setBody(Client & client, bool eof)
 	this->hasError(client, "cgi get body has error");
 	this->isTimeout(client, "cgi get body timeout is over");
     if (!FD_ISSET(this->_fds[1], &Kernel::_writeSet))    
-        return Logger::getInstance().log(DEBUG, "cgi not ready to send");
-     
+        return Logger::getInstance().log(DEBUG, "cgi not ready to send");     
     Logger::getInstance().log(WARNING, "cgi ready to send");
  	ssize_t ret = send(this->_fds[1], client.messageRecv.data(),
         client.messageRecv.size(), MSG_NOSIGNAL);
-	FD_CLR(this->_fds[1], &Kernel::_readSet);
-	FD_CLR(this->_fds[1], &Kernel::_writeSet);
-	if (this->retHandle(client, ret, "send", "cgi exited"))
-        ret = static_cast<ssize_t>(client.messageRecv.size());			
-    Kernel::cleanFdSet(client);
+    Kernel::cleanFdSet(client);	
+	this->retHandle(client, ret, "send", "cgi exited");    			
 	std::vector<char> str(client.messageRecv.data(), client.messageRecv.data()
 		+ static_cast<size_t>(ret));
 	Logger::getInstance().log(DEBUG, "sent to cgi", client);	
 	Server::printVector(str);
 	client.messageRecv.erase(client.messageRecv.begin(),
         client.messageRecv.begin() + ret);
-	if (eof && client.messageRecv.empty())	
-		shutdown(_fds[1], SHUT_WR);
+	if (eof && client.messageRecv.empty() && shutdown(_fds[1], SHUT_WR < 0))			
+		throw (Logger::getInstance().log(ERROR, "set body shutdown", client),
+			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
 }
 
 bool Cgi::getBody(Client & client)
@@ -212,21 +207,18 @@ bool Cgi::getBody(Client & client)
 	this->hasError(client, "cgi get body has error");
 	this->isTimeout(client, "cgi get body timeout is over");
     if (shutdown(_fds[1], SHUT_WR) < 0)
-		Logger::getInstance().log(ERROR, "shutdown", client);//! ret ?
-    if (!FD_ISSET(this->_fds[1], &Kernel::_readSet))
-    {
-        sleep(1);
-        Logger::getInstance().log(DEBUG, "cgi not ready to recev", client);
-        return true;
-    }
+		throw (Logger::getInstance().log(ERROR, "get body shutdown", client),
+			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
+    if (!FD_ISSET(this->_fds[1], &Kernel::_readSet))  
+        return Logger::getInstance().
+			log(DEBUG, "cgi not ready to recev", client), true;  
     client.messageSend.clear();
     client.messageSend.resize(SEND_BUFF_SIZE);
 	Logger::getInstance().log(WARNING, "cgi ready to recev", client);
     ssize_t ret = recv(this->_fds[1], client.messageSend.data(),
         client.messageSend.size(), 0);
 	Kernel::cleanFdSet(client);
-	if (retHandle(client, ret, "recv", "end cgi"))
-        ret = 0;  
+	retHandle(client, ret, "recv", "end cgi");
 	client.messageSend.erase(client.messageSend.begin() + ret,
 		client.messageSend.end());
 	return false; 
