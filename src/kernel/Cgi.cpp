@@ -4,8 +4,8 @@
 void errnoHandle(); //! a suppr
 
 Cgi::Cgi()
-{
-	this->_start = 0; //! verif wrap arround
+{	
+	std::memset(&this->_start, 0, sizeof(this->_start));
 	this->_pid = -1;
     this->_fds[0] = -1;
     this->_fds[1] = -1;
@@ -131,30 +131,38 @@ void Cgi::retHandle(Client & client, ssize_t ret, std::string err,
 		throw (Logger::getInstance().log(ERROR, err, client),
 			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
     }
-	this->_start = std::clock();
+	if (gettimeofday(&this->_start, NULL))
+		throw (Logger::getInstance().log(ERROR, "retH gettimeofday", client),
+			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));	
 }
 
+int Cgi::getTimeSpan(Client & client) const
+{
+	struct timeval actualTime;
+	
+	if (!gettimeofday(&actualTime, NULL))
+		return (static_cast<int>(actualTime.tv_sec - this->_start.tv_sec));
+	else
+		throw (Logger::getInstance().log(ERROR, "gTspan gettimeofday", client),
+			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
+}
 void Cgi::isTimeout(Client & client, std::string err)
 {
-	if (!this->_start)
-		this->_start = std::clock();
-	std::clock_t end = std::clock();
-    double span = static_cast<double>(end - this->_start) * 5000
-        / CLOCKS_PER_SEC;
-    if (span < 0)
-        this->_start = 0;
+	if (!this->_start.tv_sec && gettimeofday(&this->_start, NULL))
+		throw (Logger::getInstance().log(ERROR, "isTimeS gettimeofday", client),
+			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
+    int span = getTimeSpan(client);   
     if (span > client.conf->timeoutCgi / 2.0)
     { 
-        std::stringstream ss; ss << "Timeout - start: "
-            << this->_start << " end: " << end << " diff: "
-            << static_cast<double>(end - this->_start) << " sec: "
-            << span << "/" << client.conf->timeoutCgi << std::endl;
+        std::stringstream ss;
+		ss << "Timeout - span: "  << span << "secs/" << client.conf->timeoutCgi
+			<< std::endl;
         Logger::getInstance().log(WARNING, ss.str(), client);	
     }
 	if (span > client.conf->timeoutCgi)
 	{      
         kill(this->_pid, SIGTERM);
-		this->_start = 0;
+		std::memset(&this->_start, 0, sizeof(this->_start));
 		throw (Logger::getInstance().log(ERROR, err, client),
 			Server::ShortCircuitException(CODE_508_LOOP_DETECTED));              
     } 
@@ -207,8 +215,8 @@ bool Cgi::getBody(Client & client)
 	this->hasError(client, "cgi get body has error");
 	this->isTimeout(client, "cgi get body timeout is over");
     if (shutdown(_fds[1], SHUT_WR) < 0)
-		throw (Logger::getInstance().log(ERROR, "get body shutdown", client),
-			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
+		{}//throw (Logger::getInstance().log(ERROR, "get body shutdown", client),
+			//Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
     if (!FD_ISSET(this->_fds[1], &Kernel::_readSet))  
         return Logger::getInstance().
 			log(DEBUG, "cgi not ready to recev", client), true;  
