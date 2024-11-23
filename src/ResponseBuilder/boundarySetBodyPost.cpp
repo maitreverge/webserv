@@ -4,7 +4,8 @@
 void	ResponseBuilder::initBoundaryTokens( void ){
 
 	// To replace with Dan future parsed token.
-	string parsedBoundary = "----WebKitFormBoundary1XN99skGpOHP8Og8";
+	string parsedBoundary = _client->headerRequest.getWebToken();
+	// string parsedBoundary = "----WebKitFormBoundary1XN99skGpOHP8Og8";
 
 	_tokenDelim = parsedBoundary;
 	_tokenDelim.insert(0, "--");
@@ -20,12 +21,12 @@ bool	ResponseBuilder::isLineDelim( vector< char >& curLine, vector< char >& next
 
 	std::string::size_type posSeparator;
 
-	posSeparator = temp.find(HTTP_HEADER_SEPARATOR);
+	posSeparator = temp.find_first_of(HTTP_HEADER_SEPARATOR);
 	if (posSeparator == std::string::npos)
 		return false;
 	
 	// Does the curLine ends with a trailing \r\n ONLY
-	if (posSeparator + 2 == temp.size())
+	if (posSeparator + 2 == temp.length())
 		return true;
 
 	// in the opposite case, we need to trim the curLine and append the rest to nextLine
@@ -54,18 +55,22 @@ void	ResponseBuilder::extractFileBodyName( vector< char >& curLine ){
 
 		_fileStreamName = temp.substr(startPos, endPos - startPos);
 
+		string uploadFolder = _myconfig.uploadDirectory + "/";
+
 		// TODO : check the uploadDirectory authorizations
-		_fileStreamName.insert(0, _myconfig.uploadDirectory);
+		_fileStreamName.insert(0, uploadFolder);
 	}
 }
 
 ResponseBuilder::e_lineNature ResponseBuilder::processCurrentLine(vector< char >& curLine) {
 
-	// Trimm last two trailing character from the current line
-	curLine.erase(curLine.end() - 2, curLine.end());
+	if (curLine.size() > 2)
+	{
+        curLine.erase(curLine.end() - 2, curLine.end());
+    }
 
-	// This function serves the purpose of extracting the filename
 	string temp(curLine.begin(), curLine.end());
+	// Trimm last two trailing character from the current line
 
 	if (_writeReady)
 		return BINARY_DATA;
@@ -83,10 +88,12 @@ ResponseBuilder::e_lineNature ResponseBuilder::processCurrentLine(vector< char >
 void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 
 	usleep(50000);
-    Logger::getInstance().log(DEBUG, "setBodyPost");
+    // Logger::getInstance().log(DEBUG, "Flo_multipart_setbody");
 
 	if (this->_isCGI)	
 		return this->_cgi.setBody(client, eof);
+
+	printColor(BOLD_HIGH_INTENSITY_BLUE, "FUNCTION CALED");
 
 	vector< char > recVector;
 	static vector< char > curLine;
@@ -95,7 +102,12 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 
 	if (not _parsedBoundaryToken) // skip useless stack calls for each HTTP package
 		initBoundaryTokens();
+	
+	// printColor(BOLD_HIGH_INTENSITY_YELLOW, "WEBTOKEN = " + _client->headerRequest.getWebToken());
+	
 
+	string next(nextLine.begin(), nextLine.end());
+    printColor(BOLD_HIGH_INTENSITY_MAGENTA, "NEXT LINE = " + next);
 	// Copy the nextLine content within the currentLine
 	if (!nextLine.empty())
 	{
@@ -109,12 +121,22 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 	// ... and append it to the end of curLine
 	curLine.insert(curLine.end(), recVector.begin(), recVector.end());
 
+	string clientMessage(client.messageRecv.begin(), client.messageRecv.end());
+    printColor(BOLD_HIGH_INTENSITY_YELLOW, "CLIENT MESSAGE = " + clientMessage);
+
 	// Clearn the buffer from the client
 	client.messageRecv.clear();
 	
 	// While we didn't process a whole line, we write it within the buffer
 	if (not isLineDelim(curLine, nextLine))
+	{
+		printColor(BOLD_CYAN, "Unfinished line");
 		return;
+	}
+
+	string curent(curLine.begin(), curLine.end());
+    printColor(BOLD_HIGH_INTENSITY_GREEN, "CURRENT LINE = " + curent);
+	sleep(6);
 		
 	lineNature = processCurrentLine(curLine);
 
@@ -125,20 +147,25 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 		case TOKEN_END: // end of previous stream
 			if (_ofs.is_open())
 				_ofs.close();
+			printColor(BOLD_CYAN, "Token Delim or END detected, closing stream");
 			// curLine.clear(); // put in another scope to avoid boilerplate code
 			_fileStreamName.clear();
 			break;
 
 		case CONTENT_DISPOSITION:
+			printColor(BOLD_CYAN, "Content Disposition Detected");
 			extractFileBodyName(curLine);
+			printColor(BOLD_CYAN, "_fileStreamName =" + _fileStreamName);
 			// curLine.clear();
 			break;
 		
 		case OTHER:
+			printColor(BOLD_CYAN, "Other Line detected");
 			// curLine.clear();
 			break;
 		
 		case LINE_SEPARATOR: // next packages need to be the bnary data
+			printColor(BOLD_CYAN, "Line separator detected");
 			if (!this->_ofs.is_open())
 			{
 				this->_ofs.open(_fileStreamName.c_str(), std::ios::binary);
@@ -148,13 +175,16 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 			break;
 
 		case BINARY_DATA:
-			this->_ofs.seekp(0, std::ios::end);
+			printColor(BOLD_CYAN, "Binary data detected, writting");
+			// this->_ofs.seekp(0, std::ios::end);
 			_ofs.write(curLine.data(), static_cast<std::streamsize>(curLine.size()));
 			if (!_ofs)
 			{
 				// error CODE_500 ??
 				//Utile de rappeller getHeader ou renvoyer une exception a Seb pour qu'il puisse me rappeller avec un getHeader(.., .., CODE_500)
 			}
+			_writeReady = false;
+			_fileStreamName.clear();
 			break;
 
 		default:

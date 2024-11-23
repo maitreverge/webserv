@@ -7,9 +7,9 @@
 
 // int main() {
 
-// 	string foo = "Content-Disposition: form-data; name=\"file1\"; filename=\"fr.subject.pdf\" \r\n";
+// 	string foo = "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary1XN99skGpOHP8Og8";
 	
-// 	string needle = "filename=\"";
+// 	string needle = "boundary=";
 
 // 	size_t startPos = foo.find(needle);
 // 	size_t endPos;
@@ -18,7 +18,7 @@
 // 	{
 // 		startPos += needle.length();
 
-// 		endPos = foo.find("\"", startPos);
+// 		endPos = foo.find(" ", startPos);
 
 // 		string hey = foo.substr(startPos, endPos - startPos);
 
