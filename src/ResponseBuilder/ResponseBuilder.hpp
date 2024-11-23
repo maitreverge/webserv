@@ -144,7 +144,7 @@ class ResponseBuilder
 
 	// ===================== METHODS ==================
 
-	// boundarySetBodyPost.cpp
+	// setBody.cpp
 	bool	isLineDelim( vector< char >& , vector< char >& );
 	e_lineNature	processCurrentLine( vector< char >&  );
 	void	initBoundaryTokens( void );
@@ -214,11 +214,13 @@ class ResponseBuilder
 	
 	void extractRedirectionIndex( vector< string >&, vector< string >& );
 
+	// Priv function, Seb only needs setBody
+	void	setRegularPost( Client & client );
+	void	setMultiPartPost( Client & client );
 
 
 public:
 	// multipart function
-	void	boundarySetBodyPost( Client & client, bool eof );
 
 	std::ifstream 	_ifs; // ! PAS DANS LES CONSTRUCTEURS
 	std::streampos	_ifsStreamHead; // ! ABSOLUMENT METTRE DANS LES CONSTRUCTEURS
@@ -233,16 +235,14 @@ public:
 	ResponseBuilder( const ResponseBuilder & );
 	ResponseBuilder & operator=( const ResponseBuilder & rhs);
 
-	// ✅ GET ONLY
 	void	getHeader( Client &, Config&, e_errorCodes codeInput = CODE_200_OK );
 	bool	getBody( Client &inputClient );
+	
 	Cgi		_cgi;//! provisoire sinon private
 
-	// ✅ POST ONLY
 	void	getHeaderPost( Client &, Config &, e_errorCodes codeInput = CODE_200_OK );
-	void	setBodyPost( Client & client, bool eof );
 
-
+	void	setBody( Client & client, bool eof );
 
 	// For testing
 	void	setMethod( const e_method& method );

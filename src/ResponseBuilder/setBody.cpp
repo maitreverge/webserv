@@ -85,13 +85,8 @@ ResponseBuilder::e_lineNature ResponseBuilder::processCurrentLine(vector< char >
 	return OTHER;
 }
 
-void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
-
-	usleep(50000);
-    // Logger::getInstance().log(DEBUG, "Flo_multipart_setbody");
-
-	if (this->_isCGI)	
-		return this->_cgi.setBody(client, eof);
+// This is now the SetBody only for MultiPart form Data
+void	ResponseBuilder::setMultiPartPost( Client & client ){
 
 	printColor(BOLD_HIGH_INTENSITY_BLUE, "FUNCTION CALED");
 
@@ -190,31 +185,17 @@ void	ResponseBuilder::boundarySetBodyPost( Client & client, bool eof ){
 		default:
 			break;
 	}
+
 	curLine.clear();
-		
 
-    // if (_ofs.is_open())
-	// {
-
-	// }
-	// _postFileName // ! Variable to init during reception
-
-	// ! STEP 1 : Extract the current line until I met \r\n
-
-	// ? CASE 1 : Is the current line a _tokenDelim ?
-	// ? CASE 2 : Is the current line a _tokenEnd ?
-	// ? CASE 2 : Is the current neither a _tokenDelim or a _tokenEnd
 }
 
-// ! Blueprint function, to delete later
-void	ResponseBuilder::_setBodyPost( Client & client, bool eof ){
+// This is now the regular setPost without Multipart Writting
+void	ResponseBuilder::setRegularPost( Client & client ){
 
 	usleep(50000);
     Logger::getInstance().log(DEBUG, "setBodyPost");
 
-	if (this->_isCGI)	
-		return this->_cgi.setBody(client, eof);
-	
     // static std::ofstream ofs("uploads/image_upload.jpeg", std::ios::binary);
 	if (!this->_ofs.is_open())
 	{	
@@ -225,7 +206,8 @@ void	ResponseBuilder::_setBodyPost( Client & client, bool eof ){
 	}
 
 	// _ofs.clear();//!
-    if (_ofs.is_open()) {
+    if (_ofs.is_open())
+	{
 		this->_ofs.seekp(0, std::ios::end);
 		// this->_ofs.end();
         _ofs.write(client.messageRecv.data(), static_cast<std::streamsize>(client.messageRecv.size())); 
@@ -235,8 +217,24 @@ void	ResponseBuilder::_setBodyPost( Client & client, bool eof ){
 			std::cout << "Erreur decriture dans le fichier." << std::endl;
 			//! GERER L ERREUR 
 		}
-    } else {
+    }
+	else
+	{
         std::cout << "Erreur : impossible d'ouvrir le fichier." << std::endl;
     }
+
 	client.messageRecv.clear();
+}
+
+// Set Body is now a Articulating function for better clarity
+void	ResponseBuilder::setBody( Client & client, bool eof ){
+
+	usleep(50000);
+
+	if (this->_isCGI)	
+		return this->_cgi.setBody(client, eof);
+	else if (_myconfig.uploadAllowed == true) // and not MultiPart parsed from DAN
+		setRegularPost(client);
+	else
+		setMultiPartPost(client);
 }

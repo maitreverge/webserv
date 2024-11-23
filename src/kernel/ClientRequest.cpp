@@ -44,14 +44,14 @@ void Server::reSend(size_t i)
 	if (this->_clients[i].ping >= 1)
 	{
 		Logger::getInstance().log(INFO, "Re Send True", this->_clients[i]);
-		this->_clients[i].responseBuilder.boundarySetBodyPost(this->_clients[i], true);	
+		this->_clients[i].responseBuilder.setBody(this->_clients[i], true);	
 		if (this->_clients[i].messageRecv.empty())
 			this->_clients[i].ping++; 
 	}
 	else
 	{
 		Logger::getInstance().log(INFO, "Re Send False", this->_clients[i]);
-		this->_clients[i].responseBuilder.boundarySetBodyPost(this->_clients[i], false);
+		this->_clients[i].responseBuilder.setBody(this->_clients[i], false);
 	}
 }
 
@@ -143,7 +143,7 @@ void Server::handleClientBody(size_t i, ssize_t ret)
 	if (this->isBodyTooLarge(i) || this->isBodyTerminated(i))
 		return ;
 	if (this->_clients[i].headerRequest.getMethod() == "POST")
-		this->_clients[i].responseBuilder.boundarySetBodyPost(this->_clients[i], false);
+		this->_clients[i].responseBuilder.setBody(this->_clients[i], false);
 	else
 		this->_clients[i].messageRecv.clear();		
 }
@@ -235,7 +235,7 @@ bool Server::isBodyTerminated(size_t i)
 	
 		if (this->_clients[i].headerRequest.getMethod() == "POST")
 			this->_clients[i].responseBuilder.
-				boundarySetBodyPost(this->_clients[i], true);			
+				setBody(this->_clients[i], true);			
 		else
 		{
 			this->_clients[i].messageRecv.clear();
