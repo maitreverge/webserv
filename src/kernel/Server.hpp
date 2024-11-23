@@ -32,19 +32,19 @@ class Server
 	bool isDelimiterFind(std::string delimiter, const size_t i,
 		std::vector<char>::iterator & it);
 	void shortCircuit(const e_errorCodes err, const size_t i);
-	bool isMaxHeaderSize(std::vector<char>::iterator it, const size_t i);
-	bool isContentLengthValid(const size_t i);
+	void isMaxHeaderSize(std::vector<char>::iterator it, const size_t i);
+	void isContentLengthValid(const size_t i);
 	bool isBodyEnd(const size_t i);
 	void sendBodyPart(const size_t i);
 	void sendBodyEnd(const size_t i);
-	bool isBodyTooLarge(const size_t i);
+	void isBodyTooLarge(const size_t i);
 
 	bool isChunked(const size_t i);
 	bool firstDelim(const size_t i);
 	void calculateChunkSize(const size_t i, std::vector<char>::iterator & it);
 	bool secondDelim(const size_t i, std::vector<char>::iterator &it);
 	bool isChunkPartComplete(const size_t i, std::vector<char>::iterator & it);
-	
+
 	void sendBuffering(const size_t i, std::vector<char> & response);
 	bool replyClient(const size_t i, std::vector<char> & response);
 	void fillMessageSend(const size_t i);

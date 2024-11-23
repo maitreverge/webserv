@@ -4,38 +4,36 @@
 void Server::replyClients()
 {
 	for (size_t i = 0; i < this->_clients.size(); i++)
-	{		
-		if (this->_clients[i].ping)
-			continue;
-		if (this->_clients[i].sendFlag)
+	{	
+		try 
 		{
-			if (this->replyClient(i, this->_clients[i].sendBuffer))
-				break ;
-		}		
-		else if (!this->_clients[i].headerRespons.empty())		
-			this->sendBuffering(i, this->_clients[i].headerRespons);
-		else if (this->_clients[i].messageSend.empty())		
-			this->fillMessageSend(i);
-		else 
-			this->sendBuffering(i, this->_clients[i].messageSend);	
+			if (this->_clients[i].ping)
+				continue;
+			if (this->_clients[i].sendFlag)
+			{
+				if (this->replyClient(i, this->_clients[i].sendBuffer))
+					break ;
+			}		
+			else if (!this->_clients[i].headerRespons.empty())		
+				this->sendBuffering(i, this->_clients[i].headerRespons);
+			else if (this->_clients[i].messageSend.empty())		
+				this->fillMessageSend(i);
+			else 
+				this->sendBuffering(i, this->_clients[i].messageSend);	
+		}
+		catch (const Server::ShortCircuitException & e)	
+		{	this->shortCircuit(e.getCode(), i);	}
 	}
 }
 
 void Server::fillMessageSend(const size_t i)
-{
-	try	{
-		if (this->_clients[i].responseBuilder.getBody(this->_clients[i]))
-			return ;	}
-	catch(const Server::ShortCircuitException& e)
-	{
-		this->shortCircuit(e.getCode(), i);			
-		return ; 	
-	}	
+{	
+	if (this->_clients[i].responseBuilder.getBody(this->_clients[i]))
+		return ;
 	if (this->_clients[i].messageSend.empty())
 		this->_clients[i].sendFlag = true;
 	else										
 		this->sendBuffering(i, this->_clients[i].messageSend);
-	
 }
 
 void Server::sendBuffering(const size_t i, std::vector<char> & response)

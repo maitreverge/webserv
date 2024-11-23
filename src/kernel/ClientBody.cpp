@@ -11,12 +11,12 @@ void Server::bodyCheckin(const size_t i, const size_t addBodysize)
 	this->_clients[i].bodySize += addBodysize;
 	if (this->isChunked(i))
 		return;
-	if (!this->isContentLengthValid(i)	|| this->isBodyTooLarge(i))	
-		return ;
+	this->isContentLengthValid(i);
+	this->isBodyTooLarge(i);	
 	this->isBodyEnd(i) ? this->sendBodyEnd(i) :	this->sendBodyPart(i);
 }
 
-bool Server::isContentLengthValid(const size_t i)
+void Server::isContentLengthValid(const size_t i)
 {	
 	if (this->_clients[i].headerRequest.getHeaders().ContentLength
 		> this->_conf.maxBodySize)
@@ -26,14 +26,12 @@ bool Server::isContentLengthValid(const size_t i)
 			<< this->_clients[i].headerRequest.getHeaders().ContentLength
 			<< " - Max content size: " << this->_conf.maxBodySize << std::endl;
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
-			//! 413 Payload Too Large
-		this->shortCircuit(CODE_413_PAYLOAD_TOO_LARGE, i);
-		return false;
+
+		throw Server::ShortCircuitException(CODE_413_PAYLOAD_TOO_LARGE);
 	}
-	return true;
 }
 
-bool Server::isBodyTooLarge(const size_t i)
+void Server::isBodyTooLarge(const size_t i)
 {
 	if (this->_clients[i].bodySize >
 		this->_clients[i].headerRequest.getHeaders().ContentLength)
@@ -43,12 +41,10 @@ bool Server::isBodyTooLarge(const size_t i)
 		    << this->_clients[i].bodySize << " Content-Lenght: "
 		    << this->_clients[i].headerRequest.getHeaders().ContentLength
             << std::endl;
-		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
-			//! 413 Payload Too Large
-		this->shortCircuit(CODE_413_PAYLOAD_TOO_LARGE, i);
-		return true;;
+		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);	
+
+		throw Server::ShortCircuitException(CODE_413_PAYLOAD_TOO_LARGE);
 	}
-	return false;
 }
 
 bool Server::isBodyEnd(const size_t i)
@@ -81,13 +77,7 @@ void Server::sendBodyPart(const size_t i)
 	Server::printVector(this->_clients[i].messageRecv);
 	
 	if (this->_clients[i].headerRequest.getMethod() == "POST")
-	{
-		try {
-			this->_clients[i].responseBuilder.
-				setBodyPost(this->_clients[i], false);	}
-		catch(const Server::ShortCircuitException& e)
-		{	this->shortCircuit(e.getCode(), i);	}
-	}
+		this->_clients[i].responseBuilder.setBodyPost(this->_clients[i], false);		
 	else
 		this->_clients[i].messageRecv.clear();	
 }
@@ -97,14 +87,8 @@ void Server::sendBodyEnd(const size_t i)
 	Logger::getInstance().log(INFO, "Send Body End", this->_clients[i]);
 	Server::printVector(this->_clients[i].messageRecv);
 	
-	if (this->_clients[i].headerRequest.getMethod() == "POST")
-	{
-		try {
-			this->_clients[i].responseBuilder.
-				setBodyPost(this->_clients[i], true);	}
-		catch(const Server::ShortCircuitException& e)
-		{	this->shortCircuit(e.getCode(), i);	}	
-	}					
+	if (this->_clients[i].headerRequest.getMethod() == "POST")		
+		this->_clients[i].responseBuilder.setBodyPost(this->_clients[i], true);						
 	else
 	{
 		this->_clients[i].messageRecv.clear();

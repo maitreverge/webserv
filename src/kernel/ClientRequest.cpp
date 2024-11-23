@@ -4,16 +4,21 @@
 void Server::listenClients()
 {	
 	for (size_t i = 0; i < this->_clients.size(); i++)
-	{			
-		if (!this->_clients[i].ping)
-			continue ;
-		if (!this->_clients[i].messageRecv.empty() 
-			&& this->_clients[i].headerRequest.getHeaders().ContentLength)				
-			this->retrySend(i);
-		else if (this->_clients[i].retryChunked)
-			this->isChunked(i);
-		else if (this->recevData(i))
-			break ;
+	{
+		try
+		{
+			if (!this->_clients[i].ping)
+				continue ;
+			if (!this->_clients[i].messageRecv.empty() 
+				&& this->_clients[i].headerRequest.getHeaders().ContentLength)				
+				this->retrySend(i);
+			else if (this->_clients[i].retryChunked)
+				this->isChunked(i);
+			else if (this->recevData(i))
+				break ;
+		}
+		catch (const Server::ShortCircuitException & e)
+		{	this->shortCircuit(e.getCode(), i);	}			
 	}
 }
 
@@ -89,13 +94,13 @@ void Server::headerCheckin(const size_t i, ssize_t ret)
 	if (this->isDelimiterFind("\r\n\r\n", i, it))		
 	{	
 		Logger::getInstance().log(DEBUG, "header terminated",
-			this->_clients[i]);		
-		if (this->isMaxHeaderSize(it + 4, i))
-			return ;				
+			this->_clients[i]);
+
+		this->isMaxHeaderSize(it + 4, i);					
 		this->_clients[i].headerRequest.parse(this->_clients[i]);								
 		this->_clients[i].headerRequest.displayParsingResult();
-		if (!this->_clients[i].headerRequest.getIsValid())		
-			return this->shortCircuit(static_cast<e_errorCodes>(400), i);//! FIND REAL ERROR			
+		if (!this->_clients[i].headerRequest.getIsValid())
+			throw Server::ShortCircuitException(CODE_400_BAD_REQUEST);			
 		this->getRespHeader(i);
 		this->_clients[i].messageRecv.
             erase(this->_clients[i].messageRecv.begin(), it + 4);					
@@ -121,7 +126,7 @@ void Server::getRespHeader(const size_t i)
 			this->_conf); 
 }
 
-bool Server::isMaxHeaderSize(std::vector<char>::iterator it, const size_t i)
+void Server::isMaxHeaderSize(std::vector<char>::iterator it, const size_t i)
 {
 	if (it - this->_clients[i].messageRecv.begin() > this->_conf.maxHeaderSize)	
 	{		
@@ -129,12 +134,10 @@ bool Server::isMaxHeaderSize(std::vector<char>::iterator it, const size_t i)
 		ss << "header size" << " Actual-Size: "
             << it - this->_clients[i].messageRecv.begin()
             << " - Max-Header-Size : " << this->_conf.maxHeaderSize;
+		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
 
-		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);		
-			//! 431 Request Header Fields Too Large !!
-		this->shortCircuit(CODE_431_REQUEST_HEADER_FIELDS_TOO_LARGE, i);	
-		return true;	
+		throw Server::
+			ShortCircuitException(CODE_431_REQUEST_HEADER_FIELDS_TOO_LARGE);	
 	}
-	return false;
 }
 
