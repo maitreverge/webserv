@@ -48,6 +48,7 @@ bool Server::recevData(const size_t i)
 void Server::retrySend(const size_t i)
 {
 	Logger::getInstance().log(DEBUG, "Retry Send", this->_clients[i]);	
+
 	stringstream ss; ss << "Content-Length: "
 		<< this->_clients[i].headerRequest.getHeaders().ContentLength
 		<< " MessageRecv-Size: " << this->_clients[i].messageRecv.size()
@@ -59,10 +60,16 @@ void Server::retrySend(const size_t i)
 
 void Server::clientMessage(const size_t i, ssize_t ret)
 {
+	Logger::getInstance().log(INFO, "Client Message", this->_clients[i]);
+
+	std::vector<char> str(this->_readBuffer.begin(),
+		this->_readBuffer.begin() + ret);
+	Server::printVector(str);
+
 	this->_clients[i].messageRecv.
-	insert(this->_clients[i].messageRecv.end(), 
-	this->_readBuffer.begin(),
-	this->_readBuffer.begin() + ret);				
+		insert(this->_clients[i].messageRecv.end(), 
+		this->_readBuffer.begin(),
+		this->_readBuffer.begin() + ret);				
 	if (!this->_clients[i].headerRequest.getHeaders().ContentLength
 		&& this->_clients[i].headerRequest.getHeaders().TransferEncoding
 		!= "chunked")
@@ -87,7 +94,7 @@ void Server::headerCheckin(const size_t i, ssize_t ret)
 	stringstream ss;
 	ss << "Header Checkin - recv " << ret << " bytes";
 	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
-	Server::printVector(this->_clients[i].messageRecv);
+	// Server::printVector(this->_clients[i].messageRecv);
 
 	std::vector<char>::iterator it;		
 	if (this->isDelimiterFind("\r\n\r\n", i, it))		
@@ -97,7 +104,7 @@ void Server::headerCheckin(const size_t i, ssize_t ret)
 
 		this->isMaxHeaderSize(it + 4, i);					
 		this->_clients[i].headerRequest.parse(this->_clients[i]);								
-		this->_clients[i].headerRequest.displayParsingResult();
+		// this->_clients[i].headerRequest.displayParsingResult();
 		if (!this->_clients[i].headerRequest.getIsValid())
 			throw Server::ShortCircuitException(CODE_400_BAD_REQUEST);			
 		this->getRespHeader(i);
