@@ -98,15 +98,19 @@ void Server::exitServer()
 	close(this->_fd);	
 }
 
-void Server::printVector(const std::vector<char> & response, std::string color)
+void Server::printVector(Client & client, const std::vector<char> & response,
+	const std::string color, const int level)
 {
 	std::stringstream ss;
-	std::cout << std::endl << CYAN << "Print Vector: " << YELLOW
-		<< response.size() << " bytes" << color << std::endl;
-	std::cout << "-";		
+	ss << color << "Print data : " << YELLOW
+		<< response.size() << " bytes" << color << std::endl << std::endl;
+	ss << "-";		
 	for (size_t i = 0; i < response.size(); i++)				
-		std::cout << response[i];
-	std::cout << "-\e[0m" << std::endl << std::endl;
+		ss << response[i];
+	ss << "-\e[0m";
+	Logger::getInstance().log(static_cast<logLevel>(level), ss.str(), client);
+	if (Logger::getInstance()._logLevel[static_cast<logLevel>(level)])
+		std::cout << std::endl;
 }
 
 void Server::shortCircuit(const e_errorCodes err, const size_t i)

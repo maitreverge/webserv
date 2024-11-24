@@ -58,8 +58,9 @@ class Server
 
 		Server(sockaddr_in & sockaddr, Config & conf);
 
-		static void printVector(const std::vector<char> & response,
-		std::string color = GREEN);
+		static void printVector(Client & client,
+			const std::vector<char> & response,
+			const std::string color = GREEN, const int level = 1);
 		const sockaddr_in & getSockAdress() const;
 
 		bool setup();

@@ -64,7 +64,8 @@ void Server::clientMessage(const size_t i, ssize_t ret)
 
 	std::vector<char> str(this->_readBuffer.begin(),
 		this->_readBuffer.begin() + ret);
-	Server::printVector(str);
+	Server::printVector(this->_clients[i], str,	HIGH_INTENSITY_YELLOW,
+		static_cast<logLevel>(INFO));
 
 	this->_clients[i].messageRecv.
 		insert(this->_clients[i].messageRecv.end(), 
@@ -94,7 +95,7 @@ void Server::headerCheckin(const size_t i, ssize_t ret)
 	std::stringstream ss;
 	ss << "Header Checkin - recv " << ret << " bytes";
 	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
-	// Server::printVector(this->_clients[i].messageRecv);
+	Server::printVector(this->_clients[i], this->_clients[i].messageRecv);
 
 	std::vector<char>::iterator it;		
 	if (this->isDelimiterFind("\r\n\r\n", i, it))		
@@ -104,7 +105,7 @@ void Server::headerCheckin(const size_t i, ssize_t ret)
 
 		this->isMaxHeaderSize(it + 4, i);					
 		this->_clients[i].headerRequest.parse(this->_clients[i]);								
-		// this->_clients[i].headerRequest.displayParsingResult();
+		this->_clients[i].headerRequest.displayParsingResult();
 		if (!this->_clients[i].headerRequest.getIsValid())
 			throw Server::ShortCircuitException(CODE_400_BAD_REQUEST);			
 		this->getRespHeader(i);

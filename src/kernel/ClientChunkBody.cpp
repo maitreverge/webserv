@@ -112,7 +112,7 @@ bool Server::isChunkPartComplete(const size_t i,
 		this->_clients[i].messageRecv.
 			insert(this->_clients[i].messageRecv.end(),
 			tmp.begin() + clearNLine, tmp.end());
-		Server::printVector(this->_clients[i].messageRecv);
+		Server::printVector(this->_clients[i], this->_clients[i].messageRecv);
 		if (clearNLine == 2 && !this->_clients[i].messageRecv.empty())
 			this->_clients[i].retryChunked = true;
 		return true;

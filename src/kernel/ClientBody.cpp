@@ -6,7 +6,7 @@ void Server::bodyCheckin(const size_t i, const size_t addBodysize)
 	std::stringstream ss;
 	ss << "Body Checkin - recv " << addBodysize << " bytes";
 	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
-	// Server::printVector(this->_clients[i].messageRecv);
+	Server::printVector(this->_clients[i], this->_clients[i].messageRecv);
 
 	this->_clients[i].bodySize += addBodysize;
 	if (this->isChunked(i))
@@ -76,7 +76,7 @@ bool Server::isBodyEnd(const size_t i)
 void Server::sendBodyPart(const size_t i)
 {
 	Logger::getInstance().log(DEBUG, "Send Body Part", this->_clients[i]);
-	Server::printVector(this->_clients[i].messageRecv);
+	Server::printVector(this->_clients[i], this->_clients[i].messageRecv);
 	
 	if (this->_clients[i].headerRequest.getMethod() == "POST")
 		this->_clients[i].responseBuilder.setBodyPost(this->_clients[i], false);		
@@ -87,7 +87,7 @@ void Server::sendBodyPart(const size_t i)
 void Server::sendBodyEnd(const size_t i)
 {	
 	Logger::getInstance().log(DEBUG, "Send Body End", this->_clients[i]);
-	// Server::printVector(this->_clients[i].messageRecv);
+	Server::printVector(this->_clients[i], this->_clients[i].messageRecv);
 	
 	if (this->_clients[i].headerRequest.getMethod() == "POST")		
 		this->_clients[i].responseBuilder.setBodyPost(this->_clients[i], true);						
