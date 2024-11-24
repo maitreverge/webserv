@@ -6,7 +6,7 @@ void ResponseBuilder::checkCGI( void ){
 
     // Define the file extensions for Python and PHP scripts
     string extensionPHP = ".php";
-    string extensionPython = ".out";
+    string extensionPython = ".py";
 	string extensionTarget;
 
     // Find the first positions of the Python and PHP extensions in the URI
