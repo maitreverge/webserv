@@ -11,11 +11,12 @@ class Cgi
     struct timeval	_start;
     pid_t        	_pid;
 
-	void hasError(Client & client, std::string err);
-    void isTimeout(Client & client, std::string err);
-	int	 getTimeSpan(Client & client) const;
-    void retHandle(Client & client, ssize_t ret, std::string err, 
+	void		hasError(Client & client, std::string err);
+    void 		isTimeout(Client & client, std::string err);
+	int	 		getTimeSpan(Client & client) const;
+    void 		retHandle(Client & client, ssize_t ret, std::string err, 
     std::string info);
+	std::string getPath(const std::string & exe, Client & client);
 
     public:
     

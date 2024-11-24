@@ -86,27 +86,49 @@ void Cgi::child(Client & client)
     if (client.responseBuilder._fileExtension == "out")    
     {
 		char *argv[] = {NULL};
-        execve(path.c_str(), argv, env); //!
+        execve(path.c_str(), argv, env);
+	}	
+	else if (client.responseBuilder._fileExtension == "py")
+	{	
+		char *argv[] = {const_cast<char *>("python3"),
+			const_cast<char *>(path.c_str()), NULL};
+        execve(this->getPath("python3", client).c_str(), argv, env); 
 	}
-	// else 
-	// if (client.responseBuilder._fileExtension == "py")
-	// {	
-	// 	char *argv[] = {const_cast<char *>("/usr/bin/python3"),
-	// 		const_cast<char *>(path.c_str()), NULL};
-    //     execve("/usr/bin/python3", argv, env); //!
-	// }
-    // else if (client.responseBuilder._fileExtension == "php")
-	// {	
-	// 	char *argv[] = {const_cast<char *>("/usr/bin/php-cgi"),
-	// 		const_cast<char *>(path.c_str()), NULL};
-    //     execve("/usr/bin/php-cgi", argv, env); //!
-	// }
+    else if (client.responseBuilder._fileExtension == "php")
+	{	
+		char *argv[] = {const_cast<char *>("php-cgi"),
+			const_cast<char *>(path.c_str()), NULL};
+    	execve(this->getPath("php-cgi", client).c_str(), argv, env);
+	}
 		// execve(path.c_str(), argv, env);
     // execve("/home/seblin/42/42_webserv/cgi/main_inout.out", argv, env); 		    
     // execve("/home/svidot/42_am/webserv/cgi/main_inout.out", argv, env); 
     // execve(client.responseBuilder., argv, env);   
     std::cerr << "\e[1;31mexecve failed\e[0m" << std::endl;
     _exit(1);
+}
+
+std::string Cgi::getPath(const std::string & exe, Client & client)
+{
+	if (char * env = std::getenv("PATH"))
+	{
+		std::string path;
+		path.reserve(128);
+		std::istringstream ss(env);
+		std::string line;
+		while (std::getline(ss, line, ':'))
+		{
+			path = line + '/' + exe;
+			if (!access(path.c_str(), F_OK | X_OK))
+				return path;
+		}
+		Logger::getInstance().log(ERROR, "interpretor no exist", client); _exit(1);
+		// throw (Logger::getInstance().log(ERROR, "interpretor no exist", client),
+		// 	Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
+	}
+	else
+		throw (Logger::getInstance().log(ERROR, "path no exist", client),
+			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));	
 }
 
 void Cgi::retHandle(Client & client, ssize_t ret, std::string err,
@@ -177,11 +199,11 @@ void Cgi::hasError(Client & client, std::string err)
 		int exitCode = WEXITSTATUS(status);
 		if (exitCode != 0)		
 			throw (Logger::getInstance().log(ERROR, err, client), Server::
-				ShortCircuitException(static_cast<e_errorCodes>(exitCode))); 					
+				ShortCircuitException(CODE_406_NOT_ACCEPTABLE)); 					
 	}
-	else if (pid < 0)
-		throw (Logger::getInstance().log(ERROR, "waitpid", client),
-				Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
+	else if (pid < 0){}
+		// throw (Logger::getInstance().log(ERROR, "waitpid", client),
+		// 		Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
 }
 
 void Cgi::setBody(Client & client, bool eof)
