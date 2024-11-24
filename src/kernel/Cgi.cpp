@@ -90,21 +90,18 @@ void Cgi::child(Client & client)
     Logger::getInstance().~Logger();
     Kernel::getInstance().~Kernel();
     if (client.responseBuilder._fileExtension == "out")    
-    {
-		std::cerr << "out" << std::endl;
+    {	
 		char *argv[] = {NULL};
         execve(path.c_str(), argv, env);
 	}	
 	else if (client.responseBuilder._fileExtension == "py")
 	{	
-		std::cerr << "py" << std::endl;
 		char *argv[] = {const_cast<char *>("python3"),
 			const_cast<char *>(path.c_str()), NULL};
         execve(this->getPath("python3", client).c_str(), argv, env); 
 	}
     else if (client.responseBuilder._fileExtension == "php")
 	{	
-		std::cerr << "php" << std::endl;
 		char *argv[] = {const_cast<char *>("php-cgi"),
 			const_cast<char *>(path.c_str()), NULL};
     	execve(this->getPath("php-cgi", client).c_str(), argv, env);

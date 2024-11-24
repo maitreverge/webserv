@@ -47,7 +47,7 @@ void Server::sendBuffering(const size_t i, std::vector<char> & response)
 
 bool Server::replyClient(const size_t i, std::vector<char> & resp)
 {	
-	Logger::getInstance().log(DEBUG, "Reply Client", this->_clients[i]);
+	Logger::getInstance().log(INFO, "Reply Client", this->_clients[i]);
 	// Server::printVector(resp);
 	if (!FD_ISSET(this->_clients[i].fd, &Kernel::_writeSet))
 		return Logger::getInstance().log(DEBUG, "not ready to reply Client",
@@ -65,7 +65,7 @@ bool Server::replyClient(const size_t i, std::vector<char> & resp)
 		return true;
 	}
 	std::vector<char> str(resp.data(), resp.data() + static_cast<size_t>(ret));  		
-	Logger::getInstance().log(INFO, "sent to client: ", this->_clients[i]); 
+	Logger::getInstance().log(DEBUG, "sent to client: ", this->_clients[i]); 
 	Server::printVector(str);
 	resp.erase(resp.begin(), resp.begin() + ret);
 	if (resp.empty())
