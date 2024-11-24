@@ -127,7 +127,7 @@ void	ResponseBuilder::checkMethod( void ){
 
 void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_errorCodes codeInput ){
 
-	Logger::getInstance().log(DEBUG, "ResponseBuilder->getHeader", inputClient);
+	Logger::getInstance().log(DEBUG, "ResponseBuilder Get Header", inputClient);
 		
 	_client = &inputClient; // init client
 	_config = &inputConfig; // init config

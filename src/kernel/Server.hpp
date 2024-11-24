@@ -24,7 +24,6 @@ class Server
 	
 	bool recevData(const size_t i);
 	void clientMessage(const size_t i, ssize_t ret);
-	void displayClient(Client & client) const;
 	void retrySend(const size_t i);
 	void headerCheckin(const size_t i, ssize_t ret);
 	void getRespHeader(const size_t i);

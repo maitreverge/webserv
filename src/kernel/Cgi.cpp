@@ -40,7 +40,7 @@ Cgi::~Cgi()
 
 void Cgi::launch(Client & client)
 {   
-    Logger::getInstance().log(INFO, "Launch Cgi");  
+    Logger::getInstance().log(DEBUG, "Launch Cgi");  
 	
     if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, this->_fds) < 0)
 		throw (Logger::getInstance().log(ERROR, "socket pair", client),
@@ -64,7 +64,7 @@ void Cgi::launch(Client & client)
 
 void Cgi::child(Client & client)
 {
-    Logger::getInstance().log(INFO, "Child", client);
+    Logger::getInstance().log(DEBUG, "Child", client);
     Logger::getInstance().log(DEBUG, client.responseBuilder._fileExtension,
         client);
     std::cout << std::flush;
@@ -76,10 +76,10 @@ void Cgi::child(Client & client)
     if (chdir(client.responseBuilder._folderCGI.c_str()) < 0)
 	{
 		std::cerr << "chdir failed" << std::endl;
-		exit(1);
-	}
+		
 		// throw (Logger::getInstance().log(ERROR, "chdir", client),
 		// 	Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
+	}
     std::string envPathInfo
         ("PATH_INFO=" + client.responseBuilder._pathInfo);
     
@@ -151,7 +151,7 @@ void Cgi::retHandle(Client & client, ssize_t ret, std::string err,
 	Logger::getInstance().log(DEBUG, ss.str());
 
     if (!ret)    
-        Logger::getInstance().log(INFO, info);
+        Logger::getInstance().log(DEBUG, info);
     else if (ret < 0)
     {	      
         errnoHandle();		
@@ -183,18 +183,19 @@ int Cgi::getTimeSpan(Client & client) const
 
 void Cgi::isTimeout(Client & client, std::string err)
 {
+	Logger::getInstance().log(DEBUG, "Cgi Is Timeout", client);
+
 	if (!this->_start.tv_sec && gettimeofday(&this->_start, NULL))
 		throw (Logger::getInstance().log(ERROR, "isTimeS gettimeofday", client),
 			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
     int span = getTimeSpan(client);   
-    if (span > client.conf->timeoutCgi / 2.0)
+    if (span >= client.conf->timeoutCgi / 2.0)
     { 
         std::stringstream ss;
-		ss << "Timeout - span: "  << span << "secs/" << client.conf->timeoutCgi
-			<< std::endl;
+		ss << "Timeout - span: "  << span << "secs/" << client.conf->timeoutCgi;			
         Logger::getInstance().log(WARNING, ss.str(), client);	
     }
-	if (span > client.conf->timeoutCgi)
+	if (span >= client.conf->timeoutCgi)
 	{      
         kill(this->_pid, SIGTERM);
 		std::memset(&this->_start, 0, sizeof(this->_start));
@@ -205,7 +206,7 @@ void Cgi::isTimeout(Client & client, std::string err)
 
 void Cgi::hasError(Client & client, std::string err)
 {
-	Logger::getInstance().log(INFO, "Cgi Has Error", client);
+	Logger::getInstance().log(DEBUG, "Cgi Has Error", client);
 
 	int status;
 	pid_t pid = waitpid(this->_pid, &status, WNOHANG);
@@ -219,7 +220,7 @@ void Cgi::hasError(Client & client, std::string err)
 			std::cout << "ex code " << exitCode << std::endl;
 			if (exitCode != 0)		
 				throw (Logger::getInstance().log(ERROR, err, client), Server::
-					ShortCircuitException(CODE_406_NOT_ACCEPTABLE)); 					
+					ShortCircuitException(CODE_503_SERVICE_UNAVAILABLE)); 					
 		}
 		else if (WIFSIGNALED(status)) {
             // int signal = WTERMSIG(status);
@@ -228,20 +229,20 @@ void Cgi::hasError(Client & client, std::string err)
         }
 	}
 	else if (pid < 0){Logger::getInstance().log(ERROR, "waitpid", client);}
-	else {Logger::getInstance().log(DEBUG, "else", client);}
+	else {Logger::getInstance().log(DEBUG, "cgi is running", client);}
 		// throw (Logger::getInstance().log(ERROR, "waitpid", client),
 		// 		Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
 }
 
 void Cgi::setBody(Client & client, bool eof)
 {
-    Logger::getInstance().log(INFO, "Cgi Set Body", client);
+    Logger::getInstance().log(DEBUG, "Cgi Set Body", client);
 
 	this->hasError(client, "cgi get body has error");
 	this->isTimeout(client, "cgi get body timeout is over");
     if (!FD_ISSET(this->_fds[1], &Kernel::_writeSet))    
         return Logger::getInstance().log(DEBUG, "cgi not ready to send");     
-    Logger::getInstance().log(WARNING, "cgi ready to send");
+    Logger::getInstance().log(DEBUG, "cgi ready to send");
  	ssize_t ret = send(this->_fds[1], client.messageRecv.data(),
         client.messageRecv.size(), MSG_NOSIGNAL);
     Kernel::cleanFdSet(client);	
@@ -259,7 +260,7 @@ void Cgi::setBody(Client & client, bool eof)
 
 bool Cgi::getBody(Client & client)
 {
-    Logger::getInstance().log(INFO, "Cgi Get Body", client);
+    Logger::getInstance().log(DEBUG, "Cgi Get Body", client);
 
 	this->hasError(client, "cgi get body has error");
 	this->isTimeout(client, "cgi get body timeout is over");
@@ -271,11 +272,11 @@ bool Cgi::getBody(Client & client)
 			log(DEBUG, "cgi not ready to recev", client), true;  
     client.messageSend.clear();
     client.messageSend.resize(SEND_BUFF_SIZE);
-	Logger::getInstance().log(WARNING, "cgi ready to recev", client);
+	Logger::getInstance().log(DEBUG, "cgi ready to recev", client);
     ssize_t ret = recv(this->_fds[1], client.messageSend.data(),
         client.messageSend.size(), 0);
 	Kernel::cleanFdSet(client);
-	retHandle(client, ret, "recv", "end cgi");
+	this->retHandle(client, ret, "recv", "end cgi");
 	client.messageSend.erase(client.messageSend.begin() + ret,
 		client.messageSend.end());
 	return false; 

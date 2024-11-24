@@ -28,8 +28,7 @@ bool Server::recevData(const size_t i)
 	{
 		this->_readBuffer.clear();
 		this->_readBuffer.resize(RECV_BUFF_SIZE);	
-		Logger::getInstance().log(WARNING, "ready to recv",
-			this->_clients[i]);		
+		Logger::getInstance().log(DEBUG, "ready to recv", this->_clients[i]);		
 		ssize_t ret = recv(this->_clients[i].fd, this->_readBuffer.data(),
 			this->_readBuffer.size(), 0);
 		Kernel::cleanFdSet(this->_clients[i]);		
@@ -48,7 +47,7 @@ bool Server::recevData(const size_t i)
 
 void Server::retrySend(const size_t i)
 {
-	Logger::getInstance().log(INFO, "Retry Send", this->_clients[i]);	
+	Logger::getInstance().log(DEBUG, "Retry Send", this->_clients[i]);	
 	stringstream ss; ss << "Content-Length: "
 		<< this->_clients[i].headerRequest.getHeaders().ContentLength
 		<< " MessageRecv-Size: " << this->_clients[i].messageRecv.size()
@@ -87,7 +86,7 @@ void Server::headerCheckin(const size_t i, ssize_t ret)
 {
 	stringstream ss;
 	ss << "Header Checkin - recv " << ret << " bytes";
-	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
+	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
 	Server::printVector(this->_clients[i].messageRecv);
 
 	std::vector<char>::iterator it;		

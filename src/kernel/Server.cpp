@@ -58,7 +58,7 @@ void Server::catchClients(Kernel & kernel)
 			return Logger::getInstance().log(ERROR, "accept");		
 		if (kernel.countClients() >= this->_conf.maxClient)		
 			return close(client.fd),
-				Logger::getInstance().log(ERROR, "max client reached", client);					
+				Logger::getInstance().log(WARNING, "max clients", client);					
 		Logger::getInstance().log(INFO, "\e[30;101mnew client\e[0m", client);
 		struct timeval timeout = {SND_TIMEOUT, 0};	
 		if (setsockopt(client.fd, SOL_SOCKET, SO_SNDTIMEO, &timeout,
@@ -69,16 +69,6 @@ void Server::catchClients(Kernel & kernel)
 		Kernel::_maxFd = std::max(Kernel::_maxFd, client.fd);
 		this->_clients.push_back(client);
 	}	
-}
-
-void Server::displayClient(Client & client) const
-{
-	std::stringstream ss;
-	ss << "new client" << " - Fd: " << client.fd << " Family: "
-		<< client.address.sin_family << " Addres: "
-		<< inet_ntoa(client.address.sin_addr) << " Port: "
-		<< ntohs(client.address.sin_port);
-	Logger::getInstance().log(INFO, ss.str(), client);
 }
 
 void Server::exitClient(size_t i)
@@ -120,8 +110,12 @@ void Server::printVector(const std::vector<char> & response, std::string color)
 
 void Server::shortCircuit(const e_errorCodes err, const size_t i)
 {
-	Logger::getInstance().log(INFO, "Short Circuit", this->_clients[i]);
-
+	errorCode errCode;
+	std::stringstream ss;	
+	ss << "Short Circuit: " << RED << err << " " << errCode.getCode(err)
+		<< RESET;
+	Logger::getInstance().log(WARNING, ss.str(), this->_clients[i]);
+	
 	this->_clients[i].sendBuffer.clear();
 	this->_clients[i].messageRecv.clear();
 	this->_clients[i].responseBuilder = ResponseBuilder();

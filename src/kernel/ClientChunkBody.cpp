@@ -16,7 +16,7 @@ bool Server::isChunked(const size_t i)
 				this->_clients[i]);
 		return true;	
 	}
-	Logger::getInstance().log(INFO, "not chunked", this->_clients[i]);
+	Logger::getInstance().log(DEBUG, "not chunked", this->_clients[i]);
 
 	return false;
 }

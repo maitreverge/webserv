@@ -5,7 +5,7 @@ void Server::bodyCheckin(const size_t i, const size_t addBodysize)
 {
 	stringstream ss;
 	ss << "Body Checkin - recv " << addBodysize << " bytes";
-	Logger::getInstance().log(INFO, ss.str(), this->_clients[i]);
+	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
 	Server::printVector(this->_clients[i].messageRecv);
 
 	this->_clients[i].bodySize += addBodysize;
@@ -49,7 +49,7 @@ void Server::isBodyTooLarge(const size_t i)
 
 bool Server::isBodyEnd(const size_t i)
 {
-	Logger::getInstance().log(INFO, "Is Body End", this->_clients[i]);
+	Logger::getInstance().log(DEBUG, "Is Body End", this->_clients[i]);
 
 	if (this->_clients[i].headerRequest.getHeaders().TransferEncoding
 		== "chunked" && !this->_clients[i].chunkSize)
@@ -73,7 +73,7 @@ bool Server::isBodyEnd(const size_t i)
 
 void Server::sendBodyPart(const size_t i)
 {
-	Logger::getInstance().log(INFO, "Send Body Part", this->_clients[i]);
+	Logger::getInstance().log(DEBUG, "Send Body Part", this->_clients[i]);
 	Server::printVector(this->_clients[i].messageRecv);
 	
 	if (this->_clients[i].headerRequest.getMethod() == "POST")
@@ -84,7 +84,7 @@ void Server::sendBodyPart(const size_t i)
 
 void Server::sendBodyEnd(const size_t i)
 {	
-	Logger::getInstance().log(INFO, "Send Body End", this->_clients[i]);
+	Logger::getInstance().log(DEBUG, "Send Body End", this->_clients[i]);
 	Server::printVector(this->_clients[i].messageRecv);
 	
 	if (this->_clients[i].headerRequest.getMethod() == "POST")		
