@@ -9,6 +9,9 @@ Logger::Logger() : logToStdOut(1)
 {
 	_logLevel[INFO] = 		1;
 	_logLevel[DEBUG] = 		0;
+	#ifdef DEB
+		_logLevel[DEBUG] = 	1;	
+	#endif
 	_logLevel[WARNING] = 	1;
 	_logLevel[ERROR] = 		1;
 	_accessFile.open("access.log", std::ios::out);

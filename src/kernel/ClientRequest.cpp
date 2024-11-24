@@ -28,7 +28,8 @@ bool Server::recevData(const size_t i)
 	{
 		this->_readBuffer.clear();
 		this->_readBuffer.resize(RECV_BUFF_SIZE);	
-		Logger::getInstance().log(DEBUG, "ready to recv", this->_clients[i]);		
+		Logger::getInstance().log(DEBUG, "\e[31;43mcgi ready to recev\e[0m",
+			this->_clients[i]);		
 		ssize_t ret = recv(this->_clients[i].fd, this->_readBuffer.data(),
 			this->_readBuffer.size(), 0);
 		Kernel::cleanFdSet(this->_clients[i]);		
@@ -104,8 +105,10 @@ void Server::headerCheckin(const size_t i, ssize_t ret)
 			this->_clients[i]);
 
 		this->isMaxHeaderSize(it + 4, i);					
-		this->_clients[i].headerRequest.parse(this->_clients[i]);								
-		this->_clients[i].headerRequest.displayParsingResult();
+		this->_clients[i].headerRequest.parse(this->_clients[i]);
+		#ifdef DEB								
+			this->_clients[i].headerRequest.displayParsingResult();
+		#endif
 		if (!this->_clients[i].headerRequest.getIsValid())
 			throw Server::ShortCircuitException(CODE_400_BAD_REQUEST);			
 		this->getRespHeader(i);
