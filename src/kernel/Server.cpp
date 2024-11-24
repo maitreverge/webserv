@@ -100,6 +100,7 @@ void Server::exitServer()
 
 void Server::printVector(const std::vector<char> & response, std::string color)
 {
+	std::stringstream ss;
 	std::cout << std::endl << CYAN << "Print Vector: " << YELLOW
 		<< response.size() << " bytes" << color << std::endl;
 	std::cout << "-";		

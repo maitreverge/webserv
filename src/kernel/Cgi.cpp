@@ -146,7 +146,7 @@ std::string Cgi::getPath(const std::string & exe, Client & client)
 void Cgi::retHandle(Client & client, ssize_t ret, std::string err,
 	std::string info)
 {		
-	stringstream ss; ss << "ret: " << ret;
+	std::stringstream ss; ss << "ret: " << ret;
 	Logger::getInstance().log(DEBUG, ss.str());
 
     if (!ret)    

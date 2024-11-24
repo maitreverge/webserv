@@ -55,7 +55,7 @@ void Server::calculateChunkSize(const size_t i,
 		}
 		else
 		{
-			stringstream ss; ss << "hexadecimal succes - len: " << len;
+			std::stringstream ss; ss << "hexadecimal succes - len: " << len;
 			Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]); 
 			this->_clients[i].chunkSize = len;
 		}
@@ -70,18 +70,17 @@ bool Server::secondDelim(const size_t i, std::vector<char>::iterator & it)
 	{
 		Logger::getInstance().log(DEBUG, "second delim found",
 			this->_clients[i]);
-		stringstream ss; ss << "chunked size " << this->_clients[i].chunkSize;
+		std::stringstream ss;
+		ss << "chunked size " << this->_clients[i].chunkSize;
 		Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
 
 		if (!this->isChunkPartComplete(i, it))
 		{
 			if (std::distance(this->_clients[i].messageRecv.begin(), it)
-				> static_cast<std::ptrdiff_t>(this->_clients[i].chunkSize))
-			{
-				Logger::getInstance().log(ERROR, "chunk size",
-					this->_clients[i]);
-				throw Server::ShortCircuitException(CODE_400_BAD_REQUEST);			
-			}			
+				> static_cast<std::ptrdiff_t>(this->_clients[i].chunkSize))			
+				throw (Logger::getInstance().log(ERROR, "chunk size",
+					this->_clients[i]),
+				 Server::ShortCircuitException(CODE_400_BAD_REQUEST));
 			else
 				Logger::getInstance().log(DEBUG, "chunk part inferior",
 					this->_clients[i]);

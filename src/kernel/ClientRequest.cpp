@@ -49,7 +49,7 @@ void Server::retrySend(const size_t i)
 {
 	Logger::getInstance().log(DEBUG, "Retry Send", this->_clients[i]);	
 
-	stringstream ss; ss << "Content-Length: "
+	std::stringstream ss; ss << "Content-Length: "
 		<< this->_clients[i].headerRequest.getHeaders().ContentLength
 		<< " MessageRecv-Size: " << this->_clients[i].messageRecv.size()
 		<< std::endl;
@@ -91,7 +91,7 @@ bool Server::isDelimiterFind(std::string delimiter, const size_t i,
 
 void Server::headerCheckin(const size_t i, ssize_t ret)
 {
-	stringstream ss;
+	std::stringstream ss;
 	ss << "Header Checkin - recv " << ret << " bytes";
 	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
 	// Server::printVector(this->_clients[i].messageRecv);
@@ -136,7 +136,7 @@ void Server::isMaxHeaderSize(std::vector<char>::iterator it, const size_t i)
 {
 	if (it - this->_clients[i].messageRecv.begin() > this->_conf.maxHeaderSize)	
 	{		
-		stringstream ss;
+		std::stringstream ss;
 		ss << "header size" << " Actual-Size: "
             << it - this->_clients[i].messageRecv.begin()
             << " - Max-Header-Size : " << this->_conf.maxHeaderSize;
