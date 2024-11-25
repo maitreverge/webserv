@@ -20,7 +20,6 @@ class Server
 	sockaddr_in			_sockAddr;
 	std::vector<char>	_writeBuffer;
 	std::vector<char>	_readBuffer;
-	int					_fd;
 	
 	void clientMessage(size_t i, ssize_t ret);
 	void displayClient(Client & client) const;
@@ -29,12 +28,16 @@ class Server
 	void getRespHeader(size_t i);
 	void bodyCheckin(size_t i);
 	void handleClientBody(size_t i, ssize_t ret);
-	bool isDelimiterFind(size_t i, std::vector<char>::iterator & it);
+	bool isDelimiterFind(std::string delimiter, size_t i,
+		std::vector<char>::iterator & it);
 	void shortCircuit(e_errorCodes err, size_t i);
 	bool isMaxHeaderSize(std::vector<char>::iterator it, size_t i);
 	bool isContentLengthValid(size_t i);
-	bool isBodyTerminated(size_t i);
+	bool isBodyEnd(size_t i);
+	void sendBodyPart(size_t i);
+	void sendBodyEnd(size_t i);
 	bool isBodyTooLarge(size_t i);
+	bool isChunked(size_t i);
 	void printResponse(const std::vector<char> & response);
 	bool replyClient(size_t i, std::vector<char> & response);
 	bool fillMessageSend(size_t i);
@@ -44,6 +47,7 @@ class Server
 
 	public:
 
+		int					_fd;
 		std::vector<Client> _clients;
 
 		Server(sockaddr_in & sockaddr, Config & conf);

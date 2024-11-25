@@ -9,8 +9,8 @@
 #include "Logger.hpp"
 #include "ConfigFileParser.hpp"
 
-#define RECV_BUFF_SIZE 30
-#define SEND_BUFF_SIZE 30
+#define RECV_BUFF_SIZE 3000//30000
+#define SEND_BUFF_SIZE 3000//0000
 #define SND_TIMEOUT 1
 #define SLCT_TIMEOUT 1
 
@@ -21,7 +21,7 @@ class Kernel
 	void		callCatch();
 	static void callListen(Server & server);
 	static void callReply(Server & server);
-
+	
 	public:
 
 		Config			_conf;

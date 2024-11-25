@@ -1,0 +1,24 @@
+1,5c1,3
+< HTTP/1.1 404 Not Found
+< Content-Length: 283
+< Content-Type: text/html
+< 
+< <html>
+---
+> HTTP/1.1 404 Not Found
+> Content-Length: 283
+> Content-Type: text/html
+7,16c5
+< <head>
+< 	<title>404</title>
+< </head>
+< 
+< <body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+< 	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">404 NOT FOUND</h1>
+< 	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+< </body>
+< 
+< </html>
+---
+> <!DOCTYPE html><html><head><title>404	Not Found</title></head><body><h1>The 404.html file has not been found.This is a backup self-generated webpage.</h1><h1><img src="https://freeyork.org/wp-content/uploads/2015/06/DKOpAT4VAAEmmes.jpg" alt="Description of image"></h1></body></html>
+\ No newline at end of file

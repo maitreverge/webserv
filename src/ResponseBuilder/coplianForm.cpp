@@ -55,6 +55,8 @@ ResponseBuilder::ResponseBuilder( void ){
 
 	_deleteURI = false;
 
+	_backupNameFile = "backup.html";
+
 	this->_ifsStreamHead = 0; // ! NE PAS TOUCHER	
 
 	_writeReady = false;
@@ -98,6 +100,8 @@ ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 	this->_folderCGI = rhs._folderCGI;
 	this->_backupNameFile = rhs._backupNameFile;
 	this->_deleteURI = rhs._deleteURI;
+
+	this->_backupNameFile = rhs._backupNameFile;
 
 	this->_client = rhs._client;
 	this->_config = rhs._config;

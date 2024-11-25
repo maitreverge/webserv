@@ -12,6 +12,7 @@ struct Headers
 	std::string							Connection;
 	std::string							ContentType;
 	std::string							Host;
+	std::string							TransferEncoding;
 	std::vector<std::string>			Accept;
 	size_t								ContentLength;
 	std::map<std::string, std::string>	Cookie;

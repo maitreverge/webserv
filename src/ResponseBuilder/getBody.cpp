@@ -4,8 +4,14 @@
 bool ResponseBuilder::getBody( Client &inputClient ){
 
 	Logger::getInstance().log(INFO, "Response Builder Get Body", inputClient);
-	if (this->_isCGI)	
-		return this->_cgi.getBody(inputClient);
+	try	{
+		if (this->_isCGI)	
+			return this->_cgi.getBody(inputClient);
+	}
+	catch (const exception & e)
+	{
+		return false;
+	}
 	
 	// Edge case where you don't need a body
 	if (isErrorRedirect() ) // Code 300 Redirect

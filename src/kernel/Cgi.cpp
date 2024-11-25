@@ -20,9 +20,12 @@ Cgi & Cgi::operator=(const Cgi & rhs)
 	{
 		FD_CLR(this->_fds[1], &Kernel::_actualSet);
 		close(this->_fds[1]);
+		this->_fds[1] = dup(rhs._fds[1]);
+		FD_SET(this->_fds[1], &Kernel::_actualSet);
 	}
-	this->_fds[1] = dup(rhs._fds[1]);
-	FD_SET(this->_fds[1], &Kernel::_actualSet);
+	else
+		this->_fds[1] = rhs._fds[1];
+		
 	Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fds[1]);
 	return *this;
 }
@@ -153,6 +156,7 @@ bool Cgi::isTimeout(Client & client, std::string err)
 		this->_start = 0;
         client.exitRequired = true;
 		client.ping = 2;
+        throw std::runtime_error("timeout");
 		// client.responseBuilder.setError(CODE_508_LOOP_DETECTED);
 		// Return true will never happen
         return true;

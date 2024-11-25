@@ -1,0 +1,6 @@
+curl -i -s -X GET http://localhost:3014/_websites/festival
+--END-REQUEST--
+curl -i -s -X GET http://localhost:3014/_websites/cyborg_gaming
+--END-REQUEST--
+curl -i -s -X GET http://localhost:3014/_websites/villa_agency
+--END-REQUEST--

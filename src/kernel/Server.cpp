@@ -40,7 +40,7 @@ bool Server::setup()
 		this->exitServer();
 		return false;
 	}
-	Logger::getInstance().log(INFO, "listen", *this);
+	Logger::getInstance().log(INFO, "listen", *this);	
 	return true;
 }
 
@@ -64,8 +64,8 @@ void Server::catchClients(Kernel & kernel)
 				Logger::getInstance().log(ERROR, "send timeout", client);
 		FD_SET(client.fd, &Kernel::_actualSet);
 		Kernel::_maxFd = std::max(Kernel::_maxFd, client.fd);
-		this->_clients.push_back(client);				
-	}
+		this->_clients.push_back(client);
+	}	
 }
 
 void Server::displayClient(Client & client) const

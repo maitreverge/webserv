@@ -42,6 +42,7 @@ bool Server::endReply(size_t i)
 		return this->exitClient(i), true;						
 	this->_clients[i].headerRequest = RequestParser();
 	this->_clients[i].responseBuilder = ResponseBuilder();
+	this->_clients[i].chunkedSize = -1;
 	this->_clients[i].bodySize = 0;
 	this->_clients[i].ping = 0;		
 	this->_clients[i].messageSend.clear();
@@ -60,7 +61,7 @@ void Server::printResponse(const std::vector<char> & response)
 bool Server::replyClient(size_t i, std::vector<char> & response)
 {	
 	Logger::getInstance().log(INFO, "Reply Client", this->_clients[i]);
-	printResponse(response);
+	this->printResponse(response);
 
 	ssize_t ret = send(this->_clients[i].fd, response.data(), response.size(),
 		MSG_NOSIGNAL);		

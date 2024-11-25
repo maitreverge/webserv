@@ -1,0 +1,15 @@
+1,4c1,4
+< HTTP/1.1 405 Method Not Allowed
+< Content-Length: 292
+< Content-Type: text/html
+< 
+---
+> HTTP/1.1 405 Method Not Allowed
+> Content-Length: 292
+> Content-Type: text/html
+> 
+16c16
+< </html>
+---
+> </html>
+\ No newline at end of file

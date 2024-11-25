@@ -84,12 +84,12 @@ void Kernel::launch()
 	while (true)
 	{
 		struct timeval timeout = {SLCT_TIMEOUT, 0};
-		this->_readSet = this->_writeSet = this->_actualSet;		
-		if (select(this->_maxFd + 1, &this->_readSet, &this->_writeSet,
+		Kernel::_readSet = Kernel::_writeSet = Kernel::_actualSet;		
+		if (select(Kernel::_maxFd + 1, &Kernel::_readSet, &Kernel::_writeSet,
 			0, &timeout) < 0) 
 		{	
 			if (!this->_exit)
-				Logger::getInstance().log(ERROR, "select");
+				Logger::getInstance().log(ERROR, "select");					
 			continue;
 		}		
 		if (this->_exit)

@@ -1,0 +1,2 @@
+ curl -i -s http://localhost:3010/index.html
+--END-REQUEST--

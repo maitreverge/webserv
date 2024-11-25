@@ -1,0 +1,11 @@
+-X, --request <command>: Specify request command to use.
+-d, --data <data>: Send specified data in POST request.
+-H, --header <header>: Pass custom header(s) to server.
+-i, --include: Include the HTTP response headers in the output.
+-o, --output <file>: Write output to <file> instead of stdout.
+-s, --silent: Silent mode (don't show progress meter or error messages).
+-u, --user <user:password>: Server user and password.
+-L, --location: Follow redirects.
+-I, --head: Fetch the headers only.
+-k, --insecure: Allow connections to SSL sites without certs.
+-F, --form <name=content>: Emulate form submission.

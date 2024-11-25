@@ -160,6 +160,7 @@ void	RequestParser::extractHeaders()
 	assignHeader("Accept", _Headers.Accept);
 	assignHeader("Content-Length", _Headers.ContentLength);
 	assignHeader("Cookie", _Headers.Cookie);
+	assignHeader("Transfer-Encoding", _Headers.TransferEncoding);
 }
 
 /**========================================================================
@@ -297,8 +298,8 @@ std::map<std::string, std::string> RequestParser::extractCookies(std::vector<std
  *========================================================================**/
 void RequestParser::displayParsingResult() const
 {
-	// displayAttributes();
-	// displayHeaders();
+	displayAttributes();
+	displayHeaders();
 }
 
 void RequestParser::displayAttributes() const
@@ -319,6 +320,8 @@ void		RequestParser::displayHeaders() const
 		print("ContentType: " + _Headers.ContentType);
 	if (_Headers.Host.length())
 		print("Host: " + _Headers.Host);
+	if (_Headers.TransferEncoding.length())
+		print("TransferEncoding: " + _Headers.TransferEncoding);
 	if (_Headers.Accept.size())
 	{
 		print("Accept: ");

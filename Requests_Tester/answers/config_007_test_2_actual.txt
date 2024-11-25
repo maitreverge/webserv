@@ -1,0 +1,4 @@
+HTTP/1.1 405 Method Not Allowed
+Content-Length: 4096
+Content-Type: application/octet-stream
+

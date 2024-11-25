@@ -1,0 +1,6 @@
+ curl -i -s -X POST -H "Content-Type: text/txt" -d '12345678910' http://localhost:3008
+--END-REQUEST--
+ curl -i -s -X POST -H "Content-Type: text/txt" -d '123456789' http://localhost:3008
+--END-REQUEST--
+ curl -i -s -X POST -H "Content-Type: text/txt" -d '1234567891' http://localhost:3008
+--END-REQUEST--
