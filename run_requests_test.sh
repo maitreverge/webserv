@@ -19,6 +19,9 @@ DIFF_DIR="Requests_Tester/diff"
 CHECK_FILE="Requests_Tester/check_file.ans"
 > "$CHECK_FILE" # On réinitialise le fichier à chaque exécution
 
+# launch creation_files_script.sh
+./Requests_Tester/creation_files_script.sh
+
 # Création des répertoires de résultats et de différences s'ils n'existent pas
 mkdir -p "$ANSWERS_DIR"
 mkdir -p "$DIFF_DIR"
