@@ -2,7 +2,8 @@
 
 # This scripts aims to create ressources for the DELETE method testing
 # some with authorizations, some without
-echo $PWD
+
+cd Requests_Tester
 
 mkdir -p delete_folder
 cd delete_folder
@@ -22,12 +23,13 @@ chmod -w file_1.txt
 cd folder_1
 touch hello.txt
 chmod 755 *
-echo "This is hello.txt content" > file_2.txt
+echo "This is hello.txt content" > hello.txt
 
-# Back to root
+# Back to Requests_Tester
 cd ../../
 
 # Create a file which can't be read
-touch no_read_file.txt
 echo "Content of no_read_file.txt" > no_read_file.txt
 chmod 044 no_read_file.txt 
+
+cd ..
