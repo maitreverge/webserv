@@ -4,7 +4,6 @@
 --END-REQUEST--
  curl -i -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3002/uploads/file.json
 --END-REQUEST--
-												WORK NEEDLE
  curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.json
 --END-REQUEST--
  curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: text/txt" -d 'Hello, World!' http://localhost:3002

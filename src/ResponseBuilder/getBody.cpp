@@ -36,7 +36,7 @@ bool ResponseBuilder::getBody( Client &inputClient ){
 	{
 		this->_ifs.seekg(this->_ifsStreamHead);
 		inputClient.messageSend.clear();
-		inputClient.messageSend.resize(SEND_BUFF_SIZE);//!
+		inputClient.messageSend.resize(inputClient.conf->send_buff_size);//!
 		// ! ADVANCED TEST : keskis passe si READ se passe mal 
 		this->_ifs.read(inputClient.messageSend.data(),
 			static_cast<std::streamsize>(inputClient.messageSend.size()));	

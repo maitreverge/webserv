@@ -27,7 +27,7 @@ bool Server::recevData(const size_t i)
 	if (FD_ISSET(this->_clients[i].fd, &Kernel::_readSet))
 	{
 		this->_readBuffer.clear();
-		this->_readBuffer.resize(RECV_BUFF_SIZE);	
+		this->_readBuffer.resize(this->_conf.recv_buff_size);	
 		Logger::getInstance().log(DEBUG, "\e[31;43mcgi ready to recev\e[0m",
 			this->_clients[i]);		
 		ssize_t ret = recv(this->_clients[i].fd, this->_readBuffer.data(),

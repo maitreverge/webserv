@@ -55,7 +55,7 @@ bool Server::replyClient(const size_t i, std::vector<char> & resp)
 	Logger::getInstance().log(DEBUG, "\e[31;43mready to reply\e[0m",
 		this->_clients[i]);
 	ssize_t ret = send(this->_clients[i].fd, resp.data(), std::min(resp.size(),
-		static_cast<size_t>(SEND_BUFF_SIZE)), MSG_NOSIGNAL);
+		static_cast<size_t>(this->_conf.send_buff_size)), MSG_NOSIGNAL);
 	Kernel::cleanFdSet(this->_clients[i]);	
 	if (ret <= 0)
 	{

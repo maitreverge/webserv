@@ -14,7 +14,7 @@ Client::Client(Config * _conf) : conf(_conf)
 	chunkSize = -1;
 	retryChunked = false;
 	headerRespons.reserve(static_cast<size_t>(_conf->maxHeaderSize)); 
-	messageSend.reserve(SEND_BUFF_SIZE);
+	messageSend.reserve(conf->send_buff_size);
 	sendBuffer.reserve(_conf->maxBodySize);
 	sendFlag = false;
 	
