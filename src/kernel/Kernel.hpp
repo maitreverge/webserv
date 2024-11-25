@@ -31,8 +31,8 @@ class Kernel
 	
 		Kernel(void);
 		Kernel(char* path);
-		~Kernel();
-
+		// ~Kernel();
+		void exitKernel();
 		static Kernel & getInstance(char * = NULL);
 		static void		cleanFdSet(Client & client);
 	

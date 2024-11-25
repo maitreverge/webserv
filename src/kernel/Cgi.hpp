@@ -24,8 +24,9 @@ class Cgi
         int _fds[2];
 
         Cgi();
-        ~Cgi();  
+		Cgi(const Cgi & src);
 	    Cgi & operator=(const Cgi &);
+        ~Cgi();  
 
         void    launch(Client & client); 
         void    child(Client & client);

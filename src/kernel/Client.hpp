@@ -27,6 +27,11 @@ struct Client
 	short int			ping;
 	bool 				pongHeader;
 	bool				exitRequired;
-	
-	Client(Config *);	
+
+	void 				copyAll(const Client & rhs);
+
+	Client(Config *);
+	Client(const Client & src);
+	Client & operator=(const Client & rhs);
+	~Client();
 };

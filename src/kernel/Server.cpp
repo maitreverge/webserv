@@ -76,18 +76,19 @@ void Server::exitClient(size_t i)
 	Logger::getInstance().log(INFO, "\e[30;101mclient exited\e[0m",
 		this->_clients[i]);
 
-	FD_CLR(this->_clients[i].fd, &Kernel::_actualSet);
-	close(this->_clients[i].fd);	
+	// FD_CLR(this->_clients[i].fd, &Kernel::_actualSet);
+	// close(this->_clients[i].fd);
+	// this->_clients[i].fd = -1;
 	this->_clients.erase(this->_clients.begin() + static_cast<int>(i));
 }
 
 void Server::exitClients()
 {
-	for (size_t i = 0; i < this->_clients.size(); i++)
-	{
-		FD_CLR(this->_clients[i].fd, &Kernel::_actualSet);
-		close(this->_clients[i].fd);	
-	}
+	// for (size_t i = 0; i < this->_clients.size(); i++)
+	// {
+	// 	FD_CLR(this->_clients[i].fd, &Kernel::_actualSet);// add if clr
+	// 	close(this->_clients[i].fd);	
+	// }
 	this->_clients.clear();
 }
 
