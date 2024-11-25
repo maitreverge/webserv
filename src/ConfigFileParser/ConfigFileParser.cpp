@@ -369,6 +369,8 @@ void ConfigFileParser::printServerData(const server _serverStruct[], size_t size
 
 void ConfigFileParser::printConfig(const Config& config) {
 	std::cout << "maxClient: " << config.maxClient << std::endl;
+	std::cout << "recv_buff_size: " << config.recv_buff_size << std::endl;
+	std::cout << "send_buff_size: " << config.send_buff_size << std::endl;
 
 	std::cout << "sockAddress:" << std::endl;
 	for (std::vector<struct sockaddr_in>::const_iterator it = config.sockAddress.begin(); it != config.sockAddress.end(); ++it) {

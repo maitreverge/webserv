@@ -41,6 +41,9 @@ struct Config
 	map<string, string>				redirection;
 	std::string						errorPagesPath;
 	RoutesData						routes;
+	
+	size_t							recv_buff_size;
+	size_t							send_buff_size;
 
 	Config();
 	Config(char* path);
