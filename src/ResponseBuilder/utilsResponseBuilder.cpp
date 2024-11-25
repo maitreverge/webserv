@@ -149,6 +149,8 @@ void	ResponseBuilder::checkNature( void ){
 			else
 			{
 				// POST AND DELETE
+				if (!_isCGI and _method == POST)
+					setError(CODE_401_UNAUTHORIZED);
 				if (!_isCGI)
 				{
 					// ! ne pas ecraser l'URI si c'est un CGI

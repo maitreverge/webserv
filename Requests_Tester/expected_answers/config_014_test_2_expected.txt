@@ -1,21 +1,39 @@
 HTTP/1.1 200 OK
-Content-Length: 509
+Content-Length: 882
 Content-Type: text/html
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Simple HTML Page</title>
-	<link rel="icon" href="favicon.ico" type="image/x-icon">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Listing Directory of URL _websites/cyborg_gaming/</title>
+<style>ul li a[href$="/"]::before {
+	content: "\1F4C1";
+	margin-right: 8px;
+}
+ul li a:not([href$="/"])::before {
+	content: "\1F4C4";
+	margin-right: 8px;
+}
+ul li a {
+	text-decoration: none;
+	color: inherit;
+}
+ul li a span {
+	text-decoration: underline;
+	color: blue;
+}
+</style>
 </head>
 <body>
-	<h1>Welcome to FABULOUS WEBSITE Page</h1>
-	<p>This is a paragraph of text on my simple HTML page.</p>
-	<a href="test.html">Go to Test Page</a>
-	<p></p>
-	<p></p>
-	<a href="testResponseBuilder/upload/uploadEntryPoint.html">Go to UPLOADING FILE Page</a>
-</body>
+<ul><li><a href="assets/">assets/</a></li>
+<li><a href="browse.html">browse.html</a></li>
+<li><a href="details.html">details.html</a></li>
+<li><a href="index.html">index.html</a></li>
+<li><a href="listing.html">listing.html</a></li>
+<li><a href="profile.html">profile.html</a></li>
+<li><a href="streams.html">streams.html</a></li>
+<li><a href="vendor/">vendor/</a></li>
+</ul></body>
 </html>

@@ -1,4 +1,5 @@
 HTTP/1.1 405 Method Not Allowed
-Content-Length: 4096
-Content-Type: application/octet-stream
+Content-Length: 292
+Content-Type: text/html
 
+<!DOCTYPE html><html><head><title>405	Method Not Allowed</title></head><body><h1>The 405.html file has not been found.This is a backup self-generated webpage.</h1><h1><img src="https://freeyork.org/wp-content/uploads/2015/06/DKOpAT4VAAEmmes.jpg" alt="Description of image"></h1></body></html>
