@@ -66,7 +66,7 @@ void Server::clientMessage(const size_t i, ssize_t ret)
 	std::vector<char> str(this->_readBuffer.begin(),
 		this->_readBuffer.begin() + ret);
 	Server::printVector(this->_clients[i], str,	HIGH_INTENSITY_YELLOW,
-		static_cast<logLevel>(INFO));
+		static_cast<int>(INFO));
 
 	this->_clients[i].messageRecv.
 		insert(this->_clients[i].messageRecv.end(), 

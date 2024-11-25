@@ -109,8 +109,8 @@ void Server::printVector(Client & client, const std::vector<char> & response,
 		ss << response[i];
 	ss << "-\e[0m";
 	Logger::getInstance().log(static_cast<logLevel>(level), ss.str(), client);
-	if (Logger::getInstance()._logLevel[static_cast<logLevel>(level)])
-		std::cout << std::endl;
+	if (Logger::getInstance()._logLevel[static_cast<logLevel>(level)])	
+		std::cout << std::endl;	
 }
 
 void Server::shortCircuit(const e_errorCodes err, const size_t i)
