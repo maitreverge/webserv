@@ -28,21 +28,24 @@ Client::Client(const Client & src)
 
 Client & Client::operator=(const Client & rhs)
 {
-	copyAll(rhs);
-	if (this->fd > 0)
+	this->clone(rhs);
+	if (this->fd >= 0)
 	{
 		FD_CLR(this->fd, &Kernel::_actualSet);
-		close(this->fd);
-		this->fd = dup(rhs.fd);
-		FD_SET(this->fd, &Kernel::_actualSet);
+		close(this->fd); //! minus_maxFD
+	}
+	if (rhs.fd >= 0)
+	{
+		if (this->fd = dup(rhs.fd) >= 0)
+			FD_SET(this->fd, &Kernel::_actualSet);
+		Kernel::_maxFd = std::max(Kernel::_maxFd, this->fd);
 	}
 	else
 		this->fd = rhs.fd;		
-	Kernel::_maxFd = std::max(Kernel::_maxFd, this->fd);
 	return *this;
 }
 
-void Client::copyAll(const Client & rhs)
+void Client::clone(const Client & rhs)
 {
 	this->conf = rhs.conf;
 	this->address = rhs.address;
@@ -67,7 +70,7 @@ void Client::copyAll(const Client & rhs)
 
 Client::~Client()
 {
-	if (this->fd <= 0)
+	if (this->fd < 0)
 		return ;	
 	FD_CLR(this->fd, &Kernel::_actualSet);
 	close(this->fd);

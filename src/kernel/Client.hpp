@@ -28,7 +28,7 @@ struct Client
 	bool 				pongHeader;
 	bool				exitRequired;
 
-	void 				copyAll(const Client & rhs);
+	void 				clone(const Client & rhs);
 
 	Client(Config *);
 	Client(const Client & src);

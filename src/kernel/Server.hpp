@@ -73,6 +73,7 @@ class Server
 			e_errorCodes _code;
 
 			public:
+			
 				ShortCircuitException(e_errorCodes code):_code(code){}
 				e_errorCodes getCode() const { return _code;}			
 		};	
