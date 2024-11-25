@@ -4,20 +4,18 @@
 # some with authorizations, some without
 echo $PWD
 
-mkdir -p Requests_Tester/delete_folder
-cd Requests_Tester/delete_folder
+mkdir -p delete_folder
+cd delete_folder
 mkdir -p folder_1
 
-touch file_{1..2}.txt
+touch file_1.txt
+touch file_2.txt
 chmod 755 *
 
 # Write some content in the file for getting them back
 echo "This is file_1.txt content" > file_1.txt
 echo "This is file_2.txt content" > file_2.txt
 
-echo "I am here: $PWD"
-echo "that's what I see:"
-ls
 # Remove write access to file_1.txt only
 chmod -w file_1.txt
 

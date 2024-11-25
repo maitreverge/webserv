@@ -162,3 +162,6 @@ else
 
     done
 fi
+
+# Delete Florian ressources (including the no_read_file)
+./Requests_Tester/delete_file_script.sh
