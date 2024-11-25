@@ -229,8 +229,6 @@ void	ResponseBuilder::setRegularPost( Client & client ){
 // Set Body is now a Articulating function for better clarity
 void	ResponseBuilder::setBody( Client & client, bool eof ){
 
-	usleep(50000);
-
 	if (this->_isCGI)	
 		return this->_cgi.setBody(client, eof);
 	else if (_myconfig.uploadAllowed == true) // and not MultiPart parsed from DAN

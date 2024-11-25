@@ -79,7 +79,7 @@ void Server::sendBodyPart(const size_t i)
 	Server::printVector(this->_clients[i], this->_clients[i].messageRecv);
 	
 	if (this->_clients[i].headerRequest.getMethod() == "POST")
-		this->_clients[i].responseBuilder.setBodyPost(this->_clients[i], false);		
+		this->_clients[i].responseBuilder.setBody(this->_clients[i], false);		
 	else
 		this->_clients[i].messageRecv.clear();	
 }
@@ -90,7 +90,7 @@ void Server::sendBodyEnd(const size_t i)
 	Server::printVector(this->_clients[i], this->_clients[i].messageRecv);
 	
 	if (this->_clients[i].headerRequest.getMethod() == "POST")		
-		this->_clients[i].responseBuilder.setBodyPost(this->_clients[i], true);						
+		this->_clients[i].responseBuilder.setBody(this->_clients[i], true);						
 	else
 	{
 		this->_clients[i].messageRecv.clear();

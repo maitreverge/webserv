@@ -1,7 +1,7 @@
 #include "Cgi.hpp"
 #include "Logger.hpp"
 
-// void errnoHandle(); //! a suppr
+void errnoHandle(); //! a suppr
 
 Cgi::Cgi()
 {	

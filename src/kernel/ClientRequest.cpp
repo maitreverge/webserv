@@ -111,31 +111,14 @@ void Server::headerCheckin(const size_t i, ssize_t ret)
 		#endif
 		if (!this->_clients[i].headerRequest.getIsValid())
 			throw Server::ShortCircuitException(CODE_400_BAD_REQUEST);			
-		this->getRespHeader(i);
+		this->_clients[i].responseBuilder.getHeader(this->_clients[i],
+			this->_conf);
 		this->_clients[i].messageRecv.
             erase(this->_clients[i].messageRecv.begin(), it + 4);					
 		this->bodyCheckin(i, this->_clients[i].messageRecv.size());						
 	}
 	else
 		this->isMaxHeaderSize(it + 1, i);
-}
-
-void Server::getRespHeader(const size_t i)
-{
-	/*
-		! Note from Florian
-		J'ai pense qu'avoir une methode
-		ResponseBuilder::getHeaderPost pour les requetes POST
-		ET une seconde methode
-		ResponseBuilder::getHeader pour les requetes GET et DELETE
-
-		allait me faciliter la vie, mais au final, ca me complique la tache
-
-		Je n'ai desormais plus qu'une methode ResponseBuilder::getHeader
-		qui gere tout les cas !
-	*/
-
-	this->_clients[i].responseBuilder.getHeader(this->_clients[i], this->_conf);
 }
 
 void Server::isMaxHeaderSize(std::vector<char>::iterator it, const size_t i)

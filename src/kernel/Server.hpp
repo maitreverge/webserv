@@ -26,7 +26,6 @@ class Server
 	void clientMessage(const size_t i, ssize_t ret);
 	void retrySend(const size_t i);
 	void headerCheckin(const size_t i, ssize_t ret);
-	void getRespHeader(const size_t i);
 	void bodyCheckin(const size_t i, const size_t addBodysize);
 	bool isDelimiterFind(std::string delimiter, const size_t i,
 		std::vector<char>::iterator & it);
