@@ -12,5 +12,5 @@
 --END-REQUEST--
  curl -i -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3001/
 --END-REQUEST--
- curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3001/no_read_file.txt
+ curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3001/Requests_Tester/no_read_file.txt
 --END-REQUEST--
