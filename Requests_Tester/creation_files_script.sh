@@ -2,9 +2,10 @@
 
 # This scripts aims to create ressources for the DELETE method testing
 # some with authorizations, some without
+echo $PWD
 
-mkdir -p delete_folder
-cd delete_folder
+mkdir -p Requests_Tester/delete_folder
+cd Requests_Tester/delete_folder
 mkdir -p folder_1
 
 touch file_{1..2}.txt
