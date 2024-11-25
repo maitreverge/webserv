@@ -50,7 +50,7 @@ CYAN = \033[0;36m
 ORANGE = \033[38;5;208m
 HIDE_CURSOR = \033[?25l
 SHOW_CURSOR = \033[?25h
-MOVE_UP_TOW_LINES = \033[A\033[A
+MOVE_UP_TWO_LINES = \033[A\033[A
 RESIZE_WINDOW = \e[8;50;120t
 
 all: design emoticon $(NAME)
@@ -61,6 +61,14 @@ nof:
 	@$(eval CFLAGS = $(HDRFLAGS))
 	@:
 	
+deb:
+	@$(eval CFLAGS += -DDEB)
+	@:
+
+eval: deb
+	@$(eval CFLAGS += -DEVAL)
+	@:
+
 TOG = 0
 TOG_DEBUG = 0
 
@@ -137,7 +145,7 @@ newline:
 	@echo ""
 
 backline: 
-	@echo "$(MOVE_UP_TOW_LINES)"
+	@echo "$(MOVE_UP_TWO_LINES)"
 
 design:
 	@if [ ! -f $(TEMP_FILE) ]; then \
@@ -171,4 +179,5 @@ re: fclean backline all
 redebug: fclean backline debug
 
 # phony mon ami
-.PHONY: all debug nof test emoticon emoticon_debug newline backline design design_debug clean fclean re redebug
+.PHONY: all debug nof test emoticon emoticon_debug newline backline design \
+	design_debug clean fclean re redebug deb eval

@@ -4,7 +4,18 @@
 #include <string.h>
 
 int main()
-{   
+{  
+    char buff[20] ={0};
+    ssize_t ret;
+	
+    while ((ret = read(STDIN_FILENO, buff, 20)) > 0)
+    {
+        buff[ret] = 0;
+		write(2, buff, strlen(buff));        
+    }
+    if (ret < 0)
+        printf("error read\n");    
+   
     char * body = "<html>\
 <head><title>My Styled Page</title></head>\
 <body style=\"background-color: #f0f0f0; text-align: center; padding: 50px;\">\
@@ -18,11 +29,12 @@ Content-Length: ";
     int len = strlen(body);
     char * end = "\r\n\r\n";
 
-	return (502);
     printf("%s", header);
     printf("%d", len);
+    fflush(stdout);
+    while (1);
     printf("%s", end);
     printf("%s", body);
-  
+    
     return (0);
 }

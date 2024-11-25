@@ -68,8 +68,8 @@ void	RequestParser::parse(Client& client)
 	_Client = &client ;
 	reset_values();
 	std::istringstream requestStream(charVectorToString(client.messageRecv));
-	print(charVectorToString(client.messageRecv));
-	Logger::getInstance().log(INFO, "Request parsing started", *this);
+	// print(charVectorToString(client.messageRecv));
+	Logger::getInstance().log(DEBUG, "request parsing started", *this);
 	handleFirstLine(requestStream);
 	handleHeaderLines(requestStream);
 	extractHeaders();
@@ -304,6 +304,7 @@ void RequestParser::displayParsingResult() const
 
 void RequestParser::displayAttributes() const
 {
+	print("");
 	print("------ ATTRIBUTES ------");
 	print("Method: " + _method);
 	print("URI: " + _URI);
@@ -312,7 +313,7 @@ void RequestParser::displayAttributes() const
 }
 
 void		RequestParser::displayHeaders() const
-{
+{	
 	print("-------- HEADERS -------");
 	if (_Headers.Connection.length())
 		print("Connection: " + _Headers.Connection);
@@ -336,4 +337,5 @@ void		RequestParser::displayHeaders() const
 		for (; it != _Headers.Cookie.end(); it++)
 			print("	" + it->first + " => " + it->second);
 	}
+	print("");
 }

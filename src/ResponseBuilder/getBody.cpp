@@ -3,7 +3,7 @@
 
 bool ResponseBuilder::getBody( Client &inputClient ){
 
-	Logger::getInstance().log(INFO, "Response Builder Get Body", inputClient);
+	Logger::getInstance().log(DEBUG, "Response Builder Get Body", inputClient);
 	try	{
 		if (this->_isCGI)	
 			return this->_cgi.getBody(inputClient);
@@ -22,9 +22,9 @@ bool ResponseBuilder::getBody( Client &inputClient ){
 
 	if (!this->_ifs.is_open())
 	{	
-		Logger::getInstance().log(INFO, _realURI.c_str(), inputClient);	
+		Logger::getInstance().log(DEBUG, _realURI.c_str(), inputClient);	
 
-		if (_method == POST and _isCGI)
+		if (_method == POST and _isCGI) //!COND JUMP
 			this->_ifs.open(_fileName.c_str(), std::ios::binary);	
 		else
 			this->_ifs.open(_realURI.c_str(), std::ios::binary);	
@@ -46,7 +46,7 @@ bool ResponseBuilder::getBody( Client &inputClient ){
 			+ this->_ifs.gcount(), inputClient.messageSend.end());
 		if (this->_ifs.eof()) 
 		{
-			Logger::getInstance().log(INFO, "file end", inputClient);						
+			Logger::getInstance().log(DEBUG, "file end", inputClient);						
 			this->_ifs.close();		
 			
 			if (_deleteURI) // ! Potentially delete my shit

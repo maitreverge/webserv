@@ -20,29 +20,35 @@ class Server
 	sockaddr_in			_sockAddr;
 	std::vector<char>	_writeBuffer;
 	std::vector<char>	_readBuffer;
+	static bool			_nl;
 	
-	void clientMessage(size_t i, ssize_t ret);
-	void displayClient(Client & client) const;
-	void reSend(size_t i);
-	void handleClientHeader(size_t i, ssize_t ret);
-	void getRespHeader(size_t i);
-	void bodyCheckin(size_t i);
-	void handleClientBody(size_t i, ssize_t ret);
-	bool isDelimiterFind(std::string delimiter, size_t i,
+	bool recevData(const size_t i);
+	void clientMessage(const size_t i, ssize_t ret);
+	void retrySend(const size_t i);
+	void headerCheckin(const size_t i, ssize_t ret);
+	void getRespHeader(const size_t i);
+	void bodyCheckin(const size_t i, const size_t addBodysize);
+	bool isDelimiterFind(std::string delimiter, const size_t i,
 		std::vector<char>::iterator & it);
-	void shortCircuit(e_errorCodes err, size_t i);
-	bool isMaxHeaderSize(std::vector<char>::iterator it, size_t i);
-	bool isContentLengthValid(size_t i);
-	bool isBodyEnd(size_t i);
-	void sendBodyPart(size_t i);
-	void sendBodyEnd(size_t i);
-	bool isBodyTooLarge(size_t i);
-	bool isChunked(size_t i);
-	void printResponse(const std::vector<char> & response);
-	bool replyClient(size_t i, std::vector<char> & response);
-	bool fillMessageSend(size_t i);
-	bool endReply(size_t i);
-	void exitClient(size_t index);
+	void shortCircuit(const e_errorCodes err, const size_t i);
+	void isMaxHeaderSize(std::vector<char>::iterator it, const size_t i);
+	void isContentLengthValid(const size_t i);
+	bool isBodyEnd(const size_t i);
+	void sendBodyPart(const size_t i);
+	void sendBodyEnd(const size_t i);
+	void isBodyTooLarge(const size_t i);
+
+	bool isChunked(const size_t i);
+	bool firstDelim(const size_t i);
+	void calculateChunkSize(const size_t i, std::vector<char>::iterator & it);
+	bool secondDelim(const size_t i, std::vector<char>::iterator &it);
+	bool isChunkPartComplete(const size_t i, std::vector<char>::iterator & it);
+
+	void sendBuffering(const size_t i, std::vector<char> & response);
+	bool replyClient(const size_t i, std::vector<char> & response);
+	void fillMessageSend(const size_t i);
+	bool endReply(const size_t i);
+	void exitClient(const size_t index);
 	void exitClients();
 
 	public:
@@ -52,6 +58,9 @@ class Server
 
 		Server(sockaddr_in & sockaddr, Config & conf);
 
+		static void printVector(Client & client,
+			const std::vector<char> & response,
+			const std::string color = GREEN, const int level = 1);
 		const sockaddr_in & getSockAdress() const;
 
 		bool setup();
@@ -59,4 +68,13 @@ class Server
 		void listenClients();
 		void replyClients();
 		void exitServer();
+
+		class ShortCircuitException
+		{
+			e_errorCodes _code;
+
+			public:
+				ShortCircuitException(e_errorCodes code):_code(code){}
+				e_errorCodes getCode() const { return _code;}			
+		};	
 };

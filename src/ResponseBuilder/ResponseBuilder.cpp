@@ -129,8 +129,10 @@ void	ResponseBuilder::checkMethod( void ){
 
 void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_errorCodes codeInput ){
 
-	_client = &inputClient;
-	_config = &inputConfig;
+	Logger::getInstance().log(DEBUG, "ResponseBuilder Get Header", inputClient);
+		
+	_client = &inputClient; // init client
+	_config = &inputConfig; // init config
 
 	if (codeInput != CODE_200_OK)
 	{

@@ -44,7 +44,6 @@ class Logger
 		std::ofstream	_accessFile;
 		std::ofstream	_errorFile;
 		bool			logToStdOut;
-		int				_logLevel[LOG_LEVEL_COUNT];
 
 		void		logOut(logLevel logLevel, const std::string& message);
 		std::string	formatLogLevel(logLevel loglevel) const;
@@ -53,6 +52,9 @@ class Logger
 		int			portToInt(const struct sockaddr_in& addr);
 		std::string	intToString(int value);
 	public:
+
+		int	_logLevel[LOG_LEVEL_COUNT];
+
 		Logger();
 		~Logger();
 		void log(logLevel logLevel, const std::string& message);
