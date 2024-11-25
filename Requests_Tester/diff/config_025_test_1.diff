@@ -1,8 +1,22 @@
-1,5c1
-< HTTP/1.1 200 OK
-< Content-Type: text/html
-< Content-Length: 299
-< 
-< <html><head><title>My Styled Page</title></head><body style="background-color: #f0f0f0; text-align: center; padding: 50px;"><h1 style="color: #ff5733; font-family: Arial, sans-serif;">Hello, World!</h1><p style="color: #555; font-size: 18px;">This is a simple page with inline CSS.</p></body></html>
+1,2c1
+< HTTP/1.1 404 Not Found
+< Content-Length: 283
 ---
-> 
+> HTTP/1.1 200 OK
+3a3
+> Content-Length: 299
+5,16c5
+< <html>
+< 
+< <head>
+< 	<title>404</title>
+< </head>
+< 
+< <body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+< 	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">404 NOT FOUND</h1>
+< 	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+< </body>
+< 
+< </html>
+---
+> <html><head><title>My Styled Page</title></head><body style="background-color: #f0f0f0; text-align: center; padding: 50px;"><h1 style="color: #ff5733; font-family: Arial, sans-serif;">Hello, World!</h1><p style="color: #555; font-size: 18px;">This is a simple page with inline CSS.</p></body></html>

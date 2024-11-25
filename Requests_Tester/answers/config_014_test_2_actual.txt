@@ -1,5 +1,5 @@
 HTTP/1.1 200 OK
-Content-Length: 833
+Content-Length: 882
 Content-Type: text/html
 
 <!DOCTYPE html>
@@ -31,6 +31,7 @@ ul li a span {
 <li><a href="browse.html">browse.html</a></li>
 <li><a href="details.html">details.html</a></li>
 <li><a href="index.html">index.html</a></li>
+<li><a href="listing.html">listing.html</a></li>
 <li><a href="profile.html">profile.html</a></li>
 <li><a href="streams.html">streams.html</a></li>
 <li><a href="vendor/">vendor/</a></li>

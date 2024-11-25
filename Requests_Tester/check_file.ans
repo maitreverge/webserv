@@ -1919,7 +1919,22 @@ Content-Length: 286
 
 [34m--- Actual Answer :[0m
 
-[36m[0m
+[36mHTTP/1.1 404 Not Found
+Content-Length: 283
+Content-Type: text/html
+
+<html>
+
+<head>
+	<title>404</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">404 NOT FOUND</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
 [31m--- Requête : 												WORK NEEDLE[0m
@@ -2093,7 +2108,22 @@ Content-Type: text/html
 
 [34m--- Actual Answer :[0m
 
-[36m[0m
+[36mHTTP/1.1 404 Not Found
+Content-Length: 283
+Content-Type: text/html
+
+<html>
+
+<head>
+	<title>404</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">404 NOT FOUND</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
 [31m--- Requête :  curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.txt[0m
@@ -2452,7 +2482,22 @@ Content-Type: text/html
 
 [34m--- Actual Answer :[0m
 
-[36m[0m
+[36mHTTP/1.1 404 Not Found
+Content-Length: 283
+Content-Type: text/html
+
+<html>
+
+<head>
+	<title>404</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">404 NOT FOUND</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
 [31m--- Requête :  curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.json[0m
@@ -2601,7 +2646,22 @@ Content-Type: text/html
 
 [34m--- Actual Answer :[0m
 
-[36m[0m
+[36mHTTP/1.1 404 Not Found
+Content-Length: 283
+Content-Type: text/html
+
+<html>
+
+<head>
+	<title>404</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">404 NOT FOUND</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
 [31m--- Requête :  curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.txt[0m
@@ -2921,7 +2981,22 @@ Content-Type: text/html
 
 [34m--- Actual Answer :[0m
 
-[36m[0m
+[36mHTTP/1.1 404 Not Found
+Content-Length: 283
+Content-Type: text/html
+
+<html>
+
+<head>
+	<title>404</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">404 NOT FOUND</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
 [31m--- Requête :  curl -i -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3003/delete_folder/file_1.txt[0m
@@ -2946,7 +3021,22 @@ Content-Type: text/html
 
 [34m--- Actual Answer :[0m
 
-[36m[0m
+[36mHTTP/1.1 404 Not Found
+Content-Length: 283
+Content-Type: text/html
+
+<html>
+
+<head>
+	<title>404</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">404 NOT FOUND</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
 [31m--- Requête :  curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3003/delete_folder/file_1.txt[0m
@@ -3000,7 +3090,22 @@ Content-Length: 287
 
 [34m--- Actual Answer :[0m
 
-[36m[0m
+[36mHTTP/1.1 404 Not Found
+Content-Length: 283
+Content-Type: text/html
+
+<html>
+
+<head>
+	<title>404</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">404 NOT FOUND</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
 [31m--- Requête :  curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3003/delete_folder/file_2.txt[0m
@@ -3065,7 +3170,22 @@ Content-Type: text/html
 
 [34m--- Actual Answer :[0m
 
-[36m[0m
+[36mHTTP/1.1 404 Not Found
+Content-Length: 283
+Content-Type: text/html
+
+<html>
+
+<head>
+	<title>404</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">404 NOT FOUND</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
 [31m--- Requête :  curl -i -s --connect-timeout 2 --max-time 2 -X DELETE http://localhost:3003/delete_folder/folder_1/hello.txt[0m
@@ -3090,7 +3210,22 @@ Content-Length: 286
 
 [34m--- Actual Answer :[0m
 
-[36m[0m
+[36mHTTP/1.1 404 Not Found
+Content-Length: 283
+Content-Type: text/html
+
+<html>
+
+<head>
+	<title>404</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">404 NOT FOUND</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
 [31m--- Requête :  curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3003/delete_folder/folder_1/hello.txt[0m
@@ -3459,7 +3594,22 @@ Content-Length: 286
 
 [34m--- Actual Answer :[0m
 
-[36m[0m
+[36mHTTP/1.1 404 Not Found
+Content-Length: 283
+Content-Type: text/html
+
+<html>
+
+<head>
+	<title>404</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">404 NOT FOUND</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
 [31m--- Requête :  curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3005/uploads/file1.txt[0m
@@ -3553,7 +3703,22 @@ Content-Length: 287
 
 [34m--- Actual Answer :[0m
 
-[36m[0m
+[36mHTTP/1.1 404 Not Found
+Content-Length: 283
+Content-Type: text/html
+
+<html>
+
+<head>
+	<title>404</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">404 NOT FOUND</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
 [31m--- Requête :  curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3005/uploads/file2.json[0m
@@ -3775,9 +3940,10 @@ Content-Type: text/html
 [34m--- Actual Answer :[0m
 
 [36mHTTP/1.1 405 Method Not Allowed
-Content-Length: 4096
-Content-Type: application/octet-stream
-[0m
+Content-Length: 311
+Content-Type: text/html
+
+<!DOCTYPE html><html><head><title>405	Method Not Allowed</title></head><body><h1>The 405.html file has not been found.This is a backup self-generated webpage.</h1><h1><img src="https://freeyork.org/wp-content/uploads/2015/06/DKOpAT4VAAEmmes.jpg" alt="Description of image" style="width:50%;"></h1></body></html>[0m
 
 
 [34m=== Configuration : Requests_Tester/config_files/config_008.ini[0m
@@ -9511,7 +9677,7 @@ ul li a span {
 [34m--- Actual Answer :[0m
 
 [36mHTTP/1.1 200 OK
-Content-Length: 780
+Content-Length: 829
 Content-Type: text/html
 
 <!DOCTYPE html>
@@ -9544,6 +9710,7 @@ ul li a span {
 <li><a href="images/">images/</a></li>
 <li><a href="index.html">index.html</a></li>
 <li><a href="js/">js/</a></li>
+<li><a href="listing.html">listing.html</a></li>
 <li><a href="ticket.html">ticket.html</a></li>
 <li><a href="video/">video/</a></li>
 </ul></body>
@@ -9596,7 +9763,7 @@ ul li a span {
 [34m--- Actual Answer :[0m
 
 [36mHTTP/1.1 200 OK
-Content-Length: 833
+Content-Length: 882
 Content-Type: text/html
 
 <!DOCTYPE html>
@@ -9628,6 +9795,7 @@ ul li a span {
 <li><a href="browse.html">browse.html</a></li>
 <li><a href="details.html">details.html</a></li>
 <li><a href="index.html">index.html</a></li>
+<li><a href="listing.html">listing.html</a></li>
 <li><a href="profile.html">profile.html</a></li>
 <li><a href="streams.html">streams.html</a></li>
 <li><a href="vendor/">vendor/</a></li>
@@ -9679,7 +9847,7 @@ ul li a span {
 [34m--- Actual Answer :[0m
 
 [36mHTTP/1.1 200 OK
-Content-Length: 809
+Content-Length: 858
 Content-Type: text/html
 
 <!DOCTYPE html>
@@ -9710,6 +9878,7 @@ ul li a span {
 <ul><li><a href="assets/">assets/</a></li>
 <li><a href="contact.html">contact.html</a></li>
 <li><a href="index.html">index.html</a></li>
+<li><a href="listing.html">listing.html</a></li>
 <li><a href="properties.html">properties.html</a></li>
 <li><a href="property-details.html">property-details.html</a></li>
 <li><a href="vendor/">vendor/</a></li>
@@ -13714,7 +13883,7 @@ T e m p l a t e M o
 [34m--- Actual Answer :[0m
 
 [36mHTTP/1.1 200 OK
-Content-Length: 829
+Content-Length: 780
 Content-Type: text/html
 
 <!DOCTYPE html>
@@ -13747,7 +13916,6 @@ ul li a span {
 <li><a href="images/">images/</a></li>
 <li><a href="index.html">index.html</a></li>
 <li><a href="js/">js/</a></li>
-<li><a href="listing.html">listing.html</a></li>
 <li><a href="ticket.html">ticket.html</a></li>
 <li><a href="video/">video/</a></li>
 </ul></body>
@@ -14937,7 +15105,7 @@ https://templatemo.com/tm-591-villa-agency
 [34m--- Actual Answer :[0m
 
 [36mHTTP/1.1 200 OK
-Content-Length: 858
+Content-Length: 809
 Content-Type: text/html
 
 <!DOCTYPE html>
@@ -14968,7 +15136,6 @@ ul li a span {
 <ul><li><a href="assets/">assets/</a></li>
 <li><a href="contact.html">contact.html</a></li>
 <li><a href="index.html">index.html</a></li>
-<li><a href="listing.html">listing.html</a></li>
 <li><a href="properties.html">properties.html</a></li>
 <li><a href="property-details.html">property-details.html</a></li>
 <li><a href="vendor/">vendor/</a></li>
@@ -15415,11 +15582,22 @@ Content-Length: 299
 
 [34m--- Actual Answer :[0m
 
-[36mHTTP/1.1 200 OK
+[36mHTTP/1.1 502 Bad Gateway
+Content-Length: 285
 Content-Type: text/html
-Content-Length: 299
 
-<html><head><title>My Styled Page</title></head><body style="background-color: #f0f0f0; text-align: center; padding: 50px;"><h1 style="color: #ff5733; font-family: Arial, sans-serif;">Hello, World!</h1><p style="color: #555; font-size: 18px;">This is a simple page with inline CSS.</p></body></html>[0m
+<html>
+
+<head>
+	<title>502</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">502 Bad Gateway</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
 [31m--- Requête : curl -i  --connect-timeout 10 --max-time 10 --output response.bin http://localhost:3122/cgi/main_inout.out[0m
@@ -16008,11 +16186,22 @@ Content-Length: 299
 
 [34m--- Actual Answer :[0m
 
-[36mHTTP/1.1 200 OK
+[36mHTTP/1.1 404 Not Found
+Content-Length: 283
 Content-Type: text/html
-Content-Length: 299
 
-<html><head><title>My Styled Page</title></head><body style="background-color: #f0f0f0; text-align: center; padding: 50px;"><h1 style="color: #ff5733; font-family: Arial, sans-serif;">Hello, World!</h1><p style="color: #555; font-size: 18px;">This is a simple page with inline CSS.</p></body></html>[0m
+<html>
+
+<head>
+	<title>404</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">404 NOT FOUND</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
 [31m--- Requête : curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3025/cgi/main_errin.out[0m
@@ -16036,11 +16225,22 @@ Content-Length: 299
 
 [34m--- Actual Answer :[0m
 
-[36mHTTP/1.1 200 OK
+[36mHTTP/1.1 404 Not Found
+Content-Length: 283
 Content-Type: text/html
-Content-Length: 299
 
-<html><head><title>My Styled Page</title></head><body style="background-color: #f0f0f0; text-align: center; padding: 50px;"><h1 style="color: #ff5733; font-family: Arial, sans-serif;">Hello, World!</h1><p style="color: #555; font-size: 18px;">This is a simple page with inline CSS.</p></body></html>[0m
+<html>
+
+<head>
+	<title>404</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">404 NOT FOUND</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
 [31m--- Requête : curl -i -s --connect-timeout 10 --max-time 10 -X GET http://localhost:3025/cgi/main_errmid.out[0m
@@ -16050,7 +16250,22 @@ Content-Length: 299
 
 [34m--- Actual Answer :[0m
 
-[36m[0m
+[36mHTTP/1.1 404 Not Found
+Content-Length: 283
+Content-Type: text/html
+
+<html>
+
+<head>
+	<title>404</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">404 NOT FOUND</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
 [31m--- Requête : curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3025/cgi/main_errmid.out[0m
@@ -16070,7 +16285,22 @@ Content-Length: 299
 
 [34m--- Actual Answer :[0m
 
-[36m[0m
+[36mHTTP/1.1 404 Not Found
+Content-Length: 283
+Content-Type: text/html
+
+<html>
+
+<head>
+	<title>404</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">404 NOT FOUND</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
 [31m--- Requête : curl -i -s --connect-timeout 10 --max-time 10 -X GET http://localhost:3025/cgi/main_errout.out[0m
@@ -16081,8 +16311,22 @@ Content-Type: text/html[0m
 
 [34m--- Actual Answer :[0m
 
-[36mHTTP/1.1 200 OK
-Content-Type: text/html[0m
+[36mHTTP/1.1 503 Service Unavailable
+Content-Length: 293
+Content-Type: text/html
+
+<html>
+
+<head>
+	<title>503</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">503 Service unavailable</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
 [31m--- Requête : curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3025/cgi/main_errout.out[0m
@@ -16103,7 +16347,21 @@ Content-Type: text/html[0m
 
 [34m--- Actual Answer :[0m
 
-[36mHTTP/1.1 200 OK
-Content-Type: text/html[0m
+[36mHTTP/1.1 503 Service Unavailable
+Content-Length: 293
+Content-Type: text/html
+
+<html>
+
+<head>
+	<title>503</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">503 Service unavailable</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 

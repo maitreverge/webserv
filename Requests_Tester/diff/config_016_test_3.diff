@@ -1,6 +1,6 @@
 1,4c1,4
 < HTTP/1.1 200 OK
-< Content-Length: 858
+< Content-Length: 809
 < Content-Type: text/html
 < 
 ---
@@ -60,11 +60,10 @@
 > -->
 >   </head>
 > 
-30,37c36,585
+30,36c36,585
 < <ul><li><a href="assets/">assets/</a></li>
 < <li><a href="contact.html">contact.html</a></li>
 < <li><a href="index.html">index.html</a></li>
-< <li><a href="listing.html">listing.html</a></li>
 < <li><a href="properties.html">properties.html</a></li>
 < <li><a href="property-details.html">property-details.html</a></li>
 < <li><a href="vendor/">vendor/</a></li>

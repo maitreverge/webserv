@@ -1,6 +1,6 @@
 1,5c1,5
 < HTTP/1.1 200 OK
-< Content-Length: 829
+< Content-Length: 780
 < Content-Type: text/html
 < 
 < <!DOCTYPE html>
@@ -10,7 +10,7 @@
 > Content-Type: text/html
 > 
 > <!doctype html>
-7,38c7,693
+7,37c7,693
 < <head>
 < <meta charset="UTF-8">
 < <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,7 +39,6 @@
 < <li><a href="images/">images/</a></li>
 < <li><a href="index.html">index.html</a></li>
 < <li><a href="js/">js/</a></li>
-< <li><a href="listing.html">listing.html</a></li>
 < <li><a href="ticket.html">ticket.html</a></li>
 < <li><a href="video/">video/</a></li>
 < </ul></body>
