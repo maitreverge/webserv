@@ -9677,7 +9677,7 @@ ul li a span {
 [34m--- Actual Answer :[0m
 
 [36mHTTP/1.1 200 OK
-Content-Length: 829
+Content-Length: 780
 Content-Type: text/html
 
 <!DOCTYPE html>
@@ -9710,7 +9710,6 @@ ul li a span {
 <li><a href="images/">images/</a></li>
 <li><a href="index.html">index.html</a></li>
 <li><a href="js/">js/</a></li>
-<li><a href="listing.html">listing.html</a></li>
 <li><a href="ticket.html">ticket.html</a></li>
 <li><a href="video/">video/</a></li>
 </ul></body>
@@ -9763,7 +9762,7 @@ ul li a span {
 [34m--- Actual Answer :[0m
 
 [36mHTTP/1.1 200 OK
-Content-Length: 882
+Content-Length: 833
 Content-Type: text/html
 
 <!DOCTYPE html>
@@ -9795,7 +9794,6 @@ ul li a span {
 <li><a href="browse.html">browse.html</a></li>
 <li><a href="details.html">details.html</a></li>
 <li><a href="index.html">index.html</a></li>
-<li><a href="listing.html">listing.html</a></li>
 <li><a href="profile.html">profile.html</a></li>
 <li><a href="streams.html">streams.html</a></li>
 <li><a href="vendor/">vendor/</a></li>
@@ -9847,7 +9845,7 @@ ul li a span {
 [34m--- Actual Answer :[0m
 
 [36mHTTP/1.1 200 OK
-Content-Length: 858
+Content-Length: 809
 Content-Type: text/html
 
 <!DOCTYPE html>
@@ -9878,7 +9876,6 @@ ul li a span {
 <ul><li><a href="assets/">assets/</a></li>
 <li><a href="contact.html">contact.html</a></li>
 <li><a href="index.html">index.html</a></li>
-<li><a href="listing.html">listing.html</a></li>
 <li><a href="properties.html">properties.html</a></li>
 <li><a href="property-details.html">property-details.html</a></li>
 <li><a href="vendor/">vendor/</a></li>

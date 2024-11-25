@@ -1,6 +1,6 @@
 1,4c1,4
 < HTTP/1.1 200 OK
-< Content-Length: 882
+< Content-Length: 833
 < Content-Type: text/html
 < 
 ---
@@ -8,7 +8,9 @@
 > Content-Length: 882
 > Content-Type: text/html
 > 
-39c39
+33a34
+> <li><a href="listing.html">listing.html</a></li>
+38c39
 < </html>
 ---
 > </html>

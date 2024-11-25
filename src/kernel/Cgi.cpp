@@ -33,11 +33,10 @@ Cgi & Cgi::operator=(const Cgi & rhs)
 
 Cgi::~Cgi()
 {
-    if (this->_fds[1] > 0)
-	{	
-  		FD_CLR(this->_fds[1], &Kernel::_actualSet);
-        close(this->_fds[1]);	
-	}	
+    if (this->_fds[1] <= 0)
+		return ;	
+	FD_CLR(this->_fds[1], &Kernel::_actualSet);
+	close(this->_fds[1]);		
 }
 
 void Cgi::launch(Client & client)
@@ -67,71 +66,71 @@ void Cgi::launch(Client & client)
 void Cgi::child(Client & client)
 {
     Logger::getInstance().log(DEBUG, "Child", client);
-    Logger::getInstance().log(DEBUG, client.responseBuilder._fileExtension,
-        client);
-    std::cout << std::flush;
-    dup2(this->_fds[0], STDIN_FILENO); 
-    dup2(this->_fds[0], STDOUT_FILENO); 
-    close(this->_fds[0]);
-    close(this->_fds[1]);
-        
-    if (chdir(client.responseBuilder._folderCGI.c_str()) < 0)
+	
+	try 
 	{
-		std::cerr << "chdir failed" << std::endl;
+		dup2(this->_fds[0], STDIN_FILENO); 
+		dup2(this->_fds[0], STDOUT_FILENO); 
+		close(this->_fds[0]);
+		close(this->_fds[1]);
+			
+		if (chdir(client.responseBuilder._folderCGI.c_str()) < 0)
+		{
+			Logger::getInstance().log(ERROR, "chdir", client);
+			Logger::getInstance().~Logger();
+			Kernel::getInstance().~Kernel();
+			_exit(200);
+		}
+		char actualPath[PATH_MAX];
+		if (!getcwd(actualPath, PATH_MAX))
+		{
+			Logger::getInstance().log(ERROR, "getcwd", client);
+			Logger::getInstance().~Logger();
+			Kernel::getInstance().~Kernel();
+			_exit(200);	
+		}
+
+		std::string envPathInfo
+			("PATH_INFO=" + client.responseBuilder._pathInfo);    
+		char *env[] = {const_cast<char *>(envPathInfo.c_str()), NULL};
+		std::string path = std::string(actualPath) + '/'
+			+ client.responseBuilder._fileName; 
+
+		if (client.responseBuilder._fileExtension == "out")    
+		{	
+			Logger::getInstance().~Logger();
+			Kernel::getInstance().~Kernel();
+			char *argv[] = {NULL};
+			// execve(path.c_str(), argv, env);
+			execve("gros caca", argv, env);
+		}	
+		else if (client.responseBuilder._fileExtension == "py")
+		{	
+			Logger::getInstance().~Logger();
+			Kernel::getInstance().~Kernel();
+			char *argv[] = {const_cast<char *>("python3"),
+				const_cast<char *>(path.c_str()), NULL};
+			execve(this->getPath("python3", client).c_str(), argv, env); 
+		}
+		else if (client.responseBuilder._fileExtension == "php")
+		{
+			Logger::getInstance().~Logger();
+			Kernel::getInstance().~Kernel();	
+			char *argv[] = {const_cast<char *>("php-cgi"),
+				const_cast<char *>(path.c_str()), NULL};
+			execve(this->getPath("php-cgi", client).c_str(), argv, env);
+		} 
+		// Logger::getInstance().log(ERROR, "execve", client);
+		// std::cerr << "\e[1;31mexecve failed\e[0m" << std::endl;
 		// Logger::getInstance().~Logger();
-   		Kernel::getInstance().~Kernel();
-		exit(1);
-		// throw (Logger::getInstance().log(ERROR, "chdir", client),
-		// 	Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
+		_exit(1);
 	}
-	char actualPath[PATH_MAX];
-	if (!getcwd(actualPath, PATH_MAX))
+	catch (const Server::ShortCircuitException & e)
 	{
-		std::cerr << "getcwd failed" << std::endl;
-		// Logger::getInstance().~Logger();
+		Logger::getInstance().~Logger();
 		Kernel::getInstance().~Kernel();
-		exit(1);
-		// throw (Logger::getInstance().log(ERROR, "chdir", client),
-		// 	Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
+		_exit(static_cast<int>(e.getCode()));	
 	}
-	// std::cerr <<" ACTUAL " <<  actualPath << std::endl;
-	// 	std::cerr <<" ACTUAL " <<  client.responseBuilder._fileName << std::endl;
-    std::string envPathInfo
-        ("PATH_INFO=" + client.responseBuilder._pathInfo);
-    
-    char *env[] = {const_cast<char *>(envPathInfo.c_str()), NULL};
-    std::string path = std::string(actualPath) + '/' + client.responseBuilder._fileName;
-  
-    if (client.responseBuilder._fileExtension == "out")    
-    {	
-		  Logger::getInstance().~Logger();
-    Kernel::getInstance().~Kernel();
-		char *argv[] = {NULL};
-	std::cerr << "PATH " << path << std::endl; 
-        execve(path.c_str(), argv, env);
-	}	
-	else if (client.responseBuilder._fileExtension == "py")
-	{	
-		  Logger::getInstance().~Logger();
-    Kernel::getInstance().~Kernel();
-		char *argv[] = {const_cast<char *>("python3"),
-			const_cast<char *>(path.c_str()), NULL};
-        execve(this->getPath("python3", client).c_str(), argv, env); 
-	}
-    else if (client.responseBuilder._fileExtension == "php")
-	{
-		  Logger::getInstance().~Logger();
-    Kernel::getInstance().~Kernel();	
-		char *argv[] = {const_cast<char *>("php-cgi"),
-			const_cast<char *>(path.c_str()), NULL};
-    	execve(this->getPath("php-cgi", client).c_str(), argv, env);
-	}
-		// execve(path.c_str(), argv, env);
-    // execve("/home/seblin/42/42_webserv/cgi/main_inout.out", argv, env); 		    
-    // execve("/home/svidot/42_am/webserv/cgi/main_inout.out", argv, env); 
-    // execve(client.responseBuilder., argv, env);   
-    std::cerr << "\e[1;31mexecve failed\e[0m" << std::endl;
-    _exit(1);
 }
 
 std::string Cgi::getPath(const std::string & exe, Client & client)
@@ -151,16 +150,12 @@ std::string Cgi::getPath(const std::string & exe, Client & client)
 				return path;
 		}
 		std::cerr << "interpretor no exist" << std::endl;
-		Logger::getInstance().log(ERROR, "interpretor no exist", client); _exit(1);
-		// throw (Logger::getInstance().log(ERROR, "interpretor no exist", client),
-		// 	Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
+		Logger::getInstance().log(ERROR, "interpretor no exist", client);
+		throw (Logger::getInstance().log(ERROR, "interpretor no exist", client),
+			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
 	}
-	else //!
-	{
-		std::cerr << "path no exist" << std::endl;
-		throw (Logger::getInstance().log(ERROR, "path no exist", client),
-			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));	
-	}
+	throw (Logger::getInstance().log(ERROR, "path no exist", client),
+		Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));		
 }
 
 void Cgi::retHandle(Client & client, ssize_t ret, std::string err,
@@ -173,14 +168,7 @@ void Cgi::retHandle(Client & client, ssize_t ret, std::string err,
         Logger::getInstance().log(DEBUG, info);
     else if (ret < 0)
     {	      
-        errnoHandle();		
-        // client.ping = false;;
-		// FD_CLR(this->_fds[1], &Kernel::_actualSet);//! err 4..
-        // close(this->_fds[1]);
-        // this->_fds[1] = -1;
-
-        // client.exitRequired = true;
-        // return true;
+        errnoHandle();   
 		throw (Logger::getInstance().log(ERROR, err, client),
 			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
     }

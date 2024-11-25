@@ -96,7 +96,7 @@ void Logger::logOut(logLevel logLevel, const std::string& message)
 	std::string logEntry;
 
 	if (logToStdOut)
-		std::cout << message;
+		std::cerr << message;
 	logEntry = removeAnsiCodes(message);
 	if (logLevel == INFO || logLevel == DEBUG)
 	{
@@ -121,7 +121,7 @@ void Logger::log(logLevel logLevel, const std::string& message)
 				+ GREEN + message 
 				+ RESET + "\n";
 	if (logToStdOut)
-		std::cout << logEntry;
+		std::cerr << logEntry;
 	logEntry = removeAnsiCodes(logEntry);
 	if (logLevel == INFO || logLevel == DEBUG)
 	{
