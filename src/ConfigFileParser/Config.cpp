@@ -26,8 +26,9 @@ void	Config::intitializeVars(bool withConfigFile)
 {
 	if (!withConfigFile)
 		initializeServers();
-	
 	maxClient = 1024;
+	recv_buff_size = 4192;
+	send_buff_size = 4192;
 	errorPagesPath = "errorPages/";
 	// Default files to look for if the URI is "/"
 	indexFiles.push_back("index.html");
@@ -80,13 +81,6 @@ void	Config::initializeServers()
 	_serverStruct[0].routesData.insert(std::make_pair("route1", innerMap));
 	_serverStruct[1].routesData.insert(std::make_pair("route1", innerMap));
 	_serverStruct[2].routesData.insert(std::make_pair("route1", innerMap));
-
-	
-	
-
-
-
-	
 
 
 
