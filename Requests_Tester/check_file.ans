@@ -15569,7 +15569,22 @@ Content-Length: 299
 
 [34m--- Actual Answer :[0m
 
-[36m[0m
+[36mHTTP/1.1 502 Bad Gateway
+Content-Length: 285
+Content-Type: text/html
+
+<html>
+
+<head>
+	<title>502</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">502 Bad Gateway</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
 [31m--- Requête : curl -i -s --connect-timeout 10 --max-time 10 --output response.bin http://localhost:3122/cgi/main_inout.out[0m
@@ -16158,7 +16173,22 @@ Content-Length: 299
 
 [34m--- Actual Answer :[0m
 
-[36m[0m
+[36mHTTP/1.1 404 Not Found
+Content-Length: 283
+Content-Type: text/html
+
+<html>
+
+<head>
+	<title>404</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">404 NOT FOUND</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
 [31m--- Requête : curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3025/cgi/main_errin.out[0m
@@ -16182,7 +16212,22 @@ Content-Length: 299
 
 [34m--- Actual Answer :[0m
 
-[36m[0m
+[36mHTTP/1.1 404 Not Found
+Content-Length: 283
+Content-Type: text/html
+
+<html>
+
+<head>
+	<title>404</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">404 NOT FOUND</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
 [31m--- Requête : curl -i -s --connect-timeout 10 --max-time 10 -X GET http://localhost:3025/cgi/main_errmid.out[0m
@@ -16192,7 +16237,22 @@ Content-Length: 299
 
 [34m--- Actual Answer :[0m
 
-[36m[0m
+[36mHTTP/1.1 404 Not Found
+Content-Length: 283
+Content-Type: text/html
+
+<html>
+
+<head>
+	<title>404</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">404 NOT FOUND</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
 [31m--- Requête : curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3025/cgi/main_errmid.out[0m
@@ -16212,7 +16272,22 @@ Content-Length: 299
 
 [34m--- Actual Answer :[0m
 
-[36m[0m
+[36mHTTP/1.1 404 Not Found
+Content-Length: 283
+Content-Type: text/html
+
+<html>
+
+<head>
+	<title>404</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">404 NOT FOUND</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
 [31m--- Requête : curl -i -s --connect-timeout 10 --max-time 10 -X GET http://localhost:3025/cgi/main_errout.out[0m
@@ -16223,7 +16298,22 @@ Content-Type: text/html[0m
 
 [34m--- Actual Answer :[0m
 
-[36m[0m
+[36mHTTP/1.1 503 Service Unavailable
+Content-Length: 293
+Content-Type: text/html
+
+<html>
+
+<head>
+	<title>503</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">503 Service unavailable</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
 [31m--- Requête : curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3025/cgi/main_errout.out[0m
@@ -16244,6 +16334,21 @@ Content-Type: text/html[0m
 
 [34m--- Actual Answer :[0m
 
-[36m[0m
+[36mHTTP/1.1 503 Service Unavailable
+Content-Length: 293
+Content-Type: text/html
+
+<html>
+
+<head>
+	<title>503</title>
+</head>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">503 Service unavailable</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+</body>
+
+</html>[0m
 
 
