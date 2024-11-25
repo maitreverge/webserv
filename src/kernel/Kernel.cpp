@@ -20,10 +20,11 @@ Kernel::Kernel(char* path) : _conf(path)
 	this->setup();
 }
 
-void Kernel::exitKernel()
+Kernel::~Kernel()
 {
-	for (size_t i = 0; i < this->_servers.size(); i++)
-		this->_servers[i].exitServer();
+	// for (size_t i = 0; i < this->_servers.size(); i++)
+	// 	this->_servers[i].exitServer();
+	// this->_servers.clear(); //! en trop ?
 }
 
 Kernel & Kernel::getInstance(char *path)
@@ -119,5 +120,5 @@ void Kernel::launch()
 			this->callReply);
 		usleep(100);	
 	}
-	this->exitKernel();
+	// this->exitKernel();
 }

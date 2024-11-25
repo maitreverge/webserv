@@ -4,15 +4,49 @@
 
 bool Server::_nl = false;
 
-Server::Server(sockaddr_in & sockAddr, Config & conf)	
+Server::Server(sockaddr_in & sockAddr, Config & conf)
 {
-	static int i;		
+	static int i;
+	this->_fd = -1;		
 	this->_conf = conf;		
 	this->_conf.index = i++;
 	this->_sockAddr = sockAddr;
 	this->_clients.reserve(static_cast<size_t>(this->_conf.maxClient));
 	this->_readBuffer.reserve(conf.recv_buff_size);	
 	this->_writeBuffer.reserve(conf.send_buff_size);
+}
+
+Server::Server(const Server & src)
+{
+	this->_fd = -1;
+	// this->_clients.reserve(static_cast<size_t>(this->_conf.maxClient));
+	// this->_readBuffer.reserve(src._conf.recv_buff_size);	
+	// this->_writeBuffer.reserve(src._conf.send_buff_size);
+	*this = src;	
+}
+
+Server & Server::operator=(const Server & rhs)
+{
+	this->_conf = rhs._conf;
+	this->_sockAddr = rhs._sockAddr;
+	this->_writeBuffer = rhs._writeBuffer;
+	this->_readBuffer = rhs._readBuffer;	
+	this->_clients = _clients;
+
+	if (this->_fd >= 0)
+	{
+		FD_CLR(this->_fd, &Kernel::_actualSet);
+		close(this->_fd);
+	}
+	if (rhs._fd >= 0)
+	{
+		if ((this->_fd = dup(rhs._fd)) >= 0)
+			FD_SET(this->_fd, &Kernel::_actualSet);
+		Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fd);
+	}
+	else
+		this->_fd = rhs._fd;
+	return *this;
 }
 
 const sockaddr_in & Server::getSockAdress() const
@@ -32,14 +66,14 @@ bool Server::setup()
 	{		
 		Logger::getInstance().log(ERROR, "bind", *this);
 
-		this->exitServer();		
+		// this->exitServer();		
 		return false;		
 	}	
 	if (listen(this->_fd, this->_conf.maxClient) < 0)
 	{
 		Logger::getInstance().log(ERROR, "listen", *this);
 
-		this->exitServer();
+		// this->exitServer();
 		return false;
 	}
 	Logger::getInstance().log(INFO, "listen", *this);
@@ -82,19 +116,28 @@ void Server::exitClient(size_t i)
 	this->_clients.erase(this->_clients.begin() + static_cast<int>(i));
 }
 
-void Server::exitClients()
-{
-	// for (size_t i = 0; i < this->_clients.size(); i++)
-	// {
-	// 	FD_CLR(this->_clients[i].fd, &Kernel::_actualSet);// add if clr
-	// 	close(this->_clients[i].fd);	
-	// }
-	this->_clients.clear();
-}
+// void Server::exitClients()
+// {
+// 	// for (size_t i = 0; i < this->_clients.size(); i++)
+// 	// {
+// 	// 	FD_CLR(this->_clients[i].fd, &Kernel::_actualSet);// add if clr
+// 	// 	close(this->_clients[i].fd);	
+// 	// }
+// 	this->_clients.clear();
+// }
 
-void Server::exitServer()
+// void Server::exitServer()
+// {
+// 	this->exitClients();
+// 	FD_CLR(this->_fd, &Kernel::_actualSet);
+// 	close(this->_fd);	
+// }
+
+Server::~Server()
 {
-	this->exitClients();
+	// this->_clients.clear(); //! en trop ?
+	if (this->_fd < 0)
+		return ;
 	FD_CLR(this->_fd, &Kernel::_actualSet);
 	close(this->_fd);	
 }

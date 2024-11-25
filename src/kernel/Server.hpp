@@ -48,7 +48,7 @@ class Server
 	void fillMessageSend(const size_t i);
 	bool endReply(const size_t i);
 	void exitClient(const size_t index);
-	void exitClients();
+	// void exitClients();
 
 	public:
 
@@ -56,6 +56,9 @@ class Server
 		std::vector<Client> _clients;
 
 		Server(sockaddr_in & sockaddr, Config & conf);
+		Server(const Server & src);
+		Server & operator=(const Server & rhs);
+		~Server();
 
 		static void printVector(Client & client,
 			const std::vector<char> & response,
@@ -66,7 +69,7 @@ class Server
 		void catchClients(Kernel & kernel);
 		void listenClients();
 		void replyClients();
-		void exitServer();
+		// void exitServer();
 
 		class ShortCircuitException
 		{

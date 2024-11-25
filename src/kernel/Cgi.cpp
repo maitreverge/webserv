@@ -14,6 +14,7 @@ Cgi::Cgi()
 
 Cgi::Cgi(const Cgi & src)
 {	
+	this->_fds[1] = -1;
 	*this = src;
 }
 
@@ -23,22 +24,26 @@ Cgi & Cgi::operator=(const Cgi & rhs)
 	this->_lastSpan = rhs._lastSpan;
 	this->_pid = rhs._pid;
 	this->_fds[0] = rhs._fds[0];	
-	if (this->_fds[1] > 0)
+
+	if (this->_fds[1] >= 0)
 	{
 		FD_CLR(this->_fds[1], &Kernel::_actualSet);
 		close(this->_fds[1]);
-		this->_fds[1] = dup(rhs._fds[1]);
-		FD_SET(this->_fds[1], &Kernel::_actualSet);
+	}
+	if (rhs._fds[1] >= 0)
+	{
+		if ((this->_fds[1] = dup(rhs._fds[1])) >= 0)
+			FD_SET(this->_fds[1], &Kernel::_actualSet);
+		Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fds[1]);
 	}
 	else
-		this->_fds[1] = rhs._fds[1];		
-	Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fds[1]);
+		this->_fds[1] = rhs._fds[1];	
 	return *this;
 }
 
 Cgi::~Cgi()
 {
-    if (this->_fds[1] <= 0)
+    if (this->_fds[1] < 0)
 		return ;	
 	FD_CLR(this->_fds[1], &Kernel::_actualSet);
 	close(this->_fds[1]);		
@@ -72,18 +77,19 @@ void Cgi::child(Client & client)
 {
     Logger::getInstance().log(DEBUG, "Child", client);
 	
-	try 
-	{
+	// try 
+	// {
 		dup2(this->_fds[0], STDIN_FILENO); 
 		dup2(this->_fds[0], STDOUT_FILENO); 
 		close(this->_fds[0]);
 		close(this->_fds[1]);
-			
+		this->_fds[0] = -1;	
+		this->_fds[1] = -1;	
 		// if (chdir(client.responseBuilder._folderCGI.c_str()) < 0)
 		{
 			Logger::getInstance().log(ERROR, "chdir", client);
-			Logger::getInstance().~Logger();
-			Kernel::getInstance().exitKernel();
+			// Logger::getInstance().~Logger();
+			// Kernel::getInstance().exitKernel();
 			exit(200);
 		}
 		// {
@@ -131,13 +137,13 @@ void Cgi::child(Client & client)
 			// Logger::getInstance().~Logger();
 		// }
 		_exit(1);
-	}
-	catch (const Server::ShortCircuitException & e)
-	{
-		Logger::getInstance().~Logger();
-		Kernel::getInstance().~Kernel();
-		_exit(static_cast<int>(e.getCode()));	
-	}
+	// }
+	// catch (const Server::ShortCircuitException & e)
+	// {
+	// 	Logger::getInstance().~Logger();
+	// 	Kernel::getInstance().~Kernel();
+	// 	_exit(static_cast<int>(e.getCode()));	
+	// }
 }
 
 std::string Cgi::getPath(const std::string & exe, Client & client)
