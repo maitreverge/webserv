@@ -24,7 +24,7 @@ bool ResponseBuilder::getBody( Client &inputClient ){
 	{	
 		Logger::getInstance().log(DEBUG, _realURI.c_str(), inputClient);	
 
-		if (_method == POST and _isCGI)
+		if (_method == POST and _isCGI) //!COND JUMP
 			this->_ifs.open(_fileName.c_str(), std::ios::binary);	
 		else
 			this->_ifs.open(_realURI.c_str(), std::ios::binary);	

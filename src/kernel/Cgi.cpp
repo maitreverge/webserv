@@ -78,30 +78,50 @@ void Cgi::child(Client & client)
     if (chdir(client.responseBuilder._folderCGI.c_str()) < 0)
 	{
 		std::cerr << "chdir failed" << std::endl;
-		
+		// Logger::getInstance().~Logger();
+   		Kernel::getInstance().~Kernel();
+		exit(1);
 		// throw (Logger::getInstance().log(ERROR, "chdir", client),
 		// 	Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
 	}
+	char actualPath[PATH_MAX];
+	if (!getcwd(actualPath, PATH_MAX))
+	{
+		std::cerr << "getcwd failed" << std::endl;
+		// Logger::getInstance().~Logger();
+		Kernel::getInstance().~Kernel();
+		exit(1);
+		// throw (Logger::getInstance().log(ERROR, "chdir", client),
+		// 	Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
+	}
+	// std::cerr <<" ACTUAL " <<  actualPath << std::endl;
+	// 	std::cerr <<" ACTUAL " <<  client.responseBuilder._fileName << std::endl;
     std::string envPathInfo
         ("PATH_INFO=" + client.responseBuilder._pathInfo);
     
     char *env[] = {const_cast<char *>(envPathInfo.c_str()), NULL};
-    std::string path = client.responseBuilder._fileName;
-    Logger::getInstance().~Logger();
-    Kernel::getInstance().~Kernel();
+    std::string path = std::string(actualPath) + '/' + client.responseBuilder._fileName;
+  
     if (client.responseBuilder._fileExtension == "out")    
     {	
+		  Logger::getInstance().~Logger();
+    Kernel::getInstance().~Kernel();
 		char *argv[] = {NULL};
+	std::cerr << "PATH " << path << std::endl; 
         execve(path.c_str(), argv, env);
 	}	
 	else if (client.responseBuilder._fileExtension == "py")
 	{	
+		  Logger::getInstance().~Logger();
+    Kernel::getInstance().~Kernel();
 		char *argv[] = {const_cast<char *>("python3"),
 			const_cast<char *>(path.c_str()), NULL};
         execve(this->getPath("python3", client).c_str(), argv, env); 
 	}
     else if (client.responseBuilder._fileExtension == "php")
-	{	
+	{
+		  Logger::getInstance().~Logger();
+    Kernel::getInstance().~Kernel();	
 		char *argv[] = {const_cast<char *>("php-cgi"),
 			const_cast<char *>(path.c_str()), NULL};
     	execve(this->getPath("php-cgi", client).c_str(), argv, env);
@@ -290,4 +310,3 @@ bool Cgi::getBody(Client & client)
 		client.messageSend.end());
 	return false; 
 }
-
