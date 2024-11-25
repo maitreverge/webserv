@@ -299,7 +299,7 @@ bool Cgi::getBody(Client & client)
         return Logger::getInstance().
 			log(DEBUG, "cgi not ready to recev", client), true;  
     client.messageSend.clear();
-    client.messageSend.resize(SEND_BUFF_SIZE);
+    client.messageSend.resize(client.conf->send_buff_size);
 	Logger::getInstance().log(DEBUG, "\e[31;43mcgi ready to recev\e[0m",
 		client);
     ssize_t ret = recv(this->_fds[1], client.messageSend.data(),

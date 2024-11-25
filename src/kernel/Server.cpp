@@ -11,8 +11,8 @@ Server::Server(sockaddr_in & sockAddr, Config & conf)
 	this->_conf.index = i++;
 	this->_sockAddr = sockAddr;
 	this->_clients.reserve(static_cast<size_t>(this->_conf.maxClient));
-	this->_readBuffer.reserve(RECV_BUFF_SIZE);	
-	this->_writeBuffer.reserve(SEND_BUFF_SIZE);
+	this->_readBuffer.reserve(conf.recv_buff_size);	
+	this->_writeBuffer.reserve(conf.send_buff_size);
 }
 
 const sockaddr_in & Server::getSockAdress() const
