@@ -20,15 +20,12 @@ Config::Config()
 	int i = 0;
 	for (i = 0; i < maxServerNbr; i++)
 		initializeServer((uint16_t)std::atoi(_serverStruct[i].port.c_str()), sockAddress);
-	parser.printConfig(*this);
 }
 
 void	Config::intitializeVars(bool withConfigFile)
 {
 	if (!withConfigFile)
 		initializeServers();
-	printColor(RED, "Don't forget to clean up, baby.");
-
 	maxClient = 1024;
 	recv_buff_size = 4192;
 	send_buff_size = 4192;

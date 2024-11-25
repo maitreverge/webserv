@@ -46,6 +46,8 @@ void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
 				setConfigValue(catIt, itemIt, configStruct.maxHeaderSize, "maxHeaderSize");
 				setConfigValue(catIt, itemIt, configStruct.maxServerNbr, "maxServerNbr");
 				setConfigValue(catIt, itemIt, configStruct.maxBodySize, "maxBodySize");
+				setConfigValue(catIt, itemIt, configStruct.recv_buff_size, "recv_buff_size");
+				setConfigValue(catIt, itemIt, configStruct.send_buff_size, "send_buff_size");
 				setConfigValue(catIt, itemIt, configStruct.timeoutCgi, "timeoutCgi");
 				setConfigValue(catIt, itemIt, configStruct.listingDirectories, "listingDirectories");
 				setConfigValue(catIt, itemIt, valIt, configStruct.indexFiles, "indexFiles");
@@ -75,8 +77,6 @@ void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
 			}
 		}
 	}
-	// print("in ConfigFileParser func: ");
-	// printRoutesData(configStruct.routes);
 }
 
 void ConfigFileParser::assignRoutesToServers(Config& configStruct)
@@ -182,6 +182,14 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, short& field
 	if (catIt->first == "global" && itemIt->first == str)
 		if (!itemIt->second[0].empty())
 			field = (short)std::atoi(itemIt->second[0].c_str());
+}
+
+//? recv_buff_size/send_buff_size
+void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, unsigned short& field, const char str[])
+{
+	if (catIt->first == "global" && itemIt->first == str)
+		if (!itemIt->second[0].empty())
+			field = (unsigned short)std::atoi(itemIt->second[0].c_str());
 }
 
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, int& field, const char str[])

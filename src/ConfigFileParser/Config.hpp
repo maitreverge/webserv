@@ -42,8 +42,8 @@ struct Config
 	std::string						errorPagesPath;
 	RoutesData						routes;
 	
-	size_t							recv_buff_size;
-	size_t							send_buff_size;
+	unsigned short					recv_buff_size;
+	unsigned short					send_buff_size;
 
 	Config();
 	Config(char* path);
