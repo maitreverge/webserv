@@ -194,6 +194,8 @@ void	ResponseBuilder::extractRouteConfig( void ){
 	vector< string > routeNames;
 	vector< string > routeURIS;
 
+	resetMyConfig();
+
 	clearingRoutes(routeNames, routeURIS);
 
 	// string originalURI = _realURI;
@@ -240,6 +242,21 @@ void	ResponseBuilder::extractRouteConfig( void ){
 	{
 		extractRedirectionIndex(routeNames, routeURIS);
 	}
+}
+
+void ResponseBuilder::resetMyConfig()
+{
+	_myconfig.allowedMethods.clear();
+	_myconfig.redirection.clear();
+	_myconfig.uri.clear();
+	_myconfig.root.clear();
+	_myconfig.listingDirectory = false;
+	_myconfig.index.clear();
+	_myconfig.cgiAllowed.clear();
+	_myconfig.uploadAllowed = true;
+	_myconfig.uploadDirectory.clear();
+	_myconfig.samePathWrite = true;
+	_myconfig.indexRedirection.clear();
 }
 
 void	ResponseBuilder::printMyConfig( void ){

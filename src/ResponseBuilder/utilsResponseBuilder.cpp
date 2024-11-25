@@ -98,7 +98,7 @@ void	ResponseBuilder::checkAutho( void ){
 			case POST:
 				if (_isCGI and not _isXOK)
 					setError(CODE_401_UNAUTHORIZED);
-				else if (_myconfig.samePathWrite and not _isWOK)
+				else if (_myconfig.samePathWrite and not _isWOK) // is samePathWrite really usefull ?
 					setError(CODE_401_UNAUTHORIZED);
 				break;
 			case DELETE:

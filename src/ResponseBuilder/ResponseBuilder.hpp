@@ -59,9 +59,7 @@ struct MyConfig
 
 	MyConfig()
 	{
-		allowedMethods.push_back("GET");
-		allowedMethods.push_back("POST");
-		allowedMethods.push_back("DELETE");
+		allowedMethods.clear();
 		redirection.clear();
 		uri.clear();
 		root.clear();
@@ -204,7 +202,8 @@ class ResponseBuilder
 	bool _parsedBoundaryToken;
 
 	// extractRouteConfig
-	void	extractRouteConfig( void );
+	void extractRouteConfig(void);
+	void resetMyConfig();
 	void	clearingRoutes( vector< string >&, vector< string >& );
 	void	buildRouteConfig( string );
 	void	printMyConfig( void );
