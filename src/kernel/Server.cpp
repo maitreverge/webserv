@@ -57,17 +57,17 @@ void Server::catchClients(Kernel & kernel)
 		if (client.fd < 0)		
 			return Logger::getInstance().log(ERROR, "accept");		
 		if (kernel.countClients() >= this->_conf.maxClient)		
-			return close(client.fd),
-				Logger::getInstance().log(WARNING, "max clients", client);					
+			return Logger::getInstance().log(WARNING, "max clients", client);					
 		Logger::getInstance().log(INFO, "\e[30;101mnew client\e[0m", client);
 		struct timeval timeout = {SND_TIMEOUT, 0};	
 		if (setsockopt(client.fd, SOL_SOCKET, SO_SNDTIMEO, &timeout,
 			sizeof(timeout)) < 0)
-	  		return close(client.fd),
-				Logger::getInstance().log(ERROR, "send timeout", client);
+	  		return Logger::getInstance().log(ERROR, "send timeout", client);
 		FD_SET(client.fd, &Kernel::_actualSet);
 		Kernel::_maxFd = std::max(Kernel::_maxFd, client.fd);
+		Logger::getInstance().log(INFO, "avant de catch client", client);
 		this->_clients.push_back(client);
+		Logger::getInstance().log(INFO, "fin de catch client", client);
 	}	
 }
 

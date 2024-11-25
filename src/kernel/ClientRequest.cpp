@@ -103,7 +103,6 @@ void Server::headerCheckin(const size_t i, ssize_t ret)
 	{	
 		Logger::getInstance().log(DEBUG, "header terminated",
 			this->_clients[i]);
-
 		this->isMaxHeaderSize(it + 4, i);					
 		this->_clients[i].headerRequest.parse(this->_clients[i]);
 		#ifdef DEB								
