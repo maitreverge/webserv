@@ -26,10 +26,8 @@ chmod 755 *
 echo "This is hello.txt content" > hello.txt
 
 # Back to Requests_Tester
-cd ../../
+cd ../../..
 
 # Create a file which can't be read
 echo "Content of no_read_file.txt" > no_read_file.txt
 chmod 044 no_read_file.txt 
-
-cd ..
