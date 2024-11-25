@@ -1,28 +1,24 @@
-1,2c1,2
-< <html>
+1,5c1,3
+< HTTP/1.1 404 Not Found
+< Content-Length: 283
+< Content-Type: text/html
 < 
+< <html>
 ---
-> <!DOCTYPE html>
-> <html lang="en">
-4c4,7
+> HTTP/1.1 200 OK
+> Content-Length: 29
+> Content-Type: text/txt
+7,16c5
+< <head>
 < 	<title>404</title>
----
-> 	<meta charset="UTF-8">
-> 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-> 	<title>Simple HTML Page</title>
-> 	<link rel="icon" href="favicon.ico" type="image/x-icon">
-6,9c9,15
+< </head>
 < 
 < <body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
 < 	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">404 NOT FOUND</h1>
 < 	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
----
-> <body>
-> 	<h1>INDEX 1</h1>
-> 	<p>This is a paragraph of text on my simple HTML page.</p>
-> 	<a href="test.html">Go to Test Page</a>
-> 	<p></p>
-> 	<p></p>
-> 	<a href="testResponseBuilder/upload/uploadEntryPoint.html">Go to UPLOADING FILE Page</a>
-11d16
+< </body>
 < 
+< </html>
+---
+> Hello World, this is Megatron
+\ No newline at end of file

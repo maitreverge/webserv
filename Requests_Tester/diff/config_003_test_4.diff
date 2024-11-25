@@ -1,0 +1,17 @@
+0a1,3
+> HTTP/1.1 200 OK
+> Content-Type: text/html
+> Content-Length: 287
+1a5,16
+> <!DOCTYPE html>
+> <html lang="en">
+> <head>
+> <meta charset="UTF-8">
+> <meta name="viewport" content="width=device-width, initial-scale=1.0">
+> <title>Resource Deleted</title>
+> </head>
+> <body>
+> <h1>Resource Deleted</h1>
+> <p>The file <b>file_2.txt</b> has been successfully deleted.</p>
+> </body>
+> </html>

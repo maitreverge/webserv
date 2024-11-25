@@ -1,0 +1,14 @@
+1,2c1,2
+< HTTP/1.1 403 Forbidden
+< Content-Length: 283
+---
+> HTTP/1.1 405 Method Not Allowed
+> Content-Length: 292
+8c8
+< 	<title>403</title>
+---
+> 	<title>405</title>
+12c12
+< 	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">403 Forbidden</h1>
+---
+> 	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">405 Method Not Allowed</h1>

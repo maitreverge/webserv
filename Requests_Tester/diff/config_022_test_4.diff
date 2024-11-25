@@ -1,0 +1,17 @@
+1,5d0
+< HTTP/1.1 401 Unauthorized
+< Content-Length: 286
+< Content-Type: text/html
+< 
+< <html>
+7,16d1
+< <head>
+< 	<title>401</title>
+< </head>
+< 
+< <body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+< 	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">401 Unauthorized</h1>
+< 	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
+< </body>
+< 
+< </html>

@@ -1,31 +1,16 @@
-HTTP/1.1 201 Created
-Content-Length: 801
+HTTP/1.1 404 Not Found
+Content-Length: 283
 Content-Type: text/html
 
-<!DOCTYPE html>
 <html>
+
 <head>
-	<title>Upload Successful</title>
-	<meta charset="UTF-8">
+	<title>404</title>
 </head>
-<body>
-    <h1>Image uploaded successfully!</h1>
-    <h1><p>Your image has been saved to the server.</p></h1>
-	<h1><p> Congratulations, you are the best !</p></h1>
-	<p></p>
-	<img src="https://i.kym-cdn.com/photos/images/facebook/000/071/862/happycat.jpg" alt="happy_cat">
-	<p></p>
-	<p></p>
-	<p></p>
-	<h2><a href="../uploads/">Go to UPLOADING FOLDER Page</a></h2>
-	<p></p>
-	<h2> If you see this message,</h2>
-	<h2>
-		<ul>
-			<li> All Uploaded files are named <u>apple.jpeg</u> </li>
-			<li> All of them are in the <u>UPLOAD</u> folder at the root of <u>webserv</u></li>
-			<li> All files are corrupted because of the extension, yet <u> ✅the data is still here ✅ </u></li>
-		</ul>
-	</h2>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">404 NOT FOUND</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
 </body>
+
 </html>
