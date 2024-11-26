@@ -25,6 +25,7 @@ struct ResponseHeaders
 	// !           OR
 	string contentLenght; // ! OPTION TWO
 	
+	string cookie; //* added 26.11.2024
 	// TODO : All Headers
 	string location; // Only if redirection
 

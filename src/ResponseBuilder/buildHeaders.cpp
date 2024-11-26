@@ -77,7 +77,17 @@ void	ResponseBuilder::buildHeaders(){
 	// ======================== BONUS METHODS ========================
 
 	// TODO : Coockie and session generator
+
 	{
+		stringstream streamCookie;
+		streamCookie	<< "Set-Cookie:"
+						<< SPACE
+						<< "sessionID=mange-ton-caca"
+						<< HTTP_HEADER_SEPARATOR;
+		Headers.cookie = streamCookie.str();
+
+
+
 	}
 
 	// ======================== BONUS METHODS ========================
@@ -89,6 +99,7 @@ void	ResponseBuilder::buildHeaders(){
 						// << Headers.timeStamp
 						<< Headers.contentLenght
 						// Optionals
+						<< Headers.cookie
 						<< Headers.contentType 
 						<< Headers.location
 						// Separator
