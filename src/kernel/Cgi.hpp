@@ -17,7 +17,8 @@ class Cgi
 	double 		getTimeSpan(Client & client) const;
     void 		retHandle(Client & client, ssize_t ret, std::string err, 
     std::string info);
-	std::string getPath(const std::string & exe, Client & client);
+	void 		callExecve(Client & client, const std::string & interpreter);
+	std::string getPath(Client & client, const std::string & interpreter);
 
     public:
     

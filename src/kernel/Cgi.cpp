@@ -72,91 +72,132 @@ void Cgi::launch(Client & client)
     else
         close(this->_fds[0]);
 }
+// void Cgi::child(Client & client)
+// {
+//     Logger::getInstance().log(DEBUG, "Child", client);
+	
+// 	try 
+// 	{
+// 		dup2(this->_fds[0], STDIN_FILENO); 
+// 		dup2(this->_fds[0], STDOUT_FILENO); 
+// 		close(this->_fds[0]);
+// 		close(this->_fds[1]);
+// 		this->_fds[0] = -1;	
+// 		this->_fds[1] = -1;	
+// 		if (chdir(client.responseBuilder._folderCGI.c_str()) < 0)
+// 		{
+// 			Logger::getInstance().log(ERROR, "chdir", client);
+// 			// Logger::getInstance().~Logger();
+// 			// Kernel::getInstance().exitKernel();
+// 			exit(200);
 
+// 				// Logger::getInstance().~Logger();
+// 				// Kernel::getInstance().~Kernel();
+// 				// _exit(200);
+// 		}
+// 			char actualPath[PATH_MAX];	
+// 			if (!getcwd(actualPath, PATH_MAX))
+// 			{
+// 				Logger::getInstance().log(ERROR, "getcwd", client);
+// 				// Logger::getInstance().~Logger();
+// 				// Kernel::getInstance().~Kernel();
+// 				exit(200);	
+// 			}
+
+// 		 {
+// 			std::string envPathInfo
+// 				("PATH_INFO=" + client.responseBuilder._pathInfo);    
+// 			char *env[] = {const_cast<char *>(envPathInfo.c_str()), NULL};
+// 			std::string execPath = std::string(actualPath) + '/'
+// 				+ client.responseBuilder._fileName; 
+
+// 			if (client.responseBuilder._fileExtension == "out")    
+// 			{	
+// 				Logger::getInstance().~Logger();
+// 				// Logger::getInstance().exitLogger();
+// 				// Kernel::getInstance().~Kernel();
+// 				Kernel::getInstance().exitKernel();
+// 				char *argv[] = {NULL};
+// 				// execve(path.c_str(), argv, env);
+// 				execve("gros caca", argv, env);
+// 			}		
+// 			else if (client.responseBuilder._fileExtension == "py")
+// 			{
+// 				std::string interPath = this->getPath("python3", client);	
+// 				Logger::getInstance().~Logger();
+// 				Kernel::getInstance().exitKernel();
+// 				char *argv[] = {const_cast<char *>("python3"),
+// 					const_cast<char *>(execPath.c_str()), NULL};
+// 				execve(interPath.c_str(), argv, env); 
+// 			}
+// 			else if (client.responseBuilder._fileExtension == "php")
+// 			{
+// 				std::string interPath = this->getPath("php-cgi", client);
+// 				Logger::getInstance().~Logger();
+// 				Kernel::getInstance().exitKernel();	
+// 				char *argv[] = {const_cast<char *>("php-cgi"),
+// 					const_cast<char *>(execPath.c_str()), NULL};
+// 				execve(interPath.c_str(), argv, env);
+// 			} 
+// 			// Logger::getInstance().log(ERROR, "execve", client);
+			
+// 			// std::cerr << "\e[1;31mexecve failed\e[0m" << std::endl;
+// 			// Logger::getInstance().~Logger();
+// 		}
+// 		exit(242);// mettre une err spe pour execve 
+// 	}
+// 	catch (const Server::ShortCircuitException & e)
+// 	{
+// 		Logger::getInstance().~Logger();
+// 		Kernel::getInstance().~Kernel();
+// 		_exit(static_cast<int>(e.getCode()));	
+// 	}
+// }
 void Cgi::child(Client & client)
 {
     Logger::getInstance().log(DEBUG, "Child", client);
 	
-	// try 
-	// {
-		dup2(this->_fds[0], STDIN_FILENO); 
-		dup2(this->_fds[0], STDOUT_FILENO); 
-		close(this->_fds[0]);
-		close(this->_fds[1]);
-		this->_fds[0] = -1;	
-		this->_fds[1] = -1;	
-		if (chdir(client.responseBuilder._folderCGI.c_str()) < 0)
-		{
-			Logger::getInstance().log(ERROR, "chdir", client);
-			// Logger::getInstance().~Logger();
-			// Kernel::getInstance().exitKernel();
-			exit(200);
-
-				// Logger::getInstance().~Logger();
-				// Kernel::getInstance().~Kernel();
-				// _exit(200);
-		}
-		 {
-			char actualPath[PATH_MAX];
-			if (!getcwd(actualPath, PATH_MAX))
-			{
-				Logger::getInstance().log(ERROR, "getcwd", client);
-				// Logger::getInstance().~Logger();
-				// Kernel::getInstance().~Kernel();
-				// _exit(200);	
-			}
-
-			std::string envPathInfo
-				("PATH_INFO=" + client.responseBuilder._pathInfo);    
-			char *env[] = {const_cast<char *>(envPathInfo.c_str()), NULL};
-			std::string path = std::string(actualPath) + '/'
-				+ client.responseBuilder._fileName; 
-
-			if (client.responseBuilder._fileExtension == "out")    
-			{	
-				Logger::getInstance().~Logger();
-				// Logger::getInstance().exitLogger();
-				// Kernel::getInstance().~Kernel();
-				Kernel::getInstance().exitKernel();
-				char *argv[] = {NULL};
-				// execve(path.c_str(), argv, env);
-				execve("gros caca", argv, env);
-			}		
-			else if (client.responseBuilder._fileExtension == "py")
-			{	
-				Logger::getInstance().~Logger();
-				Kernel::getInstance().~Kernel();
-				char *argv[] = {const_cast<char *>("python3"),
-					const_cast<char *>(path.c_str()), NULL};
-				execve(this->getPath("python3", client).c_str(), argv, env); 
-			}
-			else if (client.responseBuilder._fileExtension == "php")
-			{
-				Logger::getInstance().~Logger();
-				Kernel::getInstance().~Kernel();	
-				char *argv[] = {const_cast<char *>("php-cgi"),
-					const_cast<char *>(path.c_str()), NULL};
-				execve(this->getPath("php-cgi", client).c_str(), argv, env);
-			} 
-			// Logger::getInstance().log(ERROR, "execve", client);
-			
-			std::cerr << "\e[1;31mexecve failed\e[0m" << std::endl;
-			Logger::getInstance().~Logger();
-		}
-		exit(242);// mettre une err spe pour execve 
-	// }
-	// catch (const Server::ShortCircuitException & e)
-	// {
-	// 	Logger::getInstance().~Logger();
-	// 	Kernel::getInstance().~Kernel();
-	// 	_exit(static_cast<int>(e.getCode()));	
-	// }
+	if (dup2(this->_fds[0], STDIN_FILENO) < 0
+		|| dup2(this->_fds[0], STDOUT_FILENO) < 0)		
+		Logger::getInstance().log(ERROR, "dup2", client), std::exit(200);
+	close(this->_fds[0]); this->_fds[0] = -1;	
+	close(this->_fds[1]); this->_fds[1] = -1;			
+	try 
+	{
+		if (client.responseBuilder._fileExtension == "php")		
+			this->callExecve(client, "php-cgi");
+		else if (client.responseBuilder._fileExtension == "py")	
+			this->callExecve(client, "python3");		
+		std::exit(242);
+	}
+	catch (const Server::ShortCircuitException & e)
+	{
+		Logger::getInstance().~Logger();	
+		std::exit(static_cast<int>(e.getCode()));	
+	}
 }
 
-std::string Cgi::getPath(const std::string & exe, Client & client)
+void Cgi::callExecve(Client & client, const std::string & interpreter)
 {
-	std::cerr << "Get Path" << std::endl;
+	if (chdir(client.responseBuilder._folderCGI.c_str()) < 0)	
+		Logger::getInstance().log(ERROR, "chdir", client), std::exit(200);	
+	char actualPath[PATH_MAX];	
+	if (!getcwd(actualPath, PATH_MAX))	
+		Logger::getInstance().log(ERROR, "getcwd", client),	std::exit(200);			 
+	std::string envPathInfo("PATH_INFO=" + client.responseBuilder._pathInfo);    
+	char *env[] = {const_cast<char *>(envPathInfo.c_str()), NULL};
+	std::string execPath = std::string(actualPath) + '/'
+		+ client.responseBuilder._fileName; 
+	char *argv[] = {const_cast<char *>(interpreter.c_str()),
+		const_cast<char *>(execPath.c_str()), NULL};
+	std::string interPath = this->getPath(client, interpreter);
+	Logger::getInstance().~Logger();
+	Kernel::getInstance().exitKernel();	
+	execve(interPath.c_str(), argv, env);
+}
 
+std::string Cgi::getPath(Client & client, const std::string & interpreter)
+{
 	if (char * env = std::getenv("PATH"))
 	{
 		std::string path;
@@ -165,13 +206,11 @@ std::string Cgi::getPath(const std::string & exe, Client & client)
 		std::string line;
 		while (std::getline(ss, line, ':'))
 		{
-			path = line + '/' + exe;
+			path = line + '/' + interpreter;
 			if (!access(path.c_str(), F_OK | X_OK))
 				return path;
-		}
-		std::cerr << "interpretor no exist" << std::endl;
-		Logger::getInstance().log(ERROR, "interpretor no exist", client);
-		throw (Logger::getInstance().log(ERROR, "interpretor no exist", client),
+		}		
+		throw (Logger::getInstance().log(ERROR, "interpreter no exist", client),
 			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
 	}
 	throw (Logger::getInstance().log(ERROR, "path no exist", client),
