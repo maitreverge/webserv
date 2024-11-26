@@ -70,4 +70,4 @@ Requests_Tester/check_file.ans
 *_actual.txt
 .vscode/settings.json
 Requests_Tester/check_file.ans
-Requests_Tester/answers/
+Requests_Tester/diff/
