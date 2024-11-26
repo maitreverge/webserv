@@ -153,6 +153,25 @@ void Cgi::launch(Client & client)
 // 		_exit(static_cast<int>(e.getCode()));	
 // 	}
 // }
+
+void provC(Client & client) //! a suppr
+{
+	if (chdir(client.responseBuilder._folderCGI.c_str()) < 0)	
+		Logger::getInstance().log(ERROR, "chdir", client), std::exit(200);	
+	char actualPath[PATH_MAX];	
+	if (!getcwd(actualPath, PATH_MAX))	
+		Logger::getInstance().log(ERROR, "getcwd", client),	std::exit(200);			 
+	std::string envPathInfo("PATH_INFO=" + client.responseBuilder._pathInfo);    
+	char *env[] = {const_cast<char *>(envPathInfo.c_str()), NULL};
+	std::string execPath = std::string(actualPath) + '/'
+		+ client.responseBuilder._fileName; 
+	char *argv[] = {const_cast<char *>
+		(client.responseBuilder._fileName.c_str()), NULL};	
+	Logger::getInstance().~Logger();
+	Kernel::getInstance().exitKernel();	
+	execve(execPath.c_str(), argv, env);
+}
+
 void Cgi::child(Client & client)
 {
     Logger::getInstance().log(DEBUG, "Child", client);
@@ -164,6 +183,8 @@ void Cgi::child(Client & client)
 	close(this->_fds[1]); this->_fds[1] = -1;			
 	try 
 	{
+		if (client.responseBuilder._fileExtension == "out") //! a suppr
+			provC(client);
 		if (client.responseBuilder._fileExtension == "php")		
 			this->callExecve(client, "php-cgi");
 		else if (client.responseBuilder._fileExtension == "py")	
@@ -171,10 +192,7 @@ void Cgi::child(Client & client)
 		std::exit(242);
 	}
 	catch (const Server::ShortCircuitException & e)
-	{
-		Logger::getInstance().~Logger();	
-		std::exit(static_cast<int>(e.getCode()));	
-	}
+	{	std::exit(static_cast<int>(e.getCode()));	}
 }
 
 void Cgi::callExecve(Client & client, const std::string & interpreter)
@@ -227,7 +245,7 @@ void Cgi::retHandle(Client & client, ssize_t ret, std::string err,
         Logger::getInstance().log(DEBUG, info);
     else if (ret < 0)
     {	      
-        errnoHandle();   
+        errnoHandle();//! a suppr  
 		throw (Logger::getInstance().log(ERROR, err, client),
 			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
     }
