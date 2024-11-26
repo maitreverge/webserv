@@ -48,7 +48,6 @@ class Server
 	void fillMessageSend(const size_t i);
 	bool endReply(const size_t i);
 	void exitClient(const size_t index);
-	// void exitClients();
 
 	public:
 
@@ -69,7 +68,6 @@ class Server
 		void catchClients(Kernel & kernel);
 		void listenClients();
 		void replyClients();
-		// void exitServer();
 
 		class ShortCircuitException
 		{

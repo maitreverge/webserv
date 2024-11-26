@@ -12,13 +12,15 @@ class Cgi
     pid_t        	_pid;
 	int				_lastSpan;
 	
+    void	    child(Client & client);
+	void 		callExecve(Client & client, const std::string & interpreter);
+	std::string getPath(Client & client, const std::string & interpreter);
+	
 	void		hasError(Client & client, std::string err);
     void 		isTimeout(Client & client, std::string err);
 	double 		getTimeSpan(Client & client) const;
     void 		retHandle(Client & client, ssize_t ret, std::string err, 
-    std::string info);
-	void 		callExecve(Client & client, const std::string & interpreter);
-	std::string getPath(Client & client, const std::string & interpreter);
+    	std::string info);
 
     public:
     
@@ -30,7 +32,6 @@ class Cgi
         ~Cgi();  
 
         void    launch(Client & client); 
-        void    child(Client & client);
         bool 	getBody(Client & client);
 	    void 	setBody(Client & client, bool eof);
 };

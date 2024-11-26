@@ -22,16 +22,7 @@ Kernel::Kernel(char* path) : _conf(path)
 
 void Kernel::exitKernel()
 {
-	// for (size_t i = 0; i < this->_servers.size(); i++)
-	// 	this->_servers[i].exitServer();
-	this->_servers.clear(); //! en trop ?
-}
-
-Kernel::~Kernel()
-{
-	// for (size_t i = 0; i < this->_servers.size(); i++)
-	// 	this->_servers[i].exitServer();
-	// this->_servers.clear(); //! en trop ?
+	this->_servers.clear();
 }
 
 Kernel & Kernel::getInstance(char *path)
@@ -127,5 +118,4 @@ void Kernel::launch()
 			this->callReply);
 		usleep(100);	
 	}
-	// this->exitKernel();
 }

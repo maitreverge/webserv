@@ -3,8 +3,6 @@
 
 Client::Client(Config * _conf) : conf(_conf)
 {
-	// Logger::getInstance().log(DEBUG, "Client const", *this); 
-
 	fd = -1;		
 	std::memset(&address, 0, sizeof(address));
 	addressLen = sizeof(address);
@@ -25,7 +23,6 @@ Client::Client(Config * _conf) : conf(_conf)
 
 Client::Client(const Client & src)
 {
-	// Logger::getInstance().log(DEBUG, "Client copy const", *this);
 	this->fd = -1;
 	// messageRecv.reserve(static_cast<size_t>(src.conf->maxHeaderSize));
 	// headerRespons.reserve(static_cast<size_t>(src.conf->maxHeaderSize)); 
@@ -36,8 +33,6 @@ Client::Client(const Client & src)
 
 Client & Client::operator=(const Client & rhs)
 {
-	// Logger::getInstance().log(DEBUG, "Client op=", *this); 
-
 	this->clone(rhs);
 	if (this->fd >= 0)
 	{
@@ -51,8 +46,7 @@ Client & Client::operator=(const Client & rhs)
 		Kernel::_maxFd = std::max(Kernel::_maxFd, this->fd);
 	}
 	else
-		this->fd = rhs.fd;
-	// Logger::getInstance().log(DEBUG, "Client op= end", *this); 		
+		this->fd = rhs.fd;			
 	return *this;
 }
 
@@ -81,8 +75,6 @@ void Client::clone(const Client & rhs)
 
 Client::~Client()
 {
-	// Logger::getInstance().log(DEBUG, "Client destr"); 
-
 	if (this->fd < 0)
 		return ;	
 	FD_CLR(this->fd, &Kernel::_actualSet);
