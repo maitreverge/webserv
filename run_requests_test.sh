@@ -70,7 +70,7 @@ if [ -n "$CONFIG_FILE" ]; then
 
 
 		#TODO && UNCOMMENT TO FILL EXPECTED_ANSWER_FILES &&&&&&&&&&
-		#echo "$http_response" > "$response_file"
+		# echo "$http_response" > "$response_file"
 		#TODO &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 		# Comparaison et enregistrement des réponses attendues
@@ -90,11 +90,11 @@ if [ -n "$CONFIG_FILE" ]; then
 
 		diff_file="$DIFF_DIR/config_${config_number}_test_${test_counter}.diff"
 		
-		if diff -q "$response_file" "$expected_answer_file" > /dev/null; then
+		if diff -Z -q "$response_file" "$expected_answer_file" > /dev/null; then
 			echo -e "${GREEN}config_$config_number, test $test_counter : $request ✅ Success${NC}"
 		else
 			echo -e "${GREEN}config_$config_number, test $test_counter : $request ❌ Failure${NC}"
-			diff "$response_file" "$expected_answer_file" > "$diff_file"
+			diff -Z "$response_file" "$expected_answer_file" > "$diff_file"
 			cat "$diff_file"
 		fi
 		test_counter=$((test_counter + 1))
