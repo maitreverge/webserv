@@ -115,6 +115,7 @@ void Cgi::child(Client & client)
 			if (client.responseBuilder._fileExtension == "out")    
 			{	
 				Logger::getInstance().~Logger();
+				// Logger::getInstance().exitLogger();
 				// Kernel::getInstance().~Kernel();
 				Kernel::getInstance().exitKernel();
 				char *argv[] = {NULL};
@@ -138,12 +139,12 @@ void Cgi::child(Client & client)
 			// 		const_cast<char *>(path.c_str()), NULL};
 			// 	execve(this->getPath("php-cgi", client).c_str(), argv, env);
 			// } 
-			Logger::getInstance().log(ERROR, "execve", client);
+			// Logger::getInstance().log(ERROR, "execve", client);
 			
-			std::cerr << "\e[1;31mexecve failed\e[0m" << std::endl;
+			// std::cerr << "\e[1;31mexecve failed\e[0m" << std::endl;
 			// Logger::getInstance().~Logger();
 		// }
-		exit(200);
+		exit(242);// mettre une err spe pour execve 
 	// }
 	// catch (const Server::ShortCircuitException & e)
 	// {
@@ -254,6 +255,8 @@ void Cgi::hasError(Client & client, std::string err)
 			Logger::getInstance().log(DEBUG, "cgi wifexited", client);	
 			int exitCode = WEXITSTATUS(status);
 			std::cout << "ex code " << exitCode << std::endl;
+			if (exitCode == 242)
+				Logger::getInstance().log(ERROR, "execve", client);
 			if (exitCode != 0)		
 				throw (Logger::getInstance().log(ERROR, err, client), Server::
 					ShortCircuitException(CODE_503_SERVICE_UNAVAILABLE)); 					
