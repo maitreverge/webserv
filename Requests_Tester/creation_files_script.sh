@@ -2,7 +2,6 @@
 
 # This scripts aims to create ressources for the DELETE method testing
 # some with authorizations, some without
-echo $PWD
 
 mkdir -p Requests_Tester/delete_folder
 cd Requests_Tester/delete_folder
@@ -15,9 +14,6 @@ chmod 755 *
 echo "This is file_1.txt content" > file_1.txt
 echo "This is file_2.txt content" > file_2.txt
 
-echo "I am here: $PWD"
-echo "that's what I see:"
-ls
 # Remove write access to file_1.txt only
 chmod -w file_1.txt
 
