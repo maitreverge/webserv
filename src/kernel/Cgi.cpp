@@ -157,10 +157,12 @@ void Cgi::launch(Client & client)
 void provC(Client & client) //! a suppr
 {
 	if (chdir(client.responseBuilder._folderCGI.c_str()) < 0)	
-		Logger::getInstance().log(ERROR, "chdir", client), std::exit(200);	
+		throw (Logger::getInstance().log(ERROR, "chdir", client),
+			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));	
 	char actualPath[PATH_MAX];	
 	if (!getcwd(actualPath, PATH_MAX))	
-		Logger::getInstance().log(ERROR, "getcwd", client),	std::exit(200);			 
+		throw (Logger::getInstance().log(ERROR, "getcwd", client),
+			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));			 
 	std::string envPathInfo("PATH_INFO=" + client.responseBuilder._pathInfo);    
 	char *env[] = {const_cast<char *>(envPathInfo.c_str()), NULL};
 	std::string execPath = std::string(actualPath) + '/'
@@ -176,13 +178,14 @@ void Cgi::child(Client & client)
 {
     Logger::getInstance().log(DEBUG, "Child", client);
 	
-	if (dup2(this->_fds[0], STDIN_FILENO) < 0
-		|| dup2(this->_fds[0], STDOUT_FILENO) < 0)		
-		Logger::getInstance().log(ERROR, "dup2", client), std::exit(200);
-	close(this->_fds[0]); this->_fds[0] = -1;	
-	close(this->_fds[1]); this->_fds[1] = -1;			
 	try 
 	{
+		if (dup2(this->_fds[0], STDIN_FILENO) < 0
+			|| dup2(this->_fds[0], STDOUT_FILENO) < 0)		
+			throw (Logger::getInstance().log(ERROR, "dup2", client),
+				Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
+		close(this->_fds[0]); this->_fds[0] = -1;	
+		close(this->_fds[1]); this->_fds[1] = -1;			
 		if (client.responseBuilder._fileExtension == "out") //! a suppr
 			provC(client);
 		if (client.responseBuilder._fileExtension == "php")		
@@ -197,11 +200,13 @@ void Cgi::child(Client & client)
 
 void Cgi::callExecve(Client & client, const std::string & interpreter)
 {
-	if (chdir(client.responseBuilder._folderCGI.c_str()) < 0)	
-		Logger::getInstance().log(ERROR, "chdir", client), std::exit(200);	
+	if (chdir(client.responseBuilder._folderCGI.c_str()) < 0)
+		throw (Logger::getInstance().log(ERROR, "chdir", client),
+			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));				
 	char actualPath[PATH_MAX];	
-	if (!getcwd(actualPath, PATH_MAX))	
-		Logger::getInstance().log(ERROR, "getcwd", client),	std::exit(200);			 
+	if (!getcwd(actualPath, PATH_MAX))
+		throw (Logger::getInstance().log(ERROR, "getcwd", client),
+			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));					 
 	std::string envPathInfo("PATH_INFO=" + client.responseBuilder._pathInfo);    
 	char *env[] = {const_cast<char *>(envPathInfo.c_str()), NULL};
 	std::string execPath = std::string(actualPath) + '/'
@@ -293,7 +298,7 @@ void Cgi::isTimeout(Client & client, std::string err)
         kill(this->_pid, SIGTERM);
 		std::memset(&this->_start, 0, sizeof(this->_start));
 		throw (Logger::getInstance().log(ERROR, err, client),
-			Server::ShortCircuitException(CODE_508_LOOP_DETECTED));              
+			Server::ShortCircuitException(CODE_508_LOOP_DETECTED));           
     } 
 }
 
