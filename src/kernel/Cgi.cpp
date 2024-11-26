@@ -168,7 +168,7 @@ void provC(Client & client) //! a suppr
 	std::string execPath = std::string(actualPath) + '/'
 		+ client.responseBuilder._fileName; 
 	char *argv[] = {const_cast<char *>
-		(client.responseBuilder._fileName.c_str()), NULL};	
+		(execPath.c_str()), NULL};	
 	Logger::getInstance().~Logger();
 	Kernel::getInstance().exitKernel();	
 	execve(execPath.c_str(), argv, env);
@@ -312,10 +312,10 @@ void Cgi::hasError(Client & client, std::string err)
 	{	
 		Logger::getInstance().log(DEBUG, "cgi exited", client);	
 		if (WIFEXITED(status))
-		{
-			Logger::getInstance().log(DEBUG, "cgi wifexited", client);	
+		{		
 			int exitCode = WEXITSTATUS(status);
-			std::cout << "ex code " << exitCode << std::endl;
+			std::stringstream ss; ss << "cgi exited with code : " << exitCode;
+			Logger::getInstance().log(DEBUG, ss.str(), client);
 			if (exitCode == 242)
 				Logger::getInstance().log(ERROR, "execve", client);
 			if (exitCode != 0)		

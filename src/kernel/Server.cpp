@@ -114,14 +114,14 @@ void Server::printVector(Client & client, const std::vector<char> & response,
 {
 	std::stringstream ss;
 	ss << color << "Print data : " << YELLOW
-		<< response.size() << " bytes" << color << std::endl << std::endl;
-	ss << "-";		
+		<< response.size() << " bytes" << color << std::endl << std::endl
+		<< "-";		
 	for (size_t i = 0; i < response.size(); i++)				
 		ss << response[i];
 	ss << "-\e[0m";
 	Logger::getInstance().log(static_cast<logLevel>(level), ss.str(), client);
 	if (Logger::getInstance()._logLevel[static_cast<logLevel>(level)])	
-		std::cout << std::endl;	
+		std::cerr << std::endl;	
 }
 
 void Server::shortCircuit(const e_errorCodes err, const size_t i)
