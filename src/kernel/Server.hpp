@@ -11,6 +11,7 @@
 #include "RequestParser.hpp"
 #include "errorCode.hpp"
 #include "ResponseBuilder.hpp"
+#include "Cookies.hpp"
 
 class Kernel;
 
@@ -75,5 +76,7 @@ class Server
 			public:
 				ShortCircuitException(e_errorCodes code):_code(code){}
 				e_errorCodes getCode() const { return _code;}			
-		};	
+		};
+		
+		std::map<std::string, SessionData> sessions;
 };

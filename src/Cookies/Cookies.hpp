@@ -6,6 +6,11 @@
 
 typedef	std::map<std::string, std::string> CookiesMap;
 
+struct SessionData
+{
+	std::string userId;
+};
+
 class Cookies
 {
 private:

@@ -1,7 +1,7 @@
 #include "Client.hpp"
 #include "Logger.hpp"
 
-Client::Client(Config * _conf) : conf(_conf)
+Client::Client(Config * _conf, Server& server) : conf(_conf), _server(server)
 {
 	// Logger::getInstance().log(INFO, "\e[30;101mclient created\e[0m", *this);
 	
