@@ -291,7 +291,7 @@ void ResponseBuilder::extraStartingChecks()
 		if (target.empty())
 			_setBodyExtension.clear();
 		else
-			_setBodyExtension = target;
+			_setBodyExtension = "." + target;
 	}
 
 	// ! STEP 2 : Determine where I'm supposed to write 
@@ -308,14 +308,6 @@ void ResponseBuilder::extraStartingChecks()
 			_uploadTargetDirectory = _myconfig.uploadDirectory;
 		}
 	}
-	else // if no uploadDirectory, need to check 
-	{
-
-
-	}
-
-
-	
 }
 
 void ResponseBuilder::pathSlashs(string &target){
@@ -335,4 +327,30 @@ void ResponseBuilder::pathSlashs(string &target){
 		if (beginWithSlash)
 			target.erase(target.begin());
     }
+}
+
+static std::string generateRandomString(size_t length)
+{
+	std::string characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	std::string randomString;
+	for (size_t i = 0; i < length; ++i)
+	{
+		randomString += characters[static_cast<size_t>(rand()) % characters.size()];
+	}
+	return randomString;
+}
+
+string ResponseBuilder::generateFileName( void ){
+
+	// TODO : MAKE THIS BOOL FALSE ONCE WEBSERV FINISHED
+	bool testing = true;
+
+	string baseName;
+
+	if (testing)
+		baseName = "file";
+	else
+		baseName = generateRandomString(10);
+	
+	return baseName;
 }

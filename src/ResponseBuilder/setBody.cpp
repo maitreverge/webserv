@@ -199,19 +199,12 @@ void	ResponseBuilder::setRegularPost( Client & client ){
 	if (!this->_ofs.is_open())
 	{	
 		Logger::getInstance().log(INFO, _realURI.c_str());	
-		// string pathToWrite = "uploads/apple.jpeg"; // ! need to change the extension
-		// ! WORK NEEDLE
 		
+		string targetToWrite =	_uploadTargetDirectory
+								+ generateFileName()
+								+ _setBodyExtension;
 		
-		{
-			// STEP 1 : generate a filename, depending with we're running a test or not
-
-		}
-			string pathToWrite;
-
-
-		this->_ofs.open(pathToWrite.c_str(), std::ios::binary);
-			//! GERER L ERREUR
+		this->_ofs.open(targetToWrite.c_str(), std::ios::binary);
 	}
 
 	// _ofs.clear();//!

@@ -220,6 +220,7 @@ class ResponseBuilder
 
 	string _uploadTargetDirectory;
 
+	string generateFileName( void );
 
 
 public:
