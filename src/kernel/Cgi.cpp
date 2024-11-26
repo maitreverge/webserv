@@ -121,29 +121,28 @@ void Cgi::child(Client & client)
 				char *argv[] = {NULL};
 				// execve(path.c_str(), argv, env);
 				execve("gros caca", argv, env);
-			}	
-		 }
-			// else if (client.responseBuilder._fileExtension == "py")
-			// {	
-			// 	Logger::getInstance().~Logger();
-			// 	Kernel::getInstance().~Kernel();
-			// 	char *argv[] = {const_cast<char *>("python3"),
-			// 		const_cast<char *>(path.c_str()), NULL};
-			// 	execve(this->getPath("python3", client).c_str(), argv, env); 
-			// }
-			// else if (client.responseBuilder._fileExtension == "php")
-			// {
-			// 	Logger::getInstance().~Logger();
-			// 	Kernel::getInstance().~Kernel();	
-			// 	char *argv[] = {const_cast<char *>("php-cgi"),
-			// 		const_cast<char *>(path.c_str()), NULL};
-			// 	execve(this->getPath("php-cgi", client).c_str(), argv, env);
-			// } 
+			}		
+			else if (client.responseBuilder._fileExtension == "py")
+			{	
+				Logger::getInstance().~Logger();
+				Kernel::getInstance().~Kernel();
+				char *argv[] = {const_cast<char *>("python3"),
+					const_cast<char *>(path.c_str()), NULL};
+				execve(this->getPath("python3", client).c_str(), argv, env); 
+			}
+			else if (client.responseBuilder._fileExtension == "php")
+			{
+				Logger::getInstance().~Logger();
+				Kernel::getInstance().~Kernel();	
+				char *argv[] = {const_cast<char *>("php-cgi"),
+					const_cast<char *>(path.c_str()), NULL};
+				execve(this->getPath("php-cgi", client).c_str(), argv, env);
+			} 
 			// Logger::getInstance().log(ERROR, "execve", client);
 			
-			// std::cerr << "\e[1;31mexecve failed\e[0m" << std::endl;
-			// Logger::getInstance().~Logger();
-		// }
+			std::cerr << "\e[1;31mexecve failed\e[0m" << std::endl;
+			Logger::getInstance().~Logger();
+		}
 		exit(242);// mettre une err spe pour execve 
 	// }
 	// catch (const Server::ShortCircuitException & e)
