@@ -78,5 +78,5 @@ class Server
 				e_errorCodes getCode() const { return _code;}			
 		};
 		
-		std::map<std::string, SessionData> sessions;
+		std::map<std::string, SessionData> UserSessions;
 };

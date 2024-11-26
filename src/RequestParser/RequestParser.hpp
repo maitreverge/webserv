@@ -75,8 +75,7 @@ class RequestParser
 		void	displayHeaders() const;
 		void	reset_values();
 		void	extractWebToken(const std::vector<std::string>& key);
-
-
+		void	displayUserSessionsContent(Client& client);
 	public:
 		//coplien
 		RequestParser();

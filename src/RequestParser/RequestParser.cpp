@@ -63,9 +63,15 @@ void	RequestParser::trim(std::string& str)
  * then headers are extracted form the headers (following lines)
  * Everything after '\r\n\r\n' (end of header) is IGNORED
  *========================================================================**/
+/**========================================================================
+ *!                             COOKIES WIP
+ *!  
+ *!	data struct in server:	std::map<std::string, SessionData> UserSessions;  
+ *!  
+ *! accessed by client._server.UserSessions
+ *========================================================================**/
 void	RequestParser::parse(Client& client)
 {
-	_Client = &client ;
 	reset_values();
 	std::istringstream requestStream(charVectorToString(client.messageRecv));
 	// print(charVectorToString(client.messageRecv));
@@ -73,7 +79,8 @@ void	RequestParser::parse(Client& client)
 	handleFirstLine(requestStream);
 	handleHeaderLines(requestStream);
 	extractHeaders();
-	_Client = NULL;
+	displayHeaders();
+	displayUserSessionsContent(client);
 }
 
 /**========================================================================
@@ -296,6 +303,24 @@ std::map<std::string, std::string> RequestParser::extractCookies(std::vector<std
  * only for dev purposes. 
  * May be commented once project is tested and functional
  *========================================================================**/
+void RequestParser::displayUserSessionsContent(Client& client)
+{
+	std::map<std::string, SessionData>& userSessions = client._server.UserSessions;
+	if (userSessions.empty())
+	{
+		std::cout << "Aucune session active." << std::endl;
+		return;
+	}
+	for (std::map<std::string, SessionData>::iterator it = userSessions.begin(); it != userSessions.end(); ++it)
+	{
+		const std::string& sessionId = it->first;
+		const SessionData& sessionData = it->second;
+		std::cout << "Session ID: " << sessionId << std::endl;
+		std::cout << "  User ID: " << sessionData.userId << std::endl;
+	}
+}
+
+
 void RequestParser::displayParsingResult() const
 {
 	displayAttributes();
