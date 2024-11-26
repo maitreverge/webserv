@@ -182,3 +182,5 @@ if [ "$successful_tests" -ne "$total_tests" ]; then
 else
     echo -e "${GREEN}Tous les tests ont été réussis ! 🎉${NC}"
 fi
+
+chmod 777 Requests_Tester/no_read_file.txt 

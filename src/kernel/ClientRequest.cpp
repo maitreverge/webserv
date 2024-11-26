@@ -77,7 +77,7 @@ void Server::clientMessage(const size_t i, ssize_t ret)
 		!= "chunked")
 		this->headerCheckin(i, ret);
 	else
-		this->bodyCheckin(i, ret);	
+		this->bodyCheckin(i, static_cast<size_t>(ret));	
 }
 
 bool Server::isDelimiterFind(std::string delimiter, const size_t i,

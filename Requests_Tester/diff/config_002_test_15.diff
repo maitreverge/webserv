@@ -1,27 +1,14 @@
-1,5c1,3
-< HTTP/1.1 401 Unauthorized
-< Content-Length: 286
-< Content-Type: text/html
-< 
-< <html>
----
+0a1,31
 > HTTP/1.1 201 Created
 > Content-Length: 801
 > Content-Type: text/html
-6a5,6
+> 
 > <!DOCTYPE html>
 > <html>
-8c8,9
-< 	<title>401</title>
----
+> <head>
 > 	<title>Upload Successful</title>
 > 	<meta charset="UTF-8">
-10,13c11,29
-< 
-< <body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
-< 	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">401 Unauthorized</h1>
-< 	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
----
+> </head>
 > <body>
 >     <h1>Image uploaded successfully!</h1>
 >     <h1><p>Your image has been saved to the server.</p></h1>
@@ -41,7 +28,5 @@
 > 			<li> All files are corrupted because of the extension, yet <u> ✅the data is still here ✅ </u></li>
 > 		</ul>
 > 	</h2>
-15d30
-< 
-16a32
-> 
+> </body>
+> </html>

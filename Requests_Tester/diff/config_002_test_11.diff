@@ -1,6 +1,6 @@
 1,4c1,4
-< HTTP/1.1 404 Not Found
-< Content-Length: 283
+< HTTP/1.1 401 Unauthorized
+< Content-Length: 286
 < Content-Type: text/html
 < 
 ---
@@ -8,11 +8,3 @@
 > Content-Length: 286
 > Content-Type: text/html
 > 
-8c8
-< 	<title>404</title>
----
-> 	<title>401</title>
-12c12
-< 	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">404 NOT FOUND</h1>
----
-> 	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">401 Unauthorized</h1>
