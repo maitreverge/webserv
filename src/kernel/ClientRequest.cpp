@@ -63,10 +63,10 @@ void Server::clientMessage(const size_t i, ssize_t ret)
 {
 	Logger::getInstance().log(INFO, "Client Message", this->_clients[i]);
 
-	std::vector<char> str(this->_readBuffer.begin(),
+	{ std::vector<char> str(this->_readBuffer.begin(),
 		this->_readBuffer.begin() + ret);
 	Server::printVector(this->_clients[i], str,	HIGH_INTENSITY_YELLOW,
-		static_cast<int>(INFO));
+		static_cast<int>(INFO)); }
 
 	this->_clients[i].messageRecv.
 		insert(this->_clients[i].messageRecv.end(), 
@@ -93,10 +93,10 @@ bool Server::isDelimiterFind(std::string delimiter, const size_t i,
 
 void Server::headerCheckin(const size_t i, ssize_t ret)
 {
-	std::stringstream ss;
+	{ std::stringstream ss;
 	ss << "Header Checkin - recv " << ret << " bytes";
 	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
-	Server::printVector(this->_clients[i], this->_clients[i].messageRecv);
+	Server::printVector(this->_clients[i], this->_clients[i].messageRecv); }
 
 	std::vector<char>::iterator it;		
 	if (this->isDelimiterFind("\r\n\r\n", i, it))		

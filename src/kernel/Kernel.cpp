@@ -20,6 +20,13 @@ Kernel::Kernel(char* path) : _conf(path)
 	this->setup();
 }
 
+void Kernel::exitKernel()
+{
+	// for (size_t i = 0; i < this->_servers.size(); i++)
+	// 	this->_servers[i].exitServer();
+	this->_servers.clear(); //! en trop ?
+}
+
 Kernel::~Kernel()
 {
 	// for (size_t i = 0; i < this->_servers.size(); i++)

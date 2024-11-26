@@ -85,21 +85,25 @@ void Cgi::child(Client & client)
 		close(this->_fds[1]);
 		this->_fds[0] = -1;	
 		this->_fds[1] = -1;	
-		// if (chdir(client.responseBuilder._folderCGI.c_str()) < 0)
+		if (chdir(client.responseBuilder._folderCGI.c_str()) < 0)
 		{
 			Logger::getInstance().log(ERROR, "chdir", client);
 			// Logger::getInstance().~Logger();
 			// Kernel::getInstance().exitKernel();
 			exit(200);
+
+				// Logger::getInstance().~Logger();
+				// Kernel::getInstance().~Kernel();
+				// _exit(200);
 		}
-		// {
+		 {
 			char actualPath[PATH_MAX];
 			if (!getcwd(actualPath, PATH_MAX))
 			{
 				Logger::getInstance().log(ERROR, "getcwd", client);
-				Logger::getInstance().~Logger();
-				Kernel::getInstance().~Kernel();
-				_exit(200);	
+				// Logger::getInstance().~Logger();
+				// Kernel::getInstance().~Kernel();
+				// _exit(200);	
 			}
 
 			std::string envPathInfo
@@ -111,11 +115,13 @@ void Cgi::child(Client & client)
 			if (client.responseBuilder._fileExtension == "out")    
 			{	
 				Logger::getInstance().~Logger();
-				Kernel::getInstance().~Kernel();
+				// Kernel::getInstance().~Kernel();
+				Kernel::getInstance().exitKernel();
 				char *argv[] = {NULL};
 				// execve(path.c_str(), argv, env);
 				execve("gros caca", argv, env);
 			}	
+		 }
 			// else if (client.responseBuilder._fileExtension == "py")
 			// {	
 			// 	Logger::getInstance().~Logger();
@@ -132,11 +138,12 @@ void Cgi::child(Client & client)
 			// 		const_cast<char *>(path.c_str()), NULL};
 			// 	execve(this->getPath("php-cgi", client).c_str(), argv, env);
 			// } 
-			// Logger::getInstance().log(ERROR, "execve", client);
+			Logger::getInstance().log(ERROR, "execve", client);
+			
 			std::cerr << "\e[1;31mexecve failed\e[0m" << std::endl;
 			// Logger::getInstance().~Logger();
 		// }
-		_exit(1);
+		exit(200);
 	// }
 	// catch (const Server::ShortCircuitException & e)
 	// {
