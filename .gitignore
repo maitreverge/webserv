@@ -72,3 +72,4 @@ Requests_Tester/check_file.ans
 Requests_Tester/check_file.ans
 Requests_Tester/diff/
 Requests_Tester/answers/
+src/ResponseBuilder/.test/a.out
