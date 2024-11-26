@@ -1,7 +1,0 @@
-0a1,3
-> HTTP/1.1 200 OK
-> Content-Length: 43
-> Content-Type: application/json
-1a5
-> {"key1":"Dan", "key2":"Seb", "key3":"Flo"}
-\ No newline at end of file
