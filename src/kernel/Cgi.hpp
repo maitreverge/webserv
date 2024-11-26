@@ -15,9 +15,10 @@ class Cgi
     void	    child(Client & client);
 	void 		callExecve(Client & client, const std::string & interpreter);
 	std::string getPath(Client & client, const std::string & interpreter);
-	
-	void		hasError(Client & client, std::string err);
-    void 		isTimeout(Client & client, std::string err);
+
+	void 		hasError(Client &client, std::string err);
+	void 		exitCodeHandle(int &status, Client &client, std::string &err);
+	void 		isTimeout(Client & client, std::string err);
 	double 		getTimeSpan(Client & client) const;
     void 		retHandle(Client & client, ssize_t ret, std::string err, 
     	std::string info);
