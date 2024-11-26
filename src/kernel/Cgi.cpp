@@ -157,12 +157,10 @@ void Cgi::launch(Client & client)
 void provC(Client & client) //! a suppr
 {
 	if (chdir(client.responseBuilder._folderCGI.c_str()) < 0)	
-		throw (Logger::getInstance().log(ERROR, "chdir", client),
-			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));	
+		Logger::getInstance().log(ERROR, "chdir", client), exit(200);			
 	char actualPath[PATH_MAX];	
 	if (!getcwd(actualPath, PATH_MAX))	
-		throw (Logger::getInstance().log(ERROR, "getcwd", client),
-			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));			 
+		Logger::getInstance().log(ERROR, "getcwd", client), exit(200);			 
 	std::string envPathInfo("PATH_INFO=" + client.responseBuilder._pathInfo);    
 	char *env[] = {const_cast<char *>(envPathInfo.c_str()), NULL};
 	std::string execPath = std::string(actualPath) + '/'
@@ -178,39 +176,39 @@ void Cgi::child(Client & client)
 {
     Logger::getInstance().log(DEBUG, "Child", client);
 	
-	try 
+	if (dup2(this->_fds[0], STDIN_FILENO) < 0
+		|| dup2(this->_fds[0], STDOUT_FILENO) < 0)
 	{
-		if (dup2(this->_fds[0], STDIN_FILENO) < 0
-			|| dup2(this->_fds[0], STDOUT_FILENO) < 0)		
-			throw (Logger::getInstance().log(ERROR, "dup2", client),
-				Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
+		Logger::getInstance().log(ERROR, "dup2", client);
 		close(this->_fds[0]); this->_fds[0] = -1;	
-		close(this->_fds[1]); this->_fds[1] = -1;			
-		if (client.responseBuilder._fileExtension == "out") //! a suppr
-			provC(client);
-		if (client.responseBuilder._fileExtension == "php")		
-			this->callExecve(client, "php-cgi");
-		else if (client.responseBuilder._fileExtension == "py")	
-			this->callExecve(client, "python3");		
-		std::exit(242);
-	}
-	catch (const Server::ShortCircuitException & e)
-	{	std::exit(static_cast<int>(e.getCode()));	}
+		close(this->_fds[1]); this->_fds[1] = -1;
+		exit(200);	
+	}		
+	close(this->_fds[0]); this->_fds[0] = -1;	
+	close(this->_fds[1]); this->_fds[1] = -1;			
+	if (client.responseBuilder._fileExtension == "out") //! a suppr
+		provC(client);
+	else if (client.responseBuilder._fileExtension == "php")		
+		this->callExecve(client, "php-cgi");
+	else if (client.responseBuilder._fileExtension == "py")	
+		this->callExecve(client, "python3");		
+	std::exit(242);
 }
 
 void Cgi::callExecve(Client & client, const std::string & interpreter)
 {
 	if (chdir(client.responseBuilder._folderCGI.c_str()) < 0)
-		throw (Logger::getInstance().log(ERROR, "chdir", client),
-			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));				
+		Logger::getInstance().log(ERROR, "chdir", client), exit(200);				
 	char actualPath[PATH_MAX];	
 	if (!getcwd(actualPath, PATH_MAX))
-		throw (Logger::getInstance().log(ERROR, "getcwd", client),
-			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));					 
-	std::string envPathInfo("PATH_INFO=" + client.responseBuilder._pathInfo);    
+		Logger::getInstance().log(ERROR, "getcwd", client), exit(200);					 
+	std::string envPathInfo;
+	{
+		envPathInfo.assign("PATH_INFO=" + client.responseBuilder._pathInfo);   } 
 	char *env[] = {const_cast<char *>(envPathInfo.c_str()), NULL};
-	std::string execPath = std::string(actualPath) + '/'
-		+ client.responseBuilder._fileName; 
+	std::string execPath;
+	{ execPath = std::string(actualPath)
+		+ '/' + client.responseBuilder._fileName; } 
 	char *argv[] = {const_cast<char *>(interpreter.c_str()),
 		const_cast<char *>(execPath.c_str()), NULL};
 	std::string interPath = this->getPath(client, interpreter);
@@ -223,21 +221,23 @@ std::string Cgi::getPath(Client & client, const std::string & interpreter)
 {
 	if (char * env = std::getenv("PATH"))
 	{
-		std::string path;
-		path.reserve(128);
-		std::istringstream ss(env);
-		std::string line;
-		while (std::getline(ss, line, ':'))
 		{
-			path = line + '/' + interpreter;
-			if (!access(path.c_str(), F_OK | X_OK))
-				return path;
-		}		
-		throw (Logger::getInstance().log(ERROR, "interpreter no exist", client),
-			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
+			std::string path;
+			path.reserve(128);
+			std::istringstream ss(env);
+			std::string line;
+			while (std::getline(ss, line, ':'))
+			{
+				path = line + '/' + interpreter;
+				if (!access(path.c_str(), F_OK | X_OK))
+					;//return path;
+			}
+		}
+		Logger::getInstance().log(ERROR, "interpreter no exist", client);
+		exit(200);			
 	}
-	throw (Logger::getInstance().log(ERROR, "path no exist", client),
-		Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));		
+	Logger::getInstance().log(ERROR, "path no exist", client);
+	exit(200);		
 }
 
 void Cgi::retHandle(Client & client, ssize_t ret, std::string err,
