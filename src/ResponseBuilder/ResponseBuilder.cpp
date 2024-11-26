@@ -134,9 +134,12 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	_client = &inputClient; // init client
 	_config = &inputConfig; // init config
 
+	resetMyConfig();
+	// TODO : reset all variables
+	
 	if (codeInput != CODE_200_OK)
 	{
-		Logger::getInstance().log(INFO, "getHeader invoked with an error code");
+		Logger::getInstance().log(INFO, "getHeader invoked from above with an error code");
 		setError(codeInput, true);
 		setContentLenght();
 		buildHeaders();
@@ -144,11 +147,8 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 		return;
 	}
 	
-	Logger::getInstance().log(DEBUG, "ResponseBuilder->getHeader", inputClient);
-
 	_realURI = _client->headerRequest.getURI();
 	_originalURI = _realURI;
-
 
 	_errorType = CODE_200_OK;
 
@@ -158,8 +158,10 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	try
 	{
 		extractMethod();
-
+		
 		checkMethod();
+
+		extraStartingChecks();
 
 		if (_method == POST)
 			_errorType = CODE_201_CREATED;

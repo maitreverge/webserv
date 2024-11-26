@@ -98,8 +98,14 @@ void	ResponseBuilder::checkAutho( void ){
 			case POST:
 				if (_isCGI and not _isXOK)
 					setError(CODE_401_UNAUTHORIZED);
-				else if (_myconfig.samePathWrite and not _isWOK) // is samePathWrite really usefull ?
+				else if (not _isWOK)
 					setError(CODE_401_UNAUTHORIZED);
+				if (_uploadTargetDirectory.empty())
+				{
+					string tempURI = _originalURI;
+					pathSlashs(tempURI);
+					_uploadTargetDirectory =  tempURI;
+				}
 				break;
 			case DELETE:
 				if (not _isWOK)
@@ -155,8 +161,6 @@ void	ResponseBuilder::checkNature( void ){
 			else
 			{
 				// POST AND DELETE
-				if (!_isCGI and _method == POST)
-					setError(CODE_401_UNAUTHORIZED);
 				if (!_isCGI)
 				{
 					// ! ne pas ecraser l'URI si c'est un CGI
@@ -261,4 +265,74 @@ bool ResponseBuilder::isErrorRedirect( void ){
 	if (this->_errorType >= CODE_300_MULTIPLE_CHOICES and this->_errorType < CODE_400_BAD_REQUEST)
 		return true;
 	return false;
+}
+
+void ResponseBuilder::extraStartingChecks()
+{
+	string target;
+	string contentType = _client->headerRequest.getHeaders().ContentType;
+	
+	target.clear();
+	// Detects if the current body is multipart form data
+	if (contentType.find("multipart/form-data") != std::string::npos)
+		_isMultipart = true;
+	else if (!contentType.empty()) // Extract the _setBodyExtension
+	{
+		// Looks for the Content-Type within the _mimeTypes map
+		// Example : Content-Type: application/pdf
+		for (std::map<string, string>::iterator it = _mimeTypes.begin(); it != _mimeTypes.end(); ++it)
+		{
+			if (it->second == contentType)
+			{
+				target = it->first;
+				break;
+			}
+		}
+		if (target.empty())
+			_setBodyExtension.clear();
+		else
+			_setBodyExtension = target;
+	}
+
+	// ! STEP 2 : Determine where I'm supposed to write 
+
+	// If there is a uploadDirectory, check the rights
+	if (!_myconfig.uploadDirectory.empty())
+	{
+		pathSlashs(_myconfig.uploadDirectory);
+		if (stat(_myconfig.uploadDirectory.c_str(), &_fileInfo) == 0 and (_fileInfo.st_mode & S_IFDIR))
+		{
+			bool uploadWrite = _fileInfo.st_mode & S_IWUSR;
+			if (!uploadWrite)
+				setError(CODE_403_FORBIDDEN);
+			_uploadTargetDirectory = _myconfig.uploadDirectory;
+		}
+	}
+	else // if no uploadDirectory, need to check 
+	{
+
+
+	}
+
+
+	
+}
+
+void ResponseBuilder::pathSlashs(string &target){
+
+	bool beginWithSlash = !target.empty() && (*target.begin() == '/');
+	bool endWithSlash = !target.empty() && (*target.rbegin() == '/');
+	
+	if (target.empty())
+		return;
+	if ( isDirectory(target) )
+	{
+		if (!endWithSlash)
+			target += "/";
+		
+		// Refresh the bool
+		beginWithSlash = !target.empty() && (*target.begin() == '/');
+		if (beginWithSlash)
+			target.erase(target.begin());
+    }
 }

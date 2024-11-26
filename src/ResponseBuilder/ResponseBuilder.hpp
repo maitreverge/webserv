@@ -54,7 +54,6 @@ struct MyConfig
 	string				uploadDirectory; // checked access ✅
 
 	// ========== my stuff ==========
-	bool				samePathWrite;
 	string				indexRedirection;
 
 	MyConfig()
@@ -70,7 +69,6 @@ struct MyConfig
 		uploadDirectory.clear();
 
 	// ========== my stuff ==========
-		samePathWrite = true; // need to use this one
 		indexRedirection.clear();
 
 	}
@@ -139,6 +137,9 @@ class ResponseBuilder
 	// CGI Stuff
 	e_errorCodes _errorType;
 
+	bool _isMultipart;
+	string _setBodyExtension;
+
 
 	// ===================== METHODS ==================
 
@@ -203,6 +204,7 @@ class ResponseBuilder
 
 	// extractRouteConfig
 	void extractRouteConfig(void);
+	void extraStartingChecks();
 	void resetMyConfig();
 	void	clearingRoutes( vector< string >&, vector< string >& );
 	void	buildRouteConfig( string );
@@ -213,6 +215,11 @@ class ResponseBuilder
 	void	slashManip( string& );
 	
 	void extractRedirectionIndex( vector< string >&, vector< string >& );
+
+	void pathSlashs(string &);
+
+	string _uploadTargetDirectory;
+
 
 
 public:

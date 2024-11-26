@@ -193,14 +193,23 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 // This is now the regular setPost without Multipart Writting
 void	ResponseBuilder::setRegularPost( Client & client ){
 
-	usleep(50000);
-    Logger::getInstance().log(DEBUG, "setBodyPost");
+    Logger::getInstance().log(DEBUG, "setRegularPost");
 
     // static std::ofstream ofs("uploads/image_upload.jpeg", std::ios::binary);
 	if (!this->_ofs.is_open())
 	{	
 		Logger::getInstance().log(INFO, _realURI.c_str());	
-		string pathToWrite = "uploads/apple.jpeg";
+		// string pathToWrite = "uploads/apple.jpeg"; // ! need to change the extension
+		// ! WORK NEEDLE
+		
+		
+		{
+			// STEP 1 : generate a filename, depending with we're running a test or not
+
+		}
+			string pathToWrite;
+
+
 		this->_ofs.open(pathToWrite.c_str(), std::ios::binary);
 			//! GERER L ERREUR
 	}
@@ -231,7 +240,7 @@ void	ResponseBuilder::setBody( Client & client, bool eof ){
 
 	if (this->_isCGI)	
 		return this->_cgi.setBody(client, eof);
-	else if (_myconfig.uploadAllowed == true) // and not MultiPart parsed from DAN
+	else if (_myconfig.uploadAllowed == true and !_isMultipart)
 		setRegularPost(client);
 	else
 		setMultiPartPost(client);

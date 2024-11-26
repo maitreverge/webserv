@@ -194,8 +194,6 @@ void	ResponseBuilder::extractRouteConfig( void ){
 	vector< string > routeNames;
 	vector< string > routeURIS;
 
-	resetMyConfig();
-
 	clearingRoutes(routeNames, routeURIS);
 
 	// string originalURI = _realURI;
@@ -255,7 +253,6 @@ void ResponseBuilder::resetMyConfig()
 	_myconfig.cgiAllowed.clear();
 	_myconfig.uploadAllowed = true;
 	_myconfig.uploadDirectory.clear();
-	_myconfig.samePathWrite = true;
 	_myconfig.indexRedirection.clear();
 }
 

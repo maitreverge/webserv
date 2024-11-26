@@ -67,6 +67,7 @@ if [ -n "$CONFIG_FILE" ]; then
 
 		response_file="$ANSWERS_DIR/config_${config_number}_test_${test_counter}_actual.txt"
 		http_response=$($request)
+		echo "$http_response" > "$response_file"
 
 
 		#TODO && UNCOMMENT TO FILL EXPECTED_ANSWER_FILES &&&&&&&&&&
