@@ -20,7 +20,7 @@ void	Cookies::checkSessionCookie(Headers& _Headers, Server& server)
 		{
 			// if no  => redirect to a login page
 			printColor(RED, "Your sessionID token is not valid. Get a fuckin cookie!");
-			SessionData sessionData = {"userID"};
+			SessionData sessionData = {value};
 			server.UserSessions[value] = sessionData;
 		}
 	}
