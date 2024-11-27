@@ -17,7 +17,7 @@ void	ResponseBuilder::initBoundaryTokens( void ){
 
 bool ResponseBuilder::isLineDelim(vector<char>& curLine, vector<char>& nextLine)
 {
-	char* separator = "\r\n";
+	const char* separator = "\r\n";
     size_t separatorLength = 2;
 
 	// Look for "\r\n" in curLine.
@@ -55,10 +55,7 @@ void	ResponseBuilder::extractFileBodyName( vector< char >& curLine ){
 
 		_fileStreamName = temp.substr(startPos, endPos - startPos);
 
-		string uploadFolder = _myconfig.uploadDirectory + "/";
-
-		// TODO : check the uploadDirectory authorizations
-		_fileStreamName.insert(0, uploadFolder);
+		_fileStreamName.insert(0, _uploadTargetDirectory);
 	}
 }
 
@@ -120,13 +117,12 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 		return;
 	}
 
-	string curent(curLine.begin(), curLine.end());
-    printColor(BOLD_HIGH_INTENSITY_GREEN, "CURRENT LINE = " + curent);
-	sleep(6);
+	// string curent(curLine.begin(), curLine.end());
+    // printColor(BOLD_HIGH_INTENSITY_GREEN, "CURRENT LINE = " + curent);
+	// sleep(6);
 		
 	lineNature = processCurrentLine(curLine);
 
-	// ! WIP NEEDLE 🪡🪡🪡🪡🪡🪡🪡🪡
 	switch (lineNature)
 	{
 		case TOKEN_DELIM:
@@ -134,7 +130,6 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 			if (_ofs.is_open())
 				_ofs.close();
 			printColor(BOLD_CYAN, "Token Delim or END detected, closing stream");
-			// curLine.clear(); // put in another scope to avoid boilerplate code
 			_fileStreamName.clear();
 			break;
 
@@ -142,12 +137,10 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 			printColor(BOLD_CYAN, "Content Disposition Detected");
 			extractFileBodyName(curLine);
 			printColor(BOLD_CYAN, "_fileStreamName =" + _fileStreamName);
-			// curLine.clear();
 			break;
 		
 		case OTHER:
 			printColor(BOLD_CYAN, "Other Line detected");
-			// curLine.clear();
 			break;
 		
 		case LINE_SEPARATOR: // next packages need to be the bnary data
@@ -157,7 +150,6 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 				this->_ofs.open(_fileStreamName.c_str(), std::ios::binary);
 			}
 			_writeReady = true; // TODO : empty file names or shitty ones ?
-			// curLine.clear();
 			break;
 
 		case BINARY_DATA:
