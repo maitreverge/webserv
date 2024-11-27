@@ -4,7 +4,7 @@
 	=> Need from Kernel : Seb needs to throw a CODE_400 on empty POST body (config 002, test 13 and test 14)
 	=> Need a CGI for treating test 23 and 24
 - Config 003 🟢
-- Config 004 🔴
+- Config 004 🟢
 - Config 005 🔴
 
 ## HOTFIX :
