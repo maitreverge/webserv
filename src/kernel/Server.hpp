@@ -23,9 +23,9 @@ class Server
 	static bool			_nl;
 	
 	bool recevData(const size_t i);
-	void clientMessage(const size_t i, ssize_t ret);
+	void clientMessage(const size_t i, const ssize_t ret);
 	void retrySend(const size_t i);
-	void headerCheckin(const size_t i, ssize_t ret);
+	void headerCheckin(const size_t i, const size_t ret);
 	void bodyCheckin(const size_t i, const size_t addBodysize);
 	bool isDelimiterFind(std::string delimiter, const size_t i,
 		std::vector<char>::iterator & it);

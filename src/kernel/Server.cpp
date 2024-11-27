@@ -31,7 +31,7 @@ Server & Server::operator=(const Server & rhs)
 	this->_sockAddr = rhs._sockAddr;
 	this->_writeBuffer = rhs._writeBuffer;
 	this->_readBuffer = rhs._readBuffer;	
-	this->_clients = _clients;
+	this->_clients = rhs._clients;
 
 	if (this->_fd >= 0)
 	{

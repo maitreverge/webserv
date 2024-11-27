@@ -59,7 +59,7 @@ void Server::retrySend(const size_t i)
 	this->isBodyEnd(i) ? this->sendBodyEnd(i) :	this->sendBodyPart(i);
 }
 
-void Server::clientMessage(const size_t i, ssize_t ret)
+void Server::clientMessage(const size_t i, const ssize_t ret)
 {
 	Logger::getInstance().log(INFO, "Client Message", this->_clients[i]);
 
@@ -75,9 +75,9 @@ void Server::clientMessage(const size_t i, ssize_t ret)
 	if (!this->_clients[i].headerRequest.getHeaders().ContentLength
 		&& this->_clients[i].headerRequest.getHeaders().TransferEncoding
 		!= "chunked")
-		this->headerCheckin(i, ret);
+		this->headerCheckin(i, static_cast<size_t>(ret));
 	else
-		this->bodyCheckin(i, ret);	
+		this->bodyCheckin(i, static_cast<size_t>(ret));	
 }
 
 bool Server::isDelimiterFind(std::string delimiter, const size_t i,
@@ -91,7 +91,7 @@ bool Server::isDelimiterFind(std::string delimiter, const size_t i,
 	return (it != this->_clients[i].messageRecv.end());	
 }
 
-void Server::headerCheckin(const size_t i, ssize_t ret)
+void Server::headerCheckin(const size_t i, const size_t ret)
 {
 	{ std::stringstream ss;
 	ss << "Header Checkin - recv " << ret << " bytes";
