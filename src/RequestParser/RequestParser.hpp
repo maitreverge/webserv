@@ -35,7 +35,7 @@ struct Headers
 };
 
 struct Client;
-
+class Server;
 /**========================================================================
  *                           REQUESTPARSER
  * ? gets the request as a std::vector<char>
@@ -75,7 +75,7 @@ class RequestParser
 		void	displayHeaders() const;
 		void	reset_values();
 		void	extractWebToken(const std::vector<std::string>& key);
-		void	displayUserSessionsContent(Client& client);
+		void 	displayUserSessionsContent(Client& client, Server & server);
 	public:
 		//coplien
 		RequestParser();
@@ -99,5 +99,5 @@ class RequestParser
 		void	displayAttributes() const;
 
 		// action method
-		void	parse(struct Client& client);
+		void	parse(struct Client& client, Server & server);
 };

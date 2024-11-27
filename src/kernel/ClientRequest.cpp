@@ -105,7 +105,7 @@ void Server::headerCheckin(const size_t i, ssize_t ret)
 			this->_clients[i]);
 
 		this->isMaxHeaderSize(it + 4, i);					
-		this->_clients[i].headerRequest.parse(this->_clients[i]);
+		this->_clients[i].headerRequest.parse(this->_clients[i], *this);
 		#ifdef DEB								
 			this->_clients[i].headerRequest.displayParsingResult();
 		#endif

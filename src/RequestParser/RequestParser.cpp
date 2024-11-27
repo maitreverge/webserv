@@ -70,7 +70,7 @@ void	RequestParser::trim(std::string& str)
  *!  
  *! accessed by client._server.UserSessions
  *========================================================================**/
-void	RequestParser::parse(Client& client)
+void	RequestParser::parse(Client& client, Server & server)
 {
 	reset_values();
 	std::istringstream requestStream(charVectorToString(client.messageRecv));
@@ -87,7 +87,7 @@ void	RequestParser::parse(Client& client)
 		print("cookie sessionID found!");
 		std::string value = _Headers.Cookie.find("sessionID")->second;
 		print("value: " + value);
-		if (client._server.UserSessions.find(value) != client._server.UserSessions.end())
+		if (server.UserSessions.find(value) != server.UserSessions.end())
 		{
 			print("Active session found!");
 		}
@@ -103,7 +103,7 @@ void	RequestParser::parse(Client& client)
 		// if no  => redirect to a login page
 		print("You are not connected. Get a fuckin cookie!");
 
-	displayUserSessionsContent(client);
+	displayUserSessionsContent(client, server);
 
 }
 
@@ -327,9 +327,9 @@ std::map<std::string, std::string> RequestParser::extractCookies(std::vector<std
  * only for dev purposes. 
  * May be commented once project is tested and functional
  *========================================================================**/
-void RequestParser::displayUserSessionsContent(Client& client)
+void RequestParser::displayUserSessionsContent(Client& client, Server & server)
 {
-	std::map<std::string, SessionData>& userSessions = client._server.UserSessions;
+	std::map<std::string, SessionData>& userSessions = server.UserSessions;
 	if (userSessions.empty())
 	{
 		std::cout << "Aucune session active." << std::endl;
@@ -342,6 +342,7 @@ void RequestParser::displayUserSessionsContent(Client& client)
 		std::cout << "Session ID: " << sessionId << std::endl;
 		std::cout << "  User ID: " << sessionData.userId << std::endl;
 	}
+	(void)client;
 }
 
 

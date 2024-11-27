@@ -55,6 +55,7 @@ class Server
 
 		int					_fd;
 		std::vector<Client> _clients;
+		std::map<std::string, SessionData> UserSessions;
 
 		Server(sockaddr_in & sockaddr, Config & conf);
 
@@ -76,7 +77,5 @@ class Server
 			public:
 				ShortCircuitException(e_errorCodes code):_code(code){}
 				e_errorCodes getCode() const { return _code;}			
-		};
-		
-		std::map<std::string, SessionData> UserSessions;
+		};		
 };
