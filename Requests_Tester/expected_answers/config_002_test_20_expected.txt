@@ -1,5 +1,5 @@
 HTTP/1.1 200 OK
-Content-Length: 14
+Content-Length: 13
 Content-Type: text/txt
 
 Hello, World!

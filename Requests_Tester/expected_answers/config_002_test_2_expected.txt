@@ -1,5 +1,5 @@
 HTTP/1.1 200 OK
-Content-Length: 42
+Content-Length: 13
 Content-Type: application/json
 
-{"key1":"Dan", "key2":"Seb", "key3":"Flo"}
+Hello, World!
