@@ -81,6 +81,7 @@ void	RequestParser::parse(Client& client, Server & server)
 	extractHeaders();
 	displayHeaders();
 	// check if cookie sessionID exists
+	// client.checkSessionCookie();
 	if (_Headers.Cookie.find("sessionID") != _Headers.Cookie.end())
 	{
 		// check if value of sessionID is referenced in UserSessions

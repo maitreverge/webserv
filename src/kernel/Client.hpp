@@ -5,6 +5,7 @@
 #include "RequestParser.hpp"
 #include "ResponseBuilder.hpp"
 #include "Server.hpp"
+#include "Cookies.hpp"
 
 struct Client
 {
@@ -29,5 +30,6 @@ struct Client
 	bool 				pongHeader;
 	bool				exitRequired;
 	
-	Client(Config *);	
+	Client(Config *);
+	Cookies				cookies;
 };
