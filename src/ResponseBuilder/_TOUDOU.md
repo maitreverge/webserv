@@ -1,14 +1,15 @@
 ## CURRENT WORK
 - Config 001 🟢
 - Config 002 🟠
-- Config 003 🔴
+	=> Need from Kernel : Seb needs to throw a CODE_400 on empty POST body (config 002, test 13 and test 14)
+	=> Need a CGI for treating test 23 and 24
+- Config 003 🟢
 - Config 004 🔴
 - Config 005 🔴
 
 ## HOTFIX :
 - Stabilize simple GET / DELETE REQUESTS 🟠
 - Finish the multipart-form data POST logic 🔴
-- Need from Kernel : Seb needs to throw a CODE_400 on empty POST body (config 002, test 13 and test 14)
 
 
 ## Mandatory Work but can wait
