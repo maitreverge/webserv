@@ -324,6 +324,8 @@ void ResponseBuilder::pathSlashs(string &target){
 	
 	if (target.empty())
 		return;
+	else if (beginWithSlash)
+		target.erase(target.begin());
 	if ( isDirectory(target) )
 	{
 		if (!endWithSlash)
