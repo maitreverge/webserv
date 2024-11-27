@@ -92,11 +92,14 @@ void	RequestParser::parse(Client& client, Server & server)
 			print("Active session found!");
 		}
 		else
+		{
 			// if no  => redirect to a login page
-			print("You are not connected. Get a fuckin cookie!");
-
-			// if yes => carry on as usual
-			// if no  => redirect to a login page
+			printColor(RED, "You are not connected. Get a fuckin cookie!");
+			SessionData sessionData = {"userID"};
+			server.UserSessions[value] = sessionData;
+		}
+		// if yes => carry on as usual
+		// if no  => redirect to a login page
 
 	}
 	else
