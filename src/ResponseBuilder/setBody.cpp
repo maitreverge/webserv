@@ -15,26 +15,26 @@ void	ResponseBuilder::initBoundaryTokens( void ){
 	_parsedBoundaryToken = true;
 }
 
-bool	ResponseBuilder::isLineDelim( vector< char >& curLine, vector< char >& nextLine ){
+bool ResponseBuilder::isLineDelim(vector<char>& curLine, vector<char>& nextLine)
+{
+	char* separator = "\r\n";
+    size_t separatorLength = 2;
 
-	string temp(curLine.begin(), curLine.end());
+	// Look for "\r\n" in curLine.
+    vector< char >::iterator it = std::search(curLine.begin(), curLine.end(), separator, separator + separatorLength);
 
-	std::string::size_type posSeparator;
+    if (it == curLine.end())
+        return false;
 
-	posSeparator = temp.find_first_of(HTTP_HEADER_SEPARATOR);
-	if (posSeparator == std::string::npos)
-		return false;
-	
-	// Does the curLine ends with a trailing \r\n ONLY
-	if (posSeparator + 2 == temp.length())
-		return true;
+    // Does the curLine end with a trailing \r\n ONLY
+    if (it + separatorLength == curLine.end())
+        return true;
 
-	// in the opposite case, we need to trim the curLine and append the rest to nextLine
-	posSeparator += 2;
-	nextLine.insert(nextLine.end(), (temp.begin() + static_cast<long>(posSeparator)), temp.end());
-	curLine.erase(curLine.begin() + static_cast<long>(posSeparator), curLine.end());
+    // In the opposite case, we need to trim the curLine and append the rest to nextLine
+    nextLine.insert(nextLine.end(), it + separatorLength, curLine.end());
+    curLine.erase(it + separatorLength, curLine.end());
 
-	return true;
+    return true;
 }
 
 void	ResponseBuilder::extractFileBodyName( vector< char >& curLine ){
@@ -90,7 +90,6 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 
 	printColor(BOLD_HIGH_INTENSITY_BLUE, "FUNCTION CALED");
 
-	vector< char > recVector;
 	static vector< char > curLine;
 	static vector< char > nextLine;
 	e_lineNature lineNature;
@@ -98,11 +97,6 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 	if (not _parsedBoundaryToken) // skip useless stack calls for each HTTP package
 		initBoundaryTokens();
 	
-	// printColor(BOLD_HIGH_INTENSITY_YELLOW, "WEBTOKEN = " + _client->headerRequest.getWebToken());
-	
-
-	string next(nextLine.begin(), nextLine.end());
-    printColor(BOLD_HIGH_INTENSITY_MAGENTA, "NEXT LINE = " + next);
 	// Copy the nextLine content within the currentLine
 	if (!nextLine.empty())
 	{
@@ -111,21 +105,18 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 	}
 
 	// Assign the current response...
-	recVector = client.messageRecv;
+	vector< char > recVector2(client.messageRecv);
 
 	// ... and append it to the end of curLine
-	curLine.insert(curLine.end(), recVector.begin(), recVector.end());
+	curLine.insert(curLine.end(), recVector2.begin(), recVector2.end());
 
-	string clientMessage(client.messageRecv.begin(), client.messageRecv.end());
-    printColor(BOLD_HIGH_INTENSITY_YELLOW, "CLIENT MESSAGE = " + clientMessage);
-
-	// Clearn the buffer from the client
+	// Clear the buffer from the client
 	client.messageRecv.clear();
 	
 	// While we didn't process a whole line, we write it within the buffer
 	if (not isLineDelim(curLine, nextLine))
 	{
-		printColor(BOLD_CYAN, "Unfinished line");
+		// printColor(BOLD_CYAN, "Unfinished line");
 		return;
 	}
 
