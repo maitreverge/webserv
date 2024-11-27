@@ -81,32 +81,7 @@ void	RequestParser::parse(Client& client, Server & server)
 	extractHeaders();
 	displayHeaders();
 	// check if cookie sessionID exists
-	// client.checkSessionCookie();
-	if (_Headers.Cookie.find("sessionID") != _Headers.Cookie.end())
-	{
-		// check if value of sessionID is referenced in UserSessions
-		print("cookie sessionID found!");
-		std::string value = _Headers.Cookie.find("sessionID")->second;
-		print("value: " + value);
-		if (server.UserSessions.find(value) != server.UserSessions.end())
-		{
-			print("Active session found!");
-		}
-		else
-		{
-			// if no  => redirect to a login page
-			printColor(RED, "You are not connected. Get a fuckin cookie!");
-			SessionData sessionData = {"userID"};
-			server.UserSessions[value] = sessionData;
-		}
-		// if yes => carry on as usual
-		// if no  => redirect to a login page
-
-	}
-	else
-		// if no  => redirect to a login page
-		print("You are not connected. Get a fuckin cookie!");
-
+	client.cookies.checkSessionCookie(_Headers, server);
 	displayUserSessionsContent(client, server);
 
 }

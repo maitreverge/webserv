@@ -11,7 +11,7 @@
 #include "RequestParser.hpp"
 #include "errorCode.hpp"
 #include "ResponseBuilder.hpp"
-#include "Cookies.hpp"
+#include "SessionData.hpp"
 
 class Kernel;
 

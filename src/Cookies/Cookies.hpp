@@ -3,13 +3,9 @@
 #include <string>
 #include <iostream>
 #include "master.hpp"
+#include "RequestParser.hpp"
 
 typedef	std::map<std::string, std::string> CookiesMap;
-
-struct SessionData
-{
-	std::string userId;
-};
 
 class Cookies
 {
@@ -27,5 +23,6 @@ public:
 	CookiesMap&	getCookies();
 	void parseCookies(const std::string& cookieHeader);
 	std::string trim(const std::string& str);
+	void	checkSessionCookie(Headers& _Headers, Server& server);
 };
 
