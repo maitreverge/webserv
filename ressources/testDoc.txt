@@ -36,3 +36,6 @@ http --verbose UNKNOWN http://localhost:1510
 
 CURL:
 curl -X POST http://localhost:1512 -H "Content-Type: text/plain" --data "BODY IS HERE write something shorter or longer than body limit"
+
+commande curl test cookies:
+curl -v -s -c cookies.txt -b cookies.txt -I http://localhost:1510 -H "Cookie: key1=value1; key2=value2"
