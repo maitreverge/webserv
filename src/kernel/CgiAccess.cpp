@@ -21,8 +21,7 @@ void Cgi::hasError(Client & client, std::string err)
         }
 	}
 	else if (pid < 0)
-		throw (Logger::getInstance().log(ERROR, "waitpid", client), //!
-			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
+		Logger::getInstance().log(DEBUG, "waitpid yet finish", client);
 	else
 		Logger::getInstance().log(DEBUG, "cgi is running", client);
 }

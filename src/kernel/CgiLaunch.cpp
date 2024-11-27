@@ -82,8 +82,7 @@ void provC(Client & client) //! a suppr
 	char *env[] = {const_cast<char *>(envPathInfo.c_str()), NULL};
 	std::string execPath = std::string(actualPath) + '/'
 		+ client.responseBuilder._fileName; 
-	char *argv[] = {const_cast<char *>
-		(execPath.c_str()), NULL};	
+	char *argv[] = {const_cast<char *>(execPath.c_str()), NULL};	
 	Logger::getInstance().~Logger();
 	Kernel::getInstance().exitKernel();	
 	execve(execPath.c_str(), argv, env);

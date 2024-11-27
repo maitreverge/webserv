@@ -28,7 +28,7 @@ bool Server::recevData(const size_t i)
 	{
 		this->_readBuffer.clear();
 		this->_readBuffer.resize(this->_conf.recv_buff_size);	
-		Logger::getInstance().log(DEBUG, "\e[31;103mcgi ready to recev\e[0m",
+		Logger::getInstance().log(DEBUG, "\e[31;103mready to recev\e[0m",
 			this->_clients[i]);		
 		ssize_t ret = recv(this->_clients[i].fd, this->_readBuffer.data(),
 			this->_readBuffer.size(), 0);
