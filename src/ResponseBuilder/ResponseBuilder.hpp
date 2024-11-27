@@ -83,16 +83,6 @@ class ResponseBuilder
 	private:
 	#endif
 
-	// Enum
-	typedef enum
-	{
-		GET,
-		POST,
-		DELETE
-	} e_method;
-
-	e_method _method;
-
 	typedef enum
 	{
 		TOKEN_DELIM,
@@ -245,8 +235,6 @@ public:
 
 	void	setBody( Client & client, bool eof );
 
-	// For testing
-	void	setMethod( const e_method& method );
 
 	void	printAllHeaders( void )const;
 
@@ -259,6 +247,20 @@ public:
 			}
 	};
 
+	// Enum
+	typedef enum
+	{
+		GET,
+		POST,
+		DELETE
+	} e_method;
+
+	e_method _method;
+
 	// Public method for CGI error timeout
 	void	setError( e_errorCodes, bool skip = false );
+	e_method getMethod( void );
+	// For testing
+	void	setMethod( const e_method& method );
+
 };

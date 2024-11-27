@@ -361,3 +361,5 @@ string ResponseBuilder::generateFileName( void ){
 	
 	return baseName;
 }
+
+ResponseBuilder::e_method ResponseBuilder::getMethod( void ){ return this->_method; }

@@ -216,6 +216,10 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 
 	buildHeaders();
 
+	// TO bypass the writting process // ! cf SEB ClientBody
+	if (_method == POST and _errorType != CODE_201_CREATED)
+		_method = GET;
+
 	// Copying the build Headers in headerResponse
 	// ! Si on mixe les headers du CGI + de ResponseBuilder
 	if (!_isCGI)
