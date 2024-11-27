@@ -23,7 +23,7 @@ void	ResponseBuilder::generateDeleteHTML( void ){
 			<<	_fileName
 			<<	"</b> has been successfully deleted.</p>\n"
 			<<	"</body>\n"
-			<<	"</html>\n";
+			<<	"</html>";
 
 	// Make the page dissapear
 	_deleteURI = true;

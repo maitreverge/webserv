@@ -154,13 +154,13 @@ void	ResponseBuilder::checkNature( void ){
 		else if ((_fileInfo.st_mode & S_IFMT) == S_IFREG) // checks is the given path is a FILE
 		{
 			_isFile = true;
-			if (_method == GET)
+			if (_method == GET or _method == DELETE)
 			{
 				extractFileNature( _realURI );
 			}
 			else
 			{
-				// POST AND DELETE
+				// POST
 				if (!_isCGI)
 				{
 					// ! ne pas ecraser l'URI si c'est un CGI
