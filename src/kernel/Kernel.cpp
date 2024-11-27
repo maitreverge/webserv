@@ -100,7 +100,7 @@ void Kernel::launch()
 		Kernel::_readSet = Kernel::_writeSet = Kernel::_actualSet;
 		#ifdef EVAL	
 			sleep(1);
-			Logger::getInstance().log(WARNING, "\e[31;43mselect\e[0m");
+			Logger::getInstance().log(WARNING, "\e[31;103mselect\e[0m");
 		#endif
 		if (select(Kernel::_maxFd + 1, &Kernel::_readSet, &Kernel::_writeSet,
 			0, &timeout) < 0) 

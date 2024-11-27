@@ -93,7 +93,7 @@ void Cgi::setBody(Client & client, bool eof)
 	this->isTimeout(client, "Timeout is over");
     if (!FD_ISSET(this->_fds[1], &Kernel::_writeSet))    
         return Logger::getInstance().log(DEBUG, "cgi not ready to send");     
-    Logger::getInstance().log(DEBUG, "\e[31;43mcgi ready to send\e[0m");
+    Logger::getInstance().log(DEBUG, "\e[31;103mcgi ready to send\e[0m");
  	ssize_t ret = send(this->_fds[1], client.messageRecv.data(),
         client.messageRecv.size(), MSG_NOSIGNAL);
     Kernel::cleanFdSet(client);	
@@ -120,7 +120,7 @@ bool Cgi::getBody(Client & client)
 			log(DEBUG, "cgi not ready to recev", client), true;  
     client.messageSend.clear();
     client.messageSend.resize(client.conf->send_buff_size);
-	Logger::getInstance().log(DEBUG, "\e[31;43mcgi ready to recev\e[0m",
+	Logger::getInstance().log(DEBUG, "\e[31;103mcgi ready to recev\e[0m",
 		client);
     ssize_t ret = recv(this->_fds[1], client.messageSend.data(),
         client.messageSend.size(), 0);

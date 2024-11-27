@@ -136,7 +136,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 
 	if (codeInput != CODE_200_OK)
 	{
-		Logger::getInstance().log(INFO, "getHeader invoked with an error code");
+		Logger::getInstance().log(DEBUG, "getHeader invoked with an error code");
 		setError(codeInput, true);
 		setContentLenght();
 		buildHeaders();
@@ -193,12 +193,12 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	}
 	catch(const CodeErrorRaised& e)
 	{
-		Logger::getInstance().log(INFO, "Code Error Raised in the getHeader building process", inputClient);
+		Logger::getInstance().log(DEBUG, "Code Error Raised in the getHeader building process", inputClient);
 	}
 	catch(const std::exception& e)
 	{
 		return;
-		Logger::getInstance().log(INFO, "Another kind or error has been raised in the getHeader process", inputClient);
+		Logger::getInstance().log(DEBUG, "Another kind or error has been raised in the getHeader process", inputClient);
 	} 
 
 	if (not isErrorRedirect())

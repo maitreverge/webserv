@@ -113,7 +113,7 @@ void Server::printVector(Client & client, const std::vector<char> & response,
 	const std::string color, const int level)
 {
 	std::stringstream ss;
-	ss << color << "Print data : " << YELLOW
+	ss << color << "Print data : " << HIGH_INTENSITY_YELLOW
 		<< response.size() << " bytes" << color << std::endl << std::endl
 		<< "-";		
 	for (size_t i = 0; i < response.size(); i++)				

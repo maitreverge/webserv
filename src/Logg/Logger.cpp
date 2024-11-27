@@ -46,7 +46,7 @@ std::string Logger::formatLogLevel(logLevel level) const
 		case DEBUG:
 			return std::string(BLUE) + "[DEBUG] " + RESET;
 		case WARNING:
-			return std::string(YELLOW) + "[WARNING] " + RESET;
+			return std::string(HIGH_INTENSITY_YELLOW) + "[WARNING] " + RESET;
 		case ERROR:
 			return std::string(RED) + "[ERROR] " + RESET;
 		default:
@@ -145,11 +145,11 @@ void Logger::log(logLevel logLevel, const std::string& message, const Kernel& ob
 							+ formatLogLevel(logLevel) 
 							+ GREEN + message + " "
 							// + MAGENTA + ipToString(client.address) + " "
-							// + YELLOW + intToString(portToInt(client.address)) + " "
+							// + HIGH_INTENSITY_YELLOW + intToString(portToInt(client.address)) + " "
 							// + GREEN + intToString(client.fd) + " "
 							// + GREEN + "Server: "
 							// + MAGENTA + ipToString(server._sockAddr) + " "
-							// + YELLOW + intToString(portToInt(server._sockAddr)) + " "
+							// + HIGH_INTENSITY_YELLOW + intToString(portToInt(server._sockAddr)) + " "
 							+ RESET + "\n"
 							;
 		log(logLevel, logEntry);
@@ -168,7 +168,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const RequestPar
 								+ formatLogLevel(logLevel) 
 								+ GREEN + message + " "
 								+ MAGENTA + "Client: " + ipToString(obj.getClient()->address) + " "
-								+ YELLOW + intToString(portToInt(obj.getClient()->address)) + " "
+								+ HIGH_INTENSITY_YELLOW + intToString(portToInt(obj.getClient()->address)) + " "
 								+ GREEN + intToString(obj.getClient()->fd)
 								+ RESET + "\n";
 	}
@@ -192,7 +192,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 							+ formatLogLevel(logLevel) 
 							+ GREEN + message + " "
 							+ MAGENTA + "Client: " + ipToString(client.address) + " "
-							+ YELLOW + intToString(portToInt(client.address)) + " "
+							+ HIGH_INTENSITY_YELLOW + intToString(portToInt(client.address)) + " "
 							+ GREEN + intToString(client.fd)
 							+ RESET + "\n";
 	logOut(logLevel, logEntry);
@@ -207,11 +207,11 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 							+ formatLogLevel(logLevel) + " "
 							+ GREEN + message
 							+ MAGENTA + "Client: " + ipToString(client.address) + " "
-							+ YELLOW + intToString(portToInt(client.address)) + " "
+							+ HIGH_INTENSITY_YELLOW + intToString(portToInt(client.address)) + " "
 							+ GREEN + intToString(client.fd) + " "
 							+ GREEN + "Server: "
 							+ MAGENTA + ipToString(server.getSockAdress()) + " "
-							+ YELLOW + intToString(portToInt(server.getSockAdress())) + " "
+							+ HIGH_INTENSITY_YELLOW + intToString(portToInt(server.getSockAdress())) + " "
 							+ GREEN + intToString(server._fd) + " "
 							+ RESET + "\n";
 	logOut(logLevel, logEntry);
@@ -228,7 +228,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 							+ formatLogLevel(logLevel) + " "
 							+ BOLD_HIGH_INTENSITY_WHITE + message
 							+ MAGENTA + "Client: " + ipToString(client.address) + " "
-							+ YELLOW + intToString(portToInt(client.address)) + " "
+							+ HIGH_INTENSITY_YELLOW + intToString(portToInt(client.address)) + " "
 							+ GREEN + intToString(client.fd) + " "
 							+ BOLD_HIGH_INTENSITY_WHITE + "Server: "
 							+ RESET + "\n";
@@ -260,7 +260,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const Server&ser
 							+ GREEN + message + " "
 							+ GREEN + "Server: "
 							+ MAGENTA + ipToString(server.getSockAdress()) + " "
-							+ YELLOW + intToString(portToInt(server.getSockAdress())) + " "
+							+ HIGH_INTENSITY_YELLOW + intToString(portToInt(server.getSockAdress())) + " "
 							+ GREEN + intToString(server._fd) + " "
 							+ RESET + "\n";
 	logOut(logLevel, logEntry);
@@ -279,7 +279,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const Server&ser
 							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
 							+ BOLD_HIGH_INTENSITY_WHITE + "Server: "
 							+ MAGENTA + ipToString(server.getSockAdress()) + " "
-							+ YELLOW + intToString(portToInt(server.getSockAdress())) + " "
+							+ HIGH_INTENSITY_YELLOW + intToString(portToInt(server.getSockAdress())) + " "
 							+ RESET + "\n";
 	std::ofstream logFile("debugOutput.log", std::ios_base::app);  
 	if (logFile.is_open() && yesNo)
@@ -302,7 +302,7 @@ void Logger::log(logLevel logLevel, std::string& message, struct Client& client,
 							+ GREEN + message + " "
 							+ GREEN
 							+ MAGENTA + "Client: " + ipToString(client.address) + " "
-							+ YELLOW + intToString(portToInt(client.address)) + " "
+							+ HIGH_INTENSITY_YELLOW + intToString(portToInt(client.address)) + " "
 							+ GREEN + intToString(client.fd) + " "
 							+ RESET + "\n";
 	logOut(logLevel, logEntry);
