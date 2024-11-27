@@ -53,7 +53,7 @@ if [ -n "$CONFIG_FILE" ]; then
 	
 	# Attente pour permettre à Webserv de démarrer
 	#TODO&&&&&&&&&&&&&&& DELAY TO BE ADJUSTED? &&&&&&&&&&&&&&&&&&&&
-	sleep 0.2
+	sleep 1
 	#TODO&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 	# Boucle pour lire les requêtes et envoyer à Webserv
@@ -66,7 +66,7 @@ if [ -n "$CONFIG_FILE" ]; then
 		fi
 
 		response_file="$ANSWERS_DIR/config_${config_number}_test_${test_counter}_actual.txt"
-		http_response=$($request)
+		http_response=$(eval $request)
 		echo "$http_response" > "$response_file"
 
 
@@ -120,8 +120,11 @@ else
 
 		./webserv "$config_file" > /dev/null 2>&1 &  # Lancer Webserv en arrière-plan
 		webserv_pid=$!
-		
-		sleep 0.2  # Laisser du temps pour démarrer Webserv
+
+		# Attente pour permettre à Webserv de démarrer
+		#TODO&&&&&&&&&&&&&&& DELAY TO BE ADJUSTED? &&&&&&&&&&&&&&&&&&&&
+		sleep 1
+		#TODO&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 		request_file="$REQUESTS_DIR/config_${config_number}_requests.txt"
 		test_counter=1
@@ -131,7 +134,7 @@ else
 			fi
 
 			response_file="$ANSWERS_DIR/config_${config_number}_test_${test_counter}_actual.txt"
-			http_response=$($request)
+			http_response=$(eval $request)
 			echo "$http_response" > "$response_file"
 			
 			expected_answer_file="$EXPECTED_ANSWERS_DIR/config_${config_number}_test_${test_counter}_expected.txt"
@@ -148,12 +151,12 @@ else
 
 			diff_file="$DIFF_DIR/config_${config_number}_test_${test_counter}.diff"
 			
-			if diff -q "$response_file" "$expected_answer_file" > /dev/null; then
+			if diff -Z -q "$response_file" "$expected_answer_file" > /dev/null; then
 				echo -e "${GREEN}config_$config_number, test $test_counter : $request ✅ Success${NC}"
 			else
 				echo -e "${GREEN}config_$config_number, test $test_counter : $request ❌ Failure${NC}"
 				if [ "$show_diffs" = true ]; then
-					diff "$response_file" "$expected_answer_file" > "$diff_file"
+					diff -Z "$response_file" "$expected_answer_file" > "$diff_file"
 					cat "$diff_file"
 				fi
 			fi
