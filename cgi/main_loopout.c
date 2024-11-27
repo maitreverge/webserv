@@ -30,8 +30,12 @@ Content-Length: ";
     char * end = "\r\n\r\n";
 
     printf("%s", header);
+	{
+
     printf("%d", len);
+	}
     fflush(stdout);
+	fclose(stdout);
     while (1);
     printf("%s", end);
     printf("%s", body);
