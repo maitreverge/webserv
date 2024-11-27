@@ -47,37 +47,37 @@ void	ResponseBuilder::setContentLenght(){
 		Headers.bodyLenght = static_cast<uint64_t>(_fileInfo.st_size); //! the targeted file in a GET requests
 }
 
-void	ResponseBuilder::uploadCheck( void ){
+// void	ResponseBuilder::uploadCheck( void ){
 
-	if (!_myconfig.uploadAllowed)
-	{
-		setError(CODE_403_FORBIDDEN);
-	}
-	else if (_myconfig.uploadDirectory.empty())
-	{
-		// ? Pertinent d'upload dans la meme URI si il n'y a pas d'UploadDirectory ?
-		// TODO : Which directory to choose if the targeted one is empty ?
+// 	if (!_myconfig.uploadAllowed)
+// 	{
+// 		setError(CODE_403_FORBIDDEN);
+// 	}
+// 	else if (_myconfig.uploadDirectory.empty())
+// 	{
+// 		// ? Pertinent d'upload dans la meme URI si il n'y a pas d'UploadDirectory ?
+// 		// TODO : Which directory to choose if the targeted one is empty ?
 		
-		/*
-		If such directory isn't in the config file, we can take the upload directory by default
-		! AND INFORM THE USER
-		If the upload have any proble, we create it
-		*/
+// 		/*
+// 		If such directory isn't in the config file, we can take the upload directory by default
+// 		! AND INFORM THE USER
+// 		If the upload have any proble, we create it
+// 		*/
 		
-		// ! From now, no specified uploadDirectory raise a 403
-		Logger::getInstance().log(ERROR, "Upload directory is not specified");
-		setError(CODE_403_FORBIDDEN);
-	}
-	else if ( access(_myconfig.uploadDirectory.c_str(), W_OK) == -1 )
-	{
-		//!  we can't write on the destination 
-		Logger::getInstance().log(ERROR, "Upload directory does not have right access");
-		setError(CODE_401_UNAUTHORIZED);
-	}
+// 		// ! From now, no specified uploadDirectory raise a 403
+// 		Logger::getInstance().log(ERROR, "Upload directory is not specified");
+// 		setError(CODE_403_FORBIDDEN);
+// 	}
+// 	else if ( access(_myconfig.uploadDirectory.c_str(), W_OK) == -1 )
+// 	{
+// 		//!  we can't write on the destination 
+// 		Logger::getInstance().log(ERROR, "Upload directory does not have right access");
+// 		setError(CODE_401_UNAUTHORIZED);
+// 	}
 
-	// Refresh URI
-	_realURI = _config->errorPaths.at(_errorType);
-}
+// 	// Refresh URI
+// 	_realURI = _config->errorPaths.at(_errorType);
+// }
 
 void	ResponseBuilder::checkAutho( void ){
 	
@@ -150,6 +150,11 @@ void	ResponseBuilder::checkNature( void ){
 				Logger::getInstance().log(ERROR, "Delete Method for a folder detected");
 				setError(CODE_403_FORBIDDEN);
 			}
+			else if (_method == POST)
+			{
+				_realURI = _config->errorPaths.at(_errorType);
+				extractFileNature( _config->errorPaths.at(_errorType) );
+			}
 		}
 		else if ((_fileInfo.st_mode & S_IFMT) == S_IFREG) // checks is the given path is a FILE
 		{
@@ -163,8 +168,8 @@ void	ResponseBuilder::checkNature( void ){
 				// POST
 				if (!_isCGI)
 				{
-					// ! ne pas ecraser l'URI si c'est un CGI
-					extractFileNature( _config->errorPaths.at(_errorType) );
+					// if (access(_originalURI.c_str(), F_OK) == 0)
+						setError(CODE_401_UNAUTHORIZED);
 				}
 				else
 					extractFileNature( _realURI );
@@ -308,6 +313,8 @@ void ResponseBuilder::extraStartingChecks()
 			_uploadTargetDirectory = _myconfig.uploadDirectory;
 		}
 	}
+
+	pathSlashs(_originalURI);
 }
 
 void ResponseBuilder::pathSlashs(string &target){
