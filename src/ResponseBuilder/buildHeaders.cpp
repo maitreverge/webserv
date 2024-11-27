@@ -82,7 +82,7 @@ void	ResponseBuilder::buildHeaders(){
 		stringstream streamCookie;
 		streamCookie	<< "Set-Cookie:"
 						<< SPACE
-						<< "sessionID=mange-ton-caca"
+						<< "sessionID=test_cookie"
 						<< HTTP_HEADER_SEPARATOR;
 		Headers.cookie = streamCookie.str();
 
