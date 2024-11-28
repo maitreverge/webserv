@@ -23,7 +23,17 @@ Client::Client(Config * _conf, Server* server) : conf(_conf), _server(server)
 	exitRequired = false;
 }
 
-bool	Client::isConnected() const
+bool Client::isConnected() const
 {
-	return (true);
+	CookiesMap::const_iterator itCookie = cookies._cookies.find("sessionID");
+	if (itCookie == cookies._cookies.end())
+		return (printColor(RED, "FIRST"), false);
+	if (!_server)
+		return (printColor(RED, "SECOND"), false);
+	const std::string& token = itCookie->second;
+	if (_server->UserSessions.find(token) != _server->UserSessions.end())
+		return true;
+	return (printColor(RED, "THIRD"), false);
+
 }
+

@@ -23,6 +23,7 @@ void	Cookies::checkSessionCookie(Headers& _Headers, Server& server)
 		if (server.UserSessions.find(value) != server.UserSessions.end())
 		{
 			_Headers.isConnected = true;
+			_cookies["sessionID"] = value;
 			Logger::getInstance().log(WARNING, "Active session found!");
 		}
 		else
@@ -43,6 +44,7 @@ void	Cookies::checkSessionCookie(Headers& _Headers, Server& server)
 			server.UserSessions[value] = sessionData;
 			Logger::getInstance().log(WARNING, "Your sessionID token was added to the server.");
 			_Headers.isConnected = true;
+			_cookies["sessionID"] = value;
 		}
 	}
 	else

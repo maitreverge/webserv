@@ -135,7 +135,8 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	_config = &inputConfig; // init config
 
 	{
-		// if (inputClient.headerRequest.getHeaders().isConnected == false)
+		if (inputClient.isConnected() == true)
+			printColor(BLUE, "****** YOU ARE CONNECTED ****");
 			// => redirect to connection html page
 	}
 

@@ -10,11 +10,11 @@ typedef	std::map<std::string, std::string> CookiesMap;
 class Cookies
 {
 private:
-	CookiesMap _cookies;
 
 public:
 	Cookies();
 
+	CookiesMap _cookies;
 	bool	isConnected() const;
 	bool hasSessionCookie() const;
 	std::string getCookieValue(const std::string& cookieName) const;
