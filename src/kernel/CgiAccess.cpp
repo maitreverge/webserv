@@ -16,8 +16,7 @@ void Cgi::hasError(Client & client, std::string err)
 		if (WIFEXITED(status))		
 			this->exitCodeHandle(status, client, err);		
 		else if (WIFSIGNALED(status)) 		
-            throw (Logger::getInstance().log(ERROR, err, client), Server::
-				ShortCircuitException(CODE_502_BAD_GATEWAY));         
+            Logger::getInstance().log(DEBUG, "cgi signaled", client);     
 	}
 	else if (pid < 0)
 		Logger::getInstance().log(DEBUG, "waitpid yet finish", client);
