@@ -1,6 +1,40 @@
 #include "ResponseBuilder.hpp"
 #include "Logger.hpp"
 
+void	ResponseBuilder::initCurrentFiles( vector< string>& duplicatesFileNames ){
+
+	// string path = _uploadTargetDirectory;
+
+	DIR *dir = opendir(_uploadTargetDirectory.c_str());
+	if (dir == NULL)
+	{
+		Logger::getInstance().log(ERROR, "Failing Openning Directory");
+		return;
+	}
+
+	struct dirent *listing;
+
+	while ((listing = readdir(dir)) != NULL)
+	{
+		string curFile = listing->d_name;
+		if (!isFileIgnored(curFile))
+		{
+			if (listing->d_type == DT_REG)
+			{
+				curFile.insert(0, _uploadTargetDirectory);
+				duplicatesFileNames.push_back(curFile);
+
+			}
+			// 	curFile += "/"; // Append trailing slash for directories
+			// if ( !_myconfig.root.empty() and curFile.find(_myconfig.root) == std::string::npos)
+			// {
+			// 	curFile.insert(0, _myconfig.root);
+			// }
+			
+		}
+	}
+}
+
 void	ResponseBuilder::initBoundaryTokens( void ){
 
 	// Create both tokens
@@ -13,7 +47,6 @@ void	ResponseBuilder::initBoundaryTokens( void ){
 	_tokenDelim += "\r\n";
 	_tokenEnd += "\r\n";
 
-	_parsedBoundaryToken = true;
 }
 
 void ResponseBuilder::determineSeparator(std::string &separator, size_t &separatorLength, vector<char>& curLine)
@@ -73,7 +106,10 @@ bool ResponseBuilder::isLineDelim(vector<char>& curLine, vector<char>& nextLine)
 }
 
 
-void	ResponseBuilder::extractFileBodyName( vector< char >& curLine ){
+void	ResponseBuilder::extractFileBodyName( vector< char >& curLine, vector< string >&duplicatesFileNames ){
+
+	static_cast<void>(duplicatesFileNames);
+
 
 	string temp(curLine.begin(), curLine.end());
 
@@ -132,10 +168,16 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 
 	static vector< char > curLine;
 	static vector< char > nextLine;
+	static vector< string> duplicatesFileNames;
 	e_lineNature lineNature;
 
-	// if (not _parsedBoundaryToken) // skip useless stack calls for each HTTP package
+	// skip useless stack calls for each HTTP package
+	if (not _parsedBoundaryToken)
+	{
 		initBoundaryTokens();
+		initCurrentFiles(duplicatesFileNames);
+		_parsedBoundaryToken = true;
+	}
 	
 	// Copy the nextLine content within the currentLine
 	if (!nextLine.empty())
@@ -169,11 +211,13 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 			case TOKEN_END: // end of previous stream
 				printColor(BOLD_CYAN, "Token END detected");
 				_fileStreamName.clear();
+				duplicatesFileNames.clear(); // reset the value for calling on the next request of the same client
+				_parsedBoundaryToken = false; // reset the value for calling on the next request of the same client
 				break;
 
 			case CONTENT_DISPOSITION:
 				printColor(BOLD_CYAN, "Content Disposition Detected");
-				extractFileBodyName(curLine);
+				extractFileBodyName(curLine, duplicatesFileNames);
 				printColor(BOLD_CYAN, "_fileStreamName =" + _fileStreamName);
 				break;
 			
