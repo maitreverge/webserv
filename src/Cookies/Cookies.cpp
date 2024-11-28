@@ -22,11 +22,11 @@ void	Cookies::checkSessionCookie(Headers& _Headers, Server& server)
 		print("value: " + value);
 		if (server.UserSessions.find(value) != server.UserSessions.end())
 		{
+			_Headers.isConnected = true;
 			Logger::getInstance().log(WARNING, "Active session found!");
 		}
 		else
 		{
-			
 			// if no  => redirect to a login page
 			Logger::getInstance().log(WARNING, "Your sessionID token is not valid.");
 			
