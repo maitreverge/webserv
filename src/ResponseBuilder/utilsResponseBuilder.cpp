@@ -311,8 +311,11 @@ void ResponseBuilder::extraStartingChecks()
 			if (!uploadWrite)
 				setError(CODE_403_FORBIDDEN);
 			_uploadTargetDirectory = _myconfig.uploadDirectory;
+			_myconfig.uploadAllowed = true;
 		}
 	}
+	else if (!_myconfig.uploadAllowed) // TODO : need to test this variable
+		setError(CODE_403_FORBIDDEN);
 
 	pathSlashs(_originalURI);
 }

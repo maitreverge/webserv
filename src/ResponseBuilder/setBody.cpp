@@ -67,7 +67,7 @@ void	ResponseBuilder::extractFileBodyName( vector< char >& curLine ){
 
 ResponseBuilder::e_lineNature ResponseBuilder::processCurrentLine(vector< char >& curLine) {
 
-	// Trimm last two trailing character from the current line
+	// Trimm last two trailing character from the current line only if it's not 
 	if (curLine.size() > 2)
 	{
         curLine.erase(curLine.end() - 2, curLine.end());
@@ -86,11 +86,6 @@ ResponseBuilder::e_lineNature ResponseBuilder::processCurrentLine(vector< char >
 	else if (temp.rfind("Content-Disposition: ", 0) == 0) // does the beggining of the line starts with the needle
 		return CONTENT_DISPOSITION;
 	return OTHER;
-}
-
-bool ResponseBuilder::isNextLineDelim( vector< char > &nextLine){
-
-	
 }
 
 // This is now the SetBody only for MultiPart form Data
@@ -122,69 +117,71 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 	client.messageRecv.clear();
 	
 	// While we didn't process a whole line, we write it within the buffer
+	if (not isLineDelim(curLine, nextLine))
+		return;
 	
 	do
 	{
-		if (not isLineDelim(curLine, nextLine))
-			return;
+		lineNature = processCurrentLine(curLine);
 
+		switch (lineNature)
+		{
+			case TOKEN_DELIM:
+				printColor(BOLD_CYAN, "Token DELIM detected");
+				break;
+			case TOKEN_END: // end of previous stream
+				printColor(BOLD_CYAN, "Token END detected");
+				_fileStreamName.clear();
+				break;
 
-	} while (isNextLineDelim());
-	
-	
+			case CONTENT_DISPOSITION:
+				printColor(BOLD_CYAN, "Content Disposition Detected");
+				extractFileBodyName(curLine);
+				printColor(BOLD_CYAN, "_fileStreamName =" + _fileStreamName);
+				break;
+			
+			case OTHER:
+				printColor(BOLD_CYAN, "Other Line detected");
+				break;
+			
+			case LINE_SEPARATOR: // next processed lines will be the binary data
+				printColor(BOLD_CYAN, "Line separator detected");
 
-	lineNature = processCurrentLine(curLine);
+				if (!this->_ofs.is_open())
+				{
+					this->_ofs.open(_fileStreamName.c_str(), std::ios::binary);
+				}
+				_writeReady = true;
+				break;
 
-	switch (lineNature)
-	{
-		case TOKEN_DELIM:
-		case TOKEN_END: // end of previous stream
-			if (_ofs.is_open())
-				_ofs.close();
-			printColor(BOLD_CYAN, "Token Delim or END detected, closing stream");
-			_fileStreamName.clear();
-			break;
+			case BINARY_DATA:
+				printColor(BOLD_CYAN, "Binary data detected, writting");
+				// this->_ofs.seekp(0, std::ios::end);
+				// ! Writting
+				_ofs.write(curLine.data(), static_cast<std::streamsize>(curLine.size()));
+				// ! Managing errors
+				if (!_ofs)
+				{
+					// error CODE_500 ??
+					//Utile de rappeller getHeader ou renvoyer une exception a Seb pour qu'il puisse me rappeller avec un getHeader(.., .., CODE_500)
+				}
+				// ! Closing stream
+				if (_ofs.is_open())
+					_ofs.close();
+				_writeReady = false;
+				_fileStreamName.clear();
+				break;
 
-		case CONTENT_DISPOSITION:
-			printColor(BOLD_CYAN, "Content Disposition Detected");
-			extractFileBodyName(curLine);
-			printColor(BOLD_CYAN, "_fileStreamName =" + _fileStreamName);
-			break;
+			default:
+				break;
+		}
 		
-		case OTHER:
-			printColor(BOLD_CYAN, "Other Line detected");
-			break;
-		
-		case LINE_SEPARATOR: // next packages need to be the bnary data
-			printColor(BOLD_CYAN, "Line separator detected");
-			if (!this->_ofs.is_open())
-			{
-				this->_ofs.open(_fileStreamName.c_str(), std::ios::binary);
-			}
-			_writeReady = true; // TODO : empty file names or shitty ones ?
-			break;
+		curLine.clear();
+		curLine = nextLine;
+		nextLine.clear();
 
-		case BINARY_DATA:
-			printColor(BOLD_CYAN, "Binary data detected, writting");
-			// this->_ofs.seekp(0, std::ios::end);
-			_ofs.write(curLine.data(), static_cast<std::streamsize>(curLine.size()));
-			if (!_ofs)
-			{
-				// error CODE_500 ??
-				//Utile de rappeller getHeader ou renvoyer une exception a Seb pour qu'il puisse me rappeller avec un getHeader(.., .., CODE_500)
-			}
-			_writeReady = false;
-			_fileStreamName.clear();
-			break;
-
-		default:
-			break;
-	}
-
-	curLine.clear();
-
-	// Does the next line contains another "\r\n" ??
-
+	} while (isLineDelim(curLine, nextLine));
+	
 }
 
 // This is now the regular setPost without Multipart Writting
@@ -230,8 +227,8 @@ void	ResponseBuilder::setBody( Client & client, bool eof ){
 
 	if (this->_isCGI)	
 		return this->_cgi.setBody(client, eof);
-	else if (_myconfig.uploadAllowed == true and !_isMultipart)
-		setRegularPost(client);
-	else
+	else if (_isMultipart)
 		setMultiPartPost(client);
+	else
+		setRegularPost(client);
 }
