@@ -30,6 +30,8 @@ struct Client
 	bool 				pongHeader;
 	bool				exitRequired;
 	
-	Client(Config *);
+	Client(Config *conf, Server* server);
 	Cookies				cookies;
+	Server*				_server;
+	bool	isConnected() const;
 };
