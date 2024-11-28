@@ -33,6 +33,7 @@ void	Cookies::checkSessionCookie(Headers& _Headers, Server& server)
 			printColor(RED, "");
 			SessionData sessionData = {value};
 			server.UserSessions[value] = sessionData;
+			Logger::getInstance().log(WARNING, "Your sessionID token was added to the server.");
 			_Headers.isConnected = true;
 		}
 	}
