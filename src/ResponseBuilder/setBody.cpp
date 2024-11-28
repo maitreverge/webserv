@@ -87,9 +87,18 @@ bool ResponseBuilder::isLineDelim(vector<char>& curLine, vector<char>& nextLine)
 
     // Does the curLine end with a trailing \r\n OR { token + "\r\n" } ONLY
     if (it + separatorLength == curLine.end())
+	{
+		if (_writeReady)
+		{
+			nextLine.insert(nextLine.end(), it, curLine.end());
+			curLine.erase(it , curLine.end());
+		}
         return true;
+	}
 
     // In the opposite case, we need to trim the curLine and append the rest to nextLine
+	if (_writeReady)
+		separatorLength = 0;
     nextLine.insert(nextLine.end(), it + separatorLength, curLine.end());
     curLine.erase(it + separatorLength, curLine.end());
 
