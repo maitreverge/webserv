@@ -68,12 +68,16 @@ void	ResponseBuilder::extractFileBodyName( vector< char >& curLine ){
 ResponseBuilder::e_lineNature ResponseBuilder::processCurrentLine(vector< char >& curLine) {
 
 	// Trimm last two trailing character from the current line only if it's not 
-	if (curLine.size() > 2)
-	{
-        curLine.erase(curLine.end() - 2, curLine.end());
-    }
-
+	
 	string temp(curLine.begin(), curLine.end());
+	
+	if (temp == HTTP_HEADER_SEPARATOR)
+		return LINE_SEPARATOR;
+	else
+	{
+		curLine.erase(curLine.end() - 2, curLine.end());
+		temp.erase(temp.end() - 2, temp.end());
+	}
 
 	if (_writeReady)
 		return BINARY_DATA;
@@ -81,8 +85,6 @@ ResponseBuilder::e_lineNature ResponseBuilder::processCurrentLine(vector< char >
 		return TOKEN_END;
 	else if (temp == _tokenDelim)
 		return TOKEN_DELIM;
-	else if (temp == HTTP_HEADER_SEPARATOR)
-		return LINE_SEPARATOR;
 	else if (temp.rfind("Content-Disposition: ", 0) == 0) // does the beggining of the line starts with the needle
 		return CONTENT_DISPOSITION;
 	return OTHER;
@@ -97,7 +99,7 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 	static vector< char > nextLine;
 	e_lineNature lineNature;
 
-	if (not _parsedBoundaryToken) // skip useless stack calls for each HTTP package
+	// if (not _parsedBoundaryToken) // skip useless stack calls for each HTTP package
 		initBoundaryTokens();
 	
 	// Copy the nextLine content within the currentLine
@@ -158,16 +160,20 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 				printColor(BOLD_CYAN, "Binary data detected, writting");
 				// this->_ofs.seekp(0, std::ios::end);
 				// ! Writting
-				_ofs.write(curLine.data(), static_cast<std::streamsize>(curLine.size()));
+				this->_ofs.write(curLine.data(), static_cast<std::streamsize>(curLine.size()));
+				// _ofs.flush();
+
 				// ! Managing errors
-				if (!_ofs)
+				if (!this->_ofs)
 				{
 					// error CODE_500 ??
 					//Utile de rappeller getHeader ou renvoyer une exception a Seb pour qu'il puisse me rappeller avec un getHeader(.., .., CODE_500)
 				}
 				// ! Closing stream
-				if (_ofs.is_open())
-					_ofs.close();
+				// if (this->_ofs.is_open())
+				
+				this->_ofs.close();
+				
 				_writeReady = false;
 				_fileStreamName.clear();
 				break;
@@ -198,7 +204,7 @@ void	ResponseBuilder::setRegularPost( Client & client ){
 								+ generateFileName()
 								+ _setBodyExtension;
 		
-		this->_ofs.open(targetToWrite.c_str(), std::ios::binary);
+		this->_ofs.open(targetToWrite.c_str(), std::ios::binary | std::ios::app);
 	}
 
 	// _ofs.clear();//!
