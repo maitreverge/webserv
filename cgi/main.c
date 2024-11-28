@@ -6,6 +6,21 @@
 
 int main()
 { 
+	unsigned int c;
+	unsigned int i = 49;
+	// c = (i << 24) >> 24;
+	// printf("%i\n", c);	
+	while (++i < 250)
+	{
+		c = (i << 24) >> 24;
+		printf("%i, %i\n", i, c);		
+	}
+	// int p = 502;
+	// int z = p & 255;
+	// printf("%i\n", z);	
+
+
+
 	char * path_info = getenv("PATH_INFO");
     char buff[20] = {0};
     ssize_t ret;
@@ -32,7 +47,7 @@ int main()
         }
     }
     close(fd);
-	
+
     char * body = "<html>\
 <head><title>My Styled Page</title></head>\
 <body style=\"background-color: #f0f0f0; text-align: center; padding: 50px;\">\
