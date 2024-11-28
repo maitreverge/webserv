@@ -19,12 +19,14 @@ struct Headers
 	std::vector<std::string>			Accept;
 	size_t								ContentLength;
 	Cookies_Map							Cookie;
+	bool								isConnected;
 	
 	// ! FLO ADD
 	
 	void	reset();
 
-	bool operator==(const Headers& other) const {
+	bool operator==(const Headers& other) const
+	{
 	return Connection == other.Connection &&
 			ContentType == other.ContentType &&
 			Host == other.Host &&

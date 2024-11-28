@@ -14,6 +14,7 @@ RequestParser::RequestParser() : 	_method(""),
 									_WebToken("") // ! FLO
 {
 	_Headers.reset();
+	_Headers.isConnected = false;
 }
 
 RequestParser::~RequestParser() {}
