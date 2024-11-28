@@ -30,6 +30,14 @@ void	Cookies::checkSessionCookie(Headers& _Headers, Server& server)
 			// if no  => redirect to a login page
 			Logger::getInstance().log(WARNING, "Your sessionID token is not valid.");
 			
+			/**============================================
+			 *!               ACHTUNG!
+			 *! for now, client is automatically connected.
+			 *! front logic must be added to connect through a webpage 
+			 *! => see with Flo
+			 *! the code below must be executed in case of connection	
+			 *! (to be handled through HTTP requests in custom connection page)
+			 *=============================================**/
 			printColor(RED, "");
 			SessionData sessionData = {value};
 			server.UserSessions[value] = sessionData;
