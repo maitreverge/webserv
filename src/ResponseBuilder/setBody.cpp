@@ -3,9 +3,11 @@
 
 void	ResponseBuilder::initBoundaryTokens( void ){
 
-	// To replace with Dan future parsed token.
+	/*
+		Example :
+		string parsedBoundary = "----WebKitFormBoundary1XN99skGpOHP8Og8";
+	*/
 	string parsedBoundary = _client->headerRequest.getWebToken();
-	// string parsedBoundary = "----WebKitFormBoundary1XN99skGpOHP8Og8";
 
 	_tokenDelim = parsedBoundary;
 	_tokenDelim.insert(0, "--");
@@ -18,7 +20,7 @@ void	ResponseBuilder::initBoundaryTokens( void ){
 bool ResponseBuilder::isLineDelim(vector<char>& curLine, vector<char>& nextLine)
 {
 	const char* separator = "\r\n";
-    size_t separatorLength = 2;
+    const size_t separatorLength = 2;
 
 	// Look for "\r\n" in curLine.
     vector< char >::iterator it = std::search(curLine.begin(), curLine.end(), separator, separator + separatorLength);
@@ -55,19 +57,23 @@ void	ResponseBuilder::extractFileBodyName( vector< char >& curLine ){
 
 		_fileStreamName = temp.substr(startPos, endPos - startPos);
 
+		/*
+			! IMPORTANT
+			.uploadTargetDirectory is parsed before, yet still stable for multipart-form data on multiple calls
+		*/
 		_fileStreamName.insert(0, _uploadTargetDirectory);
 	}
 }
 
 ResponseBuilder::e_lineNature ResponseBuilder::processCurrentLine(vector< char >& curLine) {
 
+	// Trimm last two trailing character from the current line
 	if (curLine.size() > 2)
 	{
         curLine.erase(curLine.end() - 2, curLine.end());
     }
 
 	string temp(curLine.begin(), curLine.end());
-	// Trimm last two trailing character from the current line
 
 	if (_writeReady)
 		return BINARY_DATA;
@@ -80,6 +86,11 @@ ResponseBuilder::e_lineNature ResponseBuilder::processCurrentLine(vector< char >
 	else if (temp.rfind("Content-Disposition: ", 0) == 0) // does the beggining of the line starts with the needle
 		return CONTENT_DISPOSITION;
 	return OTHER;
+}
+
+bool ResponseBuilder::isNextLineDelim( vector< char > &nextLine){
+
+	
 }
 
 // This is now the SetBody only for MultiPart form Data
@@ -107,20 +118,21 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 	// ... and append it to the end of curLine
 	curLine.insert(curLine.end(), recVector2.begin(), recVector2.end());
 
-	// Clear the buffer from the client
+	// Clear the buffer from the client // TODO : See if it's okay to clean with SEB
 	client.messageRecv.clear();
 	
 	// While we didn't process a whole line, we write it within the buffer
-	if (not isLineDelim(curLine, nextLine))
+	
+	do
 	{
-		// printColor(BOLD_CYAN, "Unfinished line");
-		return;
-	}
+		if (not isLineDelim(curLine, nextLine))
+			return;
 
-	// string curent(curLine.begin(), curLine.end());
-    // printColor(BOLD_HIGH_INTENSITY_GREEN, "CURRENT LINE = " + curent);
-	// sleep(6);
-		
+
+	} while (isNextLineDelim());
+	
+	
+
 	lineNature = processCurrentLine(curLine);
 
 	switch (lineNature)
@@ -170,6 +182,8 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 	}
 
 	curLine.clear();
+
+	// Does the next line contains another "\r\n" ??
 
 }
 

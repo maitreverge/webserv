@@ -242,8 +242,9 @@ void	ResponseBuilder::extractRouteConfig( void ){
 	}
 }
 
-void ResponseBuilder::resetMyConfig()
+void ResponseBuilder::resetMyVariables()
 {
+	// _myconfig part
 	_myconfig.allowedMethods.clear();
 	_myconfig.redirection.clear();
 	_myconfig.uri.clear();
@@ -254,6 +255,13 @@ void ResponseBuilder::resetMyConfig()
 	_myconfig.uploadAllowed = true;
 	_myconfig.uploadDirectory.clear();
 	_myconfig.indexRedirection.clear();
+
+	// my variables part
+	{
+		// TODO : reset all variables
+		_parsedBoundaryToken = false;
+
+	}
 }
 
 void	ResponseBuilder::printMyConfig( void ){

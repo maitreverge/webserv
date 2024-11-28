@@ -195,7 +195,7 @@ class ResponseBuilder
 	// extractRouteConfig
 	void extractRouteConfig(void);
 	void extraStartingChecks();
-	void resetMyConfig();
+	void resetMyVariables();
 	void	clearingRoutes( vector< string >&, vector< string >& );
 	void	buildRouteConfig( string );
 	void	printMyConfig( void );

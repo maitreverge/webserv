@@ -7,8 +7,10 @@
 - Config 004 🟢
 - Config 005 🔴
 
+## ASK SEB / DAN
+- `setBody`, line `client.messageRecv.clear();` => See with Seb if this line is correct 🔴
+
 ## HOTFIX :
-- Stabilize simple GET / DELETE REQUESTS 🟠
 - Finish the multipart-form data POST logic 🔴
 
 
@@ -33,6 +35,7 @@
 - If there is `Content-Type: multipart/form-data;`, then activate the unfinished branch 🟢
 - Exploit the Content-Type header for post requests 🟢
 IF NOT : Need to generate a random 10 lenghts string + an extension to save the file 🟢
+- Stabilize simple GET / DELETE REQUESTS 🟢
 
 🟢
 🟠
