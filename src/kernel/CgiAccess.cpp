@@ -89,6 +89,9 @@ void Cgi::setBody(Client & client, bool eof)
 
 	this->hasError(client, "cgi get body has error");
 	this->isTimeout(client, "Timeout is over");
+	if (eof && client.messageRecv.empty() && shutdown(_fds[1], SHUT_WR) < 0)			
+		throw (Logger::getInstance().log(ERROR, "cgi setbody shutdown", client),
+			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
     if (!FD_ISSET(this->_fds[1], &Kernel::_writeSet))    
         return Logger::getInstance().log(DEBUG, "cgi not ready to send");     
     Logger::getInstance().log(DEBUG, "\e[31;103mcgi ready to send\e[0m");
@@ -103,7 +106,7 @@ void Cgi::setBody(Client & client, bool eof)
 	client.messageRecv.erase(client.messageRecv.begin(),
         client.messageRecv.begin() + ret);
 	if (eof && client.messageRecv.empty() && shutdown(_fds[1], SHUT_WR) < 0)			
-		throw (Logger::getInstance().log(ERROR, "cgi set body shutdown", client),
+		throw (Logger::getInstance().log(ERROR, "cgi setbody shutdown", client),
 			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
 }
 

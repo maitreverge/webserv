@@ -8,11 +8,15 @@ int main()
 	// char * path_info = getenv("PATH_INFO");
     char buff[2000] = {0};
     ssize_t ret;
-	
-    while (ret = read(STDIN_FILENO, buff, 2000) > 0)
+	char send[2000] = {0};
+    while ((ret = read(STDIN_FILENO, buff, 2000)) > 0)
     {
-        // buff[ret] = 0;
-		// write(2, buff, strlen(buff));        
+		// write(2, "while\n", 6);
+		// write(2, (ret), 6);
+		// write(2, "\n", 1);
+    	buff[ret] = 0;
+		write(2, buff, strlen(buff));        
+		// strcpy(send, buff);
     }
     if (ret < 0)    
         printf("error read\n");
@@ -47,7 +51,8 @@ Content-Length: ";
 	// if (path_info)
 	// 	len += strlen(path_info);
 
-	len += ret;
+	len += strlen(buff);
+	// len += ret;
     char * end = "\r\n\r\n";
 
     printf("%s", header);

@@ -96,7 +96,7 @@ void Server::sendBodyEnd(const size_t i)
 		this->_clients[i].messageRecv.clear();
 		if (shutdown(this->_clients[i].responseBuilder._cgi._fds[1], SHUT_WR)
 			< 0)
-			throw (Logger::getInstance().log(ERROR, "set body shutdown",
+			throw (Logger::getInstance().log(ERROR, "setbody shutdown",
 				this->_clients[i]),
 				Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
 	}
