@@ -3,10 +3,9 @@
 
 void	ResponseBuilder::initCurrentFiles( vector< string>& duplicatesFileNames ){
 
-	// string path = _uploadTargetDirectory;
-
 	DIR *dir = opendir(_uploadTargetDirectory.c_str());
-	if (dir == NULL)
+
+	if (dir == NULL) // TODO : Gerer erreur d'ouverture de buffer
 	{
 		Logger::getInstance().log(ERROR, "Failing Openning Directory");
 		return;
@@ -19,18 +18,12 @@ void	ResponseBuilder::initCurrentFiles( vector< string>& duplicatesFileNames ){
 		string curFile = listing->d_name;
 		if (!isFileIgnored(curFile))
 		{
+			// DT_REG == is the extracted data a regular file 
 			if (listing->d_type == DT_REG)
 			{
 				curFile.insert(0, _uploadTargetDirectory);
 				duplicatesFileNames.push_back(curFile);
-
 			}
-			// 	curFile += "/"; // Append trailing slash for directories
-			// if ( !_myconfig.root.empty() and curFile.find(_myconfig.root) == std::string::npos)
-			// {
-			// 	curFile.insert(0, _myconfig.root);
-			// }
-			
 		}
 	}
 }
@@ -71,10 +64,8 @@ void ResponseBuilder::determineSeparator(std::string &separator, size_t &separat
 
 vector<char>::iterator ResponseBuilder::searchSeparator(vector<char>& curLine, string &separator, size_t &separatorLength){
 
-	#define itVec vector<char>::iterator
-
-    itVec it = std::search(curLine.begin(), curLine.end(), separator.c_str(),
-		separator.c_str() + separatorLength);
+    vector<char>::iterator it = std::search(curLine.begin(), curLine.end(),
+		separator.c_str(),	separator.c_str() + separatorLength);
 
 	return it;
 }
@@ -88,13 +79,13 @@ bool ResponseBuilder::isLineDelim(vector<char>& curLine, vector<char>& nextLine)
 
 	determineSeparator(separator, separatorLength, curLine);
 
-	// Look for "\r\n" in curLine.
+	// Look for "\r\n" or _tokens in curLine
 	itVec it = searchSeparator(curLine, separator, separatorLength);
 
     if (it == curLine.end())
         return false;
 
-    // Does the curLine end with a trailing \r\n ONLY
+    // Does the curLine end with a trailing \r\n OR { token + "\r\n" } ONLY
     if (it + separatorLength == curLine.end())
         return true;
 
@@ -108,9 +99,6 @@ bool ResponseBuilder::isLineDelim(vector<char>& curLine, vector<char>& nextLine)
 
 void	ResponseBuilder::extractFileBodyName( vector< char >& curLine, vector< string >&duplicatesFileNames ){
 
-	static_cast<void>(duplicatesFileNames);
-
-
 	string temp(curLine.begin(), curLine.end());
 
 	string needle = "filename=\"";
@@ -118,7 +106,6 @@ void	ResponseBuilder::extractFileBodyName( vector< char >& curLine, vector< stri
 	size_t startPos = temp.find(needle);
 	size_t endPos;
 
-	// TODO : edge case file names
 	if (startPos != std::string::npos)
 	{
 		startPos += needle.length();
@@ -127,11 +114,19 @@ void	ResponseBuilder::extractFileBodyName( vector< char >& curLine, vector< stri
 
 		_fileStreamName = temp.substr(startPos, endPos - startPos);
 
-		/*
-			! IMPORTANT
-			.uploadTargetDirectory is parsed before, yet still stable for multipart-form data on multiple calls
-		*/
 		_fileStreamName.insert(0, _uploadTargetDirectory);
+
+		/*
+			If the current _fileStreamName is found in the little "database" of duplicatesFileName
+			we append_a random 10 length string at the end, then save it
+		*/
+		if (std::find(duplicatesFileNames.begin(), duplicatesFileNames.end(), _fileStreamName) != duplicatesFileNames.end())
+		{
+			_fileStreamName.insert(_fileStreamName.find_last_of("."), generateRandomString(10, true));
+		}
+		
+		// Save for later calls
+		duplicatesFileNames.push_back(_fileStreamName);
 	}
 }
 
@@ -199,6 +194,7 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 	if (not isLineDelim(curLine, nextLine))
 		return;
 	
+	// Main loop for treating one byte at a time or all the body
 	do
 	{
 		lineNature = processCurrentLine(curLine);
@@ -206,27 +202,23 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 		switch (lineNature)
 		{
 			case TOKEN_DELIM:
-				printColor(BOLD_CYAN, "Token DELIM detected");
+				_fileStreamName.clear();
 				break;
-			case TOKEN_END: // end of previous stream
-				printColor(BOLD_CYAN, "Token END detected");
+
+			case TOKEN_END:
 				_fileStreamName.clear();
 				duplicatesFileNames.clear(); // reset the value for calling on the next request of the same client
 				_parsedBoundaryToken = false; // reset the value for calling on the next request of the same client
 				break;
 
 			case CONTENT_DISPOSITION:
-				printColor(BOLD_CYAN, "Content Disposition Detected");
 				extractFileBodyName(curLine, duplicatesFileNames);
-				printColor(BOLD_CYAN, "_fileStreamName =" + _fileStreamName);
 				break;
 			
 			case OTHER:
-				printColor(BOLD_CYAN, "Other Line detected");
 				break;
 			
 			case LINE_SEPARATOR: // next processed lines will be the binary data
-				printColor(BOLD_CYAN, "Line separator detected");
 
 				if (!this->_ofs.is_open())
 				{
@@ -236,22 +228,18 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 				break;
 
 			case BINARY_DATA:
-				printColor(BOLD_CYAN, "Binary data detected, writting");
-				// this->_ofs.seekp(0, std::ios::end);
-				// ! Writting
+				// Writting actual data
 				this->_ofs.write(curLine.data(), static_cast<std::streamsize>(curLine.size()));
-				// _ofs.flush();
 
-				// ! Managing errors
+				// TODO : Managing errors
 				if (!this->_ofs)
 				{
 					// error CODE_500 ??
 					//Utile de rappeller getHeader ou renvoyer une exception a Seb pour qu'il puisse me rappeller avec un getHeader(.., .., CODE_500)
 				}
-				// ! Closing stream
-				// if (this->_ofs.is_open())
-				
-				this->_ofs.close();
+
+				if (this->_ofs.is_open())
+					this->_ofs.close();
 				
 				_writeReady = false;
 				_fileStreamName.clear();
@@ -266,7 +254,6 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 		nextLine.clear();
 
 	} while (isLineDelim(curLine, nextLine));
-	
 }
 
 // This is now the regular setPost without Multipart Writting
@@ -274,7 +261,6 @@ void	ResponseBuilder::setRegularPost( Client & client ){
 
     Logger::getInstance().log(DEBUG, "setRegularPost");
 
-    // static std::ofstream ofs("uploads/image_upload.jpeg", std::ios::binary);
 	if (!this->_ofs.is_open())
 	{	
 		Logger::getInstance().log(INFO, _realURI.c_str());	

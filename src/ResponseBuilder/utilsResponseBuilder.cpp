@@ -341,10 +341,14 @@ void ResponseBuilder::pathSlashs(string &target){
     }
 }
 
-static std::string generateRandomString(size_t length)
+string ResponseBuilder::generateRandomString(size_t length, bool underscoreNeeded)
 {
 	std::string characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	std::string randomString;
+
+	if (underscoreNeeded)
+		randomString += "_";
+
 	for (size_t i = 0; i < length; ++i)
 	{
 		randomString += characters[static_cast<size_t>(rand()) % characters.size()];

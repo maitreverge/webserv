@@ -217,6 +217,9 @@ vector<char>::iterator searchSeparator(vector<char>& curLine, string &separator,
 
 	string generateFileName( void );
 
+	string generateRandomString(size_t, bool underscoreNeeded = false );
+
+
 
 public:
 
