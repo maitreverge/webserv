@@ -50,6 +50,11 @@ void	Cookies::checkSessionCookie(Headers& _Headers, Server& server)
 		Logger::getInstance().log(INFO, "You are not connected.");
 }
 
+bool	Cookies::isConnected() const
+{
+	return true;
+}
+
 bool Cookies::hasSessionCookie() const
 {
 	return _cookies.find("session_id") != _cookies.end();
