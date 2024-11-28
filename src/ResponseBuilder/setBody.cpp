@@ -3,27 +3,60 @@
 
 void	ResponseBuilder::initBoundaryTokens( void ){
 
-	/*
-		Example :
-		string parsedBoundary = "----WebKitFormBoundary1XN99skGpOHP8Og8";
-	*/
-	string parsedBoundary = _client->headerRequest.getWebToken();
-
-	_tokenDelim = parsedBoundary;
+	// Create both tokens
+	_tokenDelim = _client->headerRequest.getWebToken();
 	_tokenDelim.insert(0, "--");
 
 	_tokenEnd = _tokenDelim + "--";
 
+	// Append traling HTTP_SEPARATOR for easier parsing
+	_tokenDelim += "\r\n";
+	_tokenEnd += "\r\n";
+
 	_parsedBoundaryToken = true;
+}
+
+void ResponseBuilder::determineSeparator(std::string &separator, size_t &separatorLength, vector<char>& curLine)
+{
+	if (_writeReady)
+	{
+		separator = _tokenEnd;
+		separatorLength = _tokenEnd.size();
+
+		if (searchSeparator(curLine, separator, separatorLength) == curLine.end())
+		{
+			separator = _tokenDelim;
+			separatorLength = _tokenDelim.size();
+		}
+	}
+	else
+	{
+		separator = HTTP_HEADER_SEPARATOR;
+		separatorLength = 2;
+	}
+}
+
+vector<char>::iterator ResponseBuilder::searchSeparator(vector<char>& curLine, string &separator, size_t &separatorLength){
+
+	#define itVec vector<char>::iterator
+
+    itVec it = std::search(curLine.begin(), curLine.end(), separator.c_str(),
+		separator.c_str() + separatorLength);
+
+	return it;
 }
 
 bool ResponseBuilder::isLineDelim(vector<char>& curLine, vector<char>& nextLine)
 {
-	const char* separator = "\r\n";
-    const size_t separatorLength = 2;
+	#define itVec vector<char>::iterator
+
+	string separator;
+	size_t separatorLength;
+
+	determineSeparator(separator, separatorLength, curLine);
 
 	// Look for "\r\n" in curLine.
-    vector< char >::iterator it = std::search(curLine.begin(), curLine.end(), separator, separator + separatorLength);
+	itVec it = searchSeparator(curLine, separator, separatorLength);
 
     if (it == curLine.end())
         return false;
@@ -38,6 +71,7 @@ bool ResponseBuilder::isLineDelim(vector<char>& curLine, vector<char>& nextLine)
 
     return true;
 }
+
 
 void	ResponseBuilder::extractFileBodyName( vector< char >& curLine ){
 
@@ -205,7 +239,7 @@ void	ResponseBuilder::setRegularPost( Client & client ){
 								+ generateFileName()
 								+ _setBodyExtension;
 		
-		this->_ofs.open(targetToWrite.c_str(), std::ios::binary | std::ios::app);
+		this->_ofs.open(targetToWrite.c_str(), std::ios::binary | std::ios::app); // need to oppen it in append mode for seekp 
 	}
 
 	// _ofs.clear();//!

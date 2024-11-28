@@ -134,12 +134,15 @@ class ResponseBuilder
 	// ===================== METHODS ==================
 
 	// setBody.cpp
-	bool	isLineDelim( vector< char >& , vector< char >& );
+	bool isLineDelim(vector<char> &, vector<char> &);
+	void determineSeparator(std::string &separator, size_t &separatorLength, vector<char>& curLine);
 	e_lineNature	processCurrentLine( vector< char >&  );
 	void	initBoundaryTokens( void );
 	void	extractFileBodyName( vector< char >& );
 	void	setRegularPost( Client & client );
 	void	setMultiPartPost( Client & client );
+vector<char>::iterator searchSeparator(vector<char>& curLine, string &separator, size_t &separatorLength);
+
 
 	// buildHeaders.cpp
 	void	buildHeaders( void );
