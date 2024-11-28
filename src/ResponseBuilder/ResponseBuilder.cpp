@@ -134,11 +134,11 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	_client = &inputClient; // init client
 	_config = &inputConfig; // init config
 
-	{
-		if (inputClient.isConnected() == true)
-			printColor(BLUE, "****** YOU ARE CONNECTED ****");
-			// => redirect to connection html page
-	}
+	// {
+	// 	if (inputClient.isConnected() == true)
+	// 		printColor(BLUE, "****** YOU ARE CONNECTED ****");
+	// 		// => redirect to connection html page
+	// }
 
 	if (codeInput != CODE_200_OK)
 	{
@@ -163,6 +163,14 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	
 	try
 	{
+		if (inputClient.isConnected() == false)
+		{
+			printColor(YELLOW, "****** YOU ARE NOT CONNECTED ****");
+			throw Server::ShortCircuitException(CODE_42_CONNECTION);
+		}
+		else 
+			printColor(YELLOW, "****** YOU ARE CONNECTED ****");
+			// => redirect to connection html page
 		extractMethod();
 
 		checkMethod();

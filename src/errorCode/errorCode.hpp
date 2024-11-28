@@ -7,6 +7,7 @@
 typedef enum
 {
 	// Informational responses
+	CODE_42_CONNECTION = 42,
 	CODE_100_CONTINUE = 100,
 	CODE_101_SWITCHING_PROTOCOLS = 101,
 	CODE_102_PROCESSING = 102,

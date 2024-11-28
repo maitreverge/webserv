@@ -39,12 +39,12 @@ void	Cookies::checkSessionCookie(Headers& _Headers, Server& server)
 			 *! the code below must be executed in case of connection	
 			 *! (to be handled through HTTP requests in custom connection page)
 			 *=============================================**/
-			printColor(RED, "");
-			SessionData sessionData = {value};
-			server.UserSessions[value] = sessionData;
-			Logger::getInstance().log(WARNING, "Your sessionID token was added to the server.");
-			_Headers.isConnected = true;
-			_cookies["sessionID"] = value;
+			// printColor(RED, "");
+			// SessionData sessionData = {value};
+			// server.UserSessions[value] = sessionData;
+			// Logger::getInstance().log(WARNING, "Your sessionID token was added to the server.");
+			// _Headers.isConnected = true;
+			// _cookies["sessionID"] = value;
 		}
 	}
 	else
