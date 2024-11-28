@@ -7,3 +7,17 @@ DIFF CANONICAL
 
 DIFF WEIRD CAT
 
+< 00006a50: 457c 9e0d 0a4c b8be 663c daa1 6c9e a7d2  E|...L..f<..l...
+< 00006a60: 94c0 b129 65fc 8d4d 1aef c639 a4b8 5611  ...)e..M...9..V.
+
+> 00006a50: 457c 9e0d 0a                             E|...
+
+
+
+
+
+ASCII SHIT
+
+\r => 0D 
+\n => 0A 
+
