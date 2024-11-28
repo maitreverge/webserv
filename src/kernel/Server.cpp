@@ -104,9 +104,23 @@ void Server::printVector(Client & client, const std::vector<char> & response,
 	std::stringstream ss;
 	ss << color << "Print data : " << YELLOW
 		<< response.size() << " bytes" << color << std::endl << std::endl;
-	ss << "-";		
-	for (size_t i = 0; i < response.size(); i++)				
-		ss << response[i];
+	ss << "-";
+
+	/*
+		! NOTE FROM FLO
+		J'ai besoin de voir litterallement les characteres \r et \n
+		sur la console en rouge pour du debug de multipart-form-data
+	*/
+
+	for (size_t i = 0; i < response.size(); i++)
+	{
+		if (response[i] == '\r')
+		    ss << "\e[31m\\r\e[0m" << YELLOW; // Red color for \r
+		else if (response[i] == '\n')
+		    ss << "\e[31m\\n\e[0m" << "\n" << YELLOW; // Red color for \n
+		else
+		    ss << response[i]; // only keep this one to come back to standart printing
+	}
 	ss << "-\e[0m";
 	Logger::getInstance().log(static_cast<logLevel>(level), ss.str(), client);
 	if (Logger::getInstance()._logLevel[static_cast<logLevel>(level)])	
