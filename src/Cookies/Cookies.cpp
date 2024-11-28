@@ -1,32 +1,43 @@
 #include "Cookies.hpp"
 #include "Server.hpp"
+#include "Logger.hpp"
 
 Cookies::Cookies()
 {}
 
+/**========================================================================
+ *!                            COMMENTS!!!
+ *!  DOn't forget to replace WARNING flags by INFO!!!
+ *  
+ *  
+ *  
+ *========================================================================**/
 void	Cookies::checkSessionCookie(Headers& _Headers, Server& server)
 {
 	if (_Headers.Cookie.find("sessionID") != _Headers.Cookie.end())
 	{
 		// check if value of sessionID is referenced in UserSessions
-		print("cookie sessionID found!");
+		Logger::getInstance().log(WARNING, "cookie sessionID found!");
 		std::string value = _Headers.Cookie.find("sessionID")->second;
 		print("value: " + value);
 		if (server.UserSessions.find(value) != server.UserSessions.end())
 		{
-			print("Active session found!");
+			Logger::getInstance().log(WARNING, "Active session found!");
 		}
 		else
 		{
+			
 			// if no  => redirect to a login page
-			printColor(RED, "Your sessionID token is not valid. Get a fuckin cookie!");
+			Logger::getInstance().log(WARNING, "Your sessionID token is not valid.");
+			
+			printColor(RED, "");
 			SessionData sessionData = {value};
 			server.UserSessions[value] = sessionData;
 		}
 	}
 	else
 		// if no  => redirect to a login page
-		printColor(BLUE, "You are not connected. Get a fuckin cookie!");
+		Logger::getInstance().log(INFO, "You are not connected.");
 }
 
 bool Cookies::hasSessionCookie() const

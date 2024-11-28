@@ -216,6 +216,7 @@ class ResponseBuilder
 	
 	void extractRedirectionIndex( vector< string >&, vector< string >& );
 
+	void	buildSetCookieHeader(); //! Dan
 
 public:
 

@@ -79,15 +79,7 @@ void	ResponseBuilder::buildHeaders(){
 	// TODO : Coockie and session generator
 
 	{
-		stringstream streamCookie;
-		streamCookie	<< "Set-Cookie:"
-						<< SPACE
-						<< "sessionID=test_cookie"
-						<< HTTP_HEADER_SEPARATOR;
-		Headers.cookie = streamCookie.str();
-
-
-
+		buildSetCookieHeader();
 	}
 
 	// ======================== BONUS METHODS ========================

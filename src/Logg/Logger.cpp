@@ -178,7 +178,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const RequestPar
 					+ formatLogLevel(logLevel) 
 					+ GREEN + message + " "
 					+ RESET + "\n";
-	}
+	} 
 	logOut(logLevel, logEntry);
 }
 
