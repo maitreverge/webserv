@@ -12,7 +12,7 @@ Cookies::Cookies()
  *  
  *  
  *========================================================================**/
-void	Cookies::checkSessionCookie(Headers& _Headers, Server& server)
+void	Cookies::checkSessionCookie(Headers& _Headers, Server& server, std::string URI)
 {
 	if (_Headers.Cookie.find("sessionID") != _Headers.Cookie.end())
 	{
@@ -25,6 +25,14 @@ void	Cookies::checkSessionCookie(Headers& _Headers, Server& server)
 			_Headers.isConnected = true;
 			_cookies["sessionID"] = value;
 			Logger::getInstance().log(WARNING, "Active session found!");
+		}
+		else if (URI == "/connect?")
+		{
+			SessionData sessionData = {value};
+			server.UserSessions[value] = sessionData;
+			Logger::getInstance().log(WARNING, "Your sessionID token was added to the server.");
+			_Headers.isConnected = true;
+			_cookies["sessionID"] = value;
 		}
 		else
 		{
@@ -39,12 +47,6 @@ void	Cookies::checkSessionCookie(Headers& _Headers, Server& server)
 			 *! the code below must be executed in case of connection	
 			 *! (to be handled through HTTP requests in custom connection page)
 			 *=============================================**/
-			// printColor(RED, "");
-			// SessionData sessionData = {value};
-			// server.UserSessions[value] = sessionData;
-			// Logger::getInstance().log(WARNING, "Your sessionID token was added to the server.");
-			// _Headers.isConnected = true;
-			// _cookies["sessionID"] = value;
 		}
 	}
 	else

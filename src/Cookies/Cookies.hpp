@@ -24,6 +24,6 @@ public:
 	CookiesMap&	getCookies();
 	void parseCookies(const std::string& cookieHeader);
 	std::string trim(const std::string& str);
-	void	checkSessionCookie(Headers& _Headers, Server& server);
+	void	checkSessionCookie(Headers& _Headers, Server& server, std::string URI);
 };
 
