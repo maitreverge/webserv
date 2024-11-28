@@ -33,6 +33,7 @@ void	Cookies::checkSessionCookie(Headers& _Headers, Server& server)
 			printColor(RED, "");
 			SessionData sessionData = {value};
 			server.UserSessions[value] = sessionData;
+			_Headers.isConnected = true;
 		}
 	}
 	else
