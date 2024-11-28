@@ -30,6 +30,7 @@ void Cgi::exitCodeHandle(int status, Client & client, std::string & err)
 	std::stringstream ss;
 	ss << "cgi exited with code : " << exitCode;
 	Logger::getInstance().log(DEBUG, ss.str(), client);
+	
 	if (exitCode == 242)
 		Logger::getInstance().log(ERROR, "execve", client);
 	if (exitCode != 0)
@@ -101,8 +102,8 @@ void Cgi::setBody(Client & client, bool eof)
 		Server::printVector(client, str);
 	client.messageRecv.erase(client.messageRecv.begin(),
         client.messageRecv.begin() + ret);
-	if (eof && client.messageRecv.empty() && shutdown(_fds[1], SHUT_WR < 0))			
-		throw (Logger::getInstance().log(ERROR, "set body shutdown", client),
+	if (eof && client.messageRecv.empty() && shutdown(_fds[1], SHUT_WR) < 0)			
+		throw (Logger::getInstance().log(ERROR, "cgi set body shutdown", client),
 			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
 }
 
