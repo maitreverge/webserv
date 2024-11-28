@@ -69,6 +69,9 @@ ResponseBuilder::e_lineNature ResponseBuilder::processCurrentLine(vector< char >
 
 	// Trimm last two trailing character from the current line only if it's not 
 	
+	if (_writeReady)
+		return BINARY_DATA;
+	
 	string temp(curLine.begin(), curLine.end());
 	
 	if (temp == HTTP_HEADER_SEPARATOR)
@@ -79,9 +82,7 @@ ResponseBuilder::e_lineNature ResponseBuilder::processCurrentLine(vector< char >
 		temp.erase(temp.end() - 2, temp.end());
 	}
 
-	if (_writeReady)
-		return BINARY_DATA;
-	else if (temp == _tokenEnd)
+	if (temp == _tokenEnd)
 		return TOKEN_END;
 	else if (temp == _tokenDelim)
 		return TOKEN_DELIM;
