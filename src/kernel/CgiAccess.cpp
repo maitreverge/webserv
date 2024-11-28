@@ -25,7 +25,7 @@ void Cgi::hasError(Client & client, std::string err)
 		Logger::getInstance().log(DEBUG, "cgi is running", client);
 }
 
-void Cgi::exitCodeHandle(int &status, Client &client, std::string &err)
+void Cgi::exitCodeHandle(int status, Client & client, std::string & err)
 {
 	int exitCode = WEXITSTATUS(status);
 	std::stringstream ss;
