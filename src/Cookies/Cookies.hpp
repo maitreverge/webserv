@@ -15,14 +15,6 @@ public:
 	Cookies();
 
 	CookiesMap _cookies;
-	bool hasSessionCookie() const;
-	std::string getCookieValue(const std::string& cookieName) const;
-	void setCookie(const std::string& cookieName, const std::string& value);
-	void displayCookies() const;
-	void deleteCookie(const std::string& cookieName);
-	CookiesMap&	getCookies();
-	void parseCookies(const std::string& cookieHeader);
-	std::string trim(const std::string& str);
 	void	checkSessionCookie(Headers& _Headers, Server& server, std::string URI);
 };
 
