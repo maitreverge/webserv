@@ -5,7 +5,8 @@
 #include <string>
 #include <iostream>
 
-std::string generateUniqueToken(const std::string& clientIP) {
+std::string generateUniqueToken(const std::string& clientIP)
+{
 	// Obtenir le timestamp actuel
 	std::time_t currentTime = std::time(NULL);
 	
@@ -16,10 +17,11 @@ std::string generateUniqueToken(const std::string& clientIP) {
 	// Une fonction de hachage rudimentaire pour simuler l'unicité
 	unsigned int hash = 0;
 	std::string baseString = ss.str();
-	for (size_t i = 0; i < baseString.size(); ++i) {
+	for (size_t i = 0; i < baseString.size(); ++i)
+	{
 		hash = (hash * 31) + static_cast<unsigned int>(baseString[i]);
 	}
-
+	
 	// Retourner le token unique
 	std::stringstream token;
 	token << hash;
@@ -35,7 +37,7 @@ void	ResponseBuilder::buildSetCookieHeader()
 		stringstream streamCookie;
 		streamCookie	<< "Set-Cookie:"
 						<< SPACE
-						<< "sessionID=" << token << "; Path=/"
+						<< "sessionID=" << token
 						<< HTTP_HEADER_SEPARATOR;
 		Headers.cookie = streamCookie.str();
 		printColorNoEndl(CYAN, "Unique Token generated: ");

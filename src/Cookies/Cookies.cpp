@@ -5,13 +5,6 @@
 Cookies::Cookies()
 {}
 
-/**========================================================================
- *!                            COMMENTS!!!
- *!  DOn't forget to replace WARNING flags by INFO!!!
- *  
- *  
- *  
- *========================================================================**/
 void	Cookies::checkSessionCookie(Headers& _Headers, Server& server, std::string URI)
 {
 	if (_Headers.Cookie.find("sessionID") != _Headers.Cookie.end())
