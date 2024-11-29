@@ -216,8 +216,9 @@ class ResponseBuilder
 	
 	void extractRedirectionIndex( vector< string >&, vector< string >& );
 
-	void	buildSetCookieHeader(); //! Dan
-	void	checkSessionIdCookie(Client &inputClient); //! Dan
+	void		buildSetCookieHeader(); //! Dan
+	void		checkSessionIdCookie(Client &inputClient); //! Dan
+	std::string	generateUniqueToken(const std::string& clientIP); //! Dan
 
 public:
 

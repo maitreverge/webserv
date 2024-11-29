@@ -8,17 +8,11 @@
 void	ResponseBuilder::checkSessionIdCookie(Client &inputClient)
 {
 	if (inputClient.conf->handleCookies && inputClient.isConnected() == false)
-	{
-		printColor(YELLOW, "****** YOU ARE NOT CONNECTED ****");
 		throw Server::ShortCircuitException(CODE_242_CONNECTION);
-	}
-	else 
-		printColor(YELLOW, "****** YOU ARE CONNECTED ****");
-		// => redirect to connection html page
 }
 
 
-std::string generateUniqueToken(const std::string& clientIP)
+std::string ResponseBuilder::generateUniqueToken(const std::string& clientIP)
 {
 	// Obtenir le timestamp actuel
 	std::time_t currentTime = std::time(NULL);
