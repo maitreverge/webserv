@@ -2,7 +2,7 @@
 #include "ConfigFileParser.hpp"
 #include "master.hpp"
 
-Config::Config(char *path)
+Config::Config(char *path) : handleCookies(false)
 {
 	intitializeVars(1);
 	ConfigFileParser parser;

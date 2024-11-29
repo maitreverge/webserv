@@ -5,6 +5,19 @@
 #include <string>
 #include <iostream>
 
+void	ResponseBuilder::checkSessionIdCookie(Client &inputClient)
+{
+	if (inputClient.conf->handleCookies && inputClient.isConnected() == false)
+	{
+		printColor(YELLOW, "****** YOU ARE NOT CONNECTED ****");
+		throw Server::ShortCircuitException(CODE_242_CONNECTION);
+	}
+	else 
+		printColor(YELLOW, "****** YOU ARE CONNECTED ****");
+		// => redirect to connection html page
+}
+
+
 std::string generateUniqueToken(const std::string& clientIP)
 {
 	// Obtenir le timestamp actuel
@@ -21,7 +34,7 @@ std::string generateUniqueToken(const std::string& clientIP)
 	{
 		hash = (hash * 31) + static_cast<unsigned int>(baseString[i]);
 	}
-	
+
 	// Retourner le token unique
 	std::stringstream token;
 	token << hash;

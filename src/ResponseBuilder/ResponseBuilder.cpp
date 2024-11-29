@@ -157,14 +157,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	
 	try
 	{
-		if (inputClient.isConnected() == false)
-		{
-			printColor(YELLOW, "****** YOU ARE NOT CONNECTED ****");
-			throw Server::ShortCircuitException(CODE_242_CONNECTION);
-		}
-		else 
-			printColor(YELLOW, "****** YOU ARE CONNECTED ****");
-			// => redirect to connection html page
+		checkSessionIdCookie(inputClient);
 		extractMethod();
 
 		checkMethod();

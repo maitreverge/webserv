@@ -50,6 +50,7 @@ void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
 				setConfigValue(catIt, itemIt, configStruct.send_buff_size, "send_buff_size");
 				setConfigValue(catIt, itemIt, configStruct.timeoutCgi, "timeoutCgi");
 				setConfigValue(catIt, itemIt, configStruct.listingDirectories, "listingDirectories");
+				setConfigValue(catIt, itemIt, configStruct.handleCookies, "handleCookies");
 				setConfigValue(catIt, itemIt, valIt, configStruct.indexFiles, "indexFiles");
 				// category "errorPages"
 				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_201", CODE_201_CREATED);
@@ -199,7 +200,7 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, int& field, 
 			field = (int)std::atoi(itemIt->second[0].c_str());
 }
 
-//? listingDirectories
+//? listingDirectories && handleCookies
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, bool& field, const char str[])
 {
 	if (catIt->first == "global" && itemIt->first == str)

@@ -217,6 +217,7 @@ class ResponseBuilder
 	void extractRedirectionIndex( vector< string >&, vector< string >& );
 
 	void	buildSetCookieHeader(); //! Dan
+	void	checkSessionIdCookie(Client &inputClient); //! Dan
 
 public:
 
