@@ -114,10 +114,18 @@ void Server::printVector(Client & client, const std::vector<char> & response,
 {
 	std::stringstream ss;
 	ss << color << "Print data : " << HIGH_INTENSITY_YELLOW
-		<< response.size() << " bytes" << color << std::endl << std::endl
-		<< "-";		
-	for (size_t i = 0; i < response.size(); i++)				
-		ss << response[i];
+		<< response.size() << " bytes" << color << std::endl << std::endl;
+	ss << "-";
+
+	for (size_t i = 0; i < response.size(); i++)
+	{
+		if (response[i] == '\r')
+		    ss << "\e[31m\\r\e[0m" << HIGH_INTENSITY_YELLOW;
+		else if (response[i] == '\n')
+		    ss << "\e[31m\\n\e[0m" << "\n" << HIGH_INTENSITY_YELLOW;
+		else
+		    ss << response[i];
+	}
 	ss << "-\e[0m";
 	Logger::getInstance().log(static_cast<logLevel>(level), ss.str(), client);
 	if (Logger::getInstance()._logLevel[static_cast<logLevel>(level)])	

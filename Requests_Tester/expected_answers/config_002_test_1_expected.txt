@@ -28,4 +28,4 @@ Content-Type: text/html
 		</ul>
 	</h2>
 </body>
-</html>%
+</html>

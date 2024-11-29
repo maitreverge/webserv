@@ -1,5 +1,0 @@
-HTTP/1.1 200 OK
-Content-Length: 43
-Content-Type: application/json
-
-{"key1":"Dan", "key2":"Seb", "key3":"Flo"}

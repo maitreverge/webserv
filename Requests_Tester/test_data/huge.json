@@ -1,0 +1,505 @@
+{
+	"configurations": [
+		{
+			"id": 1,
+			"name": "Configuration 1",
+			"enabled": true,
+			"settings": {
+				"optionA": "value1",
+				"optionB": "value2",
+				"optionC": "value3"
+			}
+		},
+		{
+			"id": 2,
+			"name": "Configuration 2",
+			"enabled": false,
+			"settings": {
+				"optionA": "value4",
+				"optionB": "value5",
+				"optionC": "value6"
+			}
+		},
+		{
+			"id": 3,
+			"name": "Configuration 3",
+			"enabled": true,
+			"settings": {
+				"optionA": "value7",
+				"optionB": "value8",
+				"optionC": "value9"
+			}
+		},
+		{
+			"id": 4,
+			"name": "Configuration 4",
+			"enabled": false,
+			"settings": {
+				"optionA": "value10",
+				"optionB": "value11",
+				"optionC": "value12"
+			}
+		},
+		{
+			"id": 5,
+			"name": "Configuration 5",
+			"enabled": true,
+			"settings": {
+				"optionA": "value13",
+				"optionB": "value14",
+				"optionC": "value15"
+			}
+		},
+		{
+			"id": 6,
+			"name": "Configuration 6",
+			"enabled": false,
+			"settings": {
+				"optionA": "value16",
+				"optionB": "value17",
+				"optionC": "value18"
+			}
+		},
+		{
+			"id": 7,
+			"name": "Configuration 7",
+			"enabled": true,
+			"settings": {
+				"optionA": "value19",
+				"optionB": "value20",
+				"optionC": "value21"
+			}
+		},
+		{
+			"id": 8,
+			"name": "Configuration 8",
+			"enabled": false,
+			"settings": {
+				"optionA": "value22",
+				"optionB": "value23",
+				"optionC": "value24"
+			}
+		},
+		{
+			"id": 9,
+			"name": "Configuration 9",
+			"enabled": true,
+			"settings": {
+				"optionA": "value25",
+				"optionB": "value26",
+				"optionC": "value27"
+			}
+		},
+		{
+			"id": 10,
+			"name": "Configuration 10",
+			"enabled": false,
+			"settings": {
+				"optionA": "value28",
+				"optionB": "value29",
+				"optionC": "value30"
+			}
+		},
+		{
+			"id": 11,
+			"name": "Configuration 11",
+			"enabled": true,
+			"settings": {
+				"optionA": "value31",
+				"optionB": "value32",
+				"optionC": "value33"
+			}
+		},
+		{
+			"id": 12,
+			"name": "Configuration 12",
+			"enabled": false,
+			"settings": {
+				"optionA": "value34",
+				"optionB": "value35",
+				"optionC": "value36"
+			}
+		},
+		{
+			"id": 13,
+			"name": "Configuration 13",
+			"enabled": true,
+			"settings": {
+				"optionA": "value37",
+				"optionB": "value38",
+				"optionC": "value39"
+			}
+		},
+		{
+			"id": 14,
+			"name": "Configuration 14",
+			"enabled": false,
+			"settings": {
+				"optionA": "value40",
+				"optionB": "value41",
+				"optionC": "value42"
+			}
+		},
+		{
+			"id": 15,
+			"name": "Configuration 15",
+			"enabled": true,
+			"settings": {
+				"optionA": "value43",
+				"optionB": "value44",
+				"optionC": "value45"
+			}
+		},
+		{
+			"id": 16,
+			"name": "Configuration 16",
+			"enabled": false,
+			"settings": {
+				"optionA": "value46",
+				"optionB": "value47",
+				"optionC": "value48"
+			}
+		},
+		{
+			"id": 17,
+			"name": "Configuration 17",
+			"enabled": true,
+			"settings": {
+				"optionA": "value49",
+				"optionB": "value50",
+				"optionC": "value51"
+			}
+		},
+		{
+			"id": 18,
+			"name": "Configuration 18",
+			"enabled": false,
+			"settings": {
+				"optionA": "value52",
+				"optionB": "value53",
+				"optionC": "value54"
+			}
+		},
+		{
+			"id": 19,
+			"name": "Configuration 19",
+			"enabled": true,
+			"settings": {
+				"optionA": "value55",
+				"optionB": "value56",
+				"optionC": "value57"
+			}
+		},
+		{
+			"id": 20,
+			"name": "Configuration 20",
+			"enabled": false,
+			"settings": {
+				"optionA": "value58",
+				"optionB": "value59",
+				"optionC": "value60"
+			}
+		},
+		{
+			"id": 21,
+			"name": "Configuration 21",
+			"enabled": true,
+			"settings": {
+				"optionA": "value61",
+				"optionB": "value62",
+				"optionC": "value63"
+			}
+		},
+		{
+			"id": 22,
+			"name": "Configuration 22",
+			"enabled": false,
+			"settings": {
+				"optionA": "value64",
+				"optionB": "value65",
+				"optionC": "value66"
+			}
+		},
+		{
+			"id": 23,
+			"name": "Configuration 23",
+			"enabled": true,
+			"settings": {
+				"optionA": "value67",
+				"optionB": "value68",
+				"optionC": "value69"
+			}
+		},
+		{
+			"id": 24,
+			"name": "Configuration 24",
+			"enabled": false,
+			"settings": {
+				"optionA": "value70",
+				"optionB": "value71",
+				"optionC": "value72"
+			}
+		},
+		{
+			"id": 25,
+			"name": "Configuration 25",
+			"enabled": true,
+			"settings": {
+				"optionA": "value73",
+				"optionB": "value74",
+				"optionC": "value75"
+			}
+		},
+		{
+			"id": 26,
+			"name": "Configuration 26",
+			"enabled": false,
+			"settings": {
+				"optionA": "value76",
+				"optionB": "value77",
+				"optionC": "value78"
+			}
+		},
+		{
+			"id": 27,
+			"name": "Configuration 27",
+			"enabled": true,
+			"settings": {
+				"optionA": "value79",
+				"optionB": "value80",
+				"optionC": "value81"
+			}
+		},
+		{
+			"id": 28,
+			"name": "Configuration 28",
+			"enabled": false,
+			"settings": {
+				"optionA": "value82",
+				"optionB": "value83",
+				"optionC": "value84"
+			}
+		},
+		{
+			"id": 29,
+			"name": "Configuration 29",
+			"enabled": true,
+			"settings": {
+				"optionA": "value85",
+				"optionB": "value86",
+				"optionC": "value87"
+			}
+		},
+		{
+			"id": 30,
+			"name": "Configuration 30",
+			"enabled": false,
+			"settings": {
+				"optionA": "value88",
+				"optionB": "value89",
+				"optionC": "value90"
+			}
+		},
+		{
+			"id": 31,
+			"name": "Configuration 31",
+			"enabled": true,
+			"settings": {
+				"optionA": "value91",
+				"optionB": "value92",
+				"optionC": "value93"
+			}
+		},
+		{
+			"id": 32,
+			"name": "Configuration 32",
+			"enabled": false,
+			"settings": {
+				"optionA": "value94",
+				"optionB": "value95",
+				"optionC": "value96"
+			}
+		},
+		{
+			"id": 33,
+			"name": "Configuration 33",
+			"enabled": true,
+			"settings": {
+				"optionA": "value97",
+				"optionB": "value98",
+				"optionC": "value99"
+			}
+		},
+		{
+			"id": 34,
+			"name": "Configuration 34",
+			"enabled": false,
+			"settings": {
+				"optionA": "value100",
+				"optionB": "value101",
+				"optionC": "value102"
+			}
+		},
+		{
+			"id": 35,
+			"name": "Configuration 35",
+			"enabled": true,
+			"settings": {
+				"optionA": "value103",
+				"optionB": "value104",
+				"optionC": "value105"
+			}
+		},
+		{
+			"id": 36,
+			"name": "Configuration 36",
+			"enabled": false,
+			"settings": {
+				"optionA": "value106",
+				"optionB": "value107",
+				"optionC": "value108"
+			}
+		},
+		{
+			"id": 37,
+			"name": "Configuration 37",
+			"enabled": true,
+			"settings": {
+				"optionA": "value109",
+				"optionB": "value110",
+				"optionC": "value111",
+				"optionD": "\r\n"
+			}
+		},
+		{
+			"id": 38,
+			"name": "Configuration 38",
+			"enabled": false,
+			"settings": {
+				"optionA": "value112",
+				"optionB": "value113",
+				"optionC": "value114"
+			}
+		},
+		{
+			"id": 39,
+			"name": "Configuration 39",
+			"enabled": true,
+			"settings": {
+				"optionA": "value115",
+				"optionB": "value116",
+				"optionC": "value117"
+			}
+		},
+		{
+			"id": 40,
+			"name": "Configuration 40",
+			"enabled": false,
+			"settings": {
+				"optionA": "value118",
+				"optionB": "value119",
+				"optionC": "value120"
+			}
+		},
+		{
+			"id": 41,
+			"name": "Configuration 41",
+			"enabled": true,
+			"settings": {
+				"optionA": "value121",
+				"optionB": "value122",
+				"optionC": "value123"
+			}
+		},
+		{
+			"id": 42,
+			"name": "Configuration 42",
+			"enabled": false,
+			"settings": {
+				"optionA": "value124",
+				"optionB": "value125",
+				"optionC": "value126"
+			}
+		},
+		{
+			"id": 43,
+			"name": "Configuration 43",
+			"enabled": true,
+			"settings": {
+				"optionA": "value127",
+				"optionB": "value128",
+				"optionC": "value129"
+			}
+		},
+		{
+			"id": 44,
+			"name": "Configuration 44",
+			"enabled": false,
+			"settings": {
+				"optionA": "value130",
+				"optionB": "value131",
+				"optionC": "value132"
+			}
+		},
+		{
+			"id": 45,
+			"name": "Configuration 45",
+			"enabled": true,
+			"settings": {
+				"optionA": "value133",
+				"optionB": "value134",
+				"optionC": "value135"
+			}
+		},
+		{
+			"id": 46,
+			"name": "Configuration 46",
+			"enabled": false,
+			"settings": {
+				"optionA": "value136",
+				"optionB": "value137",
+				"optionC": "value138"
+			}
+		},
+		{
+			"id": 47,
+			"name": "Configuration 47",
+			"enabled": true,
+			"settings": {
+				"optionA": "value139",
+				"optionB": "value140",
+				"optionC": "value141"
+			}
+		},
+		{
+			"id": 48,
+			"name": "Configuration 48",
+			"enabled": false,
+			"settings": {
+				"optionA": "value142",
+				"optionB": "value143",
+				"optionC": "value144"
+			}
+		},
+		{
+			"id": 49,
+			"name": "Configuration 49",
+			"enabled": true,
+			"settings": {
+				"optionA": "value145",
+				"optionB": "value146",
+				"optionC": "value147"
+			}
+		},
+		{
+			"id": 50,
+			"name": "Configuration 50",
+			"enabled": false,
+			"settings": {
+				"optionA": "value148",
+				"optionB": "value149",
+				"optionC": "value150"
+			}
+		}
+	]
+}

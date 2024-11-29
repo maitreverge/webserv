@@ -47,37 +47,37 @@ void	ResponseBuilder::setContentLenght(){
 		Headers.bodyLenght = static_cast<uint64_t>(_fileInfo.st_size); //! the targeted file in a GET requests
 }
 
-void	ResponseBuilder::uploadCheck( void ){
+// void	ResponseBuilder::uploadCheck( void ){
 
-	if (!_myconfig.uploadAllowed)
-	{
-		setError(CODE_403_FORBIDDEN);
-	}
-	else if (_myconfig.uploadDirectory.empty())
-	{
-		// ? Pertinent d'upload dans la meme URI si il n'y a pas d'UploadDirectory ?
-		// TODO : Which directory to choose if the targeted one is empty ?
+// 	if (!_myconfig.uploadAllowed)
+// 	{
+// 		setError(CODE_403_FORBIDDEN);
+// 	}
+// 	else if (_myconfig.uploadDirectory.empty())
+// 	{
+// 		// ? Pertinent d'upload dans la meme URI si il n'y a pas d'UploadDirectory ?
+// 		// TODO : Which directory to choose if the targeted one is empty ?
 		
-		/*
-		If such directory isn't in the config file, we can take the upload directory by default
-		! AND INFORM THE USER
-		If the upload have any proble, we create it
-		*/
+// 		/*
+// 		If such directory isn't in the config file, we can take the upload directory by default
+// 		! AND INFORM THE USER
+// 		If the upload have any proble, we create it
+// 		*/
 		
-		// ! From now, no specified uploadDirectory raise a 403
-		Logger::getInstance().log(ERROR, "Upload directory is not specified");
-		setError(CODE_403_FORBIDDEN);
-	}
-	else if ( access(_myconfig.uploadDirectory.c_str(), W_OK) == -1 )
-	{
-		//!  we can't write on the destination 
-		Logger::getInstance().log(ERROR, "Upload directory does not have right access");
-		setError(CODE_401_UNAUTHORIZED);
-	}
+// 		// ! From now, no specified uploadDirectory raise a 403
+// 		Logger::getInstance().log(ERROR, "Upload directory is not specified");
+// 		setError(CODE_403_FORBIDDEN);
+// 	}
+// 	else if ( access(_myconfig.uploadDirectory.c_str(), W_OK) == -1 )
+// 	{
+// 		//!  we can't write on the destination 
+// 		Logger::getInstance().log(ERROR, "Upload directory does not have right access");
+// 		setError(CODE_401_UNAUTHORIZED);
+// 	}
 
-	// Refresh URI
-	_realURI = _config->errorPaths.at(_errorType);
-}
+// 	// Refresh URI
+// 	_realURI = _config->errorPaths.at(_errorType);
+// }
 
 void	ResponseBuilder::checkAutho( void ){
 	
@@ -98,8 +98,14 @@ void	ResponseBuilder::checkAutho( void ){
 			case POST:
 				if (_isCGI and not _isXOK)
 					setError(CODE_401_UNAUTHORIZED);
-				else if (_myconfig.samePathWrite and not _isWOK)
+				else if (not _isWOK)
 					setError(CODE_401_UNAUTHORIZED);
+				if (_uploadTargetDirectory.empty())
+				{
+					string tempURI = _originalURI;
+					pathSlashs(tempURI);
+					_uploadTargetDirectory =  tempURI;
+				}
 				break;
 			case DELETE:
 				if (not _isWOK)
@@ -144,23 +150,26 @@ void	ResponseBuilder::checkNature( void ){
 				Logger::getInstance().log(ERROR, "Delete Method for a folder detected");
 				setError(CODE_403_FORBIDDEN);
 			}
+			else if (_method == POST)
+			{
+				_realURI = _config->errorPaths.at(_errorType);
+				extractFileNature( _config->errorPaths.at(_errorType) );
+			}
 		}
 		else if ((_fileInfo.st_mode & S_IFMT) == S_IFREG) // checks is the given path is a FILE
 		{
 			_isFile = true;
-			if (_method == GET)
+			if (_method == GET or _method == DELETE)
 			{
 				extractFileNature( _realURI );
 			}
 			else
 			{
-				// POST AND DELETE
-				if (!_isCGI and _method == POST)
-					setError(CODE_401_UNAUTHORIZED);
+				// POST
 				if (!_isCGI)
 				{
-					// ! ne pas ecraser l'URI si c'est un CGI
-					extractFileNature( _config->errorPaths.at(_errorType) );
+					// if (access(_originalURI.c_str(), F_OK) == 0)
+						setError(CODE_401_UNAUTHORIZED);
 				}
 				else
 					extractFileNature( _realURI );
@@ -223,7 +232,8 @@ void ResponseBuilder::setError(e_errorCodes code, bool skip){
 	// Allows the setError function to raise an exception, and skip the useless others checks
 	if (!skip)
 	{
-		throw CodeErrorRaised();
+		// throw CodeErrorRaised();
+		throw Server::ShortCircuitException(code);
 	}
 }
 
@@ -262,3 +272,104 @@ bool ResponseBuilder::isErrorRedirect( void ){
 		return true;
 	return false;
 }
+
+void ResponseBuilder::extraStartingChecks()
+{
+	string target;
+	string contentType = _client->headerRequest.getHeaders().ContentType;
+	
+	target.clear();
+	// Detects if the current body is multipart form data
+	if (contentType.find("multipart/form-data") != std::string::npos)
+		_isMultipart = true;
+	else if (!contentType.empty()) // Extract the _setBodyExtension
+	{
+		// Looks for the Content-Type within the _mimeTypes map
+		// Example : Content-Type: application/pdf
+		for (std::map<string, string>::iterator it = _mimeTypes.begin(); it != _mimeTypes.end(); ++it)
+		{
+			if (it->second == contentType)
+			{
+				target = it->first;
+				break;
+			}
+		}
+		if (target.empty())
+			_setBodyExtension.clear();
+		else
+			_setBodyExtension = "." + target;
+	}
+
+	// ! STEP 2 : Determine where I'm supposed to write 
+
+	// If there is a uploadDirectory, check the rights
+	if (!_myconfig.uploadDirectory.empty())
+	{
+		pathSlashs(_myconfig.uploadDirectory);
+		if (stat(_myconfig.uploadDirectory.c_str(), &_fileInfo) == 0 and (_fileInfo.st_mode & S_IFDIR))
+		{
+			bool uploadWrite = _fileInfo.st_mode & S_IWUSR;
+			if (!uploadWrite)
+				setError(CODE_403_FORBIDDEN);
+			_uploadTargetDirectory = _myconfig.uploadDirectory;
+			_myconfig.uploadAllowed = true;
+		}
+	}
+	else if (!_myconfig.uploadAllowed) // TODO : need to test this variable
+		setError(CODE_403_FORBIDDEN);
+
+	pathSlashs(_originalURI);
+}
+
+void ResponseBuilder::pathSlashs(string &target){
+
+	bool beginWithSlash = !target.empty() && (*target.begin() == '/');
+	bool endWithSlash = !target.empty() && (*target.rbegin() == '/');
+	
+	if (target.empty())
+		return;
+	else if (beginWithSlash)
+		target.erase(target.begin());
+	if ( isDirectory(target) )
+	{
+		if (!endWithSlash)
+			target += "/";
+		
+		// Refresh the bool
+		beginWithSlash = !target.empty() && (*target.begin() == '/');
+		if (beginWithSlash)
+			target.erase(target.begin());
+    }
+}
+
+string ResponseBuilder::generateRandomString(size_t length, bool underscoreNeeded)
+{
+	std::string characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	std::string randomString;
+
+	if (underscoreNeeded)
+		randomString += "_";
+
+	for (size_t i = 0; i < length; ++i)
+	{
+		randomString += characters[static_cast<size_t>(rand()) % characters.size()];
+	}
+	return randomString;
+}
+
+string ResponseBuilder::generateFileName( void ){
+
+	// TODO : MAKE THIS BOOL FALSE ONCE WEBSERV FINISHED
+	bool testing = true;
+
+	string baseName;
+
+	if (testing)
+		baseName = "file";
+	else
+		baseName = generateRandomString(10);
+	
+	return baseName;
+}
+
+ResponseBuilder::e_method ResponseBuilder::getMethod( void ){ return this->_method; }

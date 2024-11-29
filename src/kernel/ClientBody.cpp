@@ -82,7 +82,6 @@ void Server::sendBodyPart(const size_t i)
 {
 	Logger::getInstance().log(DEBUG, "Send Body Part", this->_clients[i]);
 	Server::printVector(this->_clients[i], this->_clients[i].messageRecv);
-	
 	if (this->_clients[i].headerRequest.getMethod() == "POST")
 		this->_clients[i].responseBuilder.setBody(this->_clients[i], false);		
 	else
@@ -93,8 +92,7 @@ void Server::sendBodyEnd(const size_t i)
 {	
 	Logger::getInstance().log(DEBUG, "Send Body End", this->_clients[i]);
 	Server::printVector(this->_clients[i], this->_clients[i].messageRecv);
-	
-	if (this->_clients[i].headerRequest.getMethod() == "POST")		
+	if (this->_clients[i].headerRequest.getMethod() == "POST")
 		this->_clients[i].responseBuilder.setBody(this->_clients[i], true);						
 	else
 	{
