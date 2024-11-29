@@ -20,7 +20,9 @@ void Server::isContentLengthValid(const size_t i)
 {	
 	if (!this->_clients[i].headerRequest.getHeaders().ContentLength &&
 		this->_clients[i].headerRequest.getMethod() == "POST")
-		throw Server::ShortCircuitException(CODE_400_BAD_REQUEST);
+		throw (Logger::getInstance().log(ERROR, "post has no body",
+			this->_clients[i]),
+			Server::ShortCircuitException(CODE_400_BAD_REQUEST));
 	if (this->_clients[i].headerRequest.getHeaders().ContentLength
 		> this->_conf.maxBodySize)
 	{			
