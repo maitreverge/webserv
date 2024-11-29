@@ -15,7 +15,7 @@ int main()
 		// write(2, (ret), 6);
 		// write(2, "\n", 1);
     	buff[ret] = 0;
-		write(2, buff, strlen(buff));        
+		// write(2, buff, strlen(buff));        
 		// strcpy(send, buff);
     }
     if (ret < 0)    
