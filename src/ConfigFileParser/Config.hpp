@@ -27,6 +27,7 @@ struct server
  *========================================================================**/
 struct Config
 {
+	bool							handleCookies;
 	int								index;
 	size_t							maxBodySize;
 	ssize_t							maxHeaderSize;

@@ -81,7 +81,9 @@ void	ResponseBuilder::buildHeaders(){
 	// ======================== BONUS METHODS ========================
 
 	// TODO : Coockie and session generator
+
 	{
+		buildSetCookieHeader();
 	}
 
 	// ======================== BONUS METHODS ========================
@@ -93,6 +95,7 @@ void	ResponseBuilder::buildHeaders(){
 						// << Headers.timeStamp
 						<< Headers.contentLenght
 						// Optionals
+						<< Headers.cookie
 						<< Headers.contentType 
 						<< Headers.location
 						// Separator

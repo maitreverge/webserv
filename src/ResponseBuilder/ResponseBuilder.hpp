@@ -25,6 +25,7 @@ struct ResponseHeaders
 	// !           OR
 	string contentLenght; // ! OPTION TWO
 	
+	string cookie; //* added 26.11.2024
 	// TODO : All Headers
 	string location; // Only if redirection
 
@@ -220,6 +221,9 @@ vector<char>::iterator searchSeparator(vector<char>& curLine, string &separator,
 	string generateRandomString(size_t, bool underscoreNeeded = false );
 
 
+	void		buildSetCookieHeader(); //! Dan
+	void		checkSessionIdCookie(Client &inputClient); //! Dan
+	std::string	generateUniqueToken(const std::string& clientIP); //! Dan
 
 public:
 

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# variables de compteurs de tests réussis qui vont bien
+total_tests=1
+successful_tests=1
+
 # Codes de couleurs ANSI pour la colorisation
 RED='\033[31m'
 GREEN='\033[32m'
@@ -152,14 +156,16 @@ else
 			diff_file="$DIFF_DIR/config_${config_number}_test_${test_counter}.diff"
 			
 			if diff -Z -q "$response_file" "$expected_answer_file" > /dev/null; then
-				echo -e "${GREEN}config_$config_number, test $test_counter : $request ✅ Success${NC}"
+				echo -e "${GREEN}$total_tests => config_$config_number, test $test_counter : $request ✅ Success${NC}"
+				successful_tests=$((successful_tests + 1))
 			else
-				echo -e "${GREEN}config_$config_number, test $test_counter : $request ❌ Failure${NC}"
+				echo -e "${GREEN}$total_tests => config_$config_number, test $test_counter : $request ❌ Failure${NC}"
 				if [ "$show_diffs" = true ]; then
 					diff -Z "$response_file" "$expected_answer_file" > "$diff_file"
 					cat "$diff_file"
 				fi
 			fi
+			total_tests=$((total_tests + 1))
 			test_counter=$((test_counter + 1))
 		done < "$request_file"
 
@@ -172,4 +178,16 @@ else
 fi
 
 # Delete Florian ressources (including the no_read_file)
+echo ""
+echo -e "${CYAN}Résumé global :${NC}"
+echo -e "${GREEN}Tests réussis : $successful_tests/$total_tests${NC}"
+
+if [ "$successful_tests" -ne "$total_tests" ]; then
+    echo -e "${RED}Certains tests ont échoué. Veuillez vérifier les résultats.${NC}"
+else
+    echo -e "${GREEN}Tous les tests ont été réussis ! 🎉${NC}"
+fi
+
+chmod 777 Requests_Tester/no_read_file.txt 
+
 ./Requests_Tester/delete_file_script.sh

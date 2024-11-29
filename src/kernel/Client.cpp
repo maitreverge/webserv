@@ -1,7 +1,7 @@
 #include "Client.hpp"
 #include "Logger.hpp"
 
-Client::Client(Config * _conf) : conf(_conf)
+Client::Client(Config * _conf, Server* server) : conf(_conf), _server(server)
 {
 	fd = -1;		
 	std::memset(&address, 0, sizeof(address));
@@ -71,6 +71,9 @@ void Client::clone(const Client & rhs)
 	this->ping = rhs.ping;
 	this->pongHeader = rhs.pongHeader;
 	this->exitRequired = rhs.exitRequired;
+
+	this->cookies = rhs.cookies;
+	this->_server = rhs._server;
 }
 
 Client::~Client()
@@ -80,3 +83,17 @@ Client::~Client()
 	FD_CLR(this->fd, &Kernel::_actualSet);
 	close(this->fd);
 }
+bool Client::isConnected() const
+{
+	CookiesMap::const_iterator itCookie = cookies._cookies.find("sessionID");
+	if (itCookie == cookies._cookies.end())
+		return (printColor(RED, "FIRST"), false);
+	if (!_server)
+		return (printColor(RED, "SECOND"), false);
+	const std::string& token = itCookie->second;
+	if (_server->UserSessions.find(token) != _server->UserSessions.end())
+		return true;
+	return (printColor(RED, "THIRD"), false);
+
+}
+

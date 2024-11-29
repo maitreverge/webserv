@@ -7,6 +7,9 @@
 #include <cstring>
 #include <sstream>
 
+typedef std::map<std::string, std::vector<std::string> > Headers_Map;
+typedef std::map<std::string, std::string> Cookies_Map;
+
 struct Headers
 {
 	std::string							Connection;
@@ -15,13 +18,15 @@ struct Headers
 	std::string							TransferEncoding;
 	std::vector<std::string>			Accept;
 	size_t								ContentLength;
-	std::map<std::string, std::string>	Cookie;
+	Cookies_Map							Cookie;
+	bool								isConnected;
 	
 	// ! FLO ADD
 	
 	void	reset();
 
-	bool operator==(const Headers& other) const {
+	bool operator==(const Headers& other) const
+	{
 	return Connection == other.Connection &&
 			ContentType == other.ContentType &&
 			Host == other.Host &&
@@ -32,7 +37,7 @@ struct Headers
 };
 
 struct Client;
-
+class Server;
 /**========================================================================
  *                           REQUESTPARSER
  * ? gets the request as a std::vector<char>
@@ -51,7 +56,7 @@ class RequestParser
 		std::string											_URI;
 		std::string											_HTTP_version;
 		bool												_isValid;
-		std::map<std::string, std::vector<std::string> >	_tmpHeaders;
+		Headers_Map											_tmpHeaders;
 		Headers												_Headers;
 		Client*												_Client;
 		std::string											_WebToken;
@@ -68,14 +73,11 @@ class RequestParser
 		void	assignHeader(const std::string& key, size_t& headerField);
 		void	assignHeader(const std::string& key, std::map<std::string,
 							std::string>& cookieField);
-		std::map<std::string, std::string>	extractCookies
-							(std::vector<std::string> vec);
+		Cookies_Map	extractCookies(std::vector<std::string> vec);
 		void	displayHeaders() const;
 		void	reset_values();
-		
-		void	extractWebToken( const std::vector<std::string>& key);
-
-
+		void	extractWebToken(const std::vector<std::string>& key);
+		void 	displayUserSessionsContent(Client& client, Server & server);
 	public:
 		//coplien
 		RequestParser();
@@ -89,7 +91,7 @@ class RequestParser
 		bool		getIsValid() const;
 		Client*		getClient() const;
 		Headers		getHeaders() const;
-		std::map<std::string, std::vector<std::string> >		getTmpHeaders() const;
+		Headers_Map	getTmpHeaders() const;
 
 		std::string	getWebToken() const; // ! FLO
 
@@ -99,5 +101,5 @@ class RequestParser
 		void	displayAttributes() const;
 
 		// action method
-		void	parse(struct Client& client);
+		void	parse(struct Client& client, Server & server);
 };

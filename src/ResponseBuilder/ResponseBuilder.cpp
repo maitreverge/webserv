@@ -156,6 +156,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	
 	try
 	{
+		checkSessionIdCookie(inputClient);
 		extractMethod();
 		
 		checkMethod();

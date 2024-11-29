@@ -48,10 +48,10 @@ class Logger
 		void		logOut(logLevel logLevel, const std::string& message);
 		std::string	formatLogLevel(logLevel loglevel) const;
 		std::string removeAnsiCodes(const std::string& message);
-		std::string ipToString(const struct sockaddr_in& addr);
 		int			portToInt(const struct sockaddr_in& addr);
 		std::string	intToString(int value);
 	public:
+		static std::string ipToString(const struct sockaddr_in& addr);
 
 		int	_logLevel[LOG_LEVEL_COUNT];
 

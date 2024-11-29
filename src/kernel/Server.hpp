@@ -11,6 +11,7 @@
 #include "RequestParser.hpp"
 #include "errorCode.hpp"
 #include "ResponseBuilder.hpp"
+#include "SessionData.hpp"
 
 class Kernel;
 
@@ -53,6 +54,7 @@ class Server
 
 		int					_fd;
 		std::vector<Client> _clients;
+		std::map<std::string, SessionData> UserSessions;
 
 		Server(sockaddr_in & sockaddr, Config & conf);
 		Server(const Server & src);
@@ -77,5 +79,5 @@ class Server
 			
 				ShortCircuitException(e_errorCodes code):_code(code){}
 				e_errorCodes getCode() const { return _code;}			
-		};	
+		};		
 };

@@ -4,6 +4,8 @@
 #include "errorCode.hpp"
 #include "RequestParser.hpp"
 #include "ResponseBuilder.hpp"
+#include "Server.hpp"
+#include "Cookies.hpp"
 
 struct Client
 {
@@ -30,8 +32,12 @@ struct Client
 
 	void 				clone(const Client & rhs);
 
-	Client(Config *);
+	Client(Config *conf, Server* server);
 	Client(const Client & src);
 	Client & operator=(const Client & rhs);
 	~Client();
+	
+	Cookies				cookies;
+	Server*				_server;
+	bool	isConnected() const;
 };
