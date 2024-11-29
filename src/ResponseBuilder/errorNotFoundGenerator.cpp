@@ -26,26 +26,26 @@ void	ResponseBuilder::errorNotFoundGenerator( void ){
 	// Image source because life is fun
 	image   << "<img src=\""
 			<< imageURL
-			<< "\" alt=\"Description of image\" style=\"width:50%;\">";
+			<< "\" alt=\"Description of image\" style=\"width:40%;\">";
 
 	// Assemble all parts
-	result	<< "<!DOCTYPE html>"
-			<< "<html>"
-			<< "<head>"
+	result	<< "<!DOCTYPE html>\n"
+			<< "<html>\n"
+			<< "<head>\n"
 			<< "<title>"
 			<< errorNumber
 			<< "\t"
 			<< errorName
-			<< "</title>"
-			<< "</head>"
-			<< "<body>"
+			<< "</title>\n"
+			<< "</head>\n"
+			<< "<body>\n"
 			<< "<h1>"
 			<< body.str()
-			<< "</h1>"
+			<< "</h1>\n"
 			<< "<h1>"
 			<< image.str()
-			<< "</h1>"
-			<< "</body>"
+			<< "</h1>\n"
+			<< "</body>\n"
 			<< "</html>";
 
 	ofstream backupStream(_backupNameFile.c_str());

@@ -21,6 +21,8 @@
 
 - Clear useless variables 🔴
 
+- Reactivate TimeStamps for final project 🔴
+
 
 
 # ULTRA BONUS AND EDGE CASE

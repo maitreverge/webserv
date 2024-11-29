@@ -232,7 +232,8 @@ void ResponseBuilder::setError(e_errorCodes code, bool skip){
 	// Allows the setError function to raise an exception, and skip the useless others checks
 	if (!skip)
 	{
-		throw CodeErrorRaised();
+		// throw CodeErrorRaised();
+		throw Server::ShortCircuitException(code);
 	}
 }
 
