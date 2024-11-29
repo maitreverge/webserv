@@ -18,6 +18,9 @@ void Server::bodyCheckin(const size_t i, const size_t addBodysize)
 
 void Server::isContentLengthValid(const size_t i)
 {	
+	if (!this->_clients[i].headerRequest.getHeaders().ContentLength &&
+		this->_clients[i].headerRequest.getMethod() == "POST")
+		throw Server::ShortCircuitException(CODE_400_BAD_REQUEST);
 	if (this->_clients[i].headerRequest.getHeaders().ContentLength
 		> this->_conf.maxBodySize)
 	{			
@@ -28,7 +31,7 @@ void Server::isContentLengthValid(const size_t i)
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
 
 		throw Server::ShortCircuitException(CODE_413_PAYLOAD_TOO_LARGE);
-	}
+	}	
 }
 
 void Server::isBodyTooLarge(const size_t i)
