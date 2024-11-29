@@ -124,7 +124,7 @@ void Server::printVector(Client & client, const std::vector<char> & response,
 		else if (response[i] == '\n')
 		    ss << "\e[31m\\n\e[0m" << "\n" << HIGH_INTENSITY_YELLOW;
 		else
-		    ss << response[i];
+		    ss << color << response[i];
 	}
 	ss << "-\e[0m";
 	Logger::getInstance().log(static_cast<logLevel>(level), ss.str(), client);

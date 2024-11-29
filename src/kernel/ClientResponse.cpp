@@ -64,9 +64,9 @@ bool Server::replyClient(const size_t i, std::vector<char> & resp)
 		this->exitClient(i);
 		return true;
 	}
-	std::vector<char> str(resp.data(), resp.data() + static_cast<size_t>(ret));  		
+	std::vector<char> s(resp.data(), resp.data() + static_cast<size_t>(ret));  		
 	Logger::getInstance().log(DEBUG, "sent to client: ", this->_clients[i]); 
-	Server::printVector(this->_clients[i], str, RED, static_cast<int>(INFO));
+	Server::printVector(this->_clients[i], s, MAGENTA, static_cast<int>(INFO));
 	resp.erase(resp.begin(), resp.begin() + ret);
 	if (resp.empty())
 		return this->endReply(i);
