@@ -38,7 +38,7 @@ void	Config::intitializeVars(bool withConfigFile)
 	listingDirectories = true;
 
 	// Error paths files
-	errorPaths.insert(std::make_pair(CODE_42_CONNECTION, errorPagesPath + "42.html"));
+	errorPaths.insert(std::make_pair(CODE_242_CONNECTION, errorPagesPath + "242.html"));
 	errorPaths.insert(std::make_pair(CODE_400_BAD_REQUEST, errorPagesPath + "400.html"));
 	errorPaths.insert(std::make_pair(CODE_401_UNAUTHORIZED, errorPagesPath + "401.html"));
 	errorPaths.insert(std::make_pair(CODE_403_FORBIDDEN, errorPagesPath + "403.html"));

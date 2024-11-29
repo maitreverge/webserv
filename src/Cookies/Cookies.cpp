@@ -16,47 +16,28 @@ void	Cookies::checkSessionCookie(Headers& _Headers, Server& server, std::string 
 {
 	if (_Headers.Cookie.find("sessionID") != _Headers.Cookie.end())
 	{
-		// check if value of sessionID is referenced in UserSessions
-		Logger::getInstance().log(WARNING, "cookie sessionID found!");
+		Logger::getInstance().log(INFO, "cookie sessionID found.");
 		std::string value = _Headers.Cookie.find("sessionID")->second;
 		print("value: " + value);
 		if (server.UserSessions.find(value) != server.UserSessions.end())
 		{
-			_Headers.isConnected = true;
 			_cookies["sessionID"] = value;
-			Logger::getInstance().log(WARNING, "Active session found!");
+			Logger::getInstance().log(INFO, "Active session found.");
 		}
-		else if (URI == "/connect?")
+		else if (URI == "/connect?") //! this URI should be changed
 		{
 			SessionData sessionData = {value};
 			server.UserSessions[value] = sessionData;
-			Logger::getInstance().log(WARNING, "Your sessionID token was added to the server.");
-			_Headers.isConnected = true;
+			Logger::getInstance().log(INFO, "Your sessionID token was added to the server.");
 			_cookies["sessionID"] = value;
 		}
 		else
 		{
-			// if no  => redirect to a login page
-			Logger::getInstance().log(WARNING, "Your sessionID token is not valid.");
-			
-			/**============================================
-			 *!               ACHTUNG!
-			 *! for now, client is automatically connected.
-			 *! front logic must be added to connect through a webpage 
-			 *! => see with Flo
-			 *! the code below must be executed in case of connection	
-			 *! (to be handled through HTTP requests in custom connection page)
-			 *=============================================**/
+			Logger::getInstance().log(INFO, "Your sessionID token is not valid.");
 		}
 	}
 	else
-		// if no  => redirect to a login page
 		Logger::getInstance().log(INFO, "You are not connected.");
-}
-
-bool	Cookies::isConnected() const
-{
-	return true;
 }
 
 bool Cookies::hasSessionCookie() const

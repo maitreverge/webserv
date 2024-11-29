@@ -8,7 +8,7 @@ errorCode::errorCode( void ){
 
 		ex : CODE_404_NOT_FOUND = "Not Found"
 	*/
-	for (size_t code = CODE_42_CONNECTION; code <= CODE_511_NETWORK_AUTHENTICATION_REQUIRED; ++code)
+	for (size_t code = CODE_100_CONTINUE; code <= CODE_511_NETWORK_AUTHENTICATION_REQUIRED; ++code)
 	{
 		//  Need static cast, because `code` is actually a int within this loop.
 		_mapErrorCode.insert(std::make_pair(static_cast<e_errorCodes>(code), getCorrespondingString(static_cast<e_errorCodes>(code))));
@@ -37,7 +37,6 @@ const string errorCode::getCorrespondingString( e_errorCodes inputCode) const {
     
 	switch (inputCode)
 	{
-        case CODE_42_CONNECTION: return "Connection";
         case CODE_100_CONTINUE: return "Continue";
         case CODE_101_SWITCHING_PROTOCOLS: return "Switching Protocols";
 		case CODE_102_PROCESSING: return "Processing";
@@ -51,6 +50,7 @@ const string errorCode::getCorrespondingString( e_errorCodes inputCode) const {
 		case CODE_207_MULTI_STATUS: return "Multi-Status";
 		case CODE_208_ALREADY_REPORTED: return "Already Reported";
 		case CODE_226_IM_USED: return "IM Used";
+        case CODE_242_CONNECTION: return "Connection";
         case CODE_300_MULTIPLE_CHOICES: return "Multiple Choices";
         case CODE_301_MOVED_PERMANENTLY: return "Moved Permanently";
         case CODE_302_FOUND: return "Found";

@@ -29,13 +29,13 @@ std::string generateUniqueToken(const std::string& clientIP) {
 void	ResponseBuilder::buildSetCookieHeader()
 {
 	string clientIP = Logger::ipToString(_client->address);
-	if (_client->headerRequest.getHeaders().isConnected == false)
+	if (_client->isConnected() == false)
 	{
 		std::string token = generateUniqueToken(clientIP);
 		stringstream streamCookie;
 		streamCookie	<< "Set-Cookie:"
 						<< SPACE
-						<< "sessionID=" << token
+						<< "sessionID=" << token << "; Path=/"
 						<< HTTP_HEADER_SEPARATOR;
 		Headers.cookie = streamCookie.str();
 		printColorNoEndl(CYAN, "Unique Token generated: ");

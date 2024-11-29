@@ -15,7 +15,6 @@ public:
 	Cookies();
 
 	CookiesMap _cookies;
-	bool	isConnected() const;
 	bool hasSessionCookie() const;
 	std::string getCookieValue(const std::string& cookieName) const;
 	void setCookie(const std::string& cookieName, const std::string& value);
