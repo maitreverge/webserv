@@ -20,14 +20,14 @@ void	Cookies::checkSessionCookie(Headers& _Headers, Server& server, std::string 
 		{
 			SessionData sessionData = {value};
 			server.UserSessions[value] = sessionData;
-			Logger::getInstance().log(INFO, "Your sessionID token was added to the server.");
+			Logger::getInstance().log(INFO, "client sessionID token added to server");
 			_cookies["sessionID"] = value;
 		}
 		else
 		{
-			Logger::getInstance().log(INFO, "Your sessionID token is not valid.");
+			Logger::getInstance().log(INFO, "client sessionID token not valid");
 		}
 	}
 	else
-		Logger::getInstance().log(INFO, "You are not connected.");
+		Logger::getInstance().log(INFO, "client not connected");
 }

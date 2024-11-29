@@ -87,13 +87,13 @@ bool Client::isConnected() const
 {
 	CookiesMap::const_iterator itCookie = cookies._cookies.find("sessionID");
 	if (itCookie == cookies._cookies.end())
-		return (printColor(RED, "FIRST"), false);
+		return (false);
 	if (!_server)
-		return (printColor(RED, "SECOND"), false);
+		return (false);
 	const std::string& token = itCookie->second;
 	if (_server->UserSessions.find(token) != _server->UserSessions.end())
 		return true;
-	return (printColor(RED, "THIRD"), false);
+	return (false);
 
 }
 

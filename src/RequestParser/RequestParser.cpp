@@ -82,7 +82,6 @@ void	RequestParser::parse(Client& client, Server & server)
 	displayHeaders();
 	// check if cookie sessionID exists
 	client.cookies.checkSessionCookie(_Headers, server, _URI);
-	displayUserSessionsContent(client, server);
 
 }
 
