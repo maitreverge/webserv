@@ -94,7 +94,8 @@ void Server::sendBodyEnd(const size_t i)
 	else
 	{
 		this->_clients[i].messageRecv.clear();
-		if (shutdown(this->_clients[i].responseBuilder._cgi._fds[1], SHUT_WR)
+		if (this->_clients[i].responseBuilder._cgi._fds[1] > 0 && 
+			shutdown(this->_clients[i].responseBuilder._cgi._fds[1], SHUT_WR)
 			< 0)
 			throw (Logger::getInstance().log(ERROR, "setbody shutdown",
 				this->_clients[i]),
