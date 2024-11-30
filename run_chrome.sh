@@ -33,7 +33,7 @@ setsid flatpak run com.google.Chrome > /dev/null 2>1 &
 python3 Requests_Tester/manual_chrome_test/launch_chrome.py ${SCRIPT_NUMBER}
 
 while true; do
-	read -p "Do you want to stop webserv? (y/n) " answer
+	read -p $'\e[1;31m⚠️  Do you want to stop webserv? (y/n) ⚠️ \e[0m' answer
 	if [ "$answer" != "${answer#[Yy]}" ]; then
 		kill "$webserv_pid"
 		wait "$webserv_pid" 2>/dev/null || {
