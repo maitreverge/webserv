@@ -34,13 +34,16 @@ std::string ResponseBuilder::generateUniqueToken(const std::string& clientIP)
 	token << hash;
 	return token.str();
 }
-
+/**========================================================================
+ * !                          DON'T FORGET
+ * ! uncomment printVector func...
+ *========================================================================**/
 void	ResponseBuilder::buildSetCookieHeader()
 {
 	string clientIP = Logger::ipToString(_client->address);
-	if (_client->isConnected() == false && _client->conf->handleCookies)
+	if ((_client->isConnected() == false && _client->conf->handleCookies) || 
+		_client->headerRequest.getURI() == "/accept-cookies?action=accept")
 	{
-		printColor(RED, "************ IL EST PASSE PAR ICI **********");
 		std::string token = generateUniqueToken(clientIP);
 		stringstream streamCookie;
 		streamCookie	<< "Set-Cookie:"
