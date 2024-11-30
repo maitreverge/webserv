@@ -6,7 +6,7 @@ def get_urls_from_file(file_path):
     urls = []
     with open(file_path, 'r') as file:
         for line in file:
-            match = re.search(r'http[s]?://[^\s]+', line)
+            match = re.search(r'(http[s]?://[^\s]+)', line)
             if match:
                 urls.append(match.group(0))
     return urls
