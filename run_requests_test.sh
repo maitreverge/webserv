@@ -177,7 +177,6 @@ else
 	done
 fi
 
-# Delete Florian ressources (including the no_read_file)
 echo ""
 echo -e "${CYAN}Résumé global :${NC}"
 echo -e "${GREEN}Tests réussis : $successful_tests/$total_tests${NC}"
@@ -188,6 +187,5 @@ else
     echo -e "${GREEN}Tous les tests ont été réussis ! 🎉${NC}"
 fi
 
-chmod 777 Requests_Tester/no_read_file.txt 
-
+# Delete Florian ressources (including the no_read_file)
 ./Requests_Tester/delete_file_script.sh
