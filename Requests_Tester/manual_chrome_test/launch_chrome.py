@@ -1,6 +1,7 @@
 import sys
 import webbrowser
 import re
+import time
 
 def get_urls_from_file(file_path):
     urls = []
@@ -10,6 +11,11 @@ def get_urls_from_file(file_path):
             if match:
                 urls.append(match.group(0))
     return urls
+
+def wait(seconds):
+    print(f"Waiting for {seconds} seconds...")
+    time.sleep(seconds)
+    print("Done waiting.")
 
 if len(sys.argv) != 2:
     print("Usage: python3 launch_chrome.py <config_number>")
@@ -24,12 +30,7 @@ if not urls:
     print(f"No URLs found in {config_file_path}")
     sys.exit(1)
 
-# Path to Google Chrome command
-chrome_command = 'google-chrome'
-
-# Register the browser
-webbrowser.register('chrome', None, webbrowser.BackgroundBrowser(chrome_command))
-
 # Open all URLs in new tabs
 for url in urls:
-    webbrowser.get('chrome').open_new_tab(url)
+    webbrowser.open_new_tab(url)
+    wait(0.5)
