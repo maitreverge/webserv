@@ -39,7 +39,11 @@ void	ResponseBuilder::setContentLenght(){
 	if (stat(_realURI.c_str(), &_fileInfo) == -1)
 	{
 		if (errno == EACCES)
+		{
+
+			Logger::getInstance().log(ERROR, "401 Detected from setContentLenght");
 			setError(CODE_401_UNAUTHORIZED, true);
+		}
 		else if (errno == ENOENT or errno == EFAULT)
 			setError(CODE_404_NOT_FOUND, true);
 	}
@@ -89,17 +93,32 @@ void	ResponseBuilder::checkAutho( void ){
 
 		switch (_method)
 		{
+			/*
+				CGI : verifier chmod +x ET chmod + r
+			*/
 			case GET:
 				if (_isCGI and not _isXOK)
+				{
+					Logger::getInstance().log(ERROR, "401 Detected from checkAutho, GET check 1");
 					setError(CODE_401_UNAUTHORIZED);
+				}
 				else if (not _isROK)
+				{
+					Logger::getInstance().log(ERROR, "401 Detected from checkAutho, GET check 2");
 					setError(CODE_401_UNAUTHORIZED);
+				}
 				break;
 			case POST:
 				if (_isCGI and not _isXOK)
+				{
+					Logger::getInstance().log(ERROR, "401 Detected from checkAutho, POST check 1");
 					setError(CODE_401_UNAUTHORIZED);
+				}
 				else if (not _isWOK)
+				{
+					Logger::getInstance().log(ERROR, "401 Detected from checkAutho, POST check 2");
 					setError(CODE_401_UNAUTHORIZED);
+				}
 				if (_uploadTargetDirectory.empty())
 				{
 					string tempURI = _originalURI;
@@ -109,16 +128,20 @@ void	ResponseBuilder::checkAutho( void ){
 				break;
 			case DELETE:
 				if (not _isWOK)
+				{
+					Logger::getInstance().log(ERROR, "401 Detected from checkAutho, DELETE check 1");
 					setError(CODE_401_UNAUTHORIZED);
+				}
 				break;
 			default:
+				Logger::getInstance().log(ERROR, "405 Detected from checkAuthoDefault switch case");
 				setError(CODE_405_METHOD_NOT_ALLOWED);
 				break;
 		}
 	}
 	else
 	{
-		Logger::getInstance().log(ERROR, "Check-Autho : File not Found");
+		Logger::getInstance().log(ERROR, "405 Detected from checkAuthoDefault: File not Found");
 		setError(CODE_404_NOT_FOUND);
 	}
 }
@@ -168,8 +191,8 @@ void	ResponseBuilder::checkNature( void ){
 				// POST
 				if (!_isCGI)
 				{
-					// if (access(_originalURI.c_str(), F_OK) == 0)
-						setError(CODE_401_UNAUTHORIZED);
+					Logger::getInstance().log(ERROR, "401 Detected from checkNature");
+					setError(CODE_401_UNAUTHORIZED);
 				}
 				else
 					extractFileNature( _realURI );
@@ -185,6 +208,7 @@ void	ResponseBuilder::checkNature( void ){
 	{
 		if (errno == EACCES)
 		{
+			Logger::getInstance().log(ERROR, "401 Detected from checknature, can't access file");
 			setError(CODE_401_UNAUTHORIZED); return;
 		}
 		else if (errno == ENOENT or errno == EFAULT) // EFAULT The provided path is invalid or points to a restricted memory space.
@@ -232,7 +256,7 @@ void ResponseBuilder::setError(e_errorCodes code, bool skip){
 	// Allows the setError function to raise an exception, and skip the useless others checks
 	if (!skip)
 	{
-		// throw CodeErrorRaised();
+		Logger::getInstance().log(DEBUG, "Internal Error raised from ResponseBuilder");
 		throw Server::ShortCircuitException(code);
 	}
 }
