@@ -24,9 +24,12 @@ if not urls:
     print(f"No URLs found in {config_file_path}")
     sys.exit(1)
 
-# Open a new window with the first URL
-webbrowser.get('chrome').open_new(urls[0])
+# Path to Google Chrome command
+chrome_command = 'google-chrome'
 
-# Open new tabs with the remaining URLs
-for url in urls[1:]:
+# Register the browser
+webbrowser.register('chrome', None, webbrowser.BackgroundBrowser(chrome_command))
+
+# Open all URLs in new tabs
+for url in urls:
     webbrowser.get('chrome').open_new_tab(url)
