@@ -1,5 +1,14 @@
 HTTP/1.1 404 Not Found
-Content-Length: 283
+Content-Length: 311
 Content-Type: text/html
 
-<!DOCTYPE html><html><head><title>404	Not Found</title></head><body><h1>The 404.html file has not been found.This is a backup self-generated webpage.</h1><h1><img src="https://freeyork.org/wp-content/uploads/2015/06/DKOpAT4VAAEmmes.jpg" alt="Description of image"></h1></body></html>
+<!DOCTYPE html>
+<html>
+<head>
+<title>404	Not Found</title>
+</head>
+<body>
+<h1>The 404.html file has not been found.This is a backup self-generated webpage.</h1>
+<h1><img src="https://freeyork.org/wp-content/uploads/2015/06/DKOpAT4VAAEmmes.jpg" alt="Description of image" style="width:40%;"></h1>
+</body>
+</html>
