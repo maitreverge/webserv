@@ -34,7 +34,7 @@ try:
 	</head>
 	<body>
 		<h1>Voici votre réponse :</h1>
-		<p>{user_input}</p>
+		<p>in response to {user_input}:</p>
 		<p>{result}</p>
 	</body>
 	</html>
