@@ -139,6 +139,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	if (codeInput != CODE_200_OK)
 	{
 		Logger::getInstance().log(DEBUG, "getHeader invoked from above with an error code");
+		_method = GET;
 		setError(codeInput, true);
 		setContentLenght();
 		buildHeaders();
