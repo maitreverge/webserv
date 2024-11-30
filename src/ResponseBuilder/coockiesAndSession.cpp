@@ -40,6 +40,7 @@ void	ResponseBuilder::buildSetCookieHeader()
 	string clientIP = Logger::ipToString(_client->address);
 	if (_client->isConnected() == false && _client->conf->handleCookies)
 	{
+		printColor(RED, "************ IL EST PASSE PAR ICI **********");
 		std::string token = generateUniqueToken(clientIP);
 		stringstream streamCookie;
 		streamCookie	<< "Set-Cookie:"
