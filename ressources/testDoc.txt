@@ -17,8 +17,11 @@ docker run --rm -t jstarcher/siege -c1 -r5 10.12.6.8:1512
 
 docker run --rm -t -v $(pwd)/siege_urls.txt:/siege_urls.txt jstarcher/siege -f /siege_urls.txt -c1 -r5
 
+
 valgrind --trace-children=yes --track-fds=yes --leak-check=full --show-leak-kinds=all ./webserv
+
 kill ` ps | grep webserv | cut -d' ' -f1 `
+
 gcc main.c -o main.out &&
 gcc main_loopin.c -o main_loopin.out &&
 gcc main_loopmid.c -o main_loopmid.out && 
@@ -33,6 +36,8 @@ COMMANDES HTTPie A TESTER:
 http --verbose UNKNOWN http://localhost:1510
 
 
-
 CURL:
 curl -X POST http://localhost:1512 -H "Content-Type: text/plain" --data "BODY IS HERE write something shorter or longer than body limit"
+
+commande curl test cookies:
+curl -v -s -c cookies.txt -b cookies.txt -I http://localhost:1510 -H "Cookie: key1=value1; key2=value2"

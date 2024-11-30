@@ -18,6 +18,11 @@ void Server::bodyCheckin(const size_t i, const size_t addBodysize)
 
 void Server::isContentLengthValid(const size_t i)
 {	
+	if (!this->_clients[i].headerRequest.getHeaders().ContentLength &&
+		this->_clients[i].headerRequest.getMethod() == "POST")
+		throw (Logger::getInstance().log(ERROR, "post has no body",
+			this->_clients[i]),
+			Server::ShortCircuitException(CODE_400_BAD_REQUEST));
 	if (this->_clients[i].headerRequest.getHeaders().ContentLength
 		> this->_conf.maxBodySize)
 	{			
@@ -28,7 +33,7 @@ void Server::isContentLengthValid(const size_t i)
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
 
 		throw Server::ShortCircuitException(CODE_413_PAYLOAD_TOO_LARGE);
-	}
+	}	
 }
 
 void Server::isBodyTooLarge(const size_t i)
@@ -77,7 +82,6 @@ void Server::sendBodyPart(const size_t i)
 {
 	Logger::getInstance().log(DEBUG, "Send Body Part", this->_clients[i]);
 	Server::printVector(this->_clients[i], this->_clients[i].messageRecv);
-	
 	if (this->_clients[i].headerRequest.getMethod() == "POST")
 		this->_clients[i].responseBuilder.setBody(this->_clients[i], false);		
 	else
@@ -88,13 +92,17 @@ void Server::sendBodyEnd(const size_t i)
 {	
 	Logger::getInstance().log(DEBUG, "Send Body End", this->_clients[i]);
 	Server::printVector(this->_clients[i], this->_clients[i].messageRecv);
-	
-	if (this->_clients[i].headerRequest.getMethod() == "POST")		
+	if (this->_clients[i].headerRequest.getMethod() == "POST")
 		this->_clients[i].responseBuilder.setBody(this->_clients[i], true);						
 	else
 	{
 		this->_clients[i].messageRecv.clear();
-		shutdown(this->_clients[i].responseBuilder._cgi._fds[1], SHUT_WR);
+		if (this->_clients[i].responseBuilder._cgi._fds[1] > 0 && 
+			shutdown(this->_clients[i].responseBuilder._cgi._fds[1], SHUT_WR)
+			< 0)
+			throw (Logger::getInstance().log(ERROR, "setbody shutdown",
+				this->_clients[i]),
+				Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
 	}
 	if (this->_clients[i].messageRecv.empty())
 		this->_clients[i].ping = false;	

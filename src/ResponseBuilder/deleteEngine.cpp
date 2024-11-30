@@ -5,7 +5,37 @@
 
 void	ResponseBuilder::generateDeleteHTML( void ){
 
-	// TODO
+	// Building buffer
+	stringstream result;
+
+	string deleteFileName = "delete.html";
+
+	result	<<	"<!DOCTYPE html>\n"
+			<<	"<html lang=\"en\">\n"
+			<<	"<head>\n"
+			<<	"<meta charset=\"UTF-8\">\n"
+			<<	"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
+			<<	"<title>Resource Deleted</title>\n"
+			<<	"</head>\n"
+			<<	"<body>\n"
+			<<	"<h1>Resource Deleted</h1>\n"
+			<<	"<p>The file <b>"
+			<<	_fileName
+			<<	"</b> has been successfully deleted.</p>\n"
+			<<	"</body>\n"
+			<<	"</html>";
+
+	// Make the page dissapear
+	_deleteURI = true;
+
+	// Modify the URI to be targeted by the size afterwards
+	_realURI.erase(_realURI.find_last_of("/") + 1);
+	_realURI += deleteFileName;
+
+	ofstream deleteFile(_realURI.c_str());
+
+	deleteFile << result.str();
+
 }
 
 void	ResponseBuilder::deleteEngine( void ){
@@ -22,5 +52,6 @@ void	ResponseBuilder::deleteEngine( void ){
 		Logger::getInstance().log(DEBUG, "Target URI Successfully deleted");
 		// TODO : Generate HTML for telling client everything deleted fine
 		generateDeleteHTML();
+		setContentLenght();
 	}
 }

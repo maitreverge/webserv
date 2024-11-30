@@ -29,5 +29,3 @@ Content-Type: text/html
 	</h2>
 </body>
 </html>
-
-

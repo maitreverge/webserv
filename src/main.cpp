@@ -66,8 +66,8 @@ int main(int argc, char* argv[])
 	if (argc > 2)
 		return (std::cerr << "Usage: ./webserv [config.ini]" << std::endl, 1);
 
-	signal(2, signalHandle);
-	signal(3, signalHandle);
+	std::signal(2, signalHandle);
+	std::signal(3, signalHandle);
 	disableSignalEcho();
 
 	std::cout << std::endl;

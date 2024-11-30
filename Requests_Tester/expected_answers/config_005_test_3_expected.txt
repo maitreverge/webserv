@@ -1,6 +1,6 @@
 HTTP/1.1 200 OK
+Content-Length: 292
 Content-Type: text/html
-Content-Length: 286
 
 <!DOCTYPE html>
 <html lang="en">
@@ -11,6 +11,6 @@ Content-Length: 286
 </head>
 <body>
 <h1>Resource Deleted</h1>
-<p>The file <b>file1.txt</b> has been successfully deleted.</p>
+<p>The file <b>lorem_ipsum.txt</b> has been successfully deleted.</p>
 </body>
 </html>

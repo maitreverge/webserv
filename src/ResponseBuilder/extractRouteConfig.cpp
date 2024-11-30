@@ -242,6 +242,28 @@ void	ResponseBuilder::extractRouteConfig( void ){
 	}
 }
 
+void ResponseBuilder::resetMyVariables()
+{
+	// _myconfig part
+	_myconfig.allowedMethods.clear();
+	_myconfig.redirection.clear();
+	_myconfig.uri.clear();
+	_myconfig.root.clear();
+	_myconfig.listingDirectory = false;
+	_myconfig.index.clear();
+	_myconfig.cgiAllowed.clear();
+	_myconfig.uploadAllowed = true;
+	_myconfig.uploadDirectory.clear();
+	_myconfig.indexRedirection.clear();
+
+	// my variables part
+	{
+		// TODO : reset all variables
+		_parsedBoundaryToken = false;
+
+	}
+}
+
 void	ResponseBuilder::printMyConfig( void ){
 
 	printColor(CYAN, "================= PRINT MY CONFIG =============\n");

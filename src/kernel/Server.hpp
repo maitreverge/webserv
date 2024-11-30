@@ -11,6 +11,7 @@
 #include "RequestParser.hpp"
 #include "errorCode.hpp"
 #include "ResponseBuilder.hpp"
+#include "SessionData.hpp"
 
 class Kernel;
 
@@ -23,9 +24,9 @@ class Server
 	static bool			_nl;
 	
 	bool recevData(const size_t i);
-	void clientMessage(const size_t i, ssize_t ret);
+	void clientMessage(const size_t i, const ssize_t ret);
 	void retrySend(const size_t i);
-	void headerCheckin(const size_t i, ssize_t ret);
+	void headerCheckin(const size_t i, const size_t ret);
 	void bodyCheckin(const size_t i, const size_t addBodysize);
 	bool isDelimiterFind(std::string delimiter, const size_t i,
 		std::vector<char>::iterator & it);
@@ -48,14 +49,17 @@ class Server
 	void fillMessageSend(const size_t i);
 	bool endReply(const size_t i);
 	void exitClient(const size_t index);
-	void exitClients();
 
 	public:
 
 		int					_fd;
 		std::vector<Client> _clients;
+		std::map<std::string, SessionData> UserSessions;
 
 		Server(sockaddr_in & sockaddr, Config & conf);
+		Server(const Server & src);
+		Server & operator=(const Server & rhs);
+		~Server();
 
 		static void printVector(Client & client,
 			const std::vector<char> & response,
@@ -66,14 +70,14 @@ class Server
 		void catchClients(Kernel & kernel);
 		void listenClients();
 		void replyClients();
-		void exitServer();
 
 		class ShortCircuitException
 		{
 			e_errorCodes _code;
 
 			public:
+			
 				ShortCircuitException(e_errorCodes code):_code(code){}
 				e_errorCodes getCode() const { return _code;}			
-		};	
+		};		
 };

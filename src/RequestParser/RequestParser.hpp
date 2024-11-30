@@ -19,12 +19,14 @@ struct Headers
 	std::vector<std::string>			Accept;
 	size_t								ContentLength;
 	Cookies_Map							Cookie;
+	bool								isConnected;
 	
 	// ! FLO ADD
 	
 	void	reset();
 
-	bool operator==(const Headers& other) const {
+	bool operator==(const Headers& other) const
+	{
 	return Connection == other.Connection &&
 			ContentType == other.ContentType &&
 			Host == other.Host &&
@@ -35,7 +37,7 @@ struct Headers
 };
 
 struct Client;
-
+class Server;
 /**========================================================================
  *                           REQUESTPARSER
  * ? gets the request as a std::vector<char>
@@ -75,8 +77,7 @@ class RequestParser
 		void	displayHeaders() const;
 		void	reset_values();
 		void	extractWebToken(const std::vector<std::string>& key);
-
-
+		void 	displayUserSessionsContent(Client& client, Server & server);
 	public:
 		//coplien
 		RequestParser();
@@ -100,5 +101,5 @@ class RequestParser
 		void	displayAttributes() const;
 
 		// action method
-		void	parse(struct Client& client);
+		void	parse(struct Client& client, Server & server);
 };

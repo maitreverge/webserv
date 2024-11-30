@@ -4,6 +4,8 @@
 #include "errorCode.hpp"
 #include "RequestParser.hpp"
 #include "ResponseBuilder.hpp"
+#include "Server.hpp"
+#include "Cookies.hpp"
 
 struct Client
 {
@@ -27,6 +29,15 @@ struct Client
 	short int			ping;
 	bool 				pongHeader;
 	bool				exitRequired;
+
+	void 				clone(const Client & rhs);
+
+	Client(Config *conf, Server* server);
+	Client(const Client & src);
+	Client & operator=(const Client & rhs);
+	~Client();
 	
-	Client(Config *);	
+	Cookies				cookies;
+	Server*				_server;
+	bool	isConnected() const;
 };

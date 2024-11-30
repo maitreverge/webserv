@@ -25,6 +25,7 @@ struct ResponseHeaders
 	// !           OR
 	string contentLenght; // ! OPTION TWO
 	
+	string cookie; //* added 26.11.2024
 	// TODO : All Headers
 	string location; // Only if redirection
 
@@ -54,14 +55,11 @@ struct MyConfig
 	string				uploadDirectory; // checked access ✅
 
 	// ========== my stuff ==========
-	bool				samePathWrite;
 	string				indexRedirection;
 
 	MyConfig()
 	{
-		allowedMethods.push_back("GET");
-		allowedMethods.push_back("POST");
-		allowedMethods.push_back("DELETE");
+		allowedMethods.clear();
 		redirection.clear();
 		uri.clear();
 		root.clear();
@@ -72,7 +70,6 @@ struct MyConfig
 		uploadDirectory.clear();
 
 	// ========== my stuff ==========
-		samePathWrite = true; // need to use this one
 		indexRedirection.clear();
 
 	}
@@ -86,16 +83,6 @@ class ResponseBuilder
 	#else
 	private:
 	#endif
-
-	// Enum
-	typedef enum
-	{
-		GET,
-		POST,
-		DELETE
-	} e_method;
-
-	e_method _method;
 
 	typedef enum
 	{
@@ -141,16 +128,24 @@ class ResponseBuilder
 	// CGI Stuff
 	e_errorCodes _errorType;
 
+	bool _isMultipart;
+	string _setBodyExtension;
+
 
 	// ===================== METHODS ==================
 
 	// setBody.cpp
-	bool	isLineDelim( vector< char >& , vector< char >& );
+	void	initCurrentFiles( vector< string> & );
+
+	bool isLineDelim(vector<char> &, vector<char> &);
+	void determineSeparator(std::string &separator, size_t &separatorLength, vector<char>& curLine);
 	e_lineNature	processCurrentLine( vector< char >&  );
 	void	initBoundaryTokens( void );
-	void	extractFileBodyName( vector< char >& );
+	void	extractFileBodyName( vector< char >&, vector< string >& );
 	void	setRegularPost( Client & client );
 	void	setMultiPartPost( Client & client );
+vector<char>::iterator searchSeparator(vector<char>& curLine, string &separator, size_t &separatorLength);
+
 
 	// buildHeaders.cpp
 	void	buildHeaders( void );
@@ -204,7 +199,9 @@ class ResponseBuilder
 	bool _parsedBoundaryToken;
 
 	// extractRouteConfig
-	void	extractRouteConfig( void );
+	void extractRouteConfig(void);
+	void extraStartingChecks();
+	void resetMyVariables();
 	void	clearingRoutes( vector< string >&, vector< string >& );
 	void	buildRouteConfig( string );
 	void	printMyConfig( void );
@@ -215,6 +212,18 @@ class ResponseBuilder
 	
 	void extractRedirectionIndex( vector< string >&, vector< string >& );
 
+	void pathSlashs(string &);
+
+	string _uploadTargetDirectory;
+
+	string generateFileName( void );
+
+	string generateRandomString(size_t, bool underscoreNeeded = false );
+
+
+	void		buildSetCookieHeader(); //! Dan
+	void		checkSessionIdCookie(Client &inputClient); //! Dan
+	std::string	generateUniqueToken(const std::string& clientIP); //! Dan
 
 public:
 
@@ -238,8 +247,6 @@ public:
 
 	void	setBody( Client & client, bool eof );
 
-	// For testing
-	void	setMethod( const e_method& method );
 
 	void	printAllHeaders( void )const;
 
@@ -252,6 +259,20 @@ public:
 			}
 	};
 
+	// Enum
+	typedef enum
+	{
+		GET,
+		POST,
+		DELETE
+	} e_method;
+
+	e_method _method;
+
 	// Public method for CGI error timeout
 	void	setError( e_errorCodes, bool skip = false );
+	e_method getMethod( void );
+	// For testing
+	void	setMethod( const e_method& method );
+
 };

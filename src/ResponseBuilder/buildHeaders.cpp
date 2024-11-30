@@ -51,9 +51,13 @@ void	ResponseBuilder::buildHeaders(){
 	if (Headers.bodyLenght > 0)
 	{
 		stringstream streamContentType;
+		string contentType;
 		
-		// Content Type
-		string contentType = extractType(_fileExtension);
+		if (_method == DELETE and _errorType == CODE_200_OK)
+			contentType = "text/html";
+		else
+			contentType = extractType(_fileExtension);
+		
 		streamContentType	<< "Content-Type:"
 							<< SPACE 
 							<< contentType 
@@ -77,7 +81,9 @@ void	ResponseBuilder::buildHeaders(){
 	// ======================== BONUS METHODS ========================
 
 	// TODO : Coockie and session generator
+
 	{
+		buildSetCookieHeader();
 	}
 
 	// ======================== BONUS METHODS ========================
@@ -89,6 +95,7 @@ void	ResponseBuilder::buildHeaders(){
 						// << Headers.timeStamp
 						<< Headers.contentLenght
 						// Optionals
+						<< Headers.cookie
 						<< Headers.contentType 
 						<< Headers.location
 						// Separator

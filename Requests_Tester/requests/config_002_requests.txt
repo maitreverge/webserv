@@ -1,4 +1,4 @@
-curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d "\{\"key1\":\"Dan\", \"key2\":\"Seb\", \"key3\":\"Flo\"\}" http://localhost:3002/
+ curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '@Requests_Tester/test_data/data.json' http://localhost:3002
 --END-REQUEST--
  curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.json
 --END-REQUEST--
@@ -6,7 +6,7 @@ curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: applicatio
 --END-REQUEST--
  curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.json
 --END-REQUEST--
- curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: text/txt" -d 'Hello, World!' http://localhost:3002
+ curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: text/txt" -d @Requests_Tester/test_data/lorem_ipsum.txt http://localhost:3002
 --END-REQUEST--
  curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.txt
 --END-REQUEST--
@@ -14,11 +14,11 @@ curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: applicatio
 --END-REQUEST--
  curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.txt
 --END-REQUEST--
- curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3002/index.html
+ curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '@Requests_Tester/test_data/data.json' http://localhost:3002/index.html
 --END-REQUEST--
  curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.json
 --END-REQUEST--
- curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: text/txt" -d 'Hello, World!' http://localhost:3002/index.html
+ curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: text/txt" -d @Requests_Tester/test_data/lorem_ipsum.txt http://localhost:3002/index.html
 --END-REQUEST--
  curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.txt
 --END-REQUEST--
@@ -26,7 +26,7 @@ curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: applicatio
 --END-REQUEST--
  curl -i -s --connect-timeout 2 --max-time 2 -X POST http://localhost:3002/index.html
 --END-REQUEST--
- curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3002/uploads
+ curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '@Requests_Tester/test_data/data.json' http://localhost:3002/uploads
 --END-REQUEST--
  curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.json
 --END-REQUEST--
@@ -34,7 +34,7 @@ curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: applicatio
 --END-REQUEST--
  curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.json
 --END-REQUEST--
- curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: text/txt" -d 'Hello, World!' http://localhost:3002/uploads
+ curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: text/txt" -d @Requests_Tester/test_data/lorem_ipsum.txt http://localhost:3002/uploads
 --END-REQUEST--
  curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.txt
 --END-REQUEST--
@@ -42,9 +42,9 @@ curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: applicatio
 --END-REQUEST--
  curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/uploads/file.txt
 --END-REQUEST--
- curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '{"key1":"Dan", "key2":"Seb", "key3":"Flo"}' http://localhost:3002/process_body_post
+ curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: application/json" -d '@Requests_Tester/test_data/data.json' http://localhost:3002/process_body_post
 --END-REQUEST--
- curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: text/txt" -d 'Hello, World!' http://localhost:3002/process_body_post
+ curl -i -s --connect-timeout 2 --max-time 2 -X POST -H "Content-Type: text/txt" -d @Requests_Tester/test_data/lorem_ipsum.txt http://localhost:3002/process_body_post
 --END-REQUEST--
  curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3002/
 --END-REQUEST--

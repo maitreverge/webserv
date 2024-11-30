@@ -1,0 +1,17 @@
+Étape 1 : S'assurer que le script fonctionne hors Webserv
+Étape 2 : S'assurer que Webserv exécute les scripts CGI en Python
+Étape 3 : Intégrer et tester ton script dans Webserv
+Étape 4 : Documenter et valider pour l'évaluation
+
+
+
+
+DOC:
+au moment de vouloir tester les CGI python, il faut compiler avec la ligne de code suivante:
+
+IL FAUT AJOUTer uN FICHIER requirements.txt AU NIVEAU DU SCRIPT PYTHON.
+
+pip install -r requirements.txt --user
+
+pour installer localement les bibliotheques Python requises
+

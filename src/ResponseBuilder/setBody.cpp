@@ -1,43 +1,112 @@
 #include "ResponseBuilder.hpp"
 #include "Logger.hpp"
 
+void	ResponseBuilder::initCurrentFiles( vector< string>& duplicatesFileNames ){
+
+	DIR *dir = opendir(_uploadTargetDirectory.c_str());
+
+	if (dir == NULL) // TODO : Gerer erreur d'ouverture de buffer
+	{
+		Logger::getInstance().log(ERROR, "Failing Openning Directory");
+		return;
+	}
+
+	struct dirent *listing;
+
+	while ((listing = readdir(dir)) != NULL)
+	{
+		string curFile = listing->d_name;
+		if (!isFileIgnored(curFile))
+		{
+			// DT_REG == is the extracted data a regular file 
+			if (listing->d_type == DT_REG)
+			{
+				curFile.insert(0, _uploadTargetDirectory);
+				duplicatesFileNames.push_back(curFile);
+			}
+		}
+	}
+}
+
 void	ResponseBuilder::initBoundaryTokens( void ){
 
-	// To replace with Dan future parsed token.
-	string parsedBoundary = _client->headerRequest.getWebToken();
-	// string parsedBoundary = "----WebKitFormBoundary1XN99skGpOHP8Og8";
-
-	_tokenDelim = parsedBoundary;
+	// Create both tokens
+	_tokenDelim = _client->headerRequest.getWebToken();
 	_tokenDelim.insert(0, "--");
 
 	_tokenEnd = _tokenDelim + "--";
 
-	_parsedBoundaryToken = true;
+	// Append traling HTTP_SEPARATOR for easier parsing
+	_tokenDelim += "\r\n";
+	_tokenEnd += "\r\n";
+
 }
 
-bool	ResponseBuilder::isLineDelim( vector< char >& curLine, vector< char >& nextLine ){
+void ResponseBuilder::determineSeparator(std::string &separator, size_t &separatorLength, vector<char>& curLine)
+{
+	if (_writeReady)
+	{
+		separator = _tokenEnd;
+		separatorLength = _tokenEnd.size();
 
-	string temp(curLine.begin(), curLine.end());
-
-	std::string::size_type posSeparator;
-
-	posSeparator = temp.find_first_of(HTTP_HEADER_SEPARATOR);
-	if (posSeparator == std::string::npos)
-		return false;
-	
-	// Does the curLine ends with a trailing \r\n ONLY
-	if (posSeparator + 2 == temp.length())
-		return true;
-
-	// in the opposite case, we need to trim the curLine and append the rest to nextLine
-	posSeparator += 2;
-	nextLine.insert(nextLine.end(), (temp.begin() + static_cast<long>(posSeparator)), temp.end());
-	curLine.erase(curLine.begin() + static_cast<long>(posSeparator), curLine.end());
-
-	return true;
+		if (searchSeparator(curLine, separator, separatorLength) == curLine.end())
+		{
+			separator = _tokenDelim;
+			separatorLength = _tokenDelim.size();
+		}
+	}
+	else
+	{
+		separator = HTTP_HEADER_SEPARATOR;
+		separatorLength = 2;
+	}
 }
 
-void	ResponseBuilder::extractFileBodyName( vector< char >& curLine ){
+vector<char>::iterator ResponseBuilder::searchSeparator(vector<char>& curLine, string &separator, size_t &separatorLength){
+
+    vector<char>::iterator it = std::search(curLine.begin(), curLine.end(),
+		separator.c_str(),	separator.c_str() + separatorLength);
+
+	return it;
+}
+
+bool ResponseBuilder::isLineDelim(vector<char>& curLine, vector<char>& nextLine)
+{
+	#define itVec vector<char>::iterator
+
+	string separator;
+	size_t separatorLength;
+
+	determineSeparator(separator, separatorLength, curLine);
+
+	// Look for "\r\n" or _tokens in curLine
+	itVec it = searchSeparator(curLine, separator, separatorLength);
+
+    if (it == curLine.end())
+        return false;
+
+    // Does the curLine end with a trailing \r\n OR { token + "\r\n" } ONLY
+    if (it + static_cast<long>(separatorLength) == curLine.end())
+	{
+		if (_writeReady)
+		{
+			nextLine.insert(nextLine.end(), it, curLine.end());
+			curLine.erase(it , curLine.end());
+		}
+        return true;
+	}
+
+    // In the opposite case, we need to trim the curLine and append the rest to nextLine
+	if (_writeReady)
+		separatorLength = 0;
+    nextLine.insert(nextLine.end(), it + static_cast<long>(separatorLength), curLine.end());
+    curLine.erase(it + static_cast<long>(separatorLength), curLine.end());
+
+    return true;
+}
+
+
+void	ResponseBuilder::extractFileBodyName( vector< char >& curLine, vector< string >&duplicatesFileNames ){
 
 	string temp(curLine.begin(), curLine.end());
 
@@ -46,7 +115,6 @@ void	ResponseBuilder::extractFileBodyName( vector< char >& curLine ){
 	size_t startPos = temp.find(needle);
 	size_t endPos;
 
-	// TODO : edge case file names
 	if (startPos != std::string::npos)
 	{
 		startPos += needle.length();
@@ -55,31 +123,43 @@ void	ResponseBuilder::extractFileBodyName( vector< char >& curLine ){
 
 		_fileStreamName = temp.substr(startPos, endPos - startPos);
 
-		string uploadFolder = _myconfig.uploadDirectory + "/";
+		_fileStreamName.insert(0, _uploadTargetDirectory);
 
-		// TODO : check the uploadDirectory authorizations
-		_fileStreamName.insert(0, uploadFolder);
+		/*
+			If the current _fileStreamName is found in the little "database" of duplicatesFileName
+			we append_a random 10 length string at the end, then save it
+		*/
+		if (std::find(duplicatesFileNames.begin(), duplicatesFileNames.end(), _fileStreamName) != duplicatesFileNames.end())
+		{
+			_fileStreamName.insert(_fileStreamName.find_last_of("."), generateRandomString(10, true));
+		}
+		
+		// Save for later calls
+		duplicatesFileNames.push_back(_fileStreamName);
 	}
 }
 
 ResponseBuilder::e_lineNature ResponseBuilder::processCurrentLine(vector< char >& curLine) {
 
-	if (curLine.size() > 2)
-	{
-        curLine.erase(curLine.end() - 2, curLine.end());
-    }
-
-	string temp(curLine.begin(), curLine.end());
-	// Trimm last two trailing character from the current line
-
+	// Trimm last two trailing character from the current line only if it's not 
+	
 	if (_writeReady)
 		return BINARY_DATA;
-	else if (temp == _tokenEnd)
+	
+	string temp(curLine.begin(), curLine.end());
+	
+	if (temp == HTTP_HEADER_SEPARATOR)
+		return LINE_SEPARATOR;
+	else
+	{
+		curLine.erase(curLine.end() - 2, curLine.end());
+		temp.erase(temp.end() - 2, temp.end());
+	}
+
+	if (temp == _tokenEnd)
 		return TOKEN_END;
 	else if (temp == _tokenDelim)
 		return TOKEN_DELIM;
-	else if (temp == HTTP_HEADER_SEPARATOR)
-		return LINE_SEPARATOR;
 	else if (temp.rfind("Content-Disposition: ", 0) == 0) // does the beggining of the line starts with the needle
 		return CONTENT_DISPOSITION;
 	return OTHER;
@@ -90,19 +170,19 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 
 	printColor(BOLD_HIGH_INTENSITY_BLUE, "FUNCTION CALED");
 
-	vector< char > recVector;
 	static vector< char > curLine;
 	static vector< char > nextLine;
+	static vector< string> duplicatesFileNames;
 	e_lineNature lineNature;
 
-	if (not _parsedBoundaryToken) // skip useless stack calls for each HTTP package
+	// skip useless stack calls for each HTTP package
+	if (not _parsedBoundaryToken)
+	{
 		initBoundaryTokens();
+		initCurrentFiles(duplicatesFileNames);
+		_parsedBoundaryToken = true;
+	}
 	
-	// printColor(BOLD_HIGH_INTENSITY_YELLOW, "WEBTOKEN = " + _client->headerRequest.getWebToken());
-	
-
-	string next(nextLine.begin(), nextLine.end());
-    printColor(BOLD_HIGH_INTENSITY_MAGENTA, "NEXT LINE = " + next);
 	// Copy the nextLine content within the currentLine
 	if (!nextLine.empty())
 	{
@@ -111,98 +191,94 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 	}
 
 	// Assign the current response...
-	recVector = client.messageRecv;
+	vector< char > recVector2(client.messageRecv);
 
 	// ... and append it to the end of curLine
-	curLine.insert(curLine.end(), recVector.begin(), recVector.end());
+	curLine.insert(curLine.end(), recVector2.begin(), recVector2.end());
 
-	string clientMessage(client.messageRecv.begin(), client.messageRecv.end());
-    printColor(BOLD_HIGH_INTENSITY_YELLOW, "CLIENT MESSAGE = " + clientMessage);
-
-	// Clearn the buffer from the client
+	// Clear the buffer from the client // TODO : See if it's okay to clean with SEB
 	client.messageRecv.clear();
 	
 	// While we didn't process a whole line, we write it within the buffer
 	if (not isLineDelim(curLine, nextLine))
-	{
-		printColor(BOLD_CYAN, "Unfinished line");
 		return;
-	}
-
-	string curent(curLine.begin(), curLine.end());
-    printColor(BOLD_HIGH_INTENSITY_GREEN, "CURRENT LINE = " + curent);
-	sleep(6);
-		
-	lineNature = processCurrentLine(curLine);
-
-	// ! WIP NEEDLE 🪡🪡🪡🪡🪡🪡🪡🪡
-	switch (lineNature)
+	
+	// Main loop for treating one byte at a time or all the body
+	do
 	{
-		case TOKEN_DELIM:
-		case TOKEN_END: // end of previous stream
-			if (_ofs.is_open())
-				_ofs.close();
-			printColor(BOLD_CYAN, "Token Delim or END detected, closing stream");
-			// curLine.clear(); // put in another scope to avoid boilerplate code
-			_fileStreamName.clear();
-			break;
+		lineNature = processCurrentLine(curLine);
 
-		case CONTENT_DISPOSITION:
-			printColor(BOLD_CYAN, "Content Disposition Detected");
-			extractFileBodyName(curLine);
-			printColor(BOLD_CYAN, "_fileStreamName =" + _fileStreamName);
-			// curLine.clear();
-			break;
+		switch (lineNature)
+		{
+			case TOKEN_DELIM:
+				_fileStreamName.clear();
+				break;
+
+			case TOKEN_END:
+				_fileStreamName.clear();
+				duplicatesFileNames.clear(); // reset the value for calling on the next request of the same client
+				_parsedBoundaryToken = false; // reset the value for calling on the next request of the same client
+				break;
+
+			case CONTENT_DISPOSITION:
+				extractFileBodyName(curLine, duplicatesFileNames);
+				break;
+			
+			case OTHER:
+				break;
+			
+			case LINE_SEPARATOR: // next processed lines will be the binary data
+
+				if (!this->_ofs.is_open())
+				{
+					this->_ofs.open(_fileStreamName.c_str(), std::ios::binary);
+				}
+				_writeReady = true;
+				break;
+
+			case BINARY_DATA:
+				// Writting actual data
+				this->_ofs.write(curLine.data(), static_cast<std::streamsize>(curLine.size()));
+
+				// TODO : Managing errors
+				if (!this->_ofs)
+				{
+					// error CODE_500 ??
+					//Utile de rappeller getHeader ou renvoyer une exception a Seb pour qu'il puisse me rappeller avec un getHeader(.., .., CODE_500)
+				}
+
+				if (this->_ofs.is_open())
+					this->_ofs.close();
+				
+				_writeReady = false;
+				_fileStreamName.clear();
+				break;
+
+			default:
+				break;
+		}
 		
-		case OTHER:
-			printColor(BOLD_CYAN, "Other Line detected");
-			// curLine.clear();
-			break;
-		
-		case LINE_SEPARATOR: // next packages need to be the bnary data
-			printColor(BOLD_CYAN, "Line separator detected");
-			if (!this->_ofs.is_open())
-			{
-				this->_ofs.open(_fileStreamName.c_str(), std::ios::binary);
-			}
-			_writeReady = true; // TODO : empty file names or shitty ones ?
-			// curLine.clear();
-			break;
+		curLine.clear();
+		curLine = nextLine;
+		nextLine.clear();
 
-		case BINARY_DATA:
-			printColor(BOLD_CYAN, "Binary data detected, writting");
-			// this->_ofs.seekp(0, std::ios::end);
-			_ofs.write(curLine.data(), static_cast<std::streamsize>(curLine.size()));
-			if (!_ofs)
-			{
-				// error CODE_500 ??
-				//Utile de rappeller getHeader ou renvoyer une exception a Seb pour qu'il puisse me rappeller avec un getHeader(.., .., CODE_500)
-			}
-			_writeReady = false;
-			_fileStreamName.clear();
-			break;
-
-		default:
-			break;
-	}
-
-	curLine.clear();
-
+	} while (isLineDelim(curLine, nextLine));
 }
 
 // This is now the regular setPost without Multipart Writting
 void	ResponseBuilder::setRegularPost( Client & client ){
 
-	usleep(50000);
-    Logger::getInstance().log(DEBUG, "setBodyPost");
+    Logger::getInstance().log(DEBUG, "setRegularPost");
 
-    // static std::ofstream ofs("uploads/image_upload.jpeg", std::ios::binary);
 	if (!this->_ofs.is_open())
 	{	
 		Logger::getInstance().log(INFO, _realURI.c_str());	
-		string pathToWrite = "uploads/apple.jpeg";
-		this->_ofs.open(pathToWrite.c_str(), std::ios::binary);
-			//! GERER L ERREUR
+		
+		string targetToWrite =	_uploadTargetDirectory
+								+ generateFileName()
+								+ _setBodyExtension;
+		
+		this->_ofs.open(targetToWrite.c_str(), std::ios::binary | std::ios::app); // need to oppen it in append mode for seekp 
 	}
 
 	// _ofs.clear();//!
@@ -231,8 +307,8 @@ void	ResponseBuilder::setBody( Client & client, bool eof ){
 
 	if (this->_isCGI)	
 		return this->_cgi.setBody(client, eof);
-	else if (_myconfig.uploadAllowed == true) // and not MultiPart parsed from DAN
-		setRegularPost(client);
-	else
+	else if (_isMultipart)
 		setMultiPartPost(client);
+	else
+		setRegularPost(client);
 }
