@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		connectedInfo.style.display = 'none';
 
 		document.getElementById('acceptCookies').addEventListener('click', () => {
-			// Envoie une requête au serveur pour accepter les cookies
+			// Envoie une requête au serveur pour Accept les cookies
 			fetch('/accept-cookies?action=accept', {
 				method: 'POST',
 				headers: {
