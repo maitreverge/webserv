@@ -28,7 +28,7 @@ bool Server::recevData(const size_t i)
 	{
 		this->_readBuffer.clear();
 		this->_readBuffer.resize(this->_conf.recv_buff_size);	
-		Logger::getInstance().log(DEBUG, "\e[31;43mcgi ready to recev\e[0m",
+		Logger::getInstance().log(DEBUG, "\e[31;103mready to recev\e[0m",
 			this->_clients[i]);		
 		ssize_t ret = recv(this->_clients[i].fd, this->_readBuffer.data(),
 			this->_readBuffer.size(), 0);
@@ -52,21 +52,20 @@ void Server::retrySend(const size_t i)
 
 	std::stringstream ss; ss << "Content-Length: "
 		<< this->_clients[i].headerRequest.getHeaders().ContentLength
-		<< " MessageRecv-Size: " << this->_clients[i].messageRecv.size()
-		<< std::endl;
+		<< " MessageRecv-Size: " << this->_clients[i].messageRecv.size();		
 	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
 
 	this->isBodyEnd(i) ? this->sendBodyEnd(i) :	this->sendBodyPart(i);
 }
 
-void Server::clientMessage(const size_t i, ssize_t ret)
+void Server::clientMessage(const size_t i, const ssize_t ret)
 {
 	Logger::getInstance().log(INFO, "Client Message", this->_clients[i]);
 
-	std::vector<char> str(this->_readBuffer.begin(),
+	{ std::vector<char> str(this->_readBuffer.begin(),
 		this->_readBuffer.begin() + ret);
 	Server::printVector(this->_clients[i], str,	HIGH_INTENSITY_YELLOW,
-		static_cast<int>(INFO));
+		static_cast<int>(INFO)); }
 
 	this->_clients[i].messageRecv.
 		insert(this->_clients[i].messageRecv.end(), 
@@ -75,7 +74,7 @@ void Server::clientMessage(const size_t i, ssize_t ret)
 	if (!this->_clients[i].headerRequest.getHeaders().ContentLength
 		&& this->_clients[i].headerRequest.getHeaders().TransferEncoding
 		!= "chunked")
-		this->headerCheckin(i, ret);
+		this->headerCheckin(i, static_cast<size_t>(ret));
 	else
 		this->bodyCheckin(i, static_cast<size_t>(ret));	
 }
@@ -91,19 +90,18 @@ bool Server::isDelimiterFind(std::string delimiter, const size_t i,
 	return (it != this->_clients[i].messageRecv.end());	
 }
 
-void Server::headerCheckin(const size_t i, ssize_t ret)
+void Server::headerCheckin(const size_t i, const size_t ret)
 {
-	std::stringstream ss;
+	{ std::stringstream ss;
 	ss << "Header Checkin - recv " << ret << " bytes";
 	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
-	Server::printVector(this->_clients[i], this->_clients[i].messageRecv);
+	Server::printVector(this->_clients[i], this->_clients[i].messageRecv); }
 
 	std::vector<char>::iterator it;		
 	if (this->isDelimiterFind("\r\n\r\n", i, it))		
 	{	
 		Logger::getInstance().log(DEBUG, "header terminated",
 			this->_clients[i]);
-
 		this->isMaxHeaderSize(it + 4, i);					
 		this->_clients[i].headerRequest.parse(this->_clients[i], *this);
 		#ifdef DEB								

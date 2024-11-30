@@ -5,7 +5,15 @@
 #include <string>
 #include <iostream>
 
-std::string generateUniqueToken(const std::string& clientIP) {
+void	ResponseBuilder::checkSessionIdCookie(Client &inputClient)
+{
+	if (inputClient.conf->handleCookies && inputClient.isConnected() == false)
+		throw Server::ShortCircuitException(CODE_242_CONNECTION);
+}
+
+
+std::string ResponseBuilder::generateUniqueToken(const std::string& clientIP)
+{
 	// Obtenir le timestamp actuel
 	std::time_t currentTime = std::time(NULL);
 	
@@ -16,7 +24,8 @@ std::string generateUniqueToken(const std::string& clientIP) {
 	// Une fonction de hachage rudimentaire pour simuler l'unicité
 	unsigned int hash = 0;
 	std::string baseString = ss.str();
-	for (size_t i = 0; i < baseString.size(); ++i) {
+	for (size_t i = 0; i < baseString.size(); ++i)
+	{
 		hash = (hash * 31) + static_cast<unsigned int>(baseString[i]);
 	}
 
@@ -29,7 +38,7 @@ std::string generateUniqueToken(const std::string& clientIP) {
 void	ResponseBuilder::buildSetCookieHeader()
 {
 	string clientIP = Logger::ipToString(_client->address);
-	if (_client->headerRequest.getHeaders().isConnected == false)
+	if (_client->isConnected() == false && _client->conf->handleCookies)
 	{
 		std::string token = generateUniqueToken(clientIP);
 		stringstream streamCookie;

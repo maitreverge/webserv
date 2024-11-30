@@ -61,6 +61,9 @@ ResponseBuilder::ResponseBuilder( void ){
 
 	_writeReady = false;
 	_parsedBoundaryToken = false;
+	_isMultipart = false;
+	_setBodyExtension.clear();
+	_uploadTargetDirectory.clear();
 
 }
 
@@ -109,6 +112,9 @@ ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 
 	this->_writeReady = rhs._writeReady;
 	this->_parsedBoundaryToken = rhs._parsedBoundaryToken;
+	this->_isMultipart = rhs._isMultipart;
+	this->_setBodyExtension = rhs._setBodyExtension;
+	this->_uploadTargetDirectory = rhs._uploadTargetDirectory;
 
 
 	// ! DO NOT FUCKING TOUCH (Kernel copy stuff)

@@ -50,6 +50,7 @@ const string errorCode::getCorrespondingString( e_errorCodes inputCode) const {
 		case CODE_207_MULTI_STATUS: return "Multi-Status";
 		case CODE_208_ALREADY_REPORTED: return "Already Reported";
 		case CODE_226_IM_USED: return "IM Used";
+        case CODE_242_CONNECTION: return "Connection";
         case CODE_300_MULTIPLE_CHOICES: return "Multiple Choices";
         case CODE_301_MOVED_PERMANENTLY: return "Moved Permanently";
         case CODE_302_FOUND: return "Found";

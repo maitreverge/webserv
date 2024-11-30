@@ -134,15 +134,11 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	_client = &inputClient; // init client
 	_config = &inputConfig; // init config
 
-	{
-		if (inputClient.isConnected() == true)
-			printColor(BLUE, "****** YOU ARE CONNECTED ****");
-			// => redirect to connection html page
-	}
-
+	resetMyVariables();
+	
 	if (codeInput != CODE_200_OK)
 	{
-		Logger::getInstance().log(INFO, "getHeader invoked with an error code");
+		Logger::getInstance().log(DEBUG, "getHeader invoked from above with an error code");
 		setError(codeInput, true);
 		setContentLenght();
 		buildHeaders();
@@ -150,11 +146,8 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 		return;
 	}
 	
-	Logger::getInstance().log(DEBUG, "ResponseBuilder->getHeader", inputClient);
-
 	_realURI = _client->headerRequest.getURI();
 	_originalURI = _realURI;
-
 
 	_errorType = CODE_200_OK;
 
@@ -163,9 +156,12 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	
 	try
 	{
+		checkSessionIdCookie(inputClient);
 		extractMethod();
-
+		
 		checkMethod();
+
+		extraStartingChecks();
 
 		if (_method == POST)
 			_errorType = CODE_201_CREATED;
@@ -177,10 +173,10 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 			checkCGI();
 		}
 
-		if (_method == POST and !_isCGI)
-		{
-			uploadCheck();
-		}
+		// if (_method == POST and !_isCGI)
+		// {
+			// uploadCheck();
+		// }
 		
 		resolveURI();
 		
@@ -199,12 +195,12 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	}
 	catch(const CodeErrorRaised& e)
 	{
-		Logger::getInstance().log(INFO, "Code Error Raised in the getHeader building process", inputClient);
+		Logger::getInstance().log(DEBUG, "Code Error Raised in the getHeader building process", inputClient);
 	}
 	catch(const std::exception& e)
 	{
 		return;
-		Logger::getInstance().log(INFO, "Another kind or error has been raised in the getHeader process", inputClient);
+		Logger::getInstance().log(DEBUG, "Another kind or error has been raised in the getHeader process", inputClient);
 	} 
 
 	if (not isErrorRedirect())
@@ -219,6 +215,10 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	}
 
 	buildHeaders();
+
+	// TO bypass the writting process // ! cf SEB ClientBody
+	if (_method == POST and _errorType != CODE_201_CREATED)
+		_method = GET;
 
 	// Copying the build Headers in headerResponse
 	// ! Si on mixe les headers du CGI + de ResponseBuilder

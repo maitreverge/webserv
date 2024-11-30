@@ -31,12 +31,12 @@ class Kernel
 	
 		Kernel(void);
 		Kernel(char* path);
-		~Kernel();
-
+	
 		static Kernel & getInstance(char * = NULL);
 		static void		cleanFdSet(Client & client);
 	
 		void		setup();
 		void 		launch();
 		short int	countClients();
+		void 		exitKernel();
 };

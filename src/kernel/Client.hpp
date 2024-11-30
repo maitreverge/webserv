@@ -29,8 +29,14 @@ struct Client
 	short int			ping;
 	bool 				pongHeader;
 	bool				exitRequired;
-	
+
+	void 				clone(const Client & rhs);
+
 	Client(Config *conf, Server* server);
+	Client(const Client & src);
+	Client & operator=(const Client & rhs);
+	~Client();
+	
 	Cookies				cookies;
 	Server*				_server;
 	bool	isConnected() const;

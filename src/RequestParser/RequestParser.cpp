@@ -14,7 +14,6 @@ RequestParser::RequestParser() : 	_method(""),
 									_WebToken("") // ! FLO
 {
 	_Headers.reset();
-	_Headers.isConnected = false;
 }
 
 RequestParser::~RequestParser() {}
@@ -82,8 +81,7 @@ void	RequestParser::parse(Client& client, Server & server)
 	extractHeaders();
 	displayHeaders();
 	// check if cookie sessionID exists
-	client.cookies.checkSessionCookie(_Headers, server);
-	displayUserSessionsContent(client, server);
+	client.cookies.checkSessionCookie(_Headers, server, _URI);
 
 }
 

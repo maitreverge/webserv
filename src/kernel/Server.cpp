@@ -4,15 +4,57 @@
 
 bool Server::_nl = false;
 
-Server::Server(sockaddr_in & sockAddr, Config & conf)	
+Server::Server(sockaddr_in & sockAddr, Config & conf)
 {
-	static int i;		
+	static int i;
+	this->_fd = -1;		
 	this->_conf = conf;		
 	this->_conf.index = i++;
 	this->_sockAddr = sockAddr;
 	this->_clients.reserve(static_cast<size_t>(this->_conf.maxClient));
 	this->_readBuffer.reserve(conf.recv_buff_size);	
 	this->_writeBuffer.reserve(conf.send_buff_size);
+}
+
+Server::Server(const Server & src)
+{
+	this->_fd = -1;
+	// this->_clients.reserve(static_cast<size_t>(this->_conf.maxClient));
+	// this->_readBuffer.reserve(src._conf.recv_buff_size);	
+	// this->_writeBuffer.reserve(src._conf.send_buff_size);
+	*this = src;	
+}
+
+Server & Server::operator=(const Server & rhs)
+{
+	this->_conf = rhs._conf;
+	this->_sockAddr = rhs._sockAddr;
+	this->_writeBuffer = rhs._writeBuffer;
+	this->_readBuffer = rhs._readBuffer;	
+	this->_clients = rhs._clients;
+
+	if (this->_fd >= 0)
+	{
+		FD_CLR(this->_fd, &Kernel::_actualSet);
+		close(this->_fd);
+	}
+	if (rhs._fd >= 0)
+	{
+		if ((this->_fd = dup(rhs._fd)) >= 0)
+			FD_SET(this->_fd, &Kernel::_actualSet);
+		Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fd);
+	}
+	else
+		this->_fd = rhs._fd;
+	return *this;
+}
+
+Server::~Server()
+{
+	if (this->_fd < 0)
+		return ;
+	FD_CLR(this->_fd, &Kernel::_actualSet);
+	close(this->_fd);	
 }
 
 const sockaddr_in & Server::getSockAdress() const
@@ -24,24 +66,14 @@ bool Server::setup()
 {	
 	this->_fd = socket(AF_INET, SOCK_STREAM | SOCK_CLOEXEC, 0);
 	if (this->_fd < 0)	
-		return Logger::getInstance().log(ERROR, "socket"), false;
+		return Logger::getInstance().log(ERROR, "socket"), false;		
 	Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fd);
 	FD_SET(this->_fd, &Kernel::_actualSet);
 	if (bind(this->_fd, reinterpret_cast<const sockaddr *>
-		(&this->_sockAddr), sizeof(this->_sockAddr)) < 0)
-	{		
-		Logger::getInstance().log(ERROR, "bind", *this);
-
-		this->exitServer();		
-		return false;		
-	}	
+		(&this->_sockAddr), sizeof(this->_sockAddr)) < 0)		
+		return Logger::getInstance().log(ERROR, "bind", *this), false;	
 	if (listen(this->_fd, this->_conf.maxClient) < 0)
-	{
-		Logger::getInstance().log(ERROR, "listen", *this);
-
-		this->exitServer();
-		return false;
-	}
+		return Logger::getInstance().log(ERROR, "listen", *this), false;
 	Logger::getInstance().log(INFO, "listen", *this);
 	return true;
 }
@@ -57,17 +89,15 @@ void Server::catchClients(Kernel & kernel)
 		if (client.fd < 0)		
 			return Logger::getInstance().log(ERROR, "accept");		
 		if (kernel.countClients() >= this->_conf.maxClient)		
-			return close(client.fd),
-				Logger::getInstance().log(WARNING, "max clients", client);					
+			return Logger::getInstance().log(WARNING, "max clients", client);					
 		Logger::getInstance().log(INFO, "\e[30;101mnew client\e[0m", client);
 		struct timeval timeout = {SND_TIMEOUT, 0};	
 		if (setsockopt(client.fd, SOL_SOCKET, SO_SNDTIMEO, &timeout,
 			sizeof(timeout)) < 0)
-	  		return close(client.fd),
-				Logger::getInstance().log(ERROR, "send timeout", client);
+	  		return Logger::getInstance().log(ERROR, "send timeout", client);
 		FD_SET(client.fd, &Kernel::_actualSet);
 		Kernel::_maxFd = std::max(Kernel::_maxFd, client.fd);
-		this->_clients.push_back(client);
+		this->_clients.push_back(client);	
 	}	
 }
 
@@ -76,41 +106,30 @@ void Server::exitClient(size_t i)
 	Logger::getInstance().log(INFO, "\e[30;101mclient exited\e[0m",
 		this->_clients[i]);
 
-	FD_CLR(this->_clients[i].fd, &Kernel::_actualSet);
-	close(this->_clients[i].fd);	
 	this->_clients.erase(this->_clients.begin() + static_cast<int>(i));
-}
-
-void Server::exitClients()
-{
-	for (size_t i = 0; i < this->_clients.size(); i++)
-	{
-		FD_CLR(this->_clients[i].fd, &Kernel::_actualSet);
-		close(this->_clients[i].fd);	
-	}
-	this->_clients.clear();
-}
-
-void Server::exitServer()
-{
-	this->exitClients();
-	FD_CLR(this->_fd, &Kernel::_actualSet);
-	close(this->_fd);	
 }
 
 void Server::printVector(Client & client, const std::vector<char> & response,
 	const std::string color, const int level)
 {
 	std::stringstream ss;
-	ss << color << "Print data : " << YELLOW
+	ss << color << "Print data : " << HIGH_INTENSITY_YELLOW
 		<< response.size() << " bytes" << color << std::endl << std::endl;
-	ss << "-";		
-	for (size_t i = 0; i < response.size(); i++)				
-		ss << response[i];
+	ss << "-";
+
+	for (size_t i = 0; i < response.size(); i++)
+	{
+		if (response[i] == '\r')
+		    ss << "\e[31m\\r\e[0m" << HIGH_INTENSITY_YELLOW;
+		else if (response[i] == '\n')
+		    ss << "\e[31m\\n\e[0m" << "\n" << HIGH_INTENSITY_YELLOW;
+		else
+		    ss << color << response[i];
+	}
 	ss << "-\e[0m";
 	Logger::getInstance().log(static_cast<logLevel>(level), ss.str(), client);
 	if (Logger::getInstance()._logLevel[static_cast<logLevel>(level)])	
-		std::cout << std::endl;	
+		std::cerr << std::endl;	
 }
 
 void Server::shortCircuit(const e_errorCodes err, const size_t i)

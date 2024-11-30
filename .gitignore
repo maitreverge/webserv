@@ -65,4 +65,13 @@ tests/siege/siege_urls.txt
 # Uploads
 testResponseBuilder/folder_to_delete/file_to_delete
 Requests_Tester/no_read_file.txt
+Requests_Tester/check_file.ans
+
+*_actual.txt
+.vscode/settings.json
+Requests_Tester/check_file.ans
+Requests_Tester/diff/
+Requests_Tester/answers/
+src/ResponseBuilder/.test/a.out
+src/build_response/.test/a.out
 CGIScriptCreation/a.out

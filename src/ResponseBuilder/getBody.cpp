@@ -32,7 +32,17 @@ bool ResponseBuilder::getBody( Client &inputClient ){
 		//! FAIRE CTRL C PNDT UN TRANSFERT ET VALGRINDS
 	}
 	// ! ADVANCED TEST : keskis passe si le stream fail malgre l'URI correcte 
-	if (this->_ifs.is_open())
+	if (this->_ifs.eof()) 
+	{
+		Logger::getInstance().log(DEBUG, "file end", inputClient);						
+		this->_ifs.close();		
+		
+		// Delete the HTML response that has been generated 
+		// such as listings.html, and backup.html (for self generated errors)
+		if (_deleteURI)
+			std::remove(_realURI.c_str());
+	}
+	else if (this->_ifs.is_open())
 	{
 		this->_ifs.seekg(this->_ifsStreamHead);
 		inputClient.messageSend.clear();
@@ -44,14 +54,17 @@ bool ResponseBuilder::getBody( Client &inputClient ){
 		
 		inputClient.messageSend.erase(inputClient.messageSend.begin()
 			+ this->_ifs.gcount(), inputClient.messageSend.end());
-		if (this->_ifs.eof()) 
-		{
-			Logger::getInstance().log(DEBUG, "file end", inputClient);						
-			this->_ifs.close();		
+		/*
+			! Does this EOF condition needs to be nested within this condition ?
+		*/
+		// if (this->_ifs.eof()) 
+		// {
+		// 	Logger::getInstance().log(DEBUG, "file end", inputClient);						
+		// 	this->_ifs.close();		
 			
-			if (_deleteURI) // ! Potentially delete my shit
-				std::remove(_realURI.c_str());
-		}
+		// 	if (_deleteURI) // ! Potentially delete my shit
+		// 		std::remove(_realURI.c_str());
+		// }
 
 		std::stringstream ss;
 		ss << "gcount: " << this->_ifs.gcount();
@@ -59,7 +72,7 @@ bool ResponseBuilder::getBody( Client &inputClient ){
 		
 		return false;
     }
-	else
+	else // failed stream
 	{
 		/*
 			! IF THE STREAM CAN'T HAPPEN
