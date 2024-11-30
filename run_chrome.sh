@@ -10,9 +10,11 @@ fi
 SCRIPT_NUMBER=$1
 
 # Launch the web server
-./webserv Requests_Tester/configs/config${SCRIPT_NUMBER}.ini > /dev/null 2>&1 &
+./webserv Requests_Tester/configs_files/config_${SCRIPT_NUMBER}.ini > /dev/null 2>&1 &
 
 webserv_pid=$!
+
+sleep 1
 
 # Launch the corresponding Python script
 python3 Requests_Tester/manual_chrome_test/launch_chrome.py ${SCRIPT_NUMBER}
