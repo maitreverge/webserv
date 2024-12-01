@@ -77,7 +77,7 @@ void provC(Client & client) //! a suppr
 		Logger::getInstance().log(ERROR, "chdir", client), exit(200);			
 	char actualPath[PATH_MAX];	
 	if (!getcwd(actualPath, PATH_MAX))	
-		Logger::getInstance().log(ERROR, "getcwd", client), exit(200);			 
+		Logger::getInstance().log(ERROR, "getcwd", client), exit(200);				 
 	std::string envPathInfo("PATH_INFO=" + client.responseBuilder._pathInfo);    
 	char *env[] = {const_cast<char *>(envPathInfo.c_str()), NULL};
 	std::string execPath = std::string(actualPath) + '/'
