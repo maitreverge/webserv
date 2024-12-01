@@ -51,6 +51,14 @@ void	ResponseBuilder::buildRouteConfig( string path ){
 	try
 	{
 		_myconfig.uri = *routes->at(path).at("uri").begin();
+		// Every URI needs to start with a "/" and end without.
+		if (_myconfig.uri.size() >= 1)
+		{
+			if (*_myconfig.uri.begin() != '/')
+				_myconfig.uri.insert(0, "/");
+			if (*_myconfig.uri.rbegin() != '/')
+				_myconfig.uri += "/";
+		}
 	}
 	catch(const std::exception& e)
 	{

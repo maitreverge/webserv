@@ -24,11 +24,11 @@ bool ResponseBuilder::redirectURI( void ){
 		return false;
 
 	// TODO : Client keeps asking the same redirection over and over
-	// if (_realURI == _myconfig.redirection)
-	// {
-	// 	Logger::getInstance().log(ERROR, "Redirection Loop Detected");
-	// 	setError(CODE_508_LOOP_DETECTED);
-	// }
+	if (_realURI == _myconfig.redirection)
+	{
+		Logger::getInstance().log(ERROR, "Redirection Loop Detected");
+		setError(CODE_508_LOOP_DETECTED);
+	}
 	
 	/*
 		! I had a doubt on this one, need to dig deeper when working on redirections
