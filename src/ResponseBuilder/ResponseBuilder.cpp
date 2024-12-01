@@ -17,19 +17,26 @@ void ResponseBuilder::sanatizeURI( string &oldURI ){
 	}
 }
 
+// Need to refactor this function in `void` instead of `bool`
 bool ResponseBuilder::redirectURI( void ){
 
 	if (_myconfig.redirection.empty())
 		return false;
 
-	// Client keeps asking the same redirection over and over
-	if (_realURI == _myconfig.redirection)
-	{
-		Logger::getInstance().log(ERROR, "Redirection Loop Detected");
-		setError(CODE_508_LOOP_DETECTED);
-	}
+	// TODO : Client keeps asking the same redirection over and over
+	// if (_realURI == _myconfig.redirection)
+	// {
+	// 	Logger::getInstance().log(ERROR, "Redirection Loop Detected");
+	// 	setError(CODE_508_LOOP_DETECTED);
+	// }
 	
-	_realURI = _myconfig.redirection + _myconfig.indexRedirection;
+	/*
+		! I had a doubt on this one, need to dig deeper when working on redirections
+		Original line :
+		_realURI = _myconfig.redirection + _myconfig.indexRedirection;
+	*/
+	_realURI = _myconfig.redirection;
+
 	
 	setError(CODE_302_FOUND);
 	return true;
@@ -47,16 +54,16 @@ void ResponseBuilder::rootMapping( void ){
 
 }
 
-bool ResponseBuilder::isDirectory(string &uri) {
+bool ResponseBuilder::isDirectory(string &strInput) {
 	
-	if ( (stat(uri.c_str(), &_fileInfo) == 0) and (_fileInfo.st_mode & S_IFDIR))
+	if ( (stat(strInput.c_str(), &_fileInfo) == 0) and (_fileInfo.st_mode & S_IFDIR))
 	{
 		return true;
 	}
 	return false;
 }
 
-void	ResponseBuilder::slashManip( string &target ){
+void	ResponseBuilder::slashManip( string &target, bool makeRedirection ){
 
 	bool beginWithSlash = !target.empty() && (*target.begin() == '/');
 	bool endWithSlash = !target.empty() && (*target.rbegin() == '/');
@@ -74,7 +81,15 @@ void	ResponseBuilder::slashManip( string &target ){
 	if ( isDirectory(target) )
 	{
 		if (!endWithSlash)
-			target += "/";
+		{
+			if (makeRedirection)
+			{
+				_realURI = _originalURI + "/";
+				setError(CODE_302_FOUND);
+			}
+			else
+				target += "/";
+		}
 		if (_method == GET and _myconfig.listingDirectory == false)
 			target += _myconfig.index; // after checking the nature
 		
@@ -100,7 +115,7 @@ void ResponseBuilder::resolveURI( void ) {
 	// sanatizeURI(_realURI); // ! STAY COMMENTED until refactoring for better "../" erasing process
 
 	// ! STEP 4  : Deleting URI first 
-	slashManip(_realURI);
+	slashManip(_realURI, true);
 
 	// ! STEP 5 : Check for DELETE + webserv
 	if (_method == DELETE and _realURI == "webserv")
@@ -153,7 +168,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	_errorType = CODE_200_OK;
 
 	extractRouteConfig();
-	// printMyConfig();
+	printMyConfig();
 	
 	try
 	{

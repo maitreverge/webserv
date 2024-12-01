@@ -274,6 +274,9 @@ void	ResponseBuilder::printMyConfig( void ){
 		printColor(BOLD_RED, *it);
 	}
 
+	print("URI =");
+	printColor(BOLD_RED, _myconfig.uri);
+
 	print("REDIRECTION =");
 	printColor(BOLD_RED, _myconfig.redirection);
 	print("ROOT =");

@@ -208,7 +208,7 @@ vector<char>::iterator searchSeparator(vector<char>& curLine, string &separator,
 	
 	bool	isDirectory(string &);
 
-	void	slashManip( string& );
+	void	slashManip( string&, bool makeRedirection = false );
 	
 	void extractRedirectionIndex( vector< string >&, vector< string >& );
 

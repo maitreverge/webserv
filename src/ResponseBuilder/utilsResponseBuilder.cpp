@@ -211,7 +211,7 @@ void	ResponseBuilder::checkNature( void ){
 			Logger::getInstance().log(ERROR, "401 Detected from checknature, can't access file");
 			setError(CODE_401_UNAUTHORIZED); return;
 		}
-		else if (errno == ENOENT or errno == EFAULT) // EFAULT The provided path is invalid or points to a restricted memory space.
+		else if (errno == ENOENT or errno == EFAULT) // EFAULT The provided path is invalid OR points to a restricted memory space.
 		{
 			setError(CODE_404_NOT_FOUND); return;
 		}
@@ -342,7 +342,7 @@ void ResponseBuilder::extraStartingChecks()
 	else if (!_myconfig.uploadAllowed) // TODO : need to test this variable
 		setError(CODE_403_FORBIDDEN);
 
-	pathSlashs(_originalURI);
+	// pathSlashs(_originalURI);
 }
 
 void ResponseBuilder::pathSlashs(string &target){
