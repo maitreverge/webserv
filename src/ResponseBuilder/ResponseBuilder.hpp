@@ -220,6 +220,9 @@ vector<char>::iterator searchSeparator(vector<char>& curLine, string &separator,
 
 	string generateRandomString(size_t, bool underscoreNeeded = false );
 
+	void serverNameChecking( void );
+
+
 
 	void		buildSetCookieHeader(); //! Dan
 	void		checkSessionIdCookie(Client &inputClient); //! Dan
