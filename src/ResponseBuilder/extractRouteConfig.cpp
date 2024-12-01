@@ -90,8 +90,12 @@ void	ResponseBuilder::buildRouteConfig( string path ){
 	// ! listingDirectory
 	try
 	{
-		string myString = *routes->at(path).at("listingDirectory").begin();
-		_myconfig.listingDirectory = (myString[0] == '0') ? false : true;
+		string myString = *routes->at(path).at("listingDirectory").data();
+		// Only accepting '1' as a valid input
+		if (myString.size() == 1 and myString[0] == '1')
+			_myconfig.listingDirectory = true;
+		else
+			_myconfig.listingDirectory = false;
 	}
 	catch(const std::exception& e)
 	{
