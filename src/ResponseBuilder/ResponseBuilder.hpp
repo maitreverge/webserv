@@ -221,7 +221,7 @@ vector<char>::iterator searchSeparator(vector<char>& curLine, string &separator,
 	string generateRandomString(size_t, bool underscoreNeeded = false );
 
 	// serverName.cpp
-	string parseServerName( string str );
+	string parseServerName( string & );
 	void applyServerName( void );
 
 	

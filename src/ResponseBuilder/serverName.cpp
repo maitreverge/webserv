@@ -1,8 +1,9 @@
 #include "ResponseBuilder.hpp"
 #include "Logger.hpp"
 
-string ResponseBuilder::parseServerName( string str ){
+string ResponseBuilder::parseServerName( string &str ){
 
+	// Remove the double-quotes from "festival" within the config file.
 	return ( str.substr(str.find_first_of("\"") + 1, str.find_last_of("\"") - 1) );
 }
 
@@ -18,8 +19,6 @@ void ResponseBuilder::extractServerName()
 	string curServerName = curHost.substr(0, curHost.find_last_of("."));
 
 	map<string, string> mapPort;
-
-	printColor(BOLD_RED, curHost);
 
 	// Linking every port with every serverName
 	for (int i = 0; i < _config->maxServerNbr; ++i)
