@@ -1,9 +1,13 @@
 #include "ResponseBuilder.hpp"
 #include "Logger.hpp"
 
-void ResponseBuilder::serverNameChecking( void )
+string ResponseBuilder::parseServerName( string str ){
+
+	return ( str.substr(str.find_first_of("\"") + 1, str.find_last_of("\"") - 1) );
+}
+
+void ResponseBuilder::extractServerName()
 {
-	// Extracting ==> festival.localhost:3112
 	string curHost = _client->headerRequest.getHeaders().Host;
 
 	// Extracting ==> 3112
@@ -12,17 +16,17 @@ void ResponseBuilder::serverNameChecking( void )
 	// Extracting ==> festival
 	string curServerName = curHost.substr(0, curHost.find_last_of("."));
 
-	map< string, string > mapPort;
+	map<string, string> mapPort;
 
 	printColor(BOLD_RED, curHost);
 
 	for (int i = 0; i < _config->maxServerNbr; ++i)
 	{
 		string serverPort = _config->_serverStruct[i].port;
-		string serverName = _config->_serverStruct[i].serverName;
+		string serverName = parseServerName(_config->_serverStruct[i].serverName);
 
 		mapPort.insert(std::make_pair(serverPort, serverName));
-    }
+	}
 
 	// string matchPortName = mapPort.at(curPort)
 	if (mapPort.at(curPort) == curServerName)
@@ -35,15 +39,18 @@ void ResponseBuilder::serverNameChecking( void )
 		}
 	}
 	_serverNameChecked = true;
+}
 
-
-
+void ResponseBuilder::serverNameChecking( void )
+{
+	// Extracting ==> festival.localhost:3112
 
 	if (not _serverNameChecked)
+		extractServerName();
+	if (_isServerName)
 	{
 
 	}
-
 	/*
 	======= PRINT CUR HOST =======
 	festival.localhost:3112
