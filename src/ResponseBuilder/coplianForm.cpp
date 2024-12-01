@@ -36,9 +36,9 @@ void ResponseBuilder::initMimes( void ){
 
 	// Servername
 	{
-		_servernameType.insert(std::make_pair("festival", "websites/festival/"));
-		_servernameType.insert(std::make_pair("cyborg", "websites/cyborg_gaming/"));
-		_servernameType.insert(std::make_pair("villa", "websites/villa_agency/"));
+		_servernameType.insert(std::make_pair("festival", "_websites/festival/"));
+		_servernameType.insert(std::make_pair("cyborg", "_websites/cyborg_gaming/"));
+		_servernameType.insert(std::make_pair("villa", "_websites/villa_agency/"));
 
 	}
 }

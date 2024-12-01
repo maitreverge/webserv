@@ -222,6 +222,8 @@ vector<char>::iterator searchSeparator(vector<char>& curLine, string &separator,
 
 	// serverName.cpp
 	string parseServerName( string str );
+	void applyServerName( void );
+
 	
 	void serverNameChecking(void);
 	void extractServerName();
