@@ -82,7 +82,7 @@ void	ResponseBuilder::slashManip( string &target, bool makeRedirection ){
 	{
 		if (!endWithSlash)
 		{
-			if (makeRedirection)
+			if (makeRedirection and _method == GET)
 			{
 				_realURI = _originalURI + "/";
 				setError(CODE_302_FOUND);
