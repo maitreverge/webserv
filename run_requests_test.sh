@@ -97,12 +97,14 @@ if [ -n "$CONFIG_FILE" ]; then
 		
 		if diff -Z -q "$response_file" "$expected_answer_file" > /dev/null; then
 			echo -e "${GREEN}config_$config_number, test $test_counter ✅ Success${NC}"
+			successful_tests=$((successful_tests + 1))
 		else
 			echo -e "${RED}config_$config_number, test $test_counter : $request ❌ Failure${NC}"
 			diff -Z "$response_file" "$expected_answer_file" > "$diff_file"
 			cat "$diff_file"
 		fi
 		test_counter=$((test_counter + 1))
+		total_tests=$((total_tests + 1))
 	done < "$request_file"
 
 	# Arrêter Webserv une fois tous les tests effectués
