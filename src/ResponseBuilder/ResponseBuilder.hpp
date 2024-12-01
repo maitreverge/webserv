@@ -222,6 +222,12 @@ vector<char>::iterator searchSeparator(vector<char>& curLine, string &separator,
 
 	void serverNameChecking( void );
 
+	map< string, string >_servernameType;
+
+	bool _serverNameChecked;
+	bool _isServerName;
+	string _serverName;
+
 
 
 	void		buildSetCookieHeader(); //! Dan

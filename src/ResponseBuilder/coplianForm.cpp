@@ -33,6 +33,14 @@ void ResponseBuilder::initMimes( void ){
 		_mimeTypes.insert(std::make_pair("webm", "video/webm"));
 		_mimeTypes.insert(std::make_pair("ogv", "video/ogv"));
 	}
+
+	// Servername
+	{
+		_servernameType.insert(std::make_pair("festival", "websites/festival/"));
+		_servernameType.insert(std::make_pair("cyborg", "websites/cyborg_gaming/"));
+		_servernameType.insert(std::make_pair("villa", "websites/villa_agency/"));
+
+	}
 }
 
 // ------------------------- COPLIAN FORM -----------------------------
@@ -64,6 +72,10 @@ ResponseBuilder::ResponseBuilder( void ){
 	_isMultipart = false;
 	_setBodyExtension.clear();
 	_uploadTargetDirectory.clear();
+
+	_serverNameChecked = false;
+	_isServerName = false;
+	_serverName.clear();
 
 }
 
@@ -115,6 +127,9 @@ ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 	this->_isMultipart = rhs._isMultipart;
 	this->_setBodyExtension = rhs._setBodyExtension;
 	this->_uploadTargetDirectory = rhs._uploadTargetDirectory;
+	this->_serverNameChecked = rhs._serverNameChecked;
+	this->_serverName = rhs._serverName;
+	this->_isServerName = rhs._isServerName;
 
 
 	// ! DO NOT FUCKING TOUCH (Kernel copy stuff)
