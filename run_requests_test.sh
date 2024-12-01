@@ -96,9 +96,9 @@ if [ -n "$CONFIG_FILE" ]; then
 		diff_file="$DIFF_DIR/config_${config_number}_test_${test_counter}.diff"
 		
 		if diff -Z -q "$response_file" "$expected_answer_file" > /dev/null; then
-			echo -e "${GREEN}config_$config_number, test $test_counter : $request ✅ Success${NC}"
+			echo -e "${GREEN}config_$config_number, test $test_counter ✅ Success${NC}"
 		else
-			echo -e "${GREEN}config_$config_number, test $test_counter : $request ❌ Failure${NC}"
+			echo -e "${RED}config_$config_number, test $test_counter : $request ❌ Failure${NC}"
 			diff -Z "$response_file" "$expected_answer_file" > "$diff_file"
 			cat "$diff_file"
 		fi
@@ -156,10 +156,10 @@ else
 			diff_file="$DIFF_DIR/config_${config_number}_test_${test_counter}.diff"
 			
 			if diff -Z -q "$response_file" "$expected_answer_file" > /dev/null; then
-				echo -e "${GREEN}$total_tests => config_$config_number, test $test_counter : $request ✅ Success${NC}"
+				echo -e "${GREEN}$total_tests => config_$config_number, test $test_counter ✅ Success${NC}"
 				successful_tests=$((successful_tests + 1))
 			else
-				echo -e "${GREEN}$total_tests => config_$config_number, test $test_counter : $request ❌ Failure${NC}"
+				echo -e "${RED}$total_tests => config_$config_number, test $test_counter : $request ❌ Failure${NC}"
 				if [ "$show_diffs" = true ]; then
 					diff -Z "$response_file" "$expected_answer_file" > "$diff_file"
 					cat "$diff_file"
