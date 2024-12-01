@@ -56,8 +56,8 @@ void	ResponseBuilder::buildRouteConfig( string path ){
 		{
 			if (*_myconfig.uri.begin() != '/')
 				_myconfig.uri.insert(0, "/");
-			if (*_myconfig.uri.rbegin() != '/')
-				_myconfig.uri += "/";
+			if (*_myconfig.uri.rbegin() == '/')
+				_myconfig.uri.erase(_myconfig.uri.end() - 1);
 		}
 	}
 	catch(const std::exception& e)

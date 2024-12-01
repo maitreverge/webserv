@@ -39,6 +39,29 @@
 IF NOT : Need to generate a random 10 lenghts string + an extension to save the file 🟢
 - Stabilize simple GET / DELETE REQUESTS 🟢
 
+## BLOODY REDIRECTIONS :
+
+############################# This is a valid config #############################
+
+								
+								
+								DO NOT FUCKING TOUCH THIS
+
+
+
+[route1]
+uri = /
+redirection = _websites/cyborg_gaming/
+allowedMethods = GET
+
+# ... which matches a route
+[route2]
+uri = /_websites/cyborg_gaming
+allowedMethods = GET
+index = index.html
+
+############################# This is a valid config #############################
+
 🟢
 🟠
 🔴
