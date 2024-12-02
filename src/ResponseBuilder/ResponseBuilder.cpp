@@ -24,7 +24,8 @@ bool ResponseBuilder::redirectURI( void ){
 		return false;
 
 	// TODO : Client keeps asking the same redirection over and over
-	if (_realURI == _myconfig.redirection)
+	// if (_realURI == _myconfig.redirection)
+	if (_realURI.find(_myconfig.redirection) != std::string::npos)
 	{
 		Logger::getInstance().log(ERROR, "Redirection Loop Detected");
 		setError(CODE_508_LOOP_DETECTED);

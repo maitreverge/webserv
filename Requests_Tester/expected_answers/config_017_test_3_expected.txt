@@ -1,3 +1,3 @@
 HTTP/1.1 302 Found
-Location: /_websites/cyborg_gaming/index.html
+Location: _websites/cyborg_gaming/index.html
 
