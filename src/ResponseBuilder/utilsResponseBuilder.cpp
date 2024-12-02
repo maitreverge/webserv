@@ -31,57 +31,31 @@ void	ResponseBuilder::extractMethod( void ){
 		_method = DELETE;
 	}
 	else
+	{
+		Logger::getInstance().log(ERROR, "User tried an unknown / unsupported method");
+
 		setError(CODE_405_METHOD_NOT_ALLOWED, true);
+	}
 }
 
 void	ResponseBuilder::setContentLenght(){
 
 	if (stat(_realURI.c_str(), &_fileInfo) == -1)
 	{
-		if (errno == EACCES)
+		if (errno == EACCES) // permission denied
 		{
-
-			Logger::getInstance().log(ERROR, "401 Detected from setContentLenght");
+			Logger::getInstance().log(ERROR, "401 Detected from setContentLenght : Permission Denied");
 			setError(CODE_401_UNAUTHORIZED, true);
 		}
-		else if (errno == ENOENT or errno == EFAULT)
+		else if (errno == ENOENT or errno == EFAULT) // Missing file or bad adress
+		{
+			Logger::getInstance().log(ERROR, "401 Detected from setContentLenght : Missing file or bad adress");
 			setError(CODE_404_NOT_FOUND, true);
+		}
 	}
 	else
 		Headers.bodyLenght = static_cast<uint64_t>(_fileInfo.st_size); //! the targeted file in a GET requests
 }
-
-// void	ResponseBuilder::uploadCheck( void ){
-
-// 	if (!_myconfig.uploadAllowed)
-// 	{
-// 		setError(CODE_403_FORBIDDEN);
-// 	}
-// 	else if (_myconfig.uploadDirectory.empty())
-// 	{
-// 		// ? Pertinent d'upload dans la meme URI si il n'y a pas d'UploadDirectory ?
-// 		// TODO : Which directory to choose if the targeted one is empty ?
-		
-// 		/*
-// 		If such directory isn't in the config file, we can take the upload directory by default
-// 		! AND INFORM THE USER
-// 		If the upload have any proble, we create it
-// 		*/
-		
-// 		// ! From now, no specified uploadDirectory raise a 403
-// 		Logger::getInstance().log(ERROR, "Upload directory is not specified");
-// 		setError(CODE_403_FORBIDDEN);
-// 	}
-// 	else if ( access(_myconfig.uploadDirectory.c_str(), W_OK) == -1 )
-// 	{
-// 		//!  we can't write on the destination 
-// 		Logger::getInstance().log(ERROR, "Upload directory does not have right access");
-// 		setError(CODE_401_UNAUTHORIZED);
-// 	}
-
-// 	// Refresh URI
-// 	_realURI = _config->errorPaths.at(_errorType);
-// }
 
 void	ResponseBuilder::checkAutho( void ){
 	
@@ -97,26 +71,26 @@ void	ResponseBuilder::checkAutho( void ){
 				CGI : verifier chmod +x ET chmod + r
 			*/
 			case GET:
-				if (_isCGI and not _isXOK)
+				if ( _isCGI and (not _isXOK or not _isROK) )
 				{
-					Logger::getInstance().log(ERROR, "401 Detected from checkAutho, GET check 1");
+					Logger::getInstance().log(ERROR, "401 Detected from `checkAutho` : CGI on GET Method has incorrect permissions");
 					setError(CODE_401_UNAUTHORIZED);
 				}
 				else if (not _isROK)
 				{
-					Logger::getInstance().log(ERROR, "401 Detected from checkAutho, GET check 2");
+					Logger::getInstance().log(ERROR, "401 Detected from `checkAutho`, regular file on GET method has incorrect permissions");
 					setError(CODE_401_UNAUTHORIZED);
 				}
 				break;
 			case POST:
-				if (_isCGI and not _isXOK)
+				if ( _isCGI and (not _isXOK or not _isROK) )
 				{
-					Logger::getInstance().log(ERROR, "401 Detected from checkAutho, POST check 1");
+					Logger::getInstance().log(ERROR, "401 Detected from `checkAutho` : CGI on POST Method has incorrect permissions");
 					setError(CODE_401_UNAUTHORIZED);
 				}
 				else if (not _isWOK)
 				{
-					Logger::getInstance().log(ERROR, "401 Detected from checkAutho, POST check 2");
+					Logger::getInstance().log(ERROR, "401 Detected from `checkAutho`, regular file on POST method has incorrect permissions");
 					setError(CODE_401_UNAUTHORIZED);
 				}
 				if (_uploadTargetDirectory.empty())
@@ -129,12 +103,12 @@ void	ResponseBuilder::checkAutho( void ){
 			case DELETE:
 				if (not _isWOK)
 				{
-					Logger::getInstance().log(ERROR, "401 Detected from checkAutho, DELETE check 1");
+					Logger::getInstance().log(ERROR, "401 Detected from `checkAutho`, regular file on DELETE method can't be deleted due to permissions");
 					setError(CODE_401_UNAUTHORIZED);
 				}
 				break;
 			default:
-				Logger::getInstance().log(ERROR, "405 Detected from checkAuthoDefault switch case");
+				Logger::getInstance().log(ERROR, "405 Detected from `checkAutho` default switch case");
 				setError(CODE_405_METHOD_NOT_ALLOWED);
 				break;
 		}
@@ -170,7 +144,7 @@ void	ResponseBuilder::checkNature( void ){
 			_isDirectory = true;
 			if (_method == DELETE) // ! I decided to reject DELETE methods on folders.
 			{
-				Logger::getInstance().log(ERROR, "Delete Method for a folder detected");
+				Logger::getInstance().log(ERROR, "405 Detected from `checkNature`: Delete Method for a folder detected");
 				setError(CODE_403_FORBIDDEN);
 			}
 			else if (_method == POST)
@@ -191,7 +165,7 @@ void	ResponseBuilder::checkNature( void ){
 				// POST
 				if (!_isCGI)
 				{
-					Logger::getInstance().log(ERROR, "401 Detected from checkNature");
+					Logger::getInstance().log(ERROR, "401 Detected from `checkNature`: POST on a non-CGI file");
 					setError(CODE_401_UNAUTHORIZED);
 				}
 				else
@@ -200,20 +174,24 @@ void	ResponseBuilder::checkNature( void ){
 		}
 		else
 		{
-			// TODO : Do I need to set up an error code if the ressource is neither a file or a directory
-			setError(CODE_422_UNPROCESSABLE_ENTITY); return;
+			Logger::getInstance().log(ERROR, "422 Detected from `checkNature`");
+			setError(CODE_422_UNPROCESSABLE_ENTITY);
+			return;
 		}
 	}
 	else // Can't access file
 	{
 		if (errno == EACCES)
 		{
-			Logger::getInstance().log(ERROR, "401 Detected from checknature, can't access file");
-			setError(CODE_401_UNAUTHORIZED); return;
+			Logger::getInstance().log(ERROR, "401 Detected from `checkNature`: Can't access file");
+			setError(CODE_401_UNAUTHORIZED);
+			return;
 		}
 		else if (errno == ENOENT or errno == EFAULT) // EFAULT The provided path is invalid OR points to a restricted memory space.
 		{
-			setError(CODE_404_NOT_FOUND); return;
+			Logger::getInstance().log(ERROR, "404 Detected from `checkNature`: Invalid file or adress");
+			setError(CODE_404_NOT_FOUND);
+			return;
 		}
 	}
 }
@@ -267,7 +245,6 @@ void	ResponseBuilder::printAllHeaders( void ) const{
 
 	printColorNoEndl(BOLD_RED, "REAL URI : ");
 	print(_realURI);
-
 
 	printColorNoEndl(BOLD_GREEN, "Status Line :");
 	print(Headers.statusLine);
@@ -334,7 +311,10 @@ void ResponseBuilder::extraStartingChecks()
 		{
 			bool uploadWrite = _fileInfo.st_mode & S_IWUSR;
 			if (!uploadWrite)
+			{
+				Logger::getInstance().log(DEBUG, "Internal Error raised from ResponseBuilder");
 				setError(CODE_403_FORBIDDEN);
+			}
 			_uploadTargetDirectory = _myconfig.uploadDirectory;
 			_myconfig.uploadAllowed = true;
 		}

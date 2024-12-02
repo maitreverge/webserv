@@ -85,7 +85,10 @@ void	ResponseBuilder::slashManip( string &target, bool makeRedirection ){
 		{
 			if (makeRedirection and _method == GET)
 			{
+				Logger::getInstance().log(INFO, "Wrong Typed URI, automatic 302 Redirection enabled");
+				
 				_realURI = _originalURI + "/";
+
 				setError(CODE_302_FOUND);
 			}
 			else
@@ -120,7 +123,10 @@ void ResponseBuilder::resolveURI( void ) {
 
 	// ! STEP 5 : Check for DELETE + webserv
 	if (_method == DELETE and _realURI == "webserv")
+	{
+		Logger::getInstance().log(ERROR, "User tried to delete the `webserv` binary");
 		setError(CODE_403_FORBIDDEN);
+	}
 }
 
 void	ResponseBuilder::checkMethod( void ){
@@ -139,7 +145,7 @@ void	ResponseBuilder::checkMethod( void ){
 		else if (*(it) == "DELETE" and _method == DELETE)
 			return;
 	}
-	Logger::getInstance().log(DEBUG, "Method not found");
+	Logger::getInstance().log(ERROR, "Method not found");
 	setError(CODE_405_METHOD_NOT_ALLOWED);
 }
 

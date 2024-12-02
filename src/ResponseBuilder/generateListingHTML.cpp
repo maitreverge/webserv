@@ -189,7 +189,10 @@ void ResponseBuilder::generateListingHTML( void ){
 
 	// ! STEP 0 : check if we can read in the directory
 	if ( _myconfig.listingDirectory == false and _myconfig.index.empty())
+	{
+		Logger::getInstance().log(ERROR, "setError404 on `generateListingHTML`");
 		setError(CODE_404_NOT_FOUND);
+	}
 	
 	listingHTMLBuilder();
 	
