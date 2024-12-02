@@ -67,7 +67,6 @@ struct MyConfig
 
 	// ========== my stuff ==========
 		indexRedirection.clear();
-
 	}
 };
 
@@ -130,26 +129,16 @@ class ResponseBuilder
 
 	// ===================== METHODS ==================
 
-	// setBody.cpp
-	void	initCurrentFiles( vector< string> & );
-
-	bool isLineDelim(vector<char> &, vector<char> &);
-	void determineSeparator(std::string &separator, size_t &separatorLength, vector<char>& curLine);
-	e_lineNature	processCurrentLine( vector< char >&  );
-	void	initBoundaryTokens( void );
-	void	extractFileBodyName( vector< char >&, vector< string >& );
-	void	setRegularPost( Client & client );
-	void	setMultiPartPost( Client & client );
-vector<char>::iterator searchSeparator(vector<char>& curLine, string &separator, size_t &separatorLength);
-
-
 	// buildHeaders.cpp
 	void	buildHeaders( void );
 
 	// CGI.cpp
 	void	checkCGI( void );
 
-	// cookies.cpp
+	// coockiesAndSession.cpp
+	void		buildSetCookieHeader(); //! Dan
+	void		checkSessionIdCookie(Client &inputClient); //! Dan
+	std::string	generateUniqueToken(const std::string& clientIP); //! Dan
 
 	// coplianForm.cpp
 	void	initMimes( void );
@@ -161,12 +150,22 @@ vector<char>::iterator searchSeparator(vector<char>& curLine, string &separator,
 	// errorNotFoundGenerator.cpp
 	void	errorNotFoundGenerator( void );
 
+	// extractRouteConfig
+	void extractRouteConfig(void);
+	void extraStartingChecks();
+	void resetMyVariables();
+	void	clearingRoutes( vector< string >&, vector< string >& );
+	void	buildRouteConfig( string );
+	void	printMyConfig( void );
+
 	// generateListingHTML.cpp
 	bool	foundDefaultPath( void );
 	bool	isFileIgnored( string & );
 	void listingHTMLBuilder(void);
-	void makeHeaderListing(std::stringstream &result);
+	void makeHeaderListing(std::stringstream &);
 	void	generateListingHTML( void );
+
+	// getBody.cpp // ! Public method
 
 	// ResponseBuilder.cpp
 	void	resolveURI( void );
@@ -174,6 +173,24 @@ vector<char>::iterator searchSeparator(vector<char>& curLine, string &separator,
 	bool 	redirectURI( void );
 	void 	rootMapping( void );
 	void	checkMethod( void );
+
+	// serverName.cpp
+	string parseServerName( string & );
+	void applyServerName( void );
+	void serverNameChecking(void);
+	void extractServerName();
+
+	// setBody.cpp
+	void	initCurrentFiles( vector< string> & );
+
+	bool isLineDelim(vector<char> &, vector<char> &);
+	void determineSeparator(std::string &, size_t &, vector<char>& );
+	e_lineNature	processCurrentLine( vector< char >&  );
+	void	initBoundaryTokens( void );
+	void	extractFileBodyName( vector< char >&, vector< string >& );
+	void	setRegularPost( Client & );
+	void	setMultiPartPost( Client & );
+	vector<char>::iterator searchSeparator( vector<char>& , string &, size_t & );
 
 	// utilsResponseBuilder.cpp
 	string	extractType( const string& ) const;
@@ -194,13 +211,6 @@ vector<char>::iterator searchSeparator(vector<char>& curLine, string &separator,
 	bool _writeReady;
 	bool _parsedBoundaryToken;
 
-	// extractRouteConfig
-	void extractRouteConfig(void);
-	void extraStartingChecks();
-	void resetMyVariables();
-	void	clearingRoutes( vector< string >&, vector< string >& );
-	void	buildRouteConfig( string );
-	void	printMyConfig( void );
 	
 	bool	isDirectory(string &);
 
@@ -216,13 +226,6 @@ vector<char>::iterator searchSeparator(vector<char>& curLine, string &separator,
 
 	string generateRandomString(size_t, bool underscoreNeeded = false );
 
-	// serverName.cpp
-	string parseServerName( string & );
-	void applyServerName( void );
-
-	
-	void serverNameChecking(void);
-	void extractServerName();
 
 
 	map< string, string >_servernameType;
@@ -233,9 +236,6 @@ vector<char>::iterator searchSeparator(vector<char>& curLine, string &separator,
 
 
 
-	void		buildSetCookieHeader(); //! Dan
-	void		checkSessionIdCookie(Client &inputClient); //! Dan
-	std::string	generateUniqueToken(const std::string& clientIP); //! Dan
 
 public:
 
@@ -253,11 +253,11 @@ public:
 	ResponseBuilder & operator=( const ResponseBuilder & rhs);
 
 	void	getHeader( Client &, Config&, e_errorCodes codeInput = CODE_200_OK );
-	bool	getBody( Client &inputClient );
+	bool	getBody( Client & );
 	
 	Cgi		_cgi;//! provisoire sinon private
 
-	void	setBody( Client & client, bool eof );
+	void	setBody( Client &, bool );
 
 
 	void	printAllHeaders( void )const;
@@ -285,6 +285,5 @@ public:
 	void	setError( e_errorCodes, bool skip = false );
 	e_method getMethod( void );
 	// For testing
-	void	setMethod( const e_method& method );
-
+	void	setMethod( const e_method& );
 };
