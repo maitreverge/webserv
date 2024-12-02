@@ -9,11 +9,11 @@ void Server::listenClients()
 		{
 			if (!this->_clients[i].ping)
 				continue ;
-			if (!this->_clients[i].messageRecv.empty() 
+			if (this->_clients[i].retryChunked)
+				this->isChunked(i);
+			else if (!this->_clients[i].messageRecv.empty() 
 				&& this->_clients[i].headerRequest.getHeaders().ContentLength)				
 				this->retrySend(i);
-			else if (this->_clients[i].retryChunked)
-				this->isChunked(i);
 			else if (this->recevData(i))
 				break ;
 		}
