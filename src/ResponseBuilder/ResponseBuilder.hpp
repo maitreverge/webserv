@@ -21,19 +21,14 @@ struct ResponseHeaders
 	string statusLine;
 	string timeStamp;
 	string contentType;
-	string transfertEncoding; // ! OPTION ONE
-	// !           OR
-	string contentLenght; // ! OPTION TWO
+	string contentLenght;
 	
 	string cookie; //* added 26.11.2024
-	// TODO : All Headers
-	string location; // Only if redirection
+	string location;
 
 	// Utils
 	uint64_t bodyLenght;
 
-	// ! ADD COCKIES HERE
-	
 	ResponseHeaders()
 	{
 		masterHeader.clear();
@@ -43,16 +38,17 @@ struct ResponseHeaders
 
 struct MyConfig
 {
-	string				uri; // ! main key
+	// ! main key
+	string				uri;
 
-	vector< string >	allowedMethods; // exploited ✅
-	string				redirection; // exploited ✅
-	string				root; // exploited ✅
-	bool				listingDirectory; // exploited ✅
-	string				index; // exploited ✅
-	vector< string >	cgiAllowed; // exploited ✅
-	bool				uploadAllowed; // exploited ✅
-	string				uploadDirectory; // checked access ✅
+	vector< string >	allowedMethods;
+	string				redirection;
+	string				root;
+	bool				listingDirectory;
+	string				index;
+	vector< string >	cgiAllowed;
+	bool				uploadAllowed;
+	string				uploadDirectory;
 
 	// ========== my stuff ==========
 	string				indexRedirection;
