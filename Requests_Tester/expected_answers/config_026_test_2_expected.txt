@@ -1,2 +1,38 @@
 HTTP/1.1 200 OK
+Content-Length: 1169
 Content-Type: text/html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Listing Directory of URL _websites/cyborg_gaming/</title>
+<style>ul li a[href$="/"]::before {
+	content: "\1F4C1";
+	margin-right: 8px;
+}
+ul li a:not([href$="/"])::before {
+	content: "\1F4C4";
+	margin-right: 8px;
+}
+ul li a {
+	text-decoration: none;
+	color: inherit;
+}
+ul li a span {
+	text-decoration: underline;
+	color: blue;
+}
+</style>
+</head>
+<body>
+<ul><li><a href="_websites/cyborg_gaming/assets/">_websites/cyborg_gaming/assets/</a></li>
+<li><a href="_websites/cyborg_gaming/browse.html">_websites/cyborg_gaming/browse.html</a></li>
+<li><a href="_websites/cyborg_gaming/details.html">_websites/cyborg_gaming/details.html</a></li>
+<li><a href="_websites/cyborg_gaming/index.html">_websites/cyborg_gaming/index.html</a></li>
+<li><a href="_websites/cyborg_gaming/profile.html">_websites/cyborg_gaming/profile.html</a></li>
+<li><a href="_websites/cyborg_gaming/streams.html">_websites/cyborg_gaming/streams.html</a></li>
+<li><a href="_websites/cyborg_gaming/vendor/">_websites/cyborg_gaming/vendor/</a></li>
+</ul></body>
+</html>
