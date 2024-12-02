@@ -1,14 +1,16 @@
-HTTP/1.1 405 Method Not Allowed
-Content-Length: 320
+HTTP/1.1 400 Bad Request
+Content-Length: 285
 Content-Type: text/html
 
-<!DOCTYPE html>
 <html>
+
 <head>
-<title>405	Method Not Allowed</title>
+	<title>400</title>
 </head>
-<body>
-<h1>The 405.html file has not been found.This is a backup self-generated webpage.</h1>
-<h1><img src="https://freeyork.org/wp-content/uploads/2015/06/DKOpAT4VAAEmmes.jpg" alt="Description of image" style="width:40%;"></h1>
+
+<body style="background-color: #f0f0f0; text-align: center; padding: 50px;">
+	<h1 style="color: #ff5733; font-family: Arial, sans-serif;">400 Bad Request</h1>
+	<p style="color: #555; font-size: 18px;">Please stop dun us.</p>
 </body>
+
 </html>
