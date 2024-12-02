@@ -22,9 +22,8 @@ struct ResponseHeaders
 	string timeStamp;
 	string contentType;
 	string contentLenght;
-	
-	string cookie; //* added 26.11.2024
 	string location;
+	string cookie;
 
 	// Utils
 	uint64_t bodyLenght;
@@ -72,13 +71,13 @@ struct MyConfig
 
 class ResponseBuilder
 {
-
 	#ifdef UNIT_TEST
 	public:
 	#else
 	private:
 	#endif
 
+	// ===================== PRIVATE DATA-STRUCTURE ==================
 	typedef enum
 	{
 		TOKEN_DELIM,
@@ -89,7 +88,8 @@ class ResponseBuilder
 		OTHER
 	} e_lineNature;
 
-	// ------------- Priv Variables
+	// ===================== PRIVATE VARIABLES ==================
+	
 	Client* _client;
 	Config* _config;
 	
@@ -126,82 +126,6 @@ class ResponseBuilder
 	bool _isMultipart;
 	string _setBodyExtension;
 
-
-	// ===================== METHODS ==================
-
-	// buildHeaders.cpp
-	void	buildHeaders( void );
-
-	// CGI.cpp
-	void	checkCGI( void );
-
-	// coockiesAndSession.cpp
-	void		buildSetCookieHeader(); //! Dan
-	void		checkSessionIdCookie(Client &inputClient); //! Dan
-	std::string	generateUniqueToken(const std::string& clientIP); //! Dan
-
-	// coplianForm.cpp
-	void	initMimes( void );
-
-	// deleteEngine.cpp
-	void	generateDeleteHTML( void );
-	void	deleteEngine( void );
-
-	// errorNotFoundGenerator.cpp
-	void	errorNotFoundGenerator( void );
-
-	// extractRouteConfig
-	void extractRouteConfig(void);
-	void extraStartingChecks();
-	void resetMyVariables();
-	void	clearingRoutes( vector< string >&, vector< string >& );
-	void	buildRouteConfig( string );
-	void	printMyConfig( void );
-
-	// generateListingHTML.cpp
-	bool	foundDefaultPath( void );
-	bool	isFileIgnored( string & );
-	void listingHTMLBuilder(void);
-	void makeHeaderListing(std::stringstream &);
-	void	generateListingHTML( void );
-
-	// getBody.cpp // ! Public method
-
-	// ResponseBuilder.cpp
-	void	resolveURI( void );
-	void	sanatizeURI( string & );
-	bool 	redirectURI( void );
-	void 	rootMapping( void );
-	void	checkMethod( void );
-
-	// serverName.cpp
-	string parseServerName( string & );
-	void applyServerName( void );
-	void serverNameChecking(void);
-	void extractServerName();
-
-	// setBody.cpp
-	void	initCurrentFiles( vector< string> & );
-
-	bool isLineDelim(vector<char> &, vector<char> &);
-	void determineSeparator(std::string &, size_t &, vector<char>& );
-	e_lineNature	processCurrentLine( vector< char >&  );
-	void	initBoundaryTokens( void );
-	void	extractFileBodyName( vector< char >&, vector< string >& );
-	void	setRegularPost( Client & );
-	void	setMultiPartPost( Client & );
-	vector<char>::iterator searchSeparator( vector<char>& , string &, size_t & );
-
-	// utilsResponseBuilder.cpp
-	string	extractType( const string& ) const;
-	void	extractMethod( void );
-	void	setContentLenght( void ); // ! not a regular setter
-	void	uploadCheck( void );
-	void	checkAutho( void );
-	void	extractFileNature( string &);
-	void	checkNature( void );
-	bool	isErrorRedirect( void );
-
 	string _tokenDelim;
 	string _tokenEnd;
 	string _postFileName;
@@ -210,34 +134,120 @@ class ResponseBuilder
 
 	bool _writeReady;
 	bool _parsedBoundaryToken;
+	bool _serverNameChecked;
 
-	
-	bool	isDirectory(string &);
-
-	void	slashManip( string&, bool makeRedirection = false );
-	
-	void extractRedirectionIndex( vector< string >&, vector< string >& );
-
-	void pathSlashs(string &);
-
+	bool _isServerName;
+	string _serverName;
 	string _uploadTargetDirectory;
-
-	string generateFileName( void );
-
-	string generateRandomString(size_t, bool underscoreNeeded = false );
-
-
 
 	map< string, string >_servernameType;
 
-	bool _serverNameChecked;
-	bool _isServerName;
-	string _serverName;
+	// ===================== PRIVATE METHODS ==================
 
+	// ---------- buildHeaders.cpp
+	void	buildHeaders( void );
 
+	// ---------- CGI.cpp
+	void	checkCGI( void );
 
+	// ---------- coockiesAndSession.cpp // ! DAN FUNCTIONS
+	void		buildSetCookieHeader();
+	void		checkSessionIdCookie(Client &inputClient);
+	std::string	generateUniqueToken(const std::string& clientIP);
+
+	// ---------- coplianForm.cpp
+	void	initMimes( void );
+
+	// ---------- deleteEngine.cpp
+	void	generateDeleteHTML( void );
+	void	deleteEngine( void );
+
+	// ---------- errorNotFoundGenerator.cpp
+	void	errorNotFoundGenerator( void );
+
+	// ---------- extractRouteConfig
+	void 	extractRouteConfig(void);
+	void 	extraStartingChecks();
+	void 	resetMyVariables();
+	void	clearingRoutes( vector< string >&, vector< string >& );
+	void	buildRouteConfig( string );
+	void	printMyConfig( void );
+	void	extractRedirectionIndex( vector< string >&, vector< string >& );
+
+	// ---------- generateListingHTML.cpp
+	bool	foundDefaultPath( void );
+	bool	isFileIgnored( string & );
+	void 	listingHTMLBuilder(void);
+	void 	makeHeaderListing(std::stringstream &);
+	void	generateListingHTML( void );
+
+	// ---------- getBody.cpp //! PUBLIC METHOD
+
+	// ---------- ResponseBuilder.cpp
+	void	resolveURI( void );
+	void	sanatizeURI( string & );
+	bool 	redirectURI( void );
+	void 	rootMapping( void );
+	void	checkMethod( void );
+	bool	isDirectory(string &);
+	void	slashManip( string&, bool makeRedirection = false );
+
+	// ---------- serverName.cpp
+	string	parseServerName( string & );
+	void 	applyServerName( void );
+	void 	serverNameChecking(void);
+	void 	extractServerName();
+
+	// ---------- setBody.cpp
+	void					initCurrentFiles( vector< string> & );
+	bool					isLineDelim(vector<char> &, vector<char> &);
+	void					determineSeparator(std::string &, size_t &, vector<char>& );
+	e_lineNature			processCurrentLine( vector< char >&  );
+	void					initBoundaryTokens( void );
+	void					extractFileBodyName( vector< char >&, vector< string >& );
+	void					setRegularPost( Client & );
+	void					setMultiPartPost( Client & );
+	vector<char>::iterator	searchSeparator( vector<char>& , string &, size_t & );
+
+	// ---------- utilsResponseBuilder.cpp
+	string	extractType( const string& ) const;
+	void	extractMethod( void );
+	void	setContentLenght( void ); // ! not a regular setter
+	void	checkAutho( void );
+	void	extractFileNature( string &);
+	void	checkNature( void );
+	bool	isErrorRedirect( void );
+	void	pathSlashs(string &);
+	string	generateFileName( void );
+	string	generateRandomString(size_t, bool underscoreNeeded = false );
 
 public:
+
+	// ========================== PUBLIC DATA-STRUCTURE ========================
+
+	typedef enum
+	{
+		GET,
+		POST,
+		DELETE
+	} e_method;
+
+	e_method _method;
+
+	// ========================== PUBLIC NESTED CLASSES ========================
+
+	class CodeErrorRaised : public exception
+	{
+		public:
+			virtual const char* what( void ) const throw()
+			{
+				return ("CODE ERROR RAISED");
+			}
+	};
+
+	// ============================== PUBLIC METHODS ===========================
+	// ============================= PUBLIC VARIABLES ==========================
+
 
 	std::ifstream 	_ifs; // ! PAS DANS LES CONSTRUCTEURS
 	std::streampos	_ifsStreamHead; // ! ABSOLUMENT METTRE DANS LES CONSTRUCTEURS
@@ -262,24 +272,7 @@ public:
 
 	void	printAllHeaders( void )const;
 
-	class CodeErrorRaised : public exception
-	{
-		public:
-			virtual const char* what( void ) const throw()
-			{
-				return ("CODE ERROR RAISED");
-			}
-	};
 
-	// Enum
-	typedef enum
-	{
-		GET,
-		POST,
-		DELETE
-	} e_method;
-
-	e_method _method;
 
 	// Public method for CGI error timeout
 	void	setError( e_errorCodes, bool skip = false );

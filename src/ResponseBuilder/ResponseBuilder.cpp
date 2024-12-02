@@ -199,11 +199,6 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 			checkCGI();
 		}
 
-		// if (_method == POST and !_isCGI)
-		// {
-			// uploadCheck();
-		// }
-		
 		resolveURI();
 		
 		checkAutho();
