@@ -105,7 +105,7 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 	DIR *dir = opendir(path.c_str());
 	if (dir == NULL)
 	{
-		Logger::getInstance().log(ERROR, "Failing Openning Directory");
+		Logger::getInstance().log(ERROR, "500 Detected from `listingHTMLBuilder` : Server failed to open durrent directory with `opendir`");
 		setError(CODE_500_INTERNAL_SERVER_ERROR);
 		return;
 	}
@@ -190,7 +190,7 @@ void ResponseBuilder::generateListingHTML( void ){
 	// ! STEP 0 : check if we can read in the directory
 	if ( _myconfig.listingDirectory == false and _myconfig.index.empty())
 	{
-		Logger::getInstance().log(ERROR, "setError404 on `generateListingHTML`");
+		Logger::getInstance().log(ERROR, "404 Detected from `generateListingHTML`");
 		setError(CODE_404_NOT_FOUND);
 	}
 	

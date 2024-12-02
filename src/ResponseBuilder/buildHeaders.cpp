@@ -9,7 +9,7 @@ void	ResponseBuilder::buildHeaders(){
 	errorCode codes;
 
 	stringstream	streamStatusLine,
-					// streamTimeStamp,
+					// streamTimeStamp, // TODO : Put Timestamps back once webserv finished
 					streamContentLenght,
 					streamMasterHeader;
 
@@ -25,7 +25,7 @@ void	ResponseBuilder::buildHeaders(){
 						<< HTTP_HEADER_SEPARATOR;
 	Headers.statusLine = streamStatusLine.str();
 
-	
+	// TODO : Put Timestamps back once webserv finished
 	// ! Date:
 	// streamTimeStamp		<< "Date:"
 	// 					<< SPACE 
@@ -80,11 +80,7 @@ void	ResponseBuilder::buildHeaders(){
 
 	// ======================== BONUS METHODS ========================
 
-	// TODO : Coockie and session generator
-
-	{
-		buildSetCookieHeader();
-	}
+	buildSetCookieHeader();
 
 	// ======================== BONUS METHODS ========================
 
@@ -92,7 +88,7 @@ void	ResponseBuilder::buildHeaders(){
 	// ======================== BUILDING FINAL HEADERS ========================
 
 	streamMasterHeader	<< Headers.statusLine
-						// << Headers.timeStamp
+						// << Headers.timeStamp // TODO : Put Timestamps back once webserv finished
 						<< Headers.contentLenght
 						// Optionals
 						<< Headers.cookie

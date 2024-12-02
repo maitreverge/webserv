@@ -32,8 +32,7 @@ void	ResponseBuilder::extractMethod( void ){
 	}
 	else
 	{
-		Logger::getInstance().log(ERROR, "User tried an unknown / unsupported method");
-
+		Logger::getInstance().log(ERROR, "405 Detected from `extractMethod` : Permission Denied");
 		setError(CODE_405_METHOD_NOT_ALLOWED, true);
 	}
 }
@@ -44,12 +43,12 @@ void	ResponseBuilder::setContentLenght(){
 	{
 		if (errno == EACCES) // permission denied
 		{
-			Logger::getInstance().log(ERROR, "401 Detected from setContentLenght : Permission Denied");
+			Logger::getInstance().log(ERROR, "401 Detected from `setContentLenght` : Permission Denied");
 			setError(CODE_401_UNAUTHORIZED, true);
 		}
 		else if (errno == ENOENT or errno == EFAULT) // Missing file or bad adress
 		{
-			Logger::getInstance().log(ERROR, "401 Detected from setContentLenght : Missing file or bad adress");
+			Logger::getInstance().log(ERROR, "404 Detected from `setContentLenght` : Missing file or bad adress");
 			setError(CODE_404_NOT_FOUND, true);
 		}
 	}
@@ -115,7 +114,7 @@ void	ResponseBuilder::checkAutho( void ){
 	}
 	else
 	{
-		Logger::getInstance().log(ERROR, "405 Detected from checkAuthoDefault: File not Found");
+		Logger::getInstance().log(ERROR, "405 Detected from `checkAutho`: File not Found");
 		setError(CODE_404_NOT_FOUND);
 	}
 }
@@ -312,7 +311,7 @@ void ResponseBuilder::extraStartingChecks()
 			bool uploadWrite = _fileInfo.st_mode & S_IWUSR;
 			if (!uploadWrite)
 			{
-				Logger::getInstance().log(DEBUG, "Internal Error raised from ResponseBuilder");
+				Logger::getInstance().log(ERROR, "403 Detected from `extraStartingChecks`: Target Directory do not have WRITE permissions");
 				setError(CODE_403_FORBIDDEN);
 			}
 			_uploadTargetDirectory = _myconfig.uploadDirectory;
@@ -320,7 +319,10 @@ void ResponseBuilder::extraStartingChecks()
 		}
 	}
 	else if (!_myconfig.uploadAllowed) // TODO : need to test this variable
+	{
+		Logger::getInstance().log(ERROR, "403 Detected from `extraStartingChecks`: The route do not have `uploadAllowed` route config enabled");
 		setError(CODE_403_FORBIDDEN);
+	}
 
 	// pathSlashs(_originalURI);
 }
@@ -376,4 +378,7 @@ string ResponseBuilder::generateFileName( void ){
 	return baseName;
 }
 
-ResponseBuilder::e_method ResponseBuilder::getMethod( void ){ return this->_method; }
+ResponseBuilder::e_method ResponseBuilder::getMethod( void ){
+	
+	return this->_method;
+}

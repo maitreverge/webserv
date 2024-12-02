@@ -81,8 +81,6 @@ ResponseBuilder::ResponseBuilder( void ){
 
 ResponseBuilder::ResponseBuilder( const ResponseBuilder & src)
 {
-	// Logger::getInstance().log(INFO, "ResponseBuilder copy constructor");
-		
 	*this = src;
 }
 

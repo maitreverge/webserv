@@ -4,7 +4,6 @@
 
 void	ResponseBuilder::errorNotFoundGenerator( void ){
 
-	// codes struct for getting the appropriate error Message.
 	errorCode codes;
 	
 	stringstream result;
