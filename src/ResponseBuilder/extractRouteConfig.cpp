@@ -96,6 +96,13 @@ void	ResponseBuilder::buildRouteConfig( string path ){
 	try
 	{
 		_myconfig.root = *routes->at(path).at("root").begin();
+		if (_myconfig.root.size() > 1)
+		{
+			if (*_myconfig.root.begin() == '/')
+				_myconfig.root.erase(_myconfig.root.begin());
+			if (*_myconfig.root.rbegin() != '/' and isDirectory(_myconfig.root))
+				_myconfig.root += "/";
+		}
 	}
 	catch(const std::exception& e)
 	{
