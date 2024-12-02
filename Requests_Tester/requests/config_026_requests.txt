@@ -1,0 +1,8 @@
+curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3026/
+--END-REQUEST--
+curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3126/
+--END-REQUEST--
+curl -i -s --connect-timeout 2 --max-time 2 -X GET http://villa.localhost:3226/
+--END-REQUEST--
+curl -i -s --connect-timeout 2 --max-time 2 -X GET http://villa.localhost:3226/redirection
+--END-REQUEST--
