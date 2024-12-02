@@ -52,11 +52,11 @@ void	ResponseBuilder::buildRouteConfig( string path ){
 	{
 		_myconfig.uri = *routes->at(path).at("uri").begin();
 		// Every URI needs to start with a "/" and end without.
-		if (_myconfig.uri.size() >= 1)
+		if (_myconfig.uri.size() > 1)
 		{
 			if (*_myconfig.uri.begin() != '/')
 				_myconfig.uri.insert(0, "/");
-			if (*_myconfig.uri.rbegin() == '/')
+			if (*_myconfig.uri.rbegin() == '/' and isDirectory(_myconfig.uri))
 				_myconfig.uri.erase(_myconfig.uri.end() - 1);
 		}
 	}
@@ -79,6 +79,13 @@ void	ResponseBuilder::buildRouteConfig( string path ){
 	try
 	{
 		_myconfig.redirection = *routes->at(path).at("redirection").begin();
+		if (_myconfig.redirection.size() > 1)
+		{
+			if (*_myconfig.redirection.begin() == '/')
+				_myconfig.redirection.erase(_myconfig.redirection.begin());
+			if (*_myconfig.redirection.rbegin() != '/' and isDirectory(_myconfig.redirection))
+				_myconfig.redirection += "/";
+		}
 	}
 	catch(const std::exception& e)
 	{
