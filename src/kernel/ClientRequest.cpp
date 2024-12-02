@@ -9,11 +9,11 @@ void Server::listenClients()
 		{
 			if (!this->_clients[i].ping)
 				continue ;
-			if (!this->_clients[i].messageRecv.empty() 
+			if (this->_clients[i].retryChunked)
+				this->isChunked(i);
+			else if (!this->_clients[i].messageRecv.empty() 
 				&& this->_clients[i].headerRequest.getHeaders().ContentLength)				
 				this->retrySend(i);
-			else if (this->_clients[i].retryChunked)
-				this->isChunked(i);
 			else if (this->recevData(i))
 				break ;
 		}
@@ -96,7 +96,6 @@ void Server::headerCheckin(const size_t i, const size_t ret)
 	ss << "Header Checkin - recv " << ret << " bytes";
 	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
 	Server::printVector(this->_clients[i], this->_clients[i].messageRecv); }
-
 	std::vector<char>::iterator it;		
 	if (this->isDelimiterFind("\r\n\r\n", i, it))		
 	{	
@@ -108,7 +107,8 @@ void Server::headerCheckin(const size_t i, const size_t ret)
 			this->_clients[i].headerRequest.displayParsingResult();
 		#endif
 		if (!this->_clients[i].headerRequest.getIsValid())
-			throw Server::ShortCircuitException(CODE_400_BAD_REQUEST);			
+			throw Server::ShortCircuitException(CODE_400_BAD_REQUEST);
+		this->isContentLengthValid(i);			
 		this->_clients[i].responseBuilder.getHeader(this->_clients[i],
 			this->_conf);
 		this->_clients[i].messageRecv.

@@ -45,7 +45,7 @@ void Server::calculateChunkSize(const size_t i,
 	if (this->_clients[i].chunkSize < 0)
 	{
 		std::string hexaLen(this->_clients[i].messageRecv.begin(), it);
-		std::stringstream ss; ss << hexaLen;
+		std::stringstream ss; ss << std::hex << hexaLen;
 		ssize_t len; ss >> len;		
 		if (!ss)
 		{

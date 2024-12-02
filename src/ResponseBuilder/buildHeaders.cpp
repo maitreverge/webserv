@@ -7,7 +7,7 @@ void	ResponseBuilder::buildHeaders(){
 
 
 	errorCode codes;
-
+	
 	stringstream	streamStatusLine,
 					// streamTimeStamp, // TODO : Put Timestamps back once webserv finished
 					streamContentLenght,
@@ -53,7 +53,7 @@ void	ResponseBuilder::buildHeaders(){
 		stringstream streamContentType;
 		string contentType;
 		
-		if (_method == DELETE and _errorType == CODE_200_OK)
+		if (_method == DELETE and _errorType == CODE_200_OK) //!COND JUMP
 			contentType = "text/html";
 		else
 			contentType = extractType(_fileExtension);
