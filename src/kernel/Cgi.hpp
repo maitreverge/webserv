@@ -22,6 +22,7 @@ class Cgi
 	double 		getTimeSpan(Client & client) const;
     void 		retHandle(Client & client, ssize_t ret, std::string err, 
     	std::string info);
+	bool 		shutdownHandle(Client & client, bool eof);
 
     public:
     
