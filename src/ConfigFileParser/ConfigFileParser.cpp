@@ -206,11 +206,17 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, unsigned sho
 			field = (unsigned short)std::atoi(itemIt->second[0].c_str());
 }
 
+//? maxServerNbr
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, int& field, const char str[])
 {
 	if (catIt->first == "global" && itemIt->first == str)
 		if (!itemIt->second[0].empty())
 			field = (int)std::atoi(itemIt->second[0].c_str());
+	if  (field < 0 || field > 8)
+	{
+		Logger::getInstance().log(WARNING, "Config file error: wrong Server value");
+		field = 0;
+	}
 }
 
 //? listingDirectories && handleCookies
