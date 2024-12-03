@@ -30,6 +30,8 @@ try:
     )
 
     chatbot_response = response.choices[0].message.content
+    if "userInput" in user_input:
+        user_input = user_input.split('=', 1)[1]
 
     html_output = f"""
 	<!DOCTYPE html>
@@ -41,7 +43,7 @@ try:
 	</head>
 	<body>
 		<h1>Voici votre réponse :</h1>
-		<p>in response to {user_input}:</p>
+		<p>{user_input}:</p>
 		<p>{chatbot_response}</p>
 	</body>
 	</html>
