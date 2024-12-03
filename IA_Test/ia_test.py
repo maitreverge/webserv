@@ -15,12 +15,14 @@ logging.basicConfig(level=logging.ERROR)  # Changer le niveau à ERROR pour évi
 
 # Lire l'input depuis l'entrée standard (sys.stdin)
 user_input = sys.stdin.read().strip()
-
+if "user_input=" in user_input:
+	user_input = user_input.split('=', 1)[1]
+# user_input = user_input.split('=', 1)[1]
 client = Client("dsylvain/myNewAPI")
 
 try:
 	result = client.predict(user_input=user_input)
-
+	
 	# Rétablir stdout et stderr
 	sys.stdout = original_stdout
 	sys.stderr = original_stderr
