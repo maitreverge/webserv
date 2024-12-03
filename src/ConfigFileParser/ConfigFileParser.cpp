@@ -186,7 +186,7 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, short& field
 			field = (short)std::atoi(itemIt->second[0].c_str());
 	if (field < 0)
 	{
-		Logger::getInstance().log()
+		Logger::getInstance().log(WARNING, "Config file error: wrong MaxClient value");
 		field = 0;
 	}
 }
