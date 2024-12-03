@@ -1,4 +1,5 @@
 #include "ConfigFileParser.hpp"
+#include "Logger.hpp"
 
 ConfigFileParser::ConfigFileParser()
 {
@@ -183,6 +184,11 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, short& field
 	if (catIt->first == "global" && itemIt->first == str)
 		if (!itemIt->second[0].empty())
 			field = (short)std::atoi(itemIt->second[0].c_str());
+	if (field < 0)
+	{
+		Logger::getInstance().log()
+		field = 0;
+	}
 }
 
 //? recv_buff_size/send_buff_size
