@@ -73,7 +73,9 @@ void	ResponseBuilder::buildHeaders(){
 		streamLocation	<< "Location:"
 						<< SPACE
 						<< _realURI
-						<< HTTP_HEADER_SEPARATOR;
+						<< HTTP_HEADER_SEPARATOR
+						<< "Content-Length: 0\r\n"
+						<< "Connection: close\r\n\r\n";
 		Headers.location = streamLocation.str();
 	}
 

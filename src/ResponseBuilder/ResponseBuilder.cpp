@@ -22,30 +22,43 @@ bool ResponseBuilder::redirectURI( void ){
 
 	if (_myconfig.redirection.empty())
 		return false;
-
-	// TODO : Client keeps asking the same redirection over and over
-	// if (_realURI == _myconfig.redirection)
-	// if (_myconfig.uri == "/")
-	// {
-	// 	Logger::getInstance().log(ERROR, "Redirection Loop Detected in base config \"/\"");
-	// 	setError(CODE_508_LOOP_DETECTED);
-	// }
-	if (_myconfig.redirection != "/" and _realURI.find(_myconfig.redirection) != std::string::npos)//!
+	else if (_realURI == "/" and _myconfig.redirection == "/")
+	{
+		Logger::getInstance().log(ERROR, "508 LOOP : Both _realURi and Redirection == \"/\"");
+		setError(CODE_508_LOOP_DETECTED);
+	}
+	else if (_realURI.size() == 1 and *_realURI.begin() == '/')
+	{
+		Logger::getInstance().log(INFO, "Regular redirection activated");
+		_realURI = _myconfig.redirection;
+		setError(CODE_302_FOUND);
+	}
+	else if (_myconfig.uri == "/" and _realURI.find(_myconfig.redirection) != std::string::npos )// ! FROM HERE, _REALURI SIZE > 1
 	{
 		Logger::getInstance().log(ERROR, "Redirection Loop Detected");
 		setError(CODE_508_LOOP_DETECTED);
 	}
+	// else if (_realURI.size() > 1 and _realURI.find(_myconfig.redirection) != std::string::npos )//!
+
+	// TODO : Client keeps asking the same redirection over and over
+	// if (_realURI == _myconfig.redirection)
+	// if (( *_realURI.begin() == '/' and _realURI.size() > 1 ) and ( _myconfig.uri == "/" ) and ( *_myconfig.redirection.begin() == '/' and _myconfig.redirection.size() > 1 ) )
+	// if (_realURI.size() > 1 and )
+	// {
+	// 	Logger::getInstance().log(ERROR, "Redirection Loop Detected in base config \"/\"");
+	// 	setError(CODE_508_LOOP_DETECTED);
+	// }
 	
 	/*
 		! I had a doubt on this one, need to dig deeper when working on redirections
 		Original line :
 		_realURI = _myconfig.redirection + _myconfig.indexRedirection;
 	*/
-	_realURI = _myconfig.redirection;
+	// _realURI = _myconfig.redirection;
 
 	
-	setError(CODE_302_FOUND);
-	return true;
+	// setError(CODE_302_FOUND);
+	return false;
 }
 
 void ResponseBuilder::rootMapping( void ){
