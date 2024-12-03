@@ -1,2 +1,0 @@
-curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3027/villa_agency
---END-REQUEST--
