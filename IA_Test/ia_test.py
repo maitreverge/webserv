@@ -39,7 +39,7 @@ try:
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Résultat de l'API</title>
+		<title>Response</title>
 	</head>
 	<body>
 		<h1>Voici votre réponse :</h1>
