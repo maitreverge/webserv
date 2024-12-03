@@ -14,6 +14,7 @@ Config::Config(char *path) : handleCookies(false)
 
 Config::Config()
 {
+
 	intitializeVars(1);
 	ConfigFileParser parser;
 	parser.parseConfigFile(*this, (char *)("_configs/base_test/base_test_ok_1.ini"));

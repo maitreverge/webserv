@@ -167,7 +167,14 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, size_t& fiel
 {
 	if (catIt->first == "global" && itemIt->first == str)
 		if (!itemIt->second[0].empty())
+		{
 			field = (size_t)std::atoi(itemIt->second[0].c_str());
+			if (field > 10000 && itemIt->first == "maxBodySize")
+			{
+				Logger::getInstance().log(WARNING, "Config file error: wrong maxHeaderSize value");
+				field = 0;
+			}
+		}
 }
 
 //? maxHederSize
