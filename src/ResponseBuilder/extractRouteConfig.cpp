@@ -22,8 +22,9 @@ void ResponseBuilder::clearingRoutes( vector< string >&routeNames, vector< strin
 			curVector =  routes->at(it->first).at("uri");
 			if (curVector.empty())
 				throw std::bad_exception();
-			if (curVector[0].size() > 1 and *curVector[0].begin() == '/')
-				curVector[0].erase(curVector[0].begin());
+			if (curVector[0].size() > 1 and *curVector[0].begin() != '/')
+				curVector[0].insert(0, "/");
+				// curVector[0].erase(curVector[0].begin());
 			routeURIS.push_back(curVector[0]);
 			routeNames.push_back(it->first); // get the current route Names [route1], [route2], ect...
 		}
@@ -226,8 +227,8 @@ void	ResponseBuilder::extractRouteConfig( void ){
 
 	// string originalURI = _realURI;
 	string trimmedRoute = _realURI;
-	if (trimmedRoute.size() > 1 and  *trimmedRoute.begin() == '/' and trimmedRoute.find_first_of('/') != trimmedRoute.find_last_of('/') )
-		trimmedRoute.erase(trimmedRoute.begin());
+	// if (trimmedRoute.size() > 1 and  *trimmedRoute.begin() == '/' and trimmedRoute.find_first_of('/') != trimmedRoute.find_last_of('/') )
+	// 	trimmedRoute.erase(trimmedRoute.begin());
 	bool found = false;
 	u_int8_t pos;
 

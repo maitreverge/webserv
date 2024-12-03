@@ -25,6 +25,11 @@ bool ResponseBuilder::redirectURI( void ){
 
 	// TODO : Client keeps asking the same redirection over and over
 	// if (_realURI == _myconfig.redirection)
+	// if (_myconfig.uri == "/")
+	// {
+	// 	Logger::getInstance().log(ERROR, "Redirection Loop Detected in base config \"/\"");
+	// 	setError(CODE_508_LOOP_DETECTED);
+	// }
 	if (_myconfig.redirection != "/" and _realURI.find(_myconfig.redirection) != std::string::npos)//!
 	{
 		Logger::getInstance().log(ERROR, "Redirection Loop Detected");
