@@ -164,6 +164,7 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, server& serv
 	(void)i;
 }
 
+//? maxBodySize
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, size_t& field, const char str[])
 {
 	if (catIt->first == "global" && itemIt->first == str)
@@ -171,11 +172,17 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, size_t& fiel
 			field = (size_t)std::atoi(itemIt->second[0].c_str());
 }
 
+//? maxHederSize
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, ssize_t& field, const char str[])
 {
 	if (catIt->first == "global" && itemIt->first == str)
 		if (!itemIt->second[0].empty())
 			field = (ssize_t)std::atoi(itemIt->second[0].c_str());
+	if (field < 0)
+	{
+		Logger::getInstance().log(WARNING, "Config file error: wrong maxHeaderSize value");
+		field = 0;
+	}
 }
 
 //? maxClient
