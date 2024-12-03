@@ -208,7 +208,16 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, unsigned sho
 {
 	if (catIt->first == "global" && itemIt->first == str)
 		if (!itemIt->second[0].empty())
-			field = (unsigned short)std::atoi(itemIt->second[0].c_str());
+		{
+			int tmp = (int)std::atoi(itemIt->second[0].c_str());
+			if(tmp >= 0 && tmp < 65535)
+				field = (unsigned short)tmp;
+			else
+			{
+				Logger::getInstance().log(WARNING, "Config file error: wrong buff_size value");
+				field = 0;
+			}
+		}
 }
 
 //? maxServerNbr
