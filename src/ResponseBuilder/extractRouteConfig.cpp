@@ -22,6 +22,8 @@ void ResponseBuilder::clearingRoutes( vector< string >&routeNames, vector< strin
 			curVector =  routes->at(it->first).at("uri");
 			if (curVector.empty())
 				throw std::bad_exception();
+			if (curVector[0].size() > 1 and *curVector[0].begin() == '/')
+				curVector[0].erase(curVector[0].begin());
 			routeURIS.push_back(curVector[0]);
 			routeNames.push_back(it->first); // get the current route Names [route1], [route2], ect...
 		}
@@ -224,6 +226,8 @@ void	ResponseBuilder::extractRouteConfig( void ){
 
 	// string originalURI = _realURI;
 	string trimmedRoute = _realURI;
+	if (trimmedRoute.size() > 1 and  *trimmedRoute.begin() == '/')
+		trimmedRoute.erase(0);
 	bool found = false;
 	u_int8_t pos;
 
@@ -245,6 +249,10 @@ void	ResponseBuilder::extractRouteConfig( void ){
 		{
 			if (trimmedRoute.length() == 1)
 				break; // not found the "/" Route
+			else if (*trimmedRoute.rbegin() == '/') 
+			{
+				trimmedRoute.erase(trimmedRoute.size() -1);
+			}
 			else if (trimmedRoute.find_first_of('/') == trimmedRoute.find_last_of('/'))
 			{
 				if (trimmedRoute.length() == 1) // (if only left with a /)
@@ -253,7 +261,7 @@ void	ResponseBuilder::extractRouteConfig( void ){
 					trimmedRoute.erase(trimmedRoute.find_first_of('/') + 1);
 			}
 			else
-				trimmedRoute.erase(trimmedRoute.find_last_of('/'));
+				trimmedRoute.erase(trimmedRoute.find_last_of('/') + 1);
 		}
 		else
 			break;
