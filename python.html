@@ -5,18 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cookies</title>
 </head>
-<body>
-    <h1>Give an input for super IA script !</h1>
-	<image src="/IA_Test/ia.webp" style="width:25vw; position:relative; left:50%; transform: translateX(-50%)"></image>
-	<div  style="background-color: none;  width:20vw; position:relative; left:50%; transform: translateX(-50%)">
-		<form method="POST" enctype="text/plain">
-			<label for="userInput">Votre saisie :</label>
-			<input type="text" id="userInput" name="userInput" placeholder="Entrez quelque chose" required>
+<body style="background-color:#649e95">    
+	<image src="/IA_Test/ia_round6.webp" style="width:25vw; position:absolute; top:10vh; left:50%; transform: translateX(-50%)"></image>
+	<div  style="background-color: none; position:absolute; top:70vh; width:20vw; position:relative; left:50%; transform: translateX(-50%)">
+		<form method="POST" enctype="text/plain">			
+			<textarea
+    			style="border-radius: 10px; width:20vw; height:4vw; font-size:large; border:none; color:rgb(99, 87, 87)" 
+    			id="userInput" 
+   				name="userInput" 
+    			placeholder="Entre quelque chose..." 
+    			required></textarea>
+			<style>
+				textarea {
+					border-radius: 10px;
+					width: 20vw;
+					height: 5vw;
+					border: 1px solid rgb(168, 149, 149); /* Bordure initiale */
+					padding: 10px;
+					font-size: 1em;
+					font-family: Arial, sans-serif;
+					resize:none;
+				}
 		
-			<button type="submit" formaction="/IA_Test/ia_test.py/very angry">👿</button>
-			<button type="submit" formaction="/IA_Test/ia_test.py/very sad">😭</button>
-			<button type="submit" formaction="/IA_Test/ia_test.py/very funny">🤣</button>
-			<button type="submit" formaction="/IA_Test/ia_test.py/very hungry">🧀</button>
+				textarea:focus {
+					outline: none; /* Supprime le contour bleu par défaut */
+					border: 1px solid lightgray; /* Conserve le style sans surbrillance */
+				}
+		
+				textarea::placeholder {
+					color: rgb(125, 121, 121);
+					font-style: italic;
+				}
+				body {
+					animation: changeBackground 10s infinite alternate;
+				}
+
+				 @keyframes changeBackground{
+					0% {
+                		background-color: #649e95; /* Couleur initiale */
+            		}
+            		50% {
+                		background-color: #ff6347; /* Couleur intermédiaire */
+            		}
+            		100% {
+                		background-color: #16dcbe; /* Couleur finale */
+            		}
+				}
+
+				button {
+					background-color: white;
+					padding:5px;
+					border-radius: 4px;
+				}
+			</style>
+			<div style="position: relative; top:2vw; left:50%; transform:translatex(-50%); width:fit-content">
+				<button type="submit" formaction="/IA_Test/ia_test.py/very angry">👿</button>
+				<button type="submit" formaction="/IA_Test/ia_test.py/very sad">😭</button>
+				<button type="submit" formaction="/IA_Test/ia_test.py/very funny">🤣</button>
+				<button type="submit" formaction="/IA_Test/ia_test.py/very hungry">🧀</button>
+			</div>
 		</form>
 	</div>
 </body>
