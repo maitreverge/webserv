@@ -25,7 +25,7 @@ bool ResponseBuilder::redirectURI( void ){
 
 	// TODO : Client keeps asking the same redirection over and over
 	// if (_realURI == _myconfig.redirection)
-	if (_myconfig.redirection != "/" and _realURI.find(_myconfig.redirection) != std::string::npos)
+	if (_myconfig.redirection != "/" and _realURI.find(_myconfig.redirection) != std::string::npos)//!
 	{
 		Logger::getInstance().log(ERROR, "Redirection Loop Detected");
 		setError(CODE_508_LOOP_DETECTED);
@@ -50,8 +50,21 @@ void ResponseBuilder::rootMapping( void ){
 	
 	// slashManip(_myconfig.root);
 	
+	Logger::getInstance().log(INFO, "ROOT MAPPING CALLEDc");
 	if (_realURI.find(_myconfig.root) == std::string::npos)
+	{
+
+		Logger::getInstance().log(DEBUG, "URI BEFORE MAPPING");
+		Logger::getInstance().log(DEBUG, _realURI);
+
 		_realURI.replace(0, _myconfig.uri.size(), _myconfig.root);
+		// _realURI.insert(0, _myconfig.root);
+		
+		Logger::getInstance().log(DEBUG, "URI AFTER MAPPING");
+		Logger::getInstance().log(DEBUG, _realURI);
+	}
+
+		// http://localhost:3027/_websites/festival/index.html
 
 }
 
