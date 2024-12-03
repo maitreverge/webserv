@@ -230,9 +230,21 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, int& field, 
 //? listingDirectories && handleCookies
 void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, bool& field, const char str[])
 {
+	if (catIt->first == "errorPages")
+		return ;
 	if (catIt->first == "global" && itemIt->first == str)
 		if (!itemIt->second[0].empty())
 			field = std::atoi(itemIt->second[0].c_str());
+	if  ((field != 0 && field != 1)  && itemIt->first == "listingDirectories")
+	{
+		Logger::getInstance().log(WARNING, "Config file error: wrong listingDirectories value");
+		field = 0;
+	}
+	if  ((field != 0 && field != 1)  && itemIt->first == "handleCookies")
+	{
+		Logger::getInstance().log(WARNING, "Config file error: wrong handleCookies value");
+		field = 0;
+	}
 }
 
 //? indexFiles
