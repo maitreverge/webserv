@@ -95,7 +95,11 @@ $(OBJ_DIR_DEBUG)/%.o : %.cpp $(HDR)
 	@$(GXX) $(CFLAGS) $< -c -o $@
 
 $(NAME) : $(OBJ)
-	pip install -r IA_Test/requirements.txt --user
+	python3 -m pip install --upgrade pip --user
+	pip uninstall openai
+	pip install openai --user
+	pip install --upgrade httpx --user
+# pip install -r IA_Test/requirements.txt --user
 	@echo -n "$(HIDE_CURSOR)"
 	@$(MAKE) -s backline
 	@echo "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b compiled            ✅$(RESET)"	
