@@ -96,9 +96,7 @@ $(OBJ_DIR_DEBUG)/%.o : %.cpp $(HDR)
 
 $(NAME) : $(OBJ)
 	python3 -m pip install --upgrade pip --user
-	pip uninstall openai
-	pip install openai --user
-	pip install --upgrade httpx --user
+	pip install --upgrade openai --user
 # pip install -r IA_Test/requirements.txt --user
 	@echo -n "$(HIDE_CURSOR)"
 	@$(MAKE) -s backline

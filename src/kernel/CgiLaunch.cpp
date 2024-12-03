@@ -78,7 +78,7 @@ void provC(Client & client) //! a suppr
 	char actualPath[PATH_MAX];	
 	if (!getcwd(actualPath, PATH_MAX))	
 		Logger::getInstance().log(ERROR, "getcwd", client), exit(200);				 
-	std::string envPathInfo("PATH_INFO=" + client.responseBuilder._pathInfo);    
+	std::string envPathInfo("PATH_INFO=" + client.responseBuilder._pathInfo);
 	char *env[] = {const_cast<char *>(envPathInfo.c_str()), NULL};
 	std::string execPath = std::string(actualPath) + '/'
 		+ client.responseBuilder._fileName; 
@@ -120,8 +120,11 @@ void Cgi::callExecve(Client & client, const std::string & interpreter)
 		Logger::getInstance().log(ERROR, "getcwd", client), exit(200);					 
 	std::string interPath = this->getPath(client, interpreter);
 	
-	std::string envPathInfo("PATH_INFO=" + client.responseBuilder._pathInfo);	 
-	char *env[] = {const_cast<char *>(envPathInfo.c_str()), NULL};   
+	std::string envPathInfo("PATH_INFO=" + client.responseBuilder._pathInfo);
+	std::string envOpenAI("OPENAI_API_KEY=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");  
+	 
+	char *env[] = {const_cast<char *>(envPathInfo.c_str()), const_cast<char *>(envOpenAI.c_str()), NULL}; 
+
 	std::string execPath(std::string(actualPath)
 		+ '/' + client.responseBuilder._fileName);
 	

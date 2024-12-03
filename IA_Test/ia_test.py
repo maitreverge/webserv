@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-
-import openai
+# import openai
+from openai import OpenAI
 import sys
 import os
 import logging
 
 logging.basicConfig(level=logging.ERROR) 
 
-openai.api_key = ("sk-proj-Lr-uJ-sX316xnR7-Owv09X8GERyKZCrdeJviLGUWQFV_2JNAVphF"
-	"vMXGOjG03SaPJ6KpdwWcoiT3BlbkFJtUbHEhwMu__LraTcV5qqCeOKWgjMKi2_VuwwG6WtQaX"
-	"LYDuvVcUk59h-BfThffRsmJsbaFEPAA")
-
+client = OpenAI()
+# openai.api_key = ("sk-proj-Lr-uJ-sX316xnR7-Owv09X8GERyKZCrdeJviLGUWQFV_2JNAVphF"
+# 	"vMXGOjG03SaPJ6KpdwWcoiT3BlbkFJtUbHEhwMu__LraTcV5qqCeOKWgjMKi2_VuwwG6WtQaX"
+# 	"LYDuvVcUk59h-BfThffRsmJsbaFEPAA")
 path_info = os.getenv("PATH_INFO", "").replace("%20", " ").strip("/")
 humeur = path_info if path_info else "neutre"
 
@@ -18,18 +18,18 @@ user_input = sys.stdin.read().strip()
 
 pre_prompt = f"Réponds selon l'humeur suivante : {humeur}. \
 	Sois court et pertinent."
-
+# client = OpenAI(api_key)
 try:
-    response = openai.ChatCompletion.acreate(
-        model="gpt-3.5-turbo",
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": pre_prompt},
             {"role": "user", "content": user_input}
         ],
-        max_tokens=50
+        max_tokens=100
     )
 
-    chatbot_response = response["choices"][0]["message"]["content"]
+    chatbot_response = response.choices[0].message.content
 
     html_output = f"""
 	<!DOCTYPE html>
