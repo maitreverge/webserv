@@ -95,7 +95,10 @@ $(OBJ_DIR_DEBUG)/%.o : %.cpp $(HDR)
 	@$(GXX) $(CFLAGS) $< -c -o $@
 
 $(NAME) : $(OBJ)
-	pip install -r IA_Test/requirements.txt --user
+ifndef NO_PIP # If you do not want to install Python dependencies, just do : `export NO_PIP=1`
+		@echo -n "Installing python dependecies"
+		@pip install -r IA_Test/requirements.txt --user
+endif
 	@echo -n "$(HIDE_CURSOR)"
 	@$(MAKE) -s backline
 	@echo "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b compiled            ✅$(RESET)"	
