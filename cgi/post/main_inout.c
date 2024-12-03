@@ -15,12 +15,14 @@ int main()
 		// write(2, (ret), 6);
 		// write(2, "\n", 1);
     	buff[ret] = 0;
-		// write(2, buff, strlen(buff));        
+		write(2, buff, strlen(buff)); 
+        write(2, "boucl", 5);        
 		// strcpy(send, buff);
     }
     if (ret < 0)    
         printf("error read\n");
-    
+    write(2, "endboucle", 9);  
+    write(2, buff, strlen(buff));  
     // if (getenv("PATH_INFO"))
     //     write(2, getenv("PATH_INFO"), strlen(getenv("PATH_INFO")));
     // int fd = open("local", O_RDONLY);

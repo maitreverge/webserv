@@ -83,16 +83,27 @@ void Cgi::retHandle(Client & client, ssize_t ret, std::string err,
 			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));	
 }
 
+bool Cgi::shutdownHandle(Client & client, bool eof)
+{
+	if (eof && client.messageRecv.empty() && this->_fds[1] > 0)
+	{
+		int ret =  shutdown(this->_fds[1], SHUT_WR);
+		if (ret < 0)
+			throw (Logger::getInstance().log(ERROR, "cgi shutdown",	client),
+				Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
+		return true;
+	}
+	return false;
+}
+
 void Cgi::setBody(Client & client, bool eof)
 {
     Logger::getInstance().log(DEBUG, "Cgi Set Body", client);
 
 	this->hasError(client, "cgi get body has error");
 	this->isTimeout(client, "Timeout is over");
-	if (eof && client.messageRecv.empty() && this->_fds[1] > 0
-		&& shutdown(this->_fds[1], SHUT_WR) < 0)			
-		throw (Logger::getInstance().log(ERROR, "cgi setbody shutdown", client),
-			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
+	if (this->shutdownHandle(client, eof))
+		return;
     if (!FD_ISSET(this->_fds[1], &Kernel::_writeSet))    
         return Logger::getInstance().log(DEBUG, "cgi not ready to send");     
     Logger::getInstance().log(DEBUG, "\e[31;103mcgi ready to send\e[0m");
@@ -106,10 +117,7 @@ void Cgi::setBody(Client & client, bool eof)
 		Server::printVector(client, str);
 	client.messageRecv.erase(client.messageRecv.begin(),
         client.messageRecv.begin() + ret);
-	if (eof && client.messageRecv.empty() && this->_fds[1] > 0
-		&& shutdown(this->_fds[1], SHUT_WR) < 0)			
-		throw (Logger::getInstance().log(ERROR, "cgi setbody shutdown", client),
-			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
+	this->shutdownHandle(client, eof);
 }
 
 bool Cgi::getBody(Client & client)

@@ -10,16 +10,17 @@ void Server::bodyCheckin(const size_t i, const size_t addBodysize)
 
 	this->_clients[i].bodySize += addBodysize;
 	if (this->isChunked(i))
-		return;
-	this->isContentLengthValid(i);
+		return;	
 	this->isBodyTooLarge(i);	
 	this->isBodyEnd(i) ? this->sendBodyEnd(i) :	this->sendBodyPart(i);
 }
 
 void Server::isContentLengthValid(const size_t i)
 {	
-	if (!this->_clients[i].headerRequest.getHeaders().ContentLength &&
-		this->_clients[i].headerRequest.getMethod() == "POST")
+	if (!this->_clients[i].headerRequest.getHeaders().ContentLength
+		&& this->_clients[i].headerRequest.getMethod() == "POST"
+		&& this->_clients[i].headerRequest.getHeaders().TransferEncoding
+		!= "chunked")
 		throw (Logger::getInstance().log(ERROR, "post has no body",
 			this->_clients[i]),
 			Server::ShortCircuitException(CODE_400_BAD_REQUEST));

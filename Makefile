@@ -95,6 +95,7 @@ $(OBJ_DIR_DEBUG)/%.o : %.cpp $(HDR)
 	@$(GXX) $(CFLAGS) $< -c -o $@
 
 $(NAME) : $(OBJ)
+	pip install -r IA_Test/requirements.txt --user
 	@echo -n "$(HIDE_CURSOR)"
 	@$(MAKE) -s backline
 	@echo "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b compiled            ✅$(RESET)"	
