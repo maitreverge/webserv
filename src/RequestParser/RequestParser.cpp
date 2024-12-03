@@ -128,7 +128,10 @@ void	RequestParser::handleFirstLine(std::istringstream& requestStream)
 		if (_HTTP_version != "HTTP/1.1")
 			_isValid = false;
 		if (_method != "GET" && _method != "POST" && _method != "DELETE")
+		{
 			_isValid = false;
+			throw Server::ShortCircuitException(CODE_405_METHOD_NOT_ALLOWED);
+		}
 	}
 	if (_isValid == 0)
 		Logger::getInstance().log(ERROR, "Request first line wrong", *this);

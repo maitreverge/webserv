@@ -74,7 +74,7 @@ void Cgi::retHandle(Client & client, ssize_t ret, std::string err,
         Logger::getInstance().log(DEBUG, info);
     else if (ret < 0)
     {	      
-        errnoHandle();//! a suppr  
+        errnoHandle();//! a suppr  !!!
 		throw (Logger::getInstance().log(ERROR, err, client),
 			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
     }
