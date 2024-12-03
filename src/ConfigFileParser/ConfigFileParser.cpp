@@ -140,11 +140,12 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt
 {
 	if (isServerData(catIt->first) && itemIt->first == str)
 	{
-		// 	printColor(GREEN, itemIt->first);
-		// if (itemIt->first == "serverStructName")
-		// {
-		// 	printColor(BLUE, "TQTQ");
-		// }
+		if (itemIt->first == "port")
+		{
+			int portNbr = std::atoi(itemIt->second[0].c_str());
+			if (portNbr > 65535 || portNbr < 1024)
+				Logger::getInstance().log(WARNING, "Config file error: wrong port value");
+		}
 		if (!(*valIt).empty())
 			field = itemIt->second[0];		
 	}
@@ -154,13 +155,10 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, server& serv
 {
 	if (!serverStruct.port.empty() && !serverStruct.host.empty())
 	{
-		// printColor(YELLOW, "func is called :" + catIt->first);
 		serverStruct.serverStructName = catIt->first;
 	}
 
 	(void)itemIt;
-	// (void)catIt;
-	// (void)serverStruct;
 	(void)i;
 }
 
