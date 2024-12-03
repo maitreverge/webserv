@@ -17,7 +17,7 @@ humeur = path_info if path_info else "neutre"
 user_input = sys.stdin.read().strip()
 
 pre_prompt = f"Réponds selon l'humeur suivante : {humeur}. \
-	Sois court et pertinent."
+	Sois court et pertinent. voici des informations sur l'utilisateur nom:civil prenom eva son chat qui sapel nuage , anecdote: travaille a nexity , a eu une journee stressante. integre ces informations dune facon eloquente dans la reponse "
 # client = OpenAI(api_key)
 try:
     response = client.chat.completions.create(
@@ -26,7 +26,7 @@ try:
             {"role": "system", "content": pre_prompt},
             {"role": "user", "content": user_input}
         ],
-        max_tokens=100
+        max_tokens=500
     )
 
     chatbot_response = response.choices[0].message.content
