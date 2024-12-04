@@ -5,9 +5,9 @@
 /**========================================================================
  *                           CONSTRUCTOR && DESTRUCTOR
  *========================================================================**/
-Logger::Logger() : logToStdOut(1)
+Logger::Logger(int verbose) : logToStdOut(1)
 {
-	_logLevel[INFO] = 		1;
+	_logLevel[INFO] = 		verbose;
 	_logLevel[DEBUG] = 		0;
 	#ifdef DEB
 		_logLevel[DEBUG] = 	1;	
@@ -28,9 +28,9 @@ Logger::~Logger()
 		_errorFile.close();
 }
 
-Logger& Logger::getInstance()
+Logger& Logger::getInstance(int verbose)
 {
-	static Logger instance;
+	static Logger instance(verbose);
 	return instance;
 }
 

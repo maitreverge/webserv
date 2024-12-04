@@ -63,15 +63,20 @@ void signalHandle(int)
 
 int main(int argc, char* argv[])
 {
-	if (argc > 2)
-		return (std::cerr << "Usage: ./webserv [config.ini]" << std::endl, 1);
-
 	std::signal(2, signalHandle);
 	std::signal(3, signalHandle);
 	disableSignalEcho();
-
+	int verbose = 0;
+	if (argv[1] && std::string(argv[1]) == "-v")
+	{
+		argc--;
+		argv++;
+		verbose = 1;
+	}
+	if (argc > 2)
+		return std::cerr << "Usage: ./webserv -v [config.ini]" << std::endl, 1;
 	std::cout << std::endl;
-	Logger::getInstance().log(INFO, "\e[1;3;36mServer is Online!\e[0m");
+	Logger::getInstance(verbose).log(INFO, "\e[1;3;36mServer is Online!\e[0m");
 	std::cout << std::endl;
 	
 	if (argc == 1)
