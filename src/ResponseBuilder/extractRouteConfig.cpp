@@ -227,6 +227,8 @@ void	ResponseBuilder::extractRouteConfig( void ){
 
 	// string originalURI = _realURI;
 	string trimmedRoute = _realURI;
+	if (trimmedRoute.size() > 1 and *trimmedRoute.rbegin() != '/')
+		trimmedRoute += "/";
 	// if (trimmedRoute.size() > 1 and  *trimmedRoute.begin() == '/' and trimmedRoute.find_first_of('/') != trimmedRoute.find_last_of('/') )
 	// 	trimmedRoute.erase(trimmedRoute.begin());
 	bool found = false;
