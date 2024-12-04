@@ -16,7 +16,11 @@ void ResponseBuilder::extractServerName()
 	string curPort = curHost.substr(curHost.find_last_of(":") + 1);
 
 	// Extracting ==> festival
-	string curServerName = curHost.substr(0, curHost.find_last_of("."));
+	string curServerName;
+	if (curHost.find(".localhost:") != std::string::npos)
+		curServerName = curHost.substr(0, curHost.find_last_of("."));
+	else
+		curServerName = curHost.substr(0, curHost.find_first_of(":"));
 
 	map<string, string> mapPort;
 

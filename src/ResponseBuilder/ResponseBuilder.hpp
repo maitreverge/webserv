@@ -157,6 +157,8 @@ class ResponseBuilder
 
 	// ---------- coplianForm.cpp
 	void	initMimes( void );
+	void	initServerNames( void );
+
 
 	// ---------- deleteEngine.cpp
 	void	generateDeleteHTML( void );

@@ -1,17 +1,10 @@
 ## CURRENT WORK
-- Config 001 🟢
-- Config 002 🟠
-	=> Need from Kernel : Seb needs to throw a CODE_400 on empty POST body (config 002, test 13 and test 14)
-	=> Need a CGI for treating test 23 and 24
-- Config 003 🟢
-- Config 004 🟢
-- Config 005 🔴
+- curl command from the correction --resolve 🔴
 
 ## ASK SEB / DAN
-- `setBody`, line `client.messageRecv.clear();` => See with Seb if this line is correct 🔴
+- Finish cookies with Dan 🔴
 
 ## HOTFIX :
-- Finish the multipart-form data POST logic 🔴
 
 
 ## Mandatory Work but can wait
@@ -19,9 +12,13 @@
 
 - Clear nodes without the URI in `extractRouteConfig` 🔴
 
-- Clear useless variables 🔴
+- Clear useless variables 🟠
 
 - Reactivate TimeStamps for final project 🔴
+
+- Reactivate Finalenames for post uploading for final project 🔴
+
+- Missing `HOST` headers or double => 400 BAD REQUEST
 
 
 
@@ -38,6 +35,7 @@
 - Exploit the Content-Type header for post requests 🟢
 IF NOT : Need to generate a random 10 lenghts string + an extension to save the file 🟢
 - Stabilize simple GET / DELETE REQUESTS 🟢
+- Finish the multipart-form data POST logic 🟢
 
 ## BLOODY REDIRECTIONS :
 
