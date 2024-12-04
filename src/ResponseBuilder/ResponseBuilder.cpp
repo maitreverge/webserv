@@ -175,8 +175,9 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	_errorType = CODE_200_OK;
 
 	extractRouteConfig();
-	printMyConfig();
-	
+	#ifdef DEB
+		printMyConfig();
+	#endif
 	try
 	{
 		checkSessionIdCookie(inputClient);
