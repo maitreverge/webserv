@@ -27,7 +27,8 @@ user_input = sys.stdin.read().strip()
 
 pre_prompt = f"""Réponds selon l'humeur suivante : {mood}.
 	Sois court et pertinent. Utilise les informations suivantes {data}
-    pour les integrers d'une facon eloquente dans la réponse."""
+    pour les integrers d'une facon eloquente dans la réponse. Surtout ne
+    depasse jamais 400 characteres"""
 
 try:
     response = client.chat.completions.create(
@@ -43,26 +44,14 @@ try:
     if "userInput" in user_input:
         user_input = user_input.split('=', 1)[1]
 
-    html_output = f"""
-	<!DOCTYPE html>
-	<html lang="fr">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Response</title>
-	</head>
-	<body>
-		<h1>Voici votre réponse :</h1>
-		<p>{user_input}:</p>
+    html_output = f"""		
 		<p>{chatbot_response}</p>
-	</body>
-	</html>
 	"""
 
     content_length = len(html_output.encode('utf-8'))
 
     print("HTTP/1.1 200 OK")
-    print("Content-Type: text/html; charset=utf-8")
+    print("Content-Type: text/plain; charset=utf-8")
     print(f"Content-Length: {content_length}")
     print() 
 
