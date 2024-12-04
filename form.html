@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interaction avec CGI</title>
+    <title>Interaction with CGI</title>
 </head>
 <body>
     <h1>Form</h1>
 
     <!-- Formulaire pour envoyer des informations personnelles (requête POST) -->
-    <h2>Send personnal informations</h2>
-    <form action="cgi/bdd_firebase/bdd_script.php" method="POST">
+    <h2>Send personnal information</h2>
+    <form action="cgi/bdd_firebase/bdd_script_POST.php" method="POST">
         <label for="first_name">first Name :</label><br>
         <input type="text" id="first_name" name="first_name" required><br><br>
 
@@ -23,14 +23,14 @@
         <label for="anecdote">story :</label><br>
         <textarea id="anecdote" name="anecdote" rows="4" cols="50" required></textarea><br><br>
 
-        <button type="submit">Envoyer</button>
+        <button type="submit">Send</button>
     </form>
 
     <hr>
 
     <!-- Formulaire pour récupérer des informations (requête GET) -->
     <h2>Infos</h2>
-    <form action="cgi-bin/handler.php" method="GET">
+    <form action="cgi/bdd_firebase/bdd_script_GET.php" method="GET">
         <label for="search_login">Login :</label><br>
         <input type="text" id="search_login" name="login" required><br><br>
 
@@ -38,3 +38,4 @@
     </form>
 </body>
 </html>
+
