@@ -66,12 +66,12 @@ int main(int argc, char* argv[])
 	std::signal(2, signalHandle);
 	std::signal(3, signalHandle);
 	disableSignalEcho();
-	int verbose = 0;
+	int verbose = 1;
 	if (argv[1] && std::string(argv[1]) == "-v")
 	{
 		argc--;
 		argv++;
-		verbose = 1;
+		verbose = 0;
 	}
 	if (argc > 2)
 		return std::cerr << "Usage: ./webserv -v [config.ini]" << std::endl, 1;

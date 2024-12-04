@@ -55,7 +55,7 @@ class Logger
 
 		int	_logLevel[LOG_LEVEL_COUNT];
 
-		Logger(int verbose = 0);
+		Logger(int verbose = 1);
 		~Logger();
 		void log(logLevel logLevel, const std::string& message);
 		void log(logLevel logLevel, const std::string& message, const Kernel& context);
@@ -67,6 +67,6 @@ class Logger
 		void log(logLevel logLevel, const std::string& message, const Client& client, const Server&obj);
 		void log(logLevel logLevel, std::string& message, struct Client& client, const Error& error);
 		void log(logLevel logLevel, const std::string& message, const Server&server);
-		static Logger& getInstance(int verbose = 0);
+		static Logger& getInstance(int verbose = 1);
 };
 
