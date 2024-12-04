@@ -133,11 +133,6 @@ void	ResponseBuilder::slashManip( string &target, bool makeRedirection ){
 		if (beginWithSlash and target != "/")
 			target.erase(target.begin());
     }
-	else if (!endWithSlash and makeRedirection and _method == GET)
-	{
-		_realURI += "/";
-		setError(CODE_302_FOUND);
-	}
 }
 
 void ResponseBuilder::resolveURI( void ) {
