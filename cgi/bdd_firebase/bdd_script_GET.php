@@ -32,7 +32,7 @@ $response = file_get_contents($url);
 if ($response === FALSE) {
 	die('Error occurred while fetching data');
 }
-file_put_contents('response_log.txt', $response);
+// file_put_contents('response_log.txt', $response);
 
 // Décoder la réponse JSON
 $user_data = json_decode($response, true);
