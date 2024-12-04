@@ -22,7 +22,7 @@ curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3228/_websit
 --END-REQUEST--
 curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3328/_websites/festival/
 --END-REQUEST--
-curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3028_websites/festival
+curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3028/_websites/festival
 --END-REQUEST--
 curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3128/_websites/festival
 --END-REQUEST--
