@@ -72,14 +72,14 @@ void ResponseBuilder::rootMapping( void ){
 	if (_realURI.find(_myconfig.root) == std::string::npos)
 	{
 
-		Logger::getInstance().log(DEBUG, "URI BEFORE MAPPING");
-		Logger::getInstance().log(DEBUG, _realURI);
+		Logger::getInstance().log(INFO, "URI BEFORE MAPPING");
+		Logger::getInstance().log(INFO, _realURI);
 
-		_realURI.replace(0, _myconfig.uri.size(), _myconfig.root);
-		// _realURI.insert(0, _myconfig.root);
+		// _realURI.replace(0, _myconfig.uri.size(), _myconfig.root);
+		_realURI.insert(0, _myconfig.root);
 		
-		Logger::getInstance().log(DEBUG, "URI AFTER MAPPING");
-		Logger::getInstance().log(DEBUG, _realURI);
+		Logger::getInstance().log(INFO, "URI AFTER MAPPING");
+		Logger::getInstance().log(INFO, _realURI);
 	}
 
 		// http://localhost:3027/_websites/festival/index.html
@@ -133,6 +133,11 @@ void	ResponseBuilder::slashManip( string &target, bool makeRedirection ){
 		if (beginWithSlash and target != "/")
 			target.erase(target.begin());
     }
+	else if (!endWithSlash and makeRedirection and _method == GET)
+	{
+		_realURI += "/";
+		setError(CODE_302_FOUND);
+	}
 }
 
 void ResponseBuilder::resolveURI( void ) {
