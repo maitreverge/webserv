@@ -4,21 +4,31 @@ from openai import OpenAI
 import sys
 import os
 import logging
-
+import requests
 logging.basicConfig(level=logging.ERROR) 
 
+url = (
+    f"https://webservcgi-default-rtdb.europe-west1.firebasedatabase.app/users"
+    f"/user1.json"
+)
+
+response = requests.get(url)
+data = None
+if response.status_code == 200:   
+    data = response.json()
+else:
+    print("Erreur lors de la requête :", response.status_code)
 client = OpenAI()
-# openai.api_key = ("sk-proj-Lr-uJ-sX316xnR7-Owv09X8GERyKZCrdeJviLGUWQFV_2JNAVphF"
-# 	"vMXGOjG03SaPJ6KpdwWcoiT3BlbkFJtUbHEhwMu__LraTcV5qqCeOKWgjMKi2_VuwwG6WtQaX"
-# 	"LYDuvVcUk59h-BfThffRsmJsbaFEPAA")
+
 path_info = os.getenv("PATH_INFO", "").replace("%20", " ").strip("/")
-humeur = path_info if path_info else "neutre"
+mood = path_info if path_info else "neutre"
 
 user_input = sys.stdin.read().strip()
 
-pre_prompt = f"Réponds selon l'humeur suivante : {humeur}. \
-	Sois court et pertinent. voici des informations sur l'utilisateur nom:civil prenom eva son chat qui sapel nuage , anecdote: travaille a nexity , a eu une journee stressante. integre ces informations dune facon eloquente dans la reponse "
-# client = OpenAI(api_key)
+pre_prompt = f"""Réponds selon l'humeur suivante : {mood}.
+	Sois court et pertinent. Utilise les informations suivantes {data}
+    pour les integrers d'une facon eloquente dans la réponse."""
+
 try:
     response = client.chat.completions.create(
         model="gpt-4o-mini",

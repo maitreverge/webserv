@@ -67,14 +67,14 @@ int main(int argc, char* argv[])
 	std::signal(3, signalHandle);
 	disableSignalEcho();
 	int verbose = 1;
-	if (argv[1] && std::string(argv[1]) == "-v")
+	if (argv[1] && std::string(argv[1]) == "-s")
 	{
 		argc--;
 		argv++;
 		verbose = 0;
 	}
 	if (argc > 2)
-		return std::cerr << "Usage: ./webserv -v [config.ini]" << std::endl, 1;
+		return std::cerr << "Usage: ./webserv -s [config.ini]" << std::endl, 1;
 	std::cout << std::endl;
 	Logger::getInstance(verbose).log(INFO, "\e[1;3;36mServer is Online!\e[0m");
 	std::cout << std::endl;
