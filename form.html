@@ -1,23 +1,40 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulaire d'inscription</title>
+    <title>Interaction avec CGI</title>
 </head>
 <body>
-    <h1>Formulaire d'inscription</h1>
-    <form action="/cgi/bdd_firebase/bdd_script.php" method="POST">
-        <label for="prenom">Prénom :</label><br>
-        <input type="text" id="prenom" name="prenom" required><br><br>
+    <h1>Form</h1>
 
-        <label for="nom">Nom :</label><br>
-        <input type="text" id="nom" name="nom" required><br><br>
+    <!-- Formulaire pour envoyer des informations personnelles (requête POST) -->
+    <h2>Send personnal informations</h2>
+    <form action="cgi/bdd_firebase/bdd_script.php" method="POST">
+        <label for="first_name">first Name :</label><br>
+        <input type="text" id="first_name" name="first_name" required><br><br>
 
-        <label for="email">Adresse Email :</label><br>
-        <input type="email" id="email" name="email" required><br><br>
+        <label for="last_name">Name :</label><br>
+        <input type="text" id="last_name" name="last_name" required><br><br>
+
+        <label for="login">Login :</label><br>
+        <input type="text" id="login" name="login" required><br><br>
+
+        <label for="anecdote">story :</label><br>
+        <textarea id="anecdote" name="anecdote" rows="4" cols="50" required></textarea><br><br>
 
         <button type="submit">Envoyer</button>
+    </form>
+
+    <hr>
+
+    <!-- Formulaire pour récupérer des informations (requête GET) -->
+    <h2>Infos</h2>
+    <form action="cgi-bin/handler.php" method="GET">
+        <label for="search_login">Login :</label><br>
+        <input type="text" id="search_login" name="login" required><br><br>
+
+        <button type="submit">Search</button>
     </form>
 </body>
 </html>
