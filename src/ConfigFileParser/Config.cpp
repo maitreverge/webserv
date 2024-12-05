@@ -27,7 +27,9 @@ Config::Config()
 }
 
 /**========================================================================
- *                           INITIALIZING
+ *                           INTITIALIZEVARS
+ * ? this function, if commented, breaks all tests
+ * ? although it is in theory not usefull any more...
  *========================================================================**/
 void	Config::intitializeVars()
 {
@@ -38,10 +40,8 @@ void	Config::intitializeVars()
 	indexFiles.push_back("index.html");
 	indexFiles.push_back("index.htm");
 	indexFiles.push_back("default.html");
-
 	listingDirectories = true;
 
-	// default Error paths files	
 	errorPaths.insert(std::make_pair(CODE_242_CONNECTION, errorPagesPath + "242.html"));
 	errorPaths.insert(std::make_pair(CODE_400_BAD_REQUEST, errorPagesPath + "400.html"));
 	errorPaths.insert(std::make_pair(CODE_401_UNAUTHORIZED, errorPagesPath + "401.html"));
@@ -55,8 +55,6 @@ void	Config::intitializeVars()
 
 void	Config::initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddress)
 {
-	//! logic to be inserted here
-
 	if (port)
 	{
 		struct sockaddr_in server;	
