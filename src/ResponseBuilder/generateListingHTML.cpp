@@ -136,8 +136,7 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 	if (dir == NULL)
 	{
 		Logger::getInstance().log(ERROR, "500 Detected from `listingHTMLBuilder` : Server failed to open durrent directory with `opendir`");
-		setError(CODE_500_INTERNAL_SERVER_ERROR);
-		return;
+		throw Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR);
 	}
 
 	struct dirent *listing;
@@ -166,6 +165,8 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 			paths.push_back(curFile);
 		}
 	}
+
+	closedir(dir);
 
 	// Alphabetically sorting paths
 	std::sort(paths.begin(), paths.end());
@@ -199,22 +200,40 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 
 	defautFile += listingName;
 
-	ofstream listingFile(defautFile.c_str());
+	ofstream listingFileStream(defautFile.c_str());
 
-	listingFile << result.str();
+	if (listingFileStream.is_open())
+	{
+		// Write to the stream
+		listingFileStream << result.str();
+		
+		// Check for write errors
+		if (listingFileStream.fail())
+		{
+			Logger::getInstance().log(ERROR, "ResponseBuilder::generateDeleteHTML : listingFileStream failed to write data");
+			throw Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR);
+		}
+		else
+			Logger::getInstance().log(DEBUG, "ResponseBuilder::generateDeleteHTML : listingFileStream correctly wrote data");
+		
+		_realURI += listingName;
 
-	_realURI += listingName;
+		_deleteURI = true;
+		Logger::getInstance().log(DEBUG, "ResponseBuilder::listingHTMLBuilder : The _realURI will be deleted");
+		
+		if (*_realURI.begin() == '/')
+			_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
 
-	// Comment this to make listing.html
-	_deleteURI = true;
-	Logger::getInstance().log(DEBUG, "ResponseBuilder::listingHTMLBuilder : The _realURI will be deleted");
-	
-	if (*_realURI.begin() == '/')
-		_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
+		Logger::getInstance().log(DEBUG, "ResponseBuilder::generateDeleteHTML : The _realURI will be deleted");
+		
+	}
+	else 
+	{
+		Logger::getInstance().log(ERROR, "ResponseBuilder::generateDeleteHTML : deleteFileStream failed to open");
+		throw Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR);
+	}
 
-	closedir(dir);
-
-	listingFile.close();
+	listingFileStream.close();
 }
 
 /**

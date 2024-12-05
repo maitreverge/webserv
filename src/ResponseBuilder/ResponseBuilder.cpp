@@ -265,11 +265,6 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	{
 		Logger::getInstance().log(DEBUG, "Code Error Raised in the getHeader building process", inputClient);
 	}
-	catch(const std::exception& e)
-	{
-		return;
-		Logger::getInstance().log(DEBUG, "Another kind or error has been raised in the getHeader process", inputClient);
-	} 
 
 	if (not isErrorRedirect())
 		setContentLenght();

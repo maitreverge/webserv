@@ -37,7 +37,13 @@ bool ResponseBuilder::getBody( Client &inputClient ){
 		if (_method == POST and _isCGI)
 			this->_ifs.open(_fileName.c_str(), std::ios::binary);	
 		else
-			this->_ifs.open(_realURI.c_str(), std::ios::binary);	
+			this->_ifs.open(_realURI.c_str(), std::ios::binary);
+
+		if (!this->_ifs.is_open())
+		{
+			Logger::getInstance().log(ERROR, "ResponseBuilder::getBody : this->_ifs failed to open");
+			throw Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR);
+		}
 		
 	}
 
@@ -75,7 +81,7 @@ bool ResponseBuilder::getBody( Client &inputClient ){
 	else
 	{
 		Logger::getInstance().log(ERROR, "Failed Stream happend", inputClient);
-		setError(CODE_500_INTERNAL_SERVER_ERROR);
+		throw Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR);
     }
 	
 	return false;

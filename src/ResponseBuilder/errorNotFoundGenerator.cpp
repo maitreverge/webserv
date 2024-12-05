@@ -94,6 +94,10 @@ void	ResponseBuilder::errorNotFoundGenerator( void ){
 		throw Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR);
 	}
 
-	if (backupStream.is_open())
-		backupStream.close();
+	backupStream.close();
+	if (backupStream.fail())
+	{
+		Logger::getInstance().log(ERROR, "ResponseBuilder::errorNotFoundGenerator : backupStream failed to close");
+		throw Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR);
+	}
 }

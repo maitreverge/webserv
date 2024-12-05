@@ -265,7 +265,7 @@ void ResponseBuilder::setError(e_errorCodes code, bool skip){
 			_realURI = _config->errorPaths.at(_errorType);
 
 			if (access(_realURI.c_str(), F_OK) == -1 or access(_realURI.c_str(), R_OK) )
-				throw exception();
+				throw exception(); // inner function throw
 		}
 	}
 	catch(const std::exception& e)
