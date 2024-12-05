@@ -4,6 +4,16 @@
 typedef std::map< string, map<string, vector< string > > >::iterator mapIterator;
 typedef std::vector< string >::iterator vectorIterator;
 
+/**
+ * @brief Clears routes without URIs and handles duplicate URIs.
+ * 
+ * This function processes the routes data, extracting URIs and route names.
+ * It identifies routes without URIs and marks them for deletion. Additionally,
+ * it prepares for the removal of duplicate routes with the same URI.
+ * 
+ * @param routeNames A vector to store the names of the routes.
+ * @param routeURIS A vector to store the URIs of the routes.
+ */
 void ResponseBuilder::clearingRoutes( vector< string >&routeNames, vector< string >&routeURIS ){
 
 	vector < string > toClear;
@@ -44,8 +54,16 @@ void ResponseBuilder::clearingRoutes( vector< string >&routeNames, vector< strin
 	}
 }
 
+/**
+ * @brief Builds the route configuration for a given path.
+ * 
+ * This function extracts and sets various route configuration parameters
+ * such as URI, allowed methods, redirection, root, directory listing, index,
+ * CGI allowance, upload allowance, and upload directory from the server configuration.
+ * 
+ * @param path The path for which the route configuration is to be built.
+ */
 void	ResponseBuilder::buildRouteConfig( string path ){
-
 
 	RoutesData *routes = &_config->_serverStruct[_config->index].routesData;
 	
@@ -149,6 +167,18 @@ void	ResponseBuilder::buildRouteConfig( string path ){
 	catch(const std::exception& e) {}
 }
 
+/**
+ * @brief Extracts the redirection index from the route configuration.
+ * 
+ * This function searches through the provided route names to find a route
+ * that has a redirection configuration. Once found, it attempts to extract
+ * the index associated with that redirection. If the index is found, it is
+ * stored in the _myconfig.indexRedirection member variable. The function
+ * ensures that the extracted index starts with a '/' and does not end with a '/'.
+ * 
+ * @param routeNames A vector of route names to search through.
+ * @param routeURIS A vector of route URIs (currently unused).
+ */
 void ResponseBuilder::extractRedirectionIndex( vector< string >&routeNames, vector< string >&routeURIS ){
 
 	static_cast<void>(routeURIS); // might need later for refactoring with Dan routes
@@ -195,6 +225,16 @@ void ResponseBuilder::extractRedirectionIndex( vector< string >&routeNames, vect
 	_myconfig.indexRedirection = needleIndex;
 }
 
+/**
+ * @brief Extracts the route configuration based on the real URI.
+ *
+ * This function processes the real URI to find a matching route configuration.
+ * It trims the URI and searches for a match in the routeURIS vector. If a match
+ * is found, it builds the route configuration. If a redirection is specified
+ * in the configuration, it extracts the redirection index.
+ *
+ * @note The function modifies the trimmedRoute to find the best matching route.
+ */
 void	ResponseBuilder::extractRouteConfig( void ){
 
 	vector< string > routeNames;

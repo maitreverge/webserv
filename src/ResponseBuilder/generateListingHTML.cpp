@@ -1,6 +1,15 @@
 #include "ResponseBuilder.hpp"
 #include "Logger.hpp" 
 
+/**
+ * @brief Checks if the default index path exists and is readable.
+ *
+ * This function verifies if the default index path specified in the configuration
+ * exists and is a regular file that can be read. If the index path is found and
+ * readable, it updates the internal URI to the index path and extracts the file nature.
+ *
+ * @return true if the default index path is found and readable, false otherwise.
+ */
 bool ResponseBuilder::foundDefaultPath( void ){
 
 	if (_myconfig.index.empty())
@@ -23,6 +32,15 @@ bool ResponseBuilder::foundDefaultPath( void ){
 	return false;
 }
 
+/**
+ * @brief Checks if a file should be ignored.
+ *
+ * This function determines whether a given file name should be ignored
+ * based on a predefined list of file names.
+ *
+ * @param str The name of the file to check.
+ * @return true if the file should be ignored, false otherwise.
+ */
 bool ResponseBuilder::isFileIgnored( string &str ){
 
 	if (	str == "." or
@@ -38,6 +56,15 @@ bool ResponseBuilder::isFileIgnored( string &str ){
 	return false;
 }
 
+/**
+ * @brief Generates the HTML header for a directory listing.
+ * 
+ * This function constructs the HTML header section for a directory listing page.
+ * It sets the document title based on the current URL and includes styling for
+ * directory and file icons.
+ * 
+ * @param result A stringstream to which the generated HTML header will be appended.
+ */
 void ResponseBuilder::makeHeaderListing(std::stringstream &result) {
 	
 	stringstream documentTitle;
@@ -75,6 +102,18 @@ void ResponseBuilder::makeHeaderListing(std::stringstream &result) {
 	result << "</style>\n</head>\n<body>\n<ul>";
 }
 
+/**
+ * @brief Generates an HTML listing of the contents of a directory.
+ *
+ * This function builds an HTML file that lists the contents of the directory specified by `_realURI`.
+ * It appends a trailing slash to `_realURI` if it does not already end with one, and constructs the full path
+ * to the directory. The directory is then opened, and its contents are read and stored in a vector.
+ * The contents are sorted alphabetically and written to an HTML file named "listing.html".
+ * The function also handles errors related to opening the directory and logs relevant information.
+ *
+ * @note The generated HTML file is saved in the directory specified by `_realURI`.
+ * @note If `_realURI` begins with a '/', it is removed from `_realURI` after generating the listing.
+ */
 void	ResponseBuilder::listingHTMLBuilder( void ){
 
 	char cwd[1024];
@@ -178,6 +217,19 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 	listingFile.close();
 }
 
+/**
+ * @brief Generates the HTML listing for a directory.
+ * 
+ * This function generates an HTML listing for a directory if directory listing is enabled
+ * and no index file is found. If directory listing is disabled and no index file is found,
+ * it logs a 404 error and sets the error code to 404 Not Found.
+ * 
+ * The function performs the following steps:
+ * - Checks if directory listing is disabled and no index file is found, logs a 404 error, and sets the error code.
+ * - Calls the listingHTMLBuilder() function to build the HTML listing.
+ * - Calls the checkNature() function to perform additional checks.
+ * - Calls the checkAutho() function to perform authorization checks.
+ */
 void ResponseBuilder::generateListingHTML( void ){
 
 	if ( _myconfig.listingDirectory == false and _myconfig.index.empty())

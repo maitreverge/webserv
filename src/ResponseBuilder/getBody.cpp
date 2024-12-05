@@ -1,6 +1,15 @@
 #include "ResponseBuilder.hpp"
 #include "Logger.hpp"
 
+/**
+ * @brief Handles the process of retrieving the body of the response.
+ *
+ * This function attempts to retrieve the body of the response for the given client.
+ * It handles CGI responses, file reading, and error redirections.
+ *
+ * @param inputClient The client for which the response body is being retrieved.
+ * @return true if the body was successfully retrieved, false otherwise.
+ */
 bool ResponseBuilder::getBody( Client &inputClient ){
 
 	Logger::getInstance().log(DEBUG, "Response Builder Get Body", inputClient);

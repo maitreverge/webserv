@@ -1,6 +1,16 @@
 #include "ResponseBuilder.hpp"
 #include "Logger.hpp"
 
+/**
+ * @brief Extracts the MIME type based on the file extension.
+ *
+ * This function searches for the given file extension in the _mimeTypes map.
+ * If the extension is found, it returns the corresponding MIME type.
+ * If the extension is not found, it returns the default MIME type "application/octet-stream".
+ *
+ * @param extension The file extension for which to find the MIME type.
+ * @return The corresponding MIME type if found, otherwise "application/octet-stream".
+ */
 string ResponseBuilder::extractType( const string& extension ) const {
     
     map<string, string>::const_iterator it = _mimeTypes.find(extension);
@@ -14,6 +24,13 @@ string ResponseBuilder::extractType( const string& extension ) const {
 	}
 }
 
+/**
+ * @brief Extracts the HTTP method from the client's request and sets the internal method state.
+ *
+ * This function retrieves the HTTP method from the client's request header and sets the internal
+ * method state accordingly. Supported methods are GET, POST, and DELETE. If the method is not
+ * recognized, it logs an error and sets an error state with a 405 Method Not Allowed status.
+ */
 void	ResponseBuilder::extractMethod( void ){
 
 	string tempMethod = _client->headerRequest.getMethod();
@@ -37,6 +54,14 @@ void	ResponseBuilder::extractMethod( void ){
 	}
 }
 
+/**
+ * @brief Sets the content length of the response based on the size of the file at the given URI.
+ * 
+ * This function uses the stat system call to retrieve information about the file specified by _realURI.
+ * If the file cannot be accessed due to permission issues, a 401 Unauthorized error is set.
+ * If the file is missing or the address is invalid, a 404 Not Found error is set.
+ * If the file is successfully accessed, the content length is set to the size of the file.
+ */
 void	ResponseBuilder::setContentLenght(){
 
 	if (stat(_realURI.c_str(), &_fileInfo) == -1)
@@ -56,6 +81,14 @@ void	ResponseBuilder::setContentLenght(){
 		Headers.bodyLenght = static_cast<uint64_t>(_fileInfo.st_size); //! the targeted file in a GET requests
 }
 
+/**
+ * @brief Checks the authorization of the requested resource based on the HTTP method.
+ *
+ * This function verifies the file permissions of the requested resource (_realURI) 
+ * and sets the appropriate error code if the permissions are not sufficient for the 
+ * requested HTTP method (GET, POST, DELETE). It logs errors and sets error codes 
+ * accordingly.
+ */
 void	ResponseBuilder::checkAutho( void ){
 	
 	if (stat(_realURI.c_str(), &_fileInfo) == 0) // ! empty URI = fail
@@ -116,6 +149,14 @@ void	ResponseBuilder::checkAutho( void ){
 	}
 }
 
+/**
+ * @brief Extracts the file name and file extension from the given target string.
+ *
+ * This function takes a reference to a string representing a file path, extracts the file name
+ * and file extension, and stores them in the member variables _fileName and _fileExtension respectively.
+ *
+ * @param target A reference to a string containing the file path.
+ */
 void	ResponseBuilder::extractFileNature( string &target){
 
 	_fileName = target.substr(target.find_last_of("/") + 1); // extract file name // DOUBT for POST
@@ -123,6 +164,14 @@ void	ResponseBuilder::extractFileNature( string &target){
 	_fileExtension = _fileName.substr(_fileName.find_last_of(".") + 1); // extract file extension
 }				
 
+/**
+ * @brief Checks the nature of the resource specified by _realURI.
+ *
+ * This function determines whether the resource specified by _realURI is a file or a directory.
+ * It sets the appropriate flags (_isDirectory, _isFile) and handles different HTTP methods (GET, POST, DELETE).
+ * It also logs errors and sets error codes for various conditions such as unauthorized access, invalid paths, 
+ * and unsupported operations on directories or non-CGI files.
+ */
 void	ResponseBuilder::checkNature( void ){
 
 	if (stat(_realURI.c_str(), &_fileInfo) == 0)
@@ -184,6 +233,20 @@ void	ResponseBuilder::checkNature( void ){
 	}
 }
 
+/**
+ * @brief Sets the error state for the ResponseBuilder.
+ * 
+ * This function sets the error type based on the provided error code and handles
+ * the generation of an error response. It checks for error redirection, attempts
+ * to locate the appropriate error page, and logs warnings if the error page is not found.
+ * If the error page is not accessible, it generates a default error page.
+ * 
+ * @param code The error code to set.
+ * @param skip If true, skips additional checks and raises an exception immediately.
+ * 
+ * @throws CodeErrorRaised If an error redirection is required.
+ * @throws Server::ShortCircuitException If skip is false, indicating an internal error.
+ */
 void ResponseBuilder::setError(e_errorCodes code, bool skip){
 
 	_errorType = code;
@@ -255,6 +318,14 @@ void	ResponseBuilder::printAllHeaders( void ) const{
 	print("=========== printAllHeaders ========");
 }
 
+/**
+ * @brief Checks if the current error type is a redirection error.
+ * 
+ * This function determines whether the error type falls within the range of
+ * HTTP redirection status codes (300-399).
+ * 
+ * @return true if the error type is a redirection error, false otherwise.
+ */
 bool ResponseBuilder::isErrorRedirect( void ){
 
 	if (this->_errorType >= CODE_300_MULTIPLE_CHOICES and this->_errorType < CODE_400_BAD_REQUEST)
@@ -262,6 +333,14 @@ bool ResponseBuilder::isErrorRedirect( void ){
 	return false;
 }
 
+/**
+ * @brief Performs initial checks and setups for the response building process.
+ *
+ * This function checks the content type of the request to determine if it is multipart form data.
+ * It also sets the body extension based on the content type if it is not multipart.
+ * Additionally, it verifies the upload directory's existence and write permissions if specified in the configuration.
+ * If the upload directory is not allowed or does not have write permissions, it sets an error code.
+ */
 void ResponseBuilder::extraStartingChecks()
 {
 	string target;
@@ -315,6 +394,16 @@ void ResponseBuilder::extraStartingChecks()
 	}
 }
 
+/**
+ * @brief Adjusts the slashes at the beginning and end of the target path.
+ *
+ * This function removes a leading slash from the target string if it exists.
+ * If the target represents a directory and does not end with a slash, a slash
+ * is appended to the end. If the target starts with a slash after these adjustments,
+ * the leading slash is removed again.
+ *
+ * @param target The path string to be adjusted.
+ */
 void ResponseBuilder::pathSlashs(string &target){
 
 	bool beginWithSlash = !target.empty() && (*target.begin() == '/');
@@ -336,6 +425,17 @@ void ResponseBuilder::pathSlashs(string &target){
     }
 }
 
+/**
+ * @brief Generates a random string of specified length.
+ *
+ * This function generates a random string consisting of lowercase letters,
+ * uppercase letters, and digits. If the underscoreNeeded parameter is true,
+ * the generated string will start with an underscore.
+ *
+ * @param length The length of the random string to be generated.
+ * @param underscoreNeeded A boolean flag indicating whether the generated string should start with an underscore.
+ * @return A random string of the specified length.
+ */
 string ResponseBuilder::generateRandomString(size_t length, bool underscoreNeeded)
 {
 	std::string characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -351,6 +451,15 @@ string ResponseBuilder::generateRandomString(size_t length, bool underscoreNeede
 	return randomString;
 }
 
+/**
+ * @brief Generates a file name for the response.
+ * 
+ * This function generates a file name based on the current testing mode.
+ * If testing mode is enabled, it returns a fixed name "file".
+ * Otherwise, it generates a random string of 10 characters as the file name.
+ * 
+ * @return A string representing the generated file name.
+ */
 string ResponseBuilder::generateFileName( void ){
 
 	// TODO : MAKE THIS BOOL FALSE ONCE WEBSERV FINISHED

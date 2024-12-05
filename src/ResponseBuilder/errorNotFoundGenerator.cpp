@@ -2,6 +2,18 @@
 #include "Logger.hpp"
 #include <stdlib.h>
 
+/**
+ * @brief Generates a custom error page for "Not Found" errors.
+ *
+ * This function constructs an HTML page to be used as a backup when a requested
+ * resource is not found. It includes a predefined image and a message indicating
+ * the error. The generated HTML is saved to a file specified by `_backupNameFile`.
+ *
+ * The function also updates `_realURI` to point to the backup file and sets `_deleteURI`
+ * to true, indicating that the URI should be deleted.
+ *
+ * @note This function logs its execution at the DEBUG level.
+ */
 void	ResponseBuilder::errorNotFoundGenerator( void ){
 
 	Logger::getInstance().log(DEBUG, "FUNCTION CALL : ResponseBuilder::errorNotFoundGenerator");

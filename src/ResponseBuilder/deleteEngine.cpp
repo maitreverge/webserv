@@ -3,6 +3,16 @@
 
 #include <cstdio> // might need to move it in a global header file
 
+/**
+ * @brief Generates an HTML page indicating that a resource has been deleted.
+ *
+ * This function constructs an HTML document that informs the user that a specified file
+ * has been successfully deleted.
+ * The generated HTML is saved to a file named "delete.html" in the directory specified
+ * by the _realURI member variable.
+ * The function also updates the _realURI to point to the newly created "delete.html" file
+ * and sets the _deleteURI flag to true.
+ */
 void	ResponseBuilder::generateDeleteHTML( void ){
 
 	Logger::getInstance().log(DEBUG, "FUNCTION CALL : ResponseBuilder::generateDeleteHTML");
@@ -39,6 +49,13 @@ void	ResponseBuilder::generateDeleteHTML( void ){
 	deleteFile << result.str();
 }
 
+/**
+ * @brief Handles the DELETE HTTP method by attempting to delete the target file.
+ * 
+ * This function attempts to delete the file specified by the _realURI member variable.
+ * If the deletion is successful, it generates the appropriate HTML response and sets the content length.
+ * If the deletion fails, it logs an error and sets the response to a 500 Internal Server Error without raising an exception.
+ */
 void	ResponseBuilder::deleteEngine( void ){
 
 	Logger::getInstance().log(DEBUG, "FUNCTION CALL : ResponseBuilder::deleteEngine");

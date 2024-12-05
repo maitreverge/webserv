@@ -1,6 +1,15 @@
 #include "ResponseBuilder.hpp"
 #include "Logger.hpp"
 
+
+/**
+ * @brief Builds the HTTP response headers.
+ * 
+ * This function constructs the mandatory and optional HTTP headers for the response.
+ * It includes the status line, content length, content type, and location headers.
+ * Additionally, it handles error redirection and sets cookies if applicable.
+ * The final headers are stored in a master header vector.
+ */
 void	ResponseBuilder::buildHeaders(){
 
 	Logger::getInstance().log(INFO, "FUNCTION CALL : ResponseBuilder::buildHeaders", *_client);
