@@ -93,50 +93,43 @@ class ResponseBuilder
 	Client* _client;
 	Config* _config;
 	
-	MyConfig _myconfig;
-	ResponseHeaders Headers;
+	map<string, string>	_mimeTypes;
+	MyConfig			_myconfig;
+	ResponseHeaders		Headers;
+	e_errorCodes		_errorType;
 
-	struct stat _fileInfo; // ! PAS DANS LES CONSTRUCTEURS
+	struct stat _fileInfo; // ! SURTOUT PAS DANS LES CONSTRUCTEURS
 
-	map<string, string> _mimeTypes;
-	
 	string _realURI;
 	string _originalURI;
-
 
 	// Nature File
 	bool _isDirectory;
 	bool _isFile;
-
-	// CGI Stuff
-	bool _isCGI;
-
-	// File Characteristics
 	bool _isROK;
 	bool _isWOK;
 	bool _isXOK;
+	bool _isCGI;
 
 	// errorNotFoundGenerator
 	bool _deleteURI; // used for auto generated errors or listing.html
 	string _backupNameFile;
 
-	// CGI Stuff
-	e_errorCodes _errorType;
-
+	// Multipart-Form Data Utils
+	bool _isServerName;
 	bool _isMultipart;
-	string _setBodyExtension;
-
-	string _tokenDelim;
-	string _tokenEnd;
-	string _postFileName;
-
-	string _fileStreamName;
-
 	bool _writeReady;
 	bool _parsedBoundaryToken;
 	bool _serverNameChecked;
 
-	bool _isServerName;
+	string _tokenDelim;
+	string _tokenEnd;
+	string _postFileName;
+	string _setBodyExtension;
+
+	string _fileStreamName;
+
+
 	string _serverName;
 	string _uploadTargetDirectory;
 
@@ -194,6 +187,7 @@ class ResponseBuilder
 	void	checkMethod( void );
 	bool	isDirectory(string &);
 	void	slashManip( string&, bool makeRedirection = false );
+	void	printAllHeaders( void )const;
 
 	// ---------- serverName.cpp
 	string	parseServerName( string & );
@@ -223,6 +217,7 @@ class ResponseBuilder
 	void	pathSlashs(string &);
 	string	generateFileName( void );
 	string	generateRandomString(size_t, bool underscoreNeeded = false );
+	void	setError( e_errorCodes, bool skip = false );
 
 public:
 
@@ -249,37 +244,33 @@ public:
 	};
 
 	// ============================== PUBLIC METHODS ===========================
-	// ============================= PUBLIC VARIABLES ==========================
-
-
+	
+	// ---- Streams
 	std::ifstream 	_ifs; // ! PAS DANS LES CONSTRUCTEURS
 	std::streampos	_ifsStreamHead; // ! ABSOLUMENT METTRE DANS LES CONSTRUCTEURS
-    std::ofstream	_ofs; //! need public for seb
-	string 			_pathInfo; //! need public for seb
-	string 			_folderCGI; //! need public for seb
-	string 			_fileName; //! need public for seb
-	string 			_fileExtension; //! need public for seb
+    std::ofstream	_ofs;
+	
+	// ---- CGI related infos
+	Cgi				_cgi;
+	string 			_pathInfo;
+	string 			_folderCGI;
+	string 			_fileName;
+	string 			_fileExtension;
+	
+	// ============================= PUBLIC VARIABLES ==========================
 
+	// ---- Coplian Form
 	ResponseBuilder( void );
 	~ResponseBuilder( void );
 	ResponseBuilder( const ResponseBuilder & );
 	ResponseBuilder & operator=( const ResponseBuilder & rhs);
 
+	// ---- Main Functions
 	void	getHeader( Client &, Config&, e_errorCodes codeInput = CODE_200_OK );
 	bool	getBody( Client & );
-	
-	Cgi		_cgi;//! provisoire sinon private
-
 	void	setBody( Client &, bool );
-
-
-	void	printAllHeaders( void )const;
-
-
-
-	// Public method for CGI error timeout
-	void	setError( e_errorCodes, bool skip = false );
-	e_method getMethod( void );
-	// For testing
+	
+	// For testing with google testing framework
 	void	setMethod( const e_method& );
+	e_method getMethod( void );
 };
