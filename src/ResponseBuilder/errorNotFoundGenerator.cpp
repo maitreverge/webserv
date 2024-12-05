@@ -67,13 +67,33 @@ void	ResponseBuilder::errorNotFoundGenerator( void ){
 
 	ofstream backupStream(_backupNameFile.c_str());
 
-	backupStream << result.str();
-	
-	// ! Modify the _realURI
-	this->_realURI = _backupNameFile;
+	if (backupStream.is_open())
+	{
+		// Write to the stream
+		backupStream << result.str();
+		
+		// Check for write errors
+		if (backupStream.fail())
+		{
+			Logger::getInstance().log(ERROR, "ResponseBuilder::errorNotFoundGenerator : backupStream failed to write data");
+			throw Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR);
+		}
+		else
+			Logger::getInstance().log(DEBUG, "ResponseBuilder::errorNotFoundGenerator : backupStream correctly wrote data");
+		
+		// ! Modify the _realURI
+		this->_realURI = _backupNameFile;
 
-	this->_deleteURI = true;
-	Logger::getInstance().log(DEBUG, "ResponseBuilder::errorNotFoundGenerator : The _realURI will be deleted");
+		this->_deleteURI = true;
+		Logger::getInstance().log(DEBUG, "ResponseBuilder::errorNotFoundGenerator : The _realURI will be deleted");
+		
+	}
+	else 
+	{
+		Logger::getInstance().log(ERROR, "ResponseBuilder::errorNotFoundGenerator : backupStream failed to open");
+		throw Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR);
+	}
 
-	backupStream.close();
+	if (backupStream.is_open())
+		backupStream.close();
 }
