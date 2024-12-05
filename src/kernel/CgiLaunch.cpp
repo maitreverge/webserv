@@ -74,10 +74,10 @@ void Cgi::launch(Client & client)
 void provC(Client & client) //! a suppr
 {
 	if (chdir(client.responseBuilder._folderCGI.c_str()) < 0)	
-		Logger::getInstance().log(ERROR, "chdir", client), exit(200);			
+		Logger::getInstance().log(ERROR, "chdir", client), std::exit(200);			
 	char actualPath[PATH_MAX];	
 	if (!getcwd(actualPath, PATH_MAX))	
-		Logger::getInstance().log(ERROR, "getcwd", client), exit(200);				 
+		Logger::getInstance().log(ERROR, "getcwd", client), std::exit(200);				 
 	std::string envPathInfo("PATH_INFO=" + client.responseBuilder._pathInfo);
 	char *env[] = {const_cast<char *>(envPathInfo.c_str()), NULL};
 	std::string execPath = std::string(actualPath) + '/'
@@ -111,20 +111,37 @@ void Cgi::child(Client & client)
 	std::exit(242);
 }
 
+std::string Cgi::getApiKey(Client & client, std::string & interPath)
+{
+	ifstream ifs("apike");
+	if (!ifs)
+	{
+
+		std::string().swap(interPath); Logger::getInstance().log(ERROR, "get api key", client),
+			std::exit(200);
+	}
+	return (std::string(std::istreambuf_iterator<char>(ifs),
+		std::istreambuf_iterator<char>())); 
+}
+
 void Cgi::callExecve(Client & client, const std::string & interpreter)
 {
 	if (chdir(client.responseBuilder._folderCGI.c_str()) < 0)
-		Logger::getInstance().log(ERROR, "chdir", client), exit(200);				
+		Logger::getInstance().log(ERROR, "chdir", client), std::exit(200);				
 	char actualPath[PATH_MAX];	
 	if (!getcwd(actualPath, PATH_MAX))
-		Logger::getInstance().log(ERROR, "getcwd", client), exit(200);					 
-	std::string interPath = this->getPath(client, interpreter);
+		Logger::getInstance().log(ERROR, "getcwd", client), std::exit(200);	
+	std::string tempPath = this->getPath(client, interpreter);
+
+	std::string interPath;
+	interPath.swap(tempPath); // Échange les contenus et libère immédiatement `tempPath`
+				 
+	std::string envOpenAI = this->getApiKey(client, interPath);
 	
 	std::string envPathInfo("PATH_INFO=" + client.responseBuilder._pathInfo);
-	std::string envOpenAI("OPENAI_API_KEY=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");  
+	// std::string envOpenAI("OPENAI_API_KEY=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");  
 	 
 	char *env[] = {const_cast<char *>(envPathInfo.c_str()), const_cast<char *>(envOpenAI.c_str()), NULL}; 
-
 	std::string execPath(std::string(actualPath)
 		+ '/' + client.responseBuilder._fileName);
 	
@@ -142,7 +159,7 @@ std::string Cgi::getPath(Client & client, const std::string & interpreter)
 	{
 		{
 			std::string path;
-			path.reserve(128);
+			// path.reserve(128);
 			std::istringstream ss(env);
 			std::string line;
 			while (std::getline(ss, line, ':'))
@@ -153,10 +170,10 @@ std::string Cgi::getPath(Client & client, const std::string & interpreter)
 			}
 		}
 		Logger::getInstance().log(ERROR, "interpreter not exist", client);
-		exit(200);			
+		std::exit(200);			
 	}
 	Logger::getInstance().log(ERROR, "PATH not exist", client);
-	exit(200);		
+	std::exit(200);		
 }
 
 double Cgi::getTimeSpan(Client & client) const
