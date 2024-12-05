@@ -12,6 +12,8 @@ void ResponseBuilder::sanatizeURI( string &oldURI ){
 
 	while (found != std::string::npos)
 	{
+		Logger::getInstance().log(DEBUG, "FUNCTION CALL : ResponseBuilder::sanatizeURI : Original URI contains a \"../\" pattern");
+
 		oldURI.erase(found, 3);
 		found = oldURI.find(needle);
 	}
@@ -68,22 +70,18 @@ void ResponseBuilder::rootMapping( void ){
 	
 	// slashManip(_myconfig.root);
 	
-	Logger::getInstance().log(INFO, "ROOT MAPPING CALLEDc");
+	Logger::getInstance().log(INFO, "ROOT MAPPING CALLED");
 	if (_realURI.find(_myconfig.root) == std::string::npos)
 	{
-
-		Logger::getInstance().log(INFO, "URI BEFORE MAPPING");
-		Logger::getInstance().log(INFO, _realURI);
+		Logger::getInstance().log(DEBUG, "URI BEFORE MAPPING");
+		Logger::getInstance().log(DEBUG, _realURI);
 
 		// _realURI.replace(0, _myconfig.uri.size(), _myconfig.root);
 		_realURI.insert(0, _myconfig.root);
 		
-		Logger::getInstance().log(INFO, "URI AFTER MAPPING");
-		Logger::getInstance().log(INFO, _realURI);
+		Logger::getInstance().log(DEBUG, "URI AFTER MAPPING");
+		Logger::getInstance().log(DEBUG, _realURI);
 	}
-
-		// http://localhost:3027/_websites/festival/index.html
-
 }
 
 bool ResponseBuilder::isDirectory(string &strInput) {
@@ -191,7 +189,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	
 	if (codeInput != CODE_200_OK)
 	{
-		Logger::getInstance().log(DEBUG, "getHeader invoked from above with an error code");
+		Logger::getInstance().log(DEBUG, "ResponseBuilder::getHeader invoked from above with an error code");
 		_method = GET;
 		setError(codeInput, true);
 		setContentLenght();
@@ -269,6 +267,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	buildHeaders();
 
 	// TO bypass the writting process // ! cf SEB ClientBody
+	// TODO ! Maybe useless check
 	if (_method == POST and _errorType != CODE_201_CREATED)
 		_method = GET;
 

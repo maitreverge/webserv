@@ -4,7 +4,9 @@
 bool ResponseBuilder::getBody( Client &inputClient ){
 
 	Logger::getInstance().log(DEBUG, "Response Builder Get Body", inputClient);
-	try	{
+	
+	try
+	{
 		if (this->_isCGI)	
 			return this->_cgi.getBody(inputClient);
 	}
@@ -16,13 +18,13 @@ bool ResponseBuilder::getBody( Client &inputClient ){
 	// Edge case where you don't need a body
 	if (isErrorRedirect() ) // Code 300 Redirect
 	{
-		Logger::getInstance().log(INFO, "Redirect Non Body Response", inputClient);
+		Logger::getInstance().log(INFO, "ResponseBuilder::getBody : Redirection happended, no body is required");
 		return false;
 	}
 
 	if (!this->_ifs.is_open())
 	{	
-		Logger::getInstance().log(DEBUG, _realURI.c_str(), inputClient);	
+		Logger::getInstance().log(DEBUG, "ResponseBuilder::getBody, the targetet URI is = " + _realURI);	
 
 		if (_method == POST and _isCGI) //!COND JUMP
 			this->_ifs.open(_fileName.c_str(), std::ios::binary);	
@@ -37,8 +39,10 @@ bool ResponseBuilder::getBody( Client &inputClient ){
 		Logger::getInstance().log(DEBUG, "file end", inputClient);						
 		this->_ifs.close();		
 		
-		// Delete the HTML response that has been generated 
-		// such as listings.html, and backup.html (for self generated errors)
+		/*
+			Delete the HTML response that has been generated 
+			such as listings.html, and backup.html (for self generated errors)
+		*/
 		if (_deleteURI)
 		{
 			std::remove(_realURI.c_str());
@@ -90,6 +94,7 @@ bool ResponseBuilder::getBody( Client &inputClient ){
 			exitClient();
 		*/
 		Logger::getInstance().log(ERROR, "Failed Stream happend", inputClient);
+		setError(CODE_500_INTERNAL_SERVER_ERROR);
     }
 	
 	return false;

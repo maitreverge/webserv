@@ -66,9 +66,6 @@ void	ResponseBuilder::checkAutho( void ){
 
 		switch (_method)
 		{
-			/*
-				CGI : verifier chmod +x ET chmod + r
-			*/
 			case GET:
 				if ( _isCGI and (not _isXOK or not _isROK) )
 				{
