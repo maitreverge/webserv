@@ -77,3 +77,5 @@ src/build_response/.test/a.out
 CGIScriptCreation/a.out
 Requests_Tester/check_file.ans
 1
+Requests_Tester/.vscode
+.vscode/settings.json

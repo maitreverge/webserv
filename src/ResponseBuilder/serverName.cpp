@@ -16,7 +16,11 @@ void ResponseBuilder::extractServerName()
 	string curPort = curHost.substr(curHost.find_last_of(":") + 1);
 
 	// Extracting ==> festival
-	string curServerName = curHost.substr(0, curHost.find_last_of("."));
+	string curServerName;
+	if (curHost.find(".localhost:") != std::string::npos)
+		curServerName = curHost.substr(0, curHost.find_last_of("."));
+	else
+		curServerName = curHost.substr(0, curHost.find_first_of(":"));
 
 	map<string, string> mapPort;
 
@@ -35,6 +39,9 @@ void ResponseBuilder::extractServerName()
 		if (_servernameType.find(curServerName) != _servernameType.end())
 		{
 			_serverName = _servernameType.at(curServerName);
+
+			Logger::getInstance().log(INFO, "serverName detected");
+
 			_isServerName = true;
 		}
 	}
@@ -43,6 +50,8 @@ void ResponseBuilder::extractServerName()
 
 void ResponseBuilder::applyServerName( void )
 {
+	Logger::getInstance().log(DEBUG, "FUNCTION CALL :ResponseBuilder::applyServerName");
+
 	// Erase the URI starting with '/'
 	if (*_realURI.begin() == '/')
 	{
@@ -52,13 +61,16 @@ void ResponseBuilder::applyServerName( void )
 	// Append the _serverName with this one is not found in the URI
 	if (_realURI.find(_serverName) == std::string::npos)
 	{
+		Logger::getInstance().log(DEBUG, "_realURI before serverName" + _realURI);
+
 		_realURI.insert(0, _serverName);
+
+		Logger::getInstance().log(DEBUG, "_realURI after serverName" + _realURI);
 	}
 }
 
 void ResponseBuilder::serverNameChecking( void )
 {
-
 	if (not _serverNameChecked)
 		extractServerName();
 	if (_isServerName)

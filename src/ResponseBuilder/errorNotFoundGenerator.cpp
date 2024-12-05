@@ -4,6 +4,8 @@
 
 void	ResponseBuilder::errorNotFoundGenerator( void ){
 
+	Logger::getInstance().log(DEBUG, "FUNCTION CALL : ResponseBuilder::errorNotFoundGenerator");
+
 	errorCode codes;
 	
 	stringstream result;
@@ -11,6 +13,8 @@ void	ResponseBuilder::errorNotFoundGenerator( void ){
 	stringstream image;
 
 	string imageURL = "https://freeyork.org/wp-content/uploads/2015/06/DKOpAT4VAAEmmes.jpg";
+
+	string widthImage = "40";
 	
 	string errorName = codes.getCode(_errorType);
 
@@ -22,10 +26,12 @@ void	ResponseBuilder::errorNotFoundGenerator( void ){
 			<< ".html file has not been found."
 			<< "This is a backup self-generated webpage.";
 	
-	// Image source because life is fun
+	// Image source
 	image   << "<img src=\""
 			<< imageURL
-			<< "\" alt=\"Description of image\" style=\"width:40%;\">";
+			<< "\" alt=\"Description of image\" style=\"width:"
+			<< widthImage
+			<< "%;\">";
 
 	// Assemble all parts
 	result	<< "<!DOCTYPE html>\n"
@@ -53,7 +59,9 @@ void	ResponseBuilder::errorNotFoundGenerator( void ){
 	
 	// ! Modify the _realURI
 	this->_realURI = _backupNameFile;
+
 	this->_deleteURI = true;
-	
+	Logger::getInstance().log(DEBUG, "ResponseBuilder::errorNotFoundGenerator : The _realURI will be deleted");
+
 	backupStream.close();
 }

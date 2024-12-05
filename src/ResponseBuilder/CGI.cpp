@@ -3,6 +3,8 @@
 
 void ResponseBuilder::checkCGI( void ){
 
+	Logger::getInstance().log(DEBUG, "FUNCTION CALL : ResponseBuilder::checkCGI");
+
     // Define the file extensions for Python and PHP scripts
     string extensionPHP = ".php";
     string extensionPython = ".py";
@@ -53,4 +55,9 @@ void ResponseBuilder::checkCGI( void ){
 	_folderCGI = _realURI.substr(0, _realURI.find_last_of('/') + 1);
 
 	_folderCGI.insert(0, ".");
+
+	Logger::getInstance().log(DEBUG, "RESULT OF FUNCTION : ResponseBuilder::checkCGI");
+	Logger::getInstance().log(DEBUG, "_pathInfo = " + _pathInfo);
+	Logger::getInstance().log(DEBUG, "_folderCGI = " + _folderCGI);
+	Logger::getInstance().log(DEBUG, "_realURI = " + _realURI);
 }

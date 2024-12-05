@@ -7,7 +7,7 @@ void	ResponseBuilder::initCurrentFiles( vector< string>& duplicatesFileNames ){
 
 	if (dir == NULL) // TODO : Gerer erreur d'ouverture de buffer
 	{
-		Logger::getInstance().log(ERROR, "Failing Openning Directory");
+		Logger::getInstance().log(ERROR, "Failing Openning Directory in ResponseBuilder::initCurrentFiles");
 		return;
 	}
 
@@ -168,7 +168,7 @@ ResponseBuilder::e_lineNature ResponseBuilder::processCurrentLine(vector< char >
 // This is now the SetBody only for MultiPart form Data
 void	ResponseBuilder::setMultiPartPost( Client & client ){
 
-	printColor(BOLD_HIGH_INTENSITY_BLUE, "FUNCTION CALED");
+	Logger::getInstance().log(DEBUG, "FUNCTION CALL : ResponseBuilder::setMultiPartPost");
 
 	static vector< char > curLine;
 	static vector< char > nextLine;
@@ -268,7 +268,7 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 // This is now the regular setPost without Multipart Writting
 void	ResponseBuilder::setRegularPost( Client & client ){
 
-    Logger::getInstance().log(DEBUG, "setRegularPost");
+	Logger::getInstance().log(DEBUG, "FUNCTION CALL : ResponseBuilder::setRegularPost");
 
 	if (!this->_ofs.is_open())
 	{	

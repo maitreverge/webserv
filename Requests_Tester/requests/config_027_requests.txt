@@ -1,0 +1,32 @@
+curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3027/
+--END-REQUEST--
+curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3127/
+--END-REQUEST--
+curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3227/
+--END-REQUEST--
+curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3327/
+--END-REQUEST--
+curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3027
+--END-REQUEST--
+curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3127
+--END-REQUEST--
+curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3227
+--END-REQUEST--
+curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3327
+--END-REQUEST--
+curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3027/_websites/festival/index.html
+--END-REQUEST--
+curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3127/_websites/festival/index.html
+--END-REQUEST--
+curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3227/_websites/festival/index.html
+--END-REQUEST--
+curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3327/_websites/festival/index.html
+--END-REQUEST--
+curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3027_websites/festival/index.html
+--END-REQUEST--
+curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3127/_websites/festival/index.html
+--END-REQUEST--
+curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3227/_websites/festival/index.html
+--END-REQUEST--
+curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3327/_websites/festival/index.html
+--END-REQUEST--

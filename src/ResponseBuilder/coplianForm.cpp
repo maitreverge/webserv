@@ -3,54 +3,56 @@
 
 void ResponseBuilder::initMimes( void ){
 
-	// Init Mimes Types
-	{
-		_mimeTypes.insert(std::make_pair("html", "text/html"));
-		_mimeTypes.insert(std::make_pair("htm", "text/htm"));
-		_mimeTypes.insert(std::make_pair("txt", "text/txt"));
-		_mimeTypes.insert(std::make_pair("css", "text/css"));
-		_mimeTypes.insert(std::make_pair("xml", "text/xml"));
-		// Application Content Types
-		_mimeTypes.insert(std::make_pair("js", "application/javascript"));
-		_mimeTypes.insert(std::make_pair("json", "application/json"));
-		_mimeTypes.insert(std::make_pair("pdf", "application/pdf"));
-		_mimeTypes.insert(std::make_pair("zip", "application/zip"));
-		// Image Content Types
-		_mimeTypes.insert(std::make_pair("jpeg", "image/jpeg"));
-		_mimeTypes.insert(std::make_pair("jpg", "image/jpg"));
-		_mimeTypes.insert(std::make_pair("png", "image/png"));
-		_mimeTypes.insert(std::make_pair("gif", "image/gif"));
-		_mimeTypes.insert(std::make_pair("webp", "image/webp"));
-		_mimeTypes.insert(std::make_pair("bmp", "image/bmp"));
-		_mimeTypes.insert(std::make_pair("ico", "image/x-icon"));
-		// Audio Content Types
-		_mimeTypes.insert(std::make_pair("mp3", "audio/mp3"));
-		_mimeTypes.insert(std::make_pair("mpeg", "audio/mpeg"));
-		_mimeTypes.insert(std::make_pair("ogg", "audio/ogg"));
-		_mimeTypes.insert(std::make_pair("wav", "audio/wav"));
-		// Video Content Types
-		_mimeTypes.insert(std::make_pair("mp4", "video/mp4"));
-		_mimeTypes.insert(std::make_pair("webm", "video/webm"));
-		_mimeTypes.insert(std::make_pair("ogv", "video/ogv"));
-	}
-
-	// Servername
-	{
-		_servernameType.insert(std::make_pair("festival", "_websites/festival/"));
-		_servernameType.insert(std::make_pair("cyborg", "_websites/cyborg_gaming/"));
-		_servernameType.insert(std::make_pair("villa", "_websites/villa_agency/"));
-		_servernameType.insert(std::make_pair("example.com", "_websites/villa_agency/"));
-
-	}
+	// Text Based Types
+	_mimeTypes.insert(std::make_pair("html", "text/html"));
+	_mimeTypes.insert(std::make_pair("htm", "text/htm"));
+	_mimeTypes.insert(std::make_pair("txt", "text/txt"));
+	_mimeTypes.insert(std::make_pair("css", "text/css"));
+	_mimeTypes.insert(std::make_pair("xml", "text/xml"));
+	// Application Content Types
+	_mimeTypes.insert(std::make_pair("js", "application/javascript"));
+	_mimeTypes.insert(std::make_pair("json", "application/json"));
+	_mimeTypes.insert(std::make_pair("pdf", "application/pdf"));
+	_mimeTypes.insert(std::make_pair("zip", "application/zip"));
+	// Image Content Types
+	_mimeTypes.insert(std::make_pair("jpeg", "image/jpeg"));
+	_mimeTypes.insert(std::make_pair("jpg", "image/jpg"));
+	_mimeTypes.insert(std::make_pair("png", "image/png"));
+	_mimeTypes.insert(std::make_pair("gif", "image/gif"));
+	_mimeTypes.insert(std::make_pair("webp", "image/webp"));
+	_mimeTypes.insert(std::make_pair("bmp", "image/bmp"));
+	_mimeTypes.insert(std::make_pair("ico", "image/x-icon"));
+	// Audio Content Types
+	_mimeTypes.insert(std::make_pair("mp3", "audio/mp3"));
+	_mimeTypes.insert(std::make_pair("mpeg", "audio/mpeg"));
+	_mimeTypes.insert(std::make_pair("ogg", "audio/ogg"));
+	_mimeTypes.insert(std::make_pair("wav", "audio/wav"));
+	// Video Content Types
+	_mimeTypes.insert(std::make_pair("mp4", "video/mp4"));
+	_mimeTypes.insert(std::make_pair("webm", "video/webm"));
+	_mimeTypes.insert(std::make_pair("ogv", "video/ogv"));
 }
 
 // ------------------------- COPLIAN FORM -----------------------------
+
+void	ResponseBuilder::initServerNames( void ){
+
+	_servernameType.insert(std::make_pair("festival.com", "_websites/festival/"));
+	_servernameType.insert(std::make_pair("site1.com", "_websites/festival/"));
+	_servernameType.insert(std::make_pair("cyborg.com", "_websites/cyborg_gaming/"));
+	_servernameType.insert(std::make_pair("site2.com", "_websites/cyborg_gaming/"));
+	_servernameType.insert(std::make_pair("villa.com", "_websites/villa_agency/"));
+	_servernameType.insert(std::make_pair("site3.com", "_websites/villa_agency/"));
+	_servernameType.insert(std::make_pair("example.com", "_websites/villa_agency/"));
+}
 
 ResponseBuilder::ResponseBuilder( void ){
 	
 	// SEB UTILS
 	// Logger::getInstance().log(INFO, "ResponseBuilder constructor");
 	initMimes();
+
+	initServerNames();
 	
 	// Init priv variables
 	_isDirectory = false;

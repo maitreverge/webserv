@@ -12,6 +12,8 @@ void ResponseBuilder::sanatizeURI( string &oldURI ){
 
 	while (found != std::string::npos)
 	{
+		Logger::getInstance().log(DEBUG, "FUNCTION CALL : ResponseBuilder::sanatizeURI : Original URI contains a \"../\" pattern");
+
 		oldURI.erase(found, 3);
 		found = oldURI.find(needle);
 	}
@@ -22,25 +24,43 @@ bool ResponseBuilder::redirectURI( void ){
 
 	if (_myconfig.redirection.empty())
 		return false;
-
-	// TODO : Client keeps asking the same redirection over and over
-	// if (_realURI == _myconfig.redirection)
-	if (_myconfig.redirection != "/" and _realURI.find(_myconfig.redirection) != std::string::npos)
+	else if (_realURI == "/" and _myconfig.redirection == "/")
+	{
+		Logger::getInstance().log(ERROR, "508 LOOP : Both _realURi and Redirection == \"/\"");
+		setError(CODE_508_LOOP_DETECTED);
+	}
+	else if (_realURI.size() == 1 and *_realURI.begin() == '/')
+	{
+		Logger::getInstance().log(INFO, "Regular redirection activated");
+		_realURI = _myconfig.redirection;
+		setError(CODE_302_FOUND);
+	}
+	else if (_myconfig.uri == "/" and _realURI.find(_myconfig.redirection) != std::string::npos )// ! FROM HERE, _REALURI SIZE > 1
 	{
 		Logger::getInstance().log(ERROR, "Redirection Loop Detected");
 		setError(CODE_508_LOOP_DETECTED);
 	}
+	// else if (_realURI.size() > 1 and _realURI.find(_myconfig.redirection) != std::string::npos )//!
+
+	// TODO : Client keeps asking the same redirection over and over
+	// if (_realURI == _myconfig.redirection)
+	// if (( *_realURI.begin() == '/' and _realURI.size() > 1 ) and ( _myconfig.uri == "/" ) and ( *_myconfig.redirection.begin() == '/' and _myconfig.redirection.size() > 1 ) )
+	// if (_realURI.size() > 1 and )
+	// {
+	// 	Logger::getInstance().log(ERROR, "Redirection Loop Detected in base config \"/\"");
+	// 	setError(CODE_508_LOOP_DETECTED);
+	// }
 	
 	/*
 		! I had a doubt on this one, need to dig deeper when working on redirections
 		Original line :
 		_realURI = _myconfig.redirection + _myconfig.indexRedirection;
 	*/
-	_realURI = _myconfig.redirection;
+	// _realURI = _myconfig.redirection;
 
 	
-	setError(CODE_302_FOUND);
-	return true;
+	// setError(CODE_302_FOUND);
+	return false;
 }
 
 void ResponseBuilder::rootMapping( void ){
@@ -50,9 +70,18 @@ void ResponseBuilder::rootMapping( void ){
 	
 	// slashManip(_myconfig.root);
 	
+	Logger::getInstance().log(INFO, "ROOT MAPPING CALLED");
 	if (_realURI.find(_myconfig.root) == std::string::npos)
-		_realURI.replace(0, _myconfig.uri.size(), _myconfig.root);
+	{
+		Logger::getInstance().log(DEBUG, "URI BEFORE MAPPING");
+		Logger::getInstance().log(DEBUG, _realURI);
 
+		// _realURI.replace(0, _myconfig.uri.size(), _myconfig.root);
+		_realURI.insert(0, _myconfig.root);
+		
+		Logger::getInstance().log(DEBUG, "URI AFTER MAPPING");
+		Logger::getInstance().log(DEBUG, _realURI);
+	}
 }
 
 bool ResponseBuilder::isDirectory(string &strInput) {
@@ -160,7 +189,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	
 	if (codeInput != CODE_200_OK)
 	{
-		Logger::getInstance().log(DEBUG, "getHeader invoked from above with an error code");
+		Logger::getInstance().log(DEBUG, "ResponseBuilder::getHeader invoked from above with an error code");
 		_method = GET;
 		setError(codeInput, true);
 		setContentLenght();
@@ -238,6 +267,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	buildHeaders();
 
 	// TO bypass the writting process // ! cf SEB ClientBody
+	// TODO ! Maybe useless check
 	if (_method == POST and _errorType != CODE_201_CREATED)
 		_method = GET;
 

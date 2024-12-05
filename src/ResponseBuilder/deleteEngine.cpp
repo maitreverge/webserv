@@ -5,6 +5,8 @@
 
 void	ResponseBuilder::generateDeleteHTML( void ){
 
+	Logger::getInstance().log(DEBUG, "FUNCTION CALL : ResponseBuilder::generateDeleteHTML");
+	
 	// Building buffer
 	stringstream result;
 
@@ -25,8 +27,8 @@ void	ResponseBuilder::generateDeleteHTML( void ){
 			<<	"</body>\n"
 			<<	"</html>";
 
-	// Make the page dissapear
 	_deleteURI = true;
+	Logger::getInstance().log(DEBUG, "ResponseBuilder::generateDeleteHTML : The _realURI will be deleted");
 
 	// Modify the URI to be targeted by the size afterwards
 	_realURI.erase(_realURI.find_last_of("/") + 1);
@@ -35,21 +37,22 @@ void	ResponseBuilder::generateDeleteHTML( void ){
 	ofstream deleteFile(_realURI.c_str());
 
 	deleteFile << result.str();
-
 }
 
 void	ResponseBuilder::deleteEngine( void ){
+
+	Logger::getInstance().log(DEBUG, "FUNCTION CALL : ResponseBuilder::deleteEngine");
 
 	string targetToDelete = _realURI;
 
 	if (std::remove(targetToDelete.c_str()) != 0)
 	{
-		Logger::getInstance().log(ERROR, "500 Detected from `deleteEngine` : Server failed to delete file with DELETE method");
+		Logger::getInstance().log(ERROR, "500 Detected from ResponseBuilder::deleteEngine : Server failed to delete file with DELETE method");
 		setError(CODE_500_INTERNAL_SERVER_ERROR, true); // do not raise an exception
 	}
 	else
 	{
-		Logger::getInstance().log(DEBUG, "`deleteEngine` successfully deleted the file");
+		Logger::getInstance().log(DEBUG, "ResponseBuilder::deleteEngine successfully deleted the file");
 		generateDeleteHTML();
 		setContentLenght();
 	}

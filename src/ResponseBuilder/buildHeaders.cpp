@@ -3,7 +3,7 @@
 
 void	ResponseBuilder::buildHeaders(){
 
-	Logger::getInstance().log(DEBUG, "ResponseBuilder->buildHeader", *_client);
+	Logger::getInstance().log(INFO, "FUNCTION CALL : ResponseBuilder::buildHeaders", *_client);
 
 
 	errorCode codes;
@@ -73,6 +73,10 @@ void	ResponseBuilder::buildHeaders(){
 		streamLocation	<< "Location:"
 						<< SPACE
 						<< _realURI
+						<< HTTP_HEADER_SEPARATOR
+						<< "Content-Length: 0"
+						<< HTTP_HEADER_SEPARATOR
+						<< "Connection: close\r\n"
 						<< HTTP_HEADER_SEPARATOR;
 		Headers.location = streamLocation.str();
 	}
@@ -82,9 +86,6 @@ void	ResponseBuilder::buildHeaders(){
 
 	buildSetCookieHeader();
 
-	// ======================== BONUS METHODS ========================
-
-	
 	// ======================== BUILDING FINAL HEADERS ========================
 
 	streamMasterHeader	<< Headers.statusLine
@@ -94,7 +95,6 @@ void	ResponseBuilder::buildHeaders(){
 						<< Headers.cookie
 						<< Headers.contentType 
 						<< Headers.location
-						// Separator
 						<< HTTP_HEADER_SEPARATOR;
 	
 	string tempAllHeaders = streamMasterHeader.str();

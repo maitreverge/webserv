@@ -126,12 +126,13 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 		if (!isFileIgnored(curFile))
 		{
 			if (listing->d_type == DT_DIR)
+			{
 				curFile += "/"; // Append trailing slash for directories
+			}
 			if ( !_myconfig.root.empty() and curFile.find(_myconfig.root) == std::string::npos)
 			{
 				curFile.insert(0, _myconfig.root);
 			}
-			
 			paths.push_back(curFile);
 		}
 	}
@@ -176,7 +177,8 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 
 	// Comment this to make listing.html
 	_deleteURI = true;
-
+	Logger::getInstance().log(DEBUG, "ResponseBuilder::listingHTMLBuilder : The _realURI will be deleted");
+	
 	if (*_realURI.begin() == '/')
 		_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")
 
