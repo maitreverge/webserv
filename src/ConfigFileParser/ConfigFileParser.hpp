@@ -37,7 +37,7 @@ class ConfigFileParser
 		int		ignoreComents(std::string& line);
 		int		getCurrentCategory(std::string& line, std::string& currentCategory);
 		void	extractKeyValuePairs(std::string& line, std::string& currentCategory);
-		// void	printServerData(const server serverStruct[], size_t size);
+		
 		void	setAllConfigValues(catIt& catIt, itemIt& itemIt, valIt& valIt, Config& configStruct, int& i);
 		void	setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, Config& configStruct, const char str[], e_errorCodes e);
 		void	setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::string& field, const char str[]);
@@ -48,22 +48,21 @@ class ConfigFileParser
 		void	setConfigValue(itemIt& itemIt, valIt& valIt, std::vector<std::string>& vec, const char str[]);
 		void	setConfigValue(catIt catIt, itemIt itemIt, valIt valIt, Config& configStruct);
 		void	setConfigValue(catIt& catIt, server& serverStruct);
-
 		void	setConfigValue(catIt& catIt, itemIt& itemIt, int& field, const char str[]);
 		void	setConfigValue(catIt& catIt, itemIt& itemIt, unsigned short& field, const char str[]);
-		// void	setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::vector<std::string>& allowedRoutes, const char str[]);
 		void	initializeServers(Config& configStruct, int& i);
 		bool	isServerData(const std::string& category);
 		bool	isRouteData(const std::string& category);
 		bool	isAllowedRoute(const std::string& str, server& serverStruct);
 		void	assignRoutesToServers(Config& configStruct);
-
-		public:
-		ConfigFileParser();
-		static void 	printServerData(const server _serverStruct[], size_t size);
 		void	intializeConfigStruct(Config& configStruct);
 		int		extractDataFromConfigFile(const std::string& path);
-		void	parseConfigFile(Config& configStruct, char* path);
-		static void 	printConfig(const Config& config);
+
+		static void printServerData(const server _serverStruct[], size_t size);
+		static void printConfig(const Config& config);
 		static void	printRoutesData(const RoutesData& routesData);
+		public:
+		ConfigFileParser();
+		void		parseConfigFile(Config& configStruct, char* path);
+
 };
