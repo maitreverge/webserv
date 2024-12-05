@@ -3,9 +3,7 @@
 from openai import OpenAI
 import sys
 import os
-import logging
 import requests
-logging.basicConfig(level=logging.ERROR) 
 
 url = (
     f"https://webservcgi-default-rtdb.europe-west1.firebasedatabase.app/users"
@@ -23,8 +21,6 @@ client = OpenAI()
 path_info = os.getenv("PATH_INFO", "").replace("%20", " ").strip("/")
 mood = path_info if path_info else "neutre"
 
-user_input = sys.stdin.read().strip()
-
 if 'login' in data and data['login'] == 'user1':
     del data['login']  
  
@@ -33,6 +29,8 @@ pre_prompt = f"""Réponds selon l'humeur suivante : {mood}.
     suivantes {data} pour les integrers d'une facon eloquente dans la réponse.
     Surtout ne depasse jamais 400 characteres,
     n'hesite pas a mettre des emojies."""
+
+user_input = sys.stdin.read().strip()
 
 try:
     response = client.chat.completions.create(
@@ -44,23 +42,14 @@ try:
         max_tokens=500
     )
 
-    chatbot_response = response.choices[0].message.content
-    if "userInput" in user_input:
-        user_input = user_input.split('=', 1)[1]
-
-    html_output = f"""		
-		<p>{chatbot_response}</p>
-	"""
-
-    content_length = len(html_output.encode('utf-8'))
-
+    output = response.choices[0].message.content
+    content_length = len(output.encode('utf-8'))
     print("HTTP/1.1 200 OK")
     print("Content-Type: text/plain; charset=utf-8")
     print(f"Content-Length: {content_length}")
-    print() 
+    print()
+    print(output)
 
-    print(html_output)
-
-except Exception as e:
-    print("Content-Type: text/plain\n")
+except Exception as e:    
     print(f"Erreur : {str(e)}")
+    exit(1)
