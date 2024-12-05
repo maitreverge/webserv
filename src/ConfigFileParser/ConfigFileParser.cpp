@@ -1,5 +1,4 @@
 #include "ConfigFileParser.hpp"
-#include "Logger.hpp"
 
 ConfigFileParser::ConfigFileParser()
 {
@@ -14,21 +13,49 @@ ConfigFileParser::ConfigFileParser()
 	routeKey.push_back("uploadDirectory");
 }
 
-/**========================================================================
- *                             WIP
- *?  il faut brancher la classe au reste du projet!
-*?  Il devrait etre possible d'initialiser cette structure dans Kernel,
-*?  et linker la structure de config dans les servers
-*?  => tests a faire!
-*========================================================================**/
-
 void ConfigFileParser::parseConfigFile(Config& configStruct, char* path)
 {
 	extractDataFromConfigFile(path);
 	intializeConfigStruct(configStruct);
 	assignRoutesToServers(configStruct);
-	// printServerData(configStruct._serverStruct, 4);
-	
+}
+
+void ConfigFileParser::setAllConfigValues(catIt& catIt, itemIt& itemIt, valIt& valIt, Config& configStruct, int& i)
+{
+	// Category "global"
+	setConfigValue(catIt, itemIt, configStruct.maxClient, "maxClient");
+	setConfigValue(catIt, itemIt, configStruct.maxHeaderSize, "maxHeaderSize");
+	setConfigValue(catIt, itemIt, configStruct.maxServerNbr, "maxServerNbr");
+	setConfigValue(catIt, itemIt, configStruct.maxBodySize, "maxBodySize");
+	setConfigValue(catIt, itemIt, configStruct.recv_buff_size, "recv_buff_size");
+	setConfigValue(catIt, itemIt, configStruct.send_buff_size, "send_buff_size");
+	setConfigValue(catIt, itemIt, configStruct.timeoutCgi, "timeoutCgi");
+	setConfigValue(catIt, itemIt, configStruct.listingDirectories, "listingDirectories");
+	setConfigValue(catIt, itemIt, configStruct.handleCookies, "handleCookies");
+	setConfigValue(catIt, itemIt, valIt, configStruct.indexFiles, "indexFiles");
+	// category "errorPages"
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_201", CODE_201_CREATED);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_400", CODE_400_BAD_REQUEST);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_401", CODE_401_UNAUTHORIZED);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_403", CODE_403_FORBIDDEN);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_404", CODE_404_NOT_FOUND);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_405", CODE_405_METHOD_NOT_ALLOWED);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_413", CODE_413_PAYLOAD_TOO_LARGE);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_422", CODE_422_UNPROCESSABLE_ENTITY);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_431", CODE_431_REQUEST_HEADER_FIELDS_TOO_LARGE);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_500", CODE_500_INTERNAL_SERVER_ERROR);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_502", CODE_502_BAD_GATEWAY);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_503", CODE_503_SERVICE_UNAVAILABLE);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_504", CODE_504_GATEWAY_TIMEOUT);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_508", CODE_508_LOOP_DETECTED);
+	// category server
+	setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].host, "host");
+	setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].port, "port");
+	setConfigValue(catIt, itemIt, configStruct._serverStruct[i], i);
+	setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].serverName, "serverName");
+	setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].allowedRoutes, "allowedRoutes");
+	// category routes (inner loop)
+	setConfigValue(catIt, itemIt, valIt, configStruct, i);
 }
 
 void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
@@ -41,42 +68,7 @@ void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
 		for (itemIt itemIt = catIt->second.begin(); itemIt != catIt->second.end(); ++itemIt)
 		{
 			for (valIt valIt = itemIt->second.begin(); valIt != itemIt->second.end(); ++valIt)
-			{
-				// Category "global"
-				setConfigValue(catIt, itemIt, configStruct.maxClient, "maxClient");
-				setConfigValue(catIt, itemIt, configStruct.maxHeaderSize, "maxHeaderSize");
-				setConfigValue(catIt, itemIt, configStruct.maxServerNbr, "maxServerNbr");
-				setConfigValue(catIt, itemIt, configStruct.maxBodySize, "maxBodySize");
-				setConfigValue(catIt, itemIt, configStruct.recv_buff_size, "recv_buff_size");
-				setConfigValue(catIt, itemIt, configStruct.send_buff_size, "send_buff_size");
-				setConfigValue(catIt, itemIt, configStruct.timeoutCgi, "timeoutCgi");
-				setConfigValue(catIt, itemIt, configStruct.listingDirectories, "listingDirectories");
-				setConfigValue(catIt, itemIt, configStruct.handleCookies, "handleCookies");
-				setConfigValue(catIt, itemIt, valIt, configStruct.indexFiles, "indexFiles");
-				// category "errorPages"
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_201", CODE_201_CREATED);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_400", CODE_400_BAD_REQUEST);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_401", CODE_401_UNAUTHORIZED);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_403", CODE_403_FORBIDDEN);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_404", CODE_404_NOT_FOUND);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_405", CODE_405_METHOD_NOT_ALLOWED);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_413", CODE_413_PAYLOAD_TOO_LARGE);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_422", CODE_422_UNPROCESSABLE_ENTITY);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_431", CODE_431_REQUEST_HEADER_FIELDS_TOO_LARGE);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_500", CODE_500_INTERNAL_SERVER_ERROR);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_502", CODE_502_BAD_GATEWAY);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_503", CODE_503_SERVICE_UNAVAILABLE);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_504", CODE_504_GATEWAY_TIMEOUT);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_508", CODE_508_LOOP_DETECTED);
-				// category server
-				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].host, "host");
-				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].port, "port");
-				setConfigValue(catIt, itemIt, configStruct._serverStruct[i], i);
-				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].serverName, "serverName");
-				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].allowedRoutes, "allowedRoutes");
-				// category routes (inner loop)
-				setConfigValue(catIt, itemIt, valIt, configStruct, i);
-			}
+				setAllConfigValues(catIt, itemIt, valIt, configStruct, i);
 		}
 	}
 }

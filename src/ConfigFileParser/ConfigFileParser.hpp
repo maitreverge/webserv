@@ -13,6 +13,7 @@
 #include <netinet/in.h> // pour struct sockaddr_in et AF_INET
 #include <arpa/inet.h> // pour inet_ntoa
 #include <cstring> // pour memset
+#include "Logger.hpp"
 
 typedef std::map<std::string, std::map<std::string, std::vector<std::string> > >::const_iterator catIt;
 typedef std::map<std::string, std::vector<std::string> >::const_iterator itemIt;
@@ -37,7 +38,7 @@ class ConfigFileParser
 		int		getCurrentCategory(std::string& line, std::string& currentCategory);
 		void	extractKeyValuePairs(std::string& line, std::string& currentCategory);
 		// void	printServerData(const server serverStruct[], size_t size);
-		
+		void	setAllConfigValues(catIt& catIt, itemIt& itemIt, valIt& valIt, Config& configStruct, int& i);
 		void	setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, Config& configStruct, const char str[], e_errorCodes e);
 		void	setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::string& field, const char str[]);
 		void	setConfigValue(catIt& catIt, itemIt& itemIt, short& field, const char str[]);
