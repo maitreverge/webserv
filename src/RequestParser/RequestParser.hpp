@@ -38,7 +38,6 @@ class RequestParser
 		Client*												_Client;
 		std::string											_WebToken;
 		// utils
-		void		trim(std::string& str);
 		std::string	charVectorToString(const std::vector<char>& vector);
 
 		// action
@@ -55,6 +54,7 @@ class RequestParser
 		void	extractWebToken(const std::vector<std::string>& key);
 		void 	displayUserSessionsContent(Client& client, Server & server);
 	public:
+		static void		trim(std::string& str);
 		//coplien
 		RequestParser();
 		~RequestParser();

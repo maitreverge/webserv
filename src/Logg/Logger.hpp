@@ -52,9 +52,8 @@ class Logger
 		int			portToInt(const struct sockaddr_in& addr);
 		std::string	intToString(int value);
 	public:
-		static std::string ipToString(const struct sockaddr_in& addr);
-
 		int	_logLevel[LOG_LEVEL_COUNT];
+		static std::string ipToString(const struct sockaddr_in& addr);
 
 		Logger(int verbose = 1);
 		~Logger();

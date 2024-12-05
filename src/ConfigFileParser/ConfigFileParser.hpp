@@ -14,6 +14,8 @@
 #include <arpa/inet.h> // pour inet_ntoa
 #include <cstring> // pour memset
 #include "Logger.hpp"
+#include "RequestParser.hpp"
+#include "master.hpp"
 
 typedef std::map<std::string, std::map<std::string, std::vector<std::string> > >::const_iterator catIt;
 typedef std::map<std::string, std::vector<std::string> >::const_iterator itemIt;
@@ -31,8 +33,6 @@ class ConfigFileParser
 		Data			_data;
 		std::vector<std::string> routeKey;
 
-		void	print(std::string str);
-		void	trim(std::string& str);
 		void	printData(const std::map<std::string, std::map<std::string, std::vector<std::string> > >& data);
 		int		ignoreComents(std::string& line);
 		int		getCurrentCategory(std::string& line, std::string& currentCategory);
@@ -61,6 +61,7 @@ class ConfigFileParser
 		static void printServerData(const server _serverStruct[], size_t size);
 		static void printConfig(const Config& config);
 		static void	printRoutesData(const RoutesData& routesData);
+		
 		public:
 		ConfigFileParser();
 		void		parseConfigFile(Config& configStruct, char* path);

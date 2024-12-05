@@ -274,12 +274,12 @@ void	ConfigFileParser::extractKeyValuePairs(std::string& line, std::string& curr
 	{
 		std::string key = line.substr(0, colonPos);
 		std::string value = line.substr(colonPos + 1);
-		trim(key); trim(value);
+		RequestParser::trim(key); RequestParser::trim(value);
 		std::istringstream valueStream(value);
 		std::string singleValue;
 		while (std::getline(valueStream, singleValue, ','))
 		{
-			trim(singleValue);
+			RequestParser::trim(singleValue);
 			_data[currentCategory][key].push_back(singleValue);
 		}
 	}
@@ -309,7 +309,7 @@ int	ConfigFileParser::extractDataFromConfigFile(const std::string& path)
  *========================================================================**/
 int	ConfigFileParser::ignoreComents(std::string& line)
 {
-	trim(line);
+	RequestParser::trim(line);
 	size_t firstChar = line.find('#');
 	if (firstChar != std::string::npos)
 		line.erase(firstChar);
@@ -330,7 +330,7 @@ int	ConfigFileParser::ignoreComents(std::string& line)
 
 int	ConfigFileParser::getCurrentCategory(std::string& line, std::string& currentCategory)
 {
-	trim(line);
+	RequestParser::trim(line);
 	if (!line.empty() && line[0] == '[')
 	{
 		size_t lastChar = line.find_last_not_of(" \t");
@@ -362,17 +362,6 @@ bool ConfigFileParser::isAllowedRoute(const std::string& str, server& serverStru
 	std::vector<std::string>::iterator it;
 	it = std::find(serverStruct.allowedRoutes.begin(), serverStruct.allowedRoutes.end(), str);
 	return it != serverStruct.allowedRoutes.end();
-}
-
-void	ConfigFileParser::print(std::string str)
-{
-	std::cout << str << std::endl;
-}
-
-void	ConfigFileParser::trim(std::string& str)
-{
-	str.erase(0, str.find_first_not_of(" \t\r\n"));
-	str.erase(str.find_last_not_of(" \t\r\n") + 1);
 }
 
 /**========================================================================
