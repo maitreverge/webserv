@@ -1,1 +1,2 @@
-gradio_client
+openai>=1.0.0
+httpx>=0.21.0

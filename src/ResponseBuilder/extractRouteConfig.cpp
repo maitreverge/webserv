@@ -280,7 +280,8 @@ void ResponseBuilder::resetMyVariables()
 }
 
 void	ResponseBuilder::printMyConfig( void ){
-
+	
+	print("");
 	printColor(CYAN, "================= PRINT MY CONFIG =============\n");
 	
 	print("ALLOWED METHODS =");
@@ -319,4 +320,5 @@ void	ResponseBuilder::printMyConfig( void ){
 	printColor(BOLD_RED, _myconfig.indexRedirection);
 
 	printColor(CYAN, "================= PRINT MY CONFIG =============");
+	print("");
 }

@@ -1,55 +1,66 @@
 #!/usr/bin/env python3
-
+# import openai
+from openai import OpenAI
 import sys
 import os
-from gradio_client import Client
 import logging
+import requests
+logging.basicConfig(level=logging.ERROR) 
 
-original_stdout = sys.stdout
-original_stderr = sys.stderr
-# Rediriger stdout et stderr pour éviter les messages non désirés
-sys.stdout = open(os.devnull, 'w')
-sys.stderr = open(os.devnull, 'w')
+url = (
+    f"https://webservcgi-default-rtdb.europe-west1.firebasedatabase.app/users"
+    f"/user1.json"
+)
 
-logging.basicConfig(level=logging.ERROR)  # Changer le niveau à ERROR pour éviter les infos
+response = requests.get(url)
+data = None
+if response.status_code == 200:   
+    data = response.json()
+else:
+    print("Erreur lors de la requête :", response.status_code)
+client = OpenAI()
 
-# Lire l'input depuis l'entrée standard (sys.stdin)
+path_info = os.getenv("PATH_INFO", "").replace("%20", " ").strip("/")
+mood = path_info if path_info else "neutre"
+
 user_input = sys.stdin.read().strip()
 
-client = Client("dsylvain/myNewAPI")
+if 'login' in data and data['login'] == 'user1':
+    del data['login']  
+ 
+pre_prompt = f"""Réponds selon l'humeur suivante : {mood}.
+	Sois court et pertinent. Utilise les informations sur l'utilisateur
+    suivantes {data} pour les integrers d'une facon eloquente dans la réponse.
+    Surtout ne depasse jamais 400 characteres,
+    n'hesite pas a mettre des emojies."""
 
 try:
-	result = client.predict(user_input=user_input)
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": pre_prompt},
+            {"role": "user", "content": user_input}
+        ],
+        max_tokens=500
+    )
 
-	# Rétablir stdout et stderr
-	sys.stdout = original_stdout
-	sys.stderr = original_stderr
-	html_output = f"""
-	<!DOCTYPE html>
-	<html lang="fr">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Résultat de l'API</title>
-	</head>
-	<body>
-		<h1>Voici votre réponse :</h1>
-		<p>in response to {user_input}:</p>
-		<p>{result}</p>
-	</body>
-	</html>
+    chatbot_response = response.choices[0].message.content
+    if "userInput" in user_input:
+        user_input = user_input.split('=', 1)[1]
+
+    html_output = f"""		
+		<p>{chatbot_response}</p>
 	"""
 
-	content_length = len(html_output.encode('utf-8'))
+    content_length = len(html_output.encode('utf-8'))
 
-	# Imprimer les en-têtes HTTP
-	print("HTTP/1.1 200 OK")
-	print("Content-Type: text/html; charset=utf-8")
-	print(f"Content-Length: {content_length}")
-	print()  # Ligne vide pour séparer les en-têtes du corps
+    print("HTTP/1.1 200 OK")
+    print("Content-Type: text/plain; charset=utf-8")
+    print(f"Content-Length: {content_length}")
+    print() 
 
-	print(html_output)
+    print(html_output)
+
 except Exception as e:
-	logging.error(f"An error occurred: {e}")
-	sys.stdout = original_stdout
-	sys.stderr = original_stderr
+    print("Content-Type: text/plain\n")
+    print(f"Erreur : {str(e)}")
