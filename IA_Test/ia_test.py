@@ -25,10 +25,14 @@ mood = path_info if path_info else "neutre"
 
 user_input = sys.stdin.read().strip()
 
+if 'login' in data and data['login'] == 'user1':
+    del data['login']  
+ 
 pre_prompt = f"""Réponds selon l'humeur suivante : {mood}.
-	Sois court et pertinent. Utilise les informations suivantes {data}
-    pour les integrers d'une facon eloquente dans la réponse. Surtout ne
-    depasse jamais 400 characteres"""
+	Sois court et pertinent. Utilise les informations sur l'utilisateur
+    suivantes {data} pour les integrers d'une facon eloquente dans la réponse.
+    Surtout ne depasse jamais 400 characteres,
+    n'hesite pas a mettre des emojies."""
 
 try:
     response = client.chat.completions.create(
