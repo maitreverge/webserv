@@ -37,16 +37,43 @@ void	ResponseBuilder::generateDeleteHTML( void ){
 			<<	"</body>\n"
 			<<	"</html>";
 
-	_deleteURI = true;
-	Logger::getInstance().log(DEBUG, "ResponseBuilder::generateDeleteHTML : The _realURI will be deleted");
 
 	// Modify the URI to be targeted by the size afterwards
 	_realURI.erase(_realURI.find_last_of("/") + 1);
 	_realURI += deleteFileName;
 
-	ofstream deleteFile(_realURI.c_str());
+	ofstream deleteFileStream(_realURI.c_str());
 
-	deleteFile << result.str();
+	if (deleteFileStream.is_open())
+	{
+		// Write to the stream
+		deleteFileStream << result.str();
+		
+		// Check for write errors
+		if (deleteFileStream.fail())
+		{
+			Logger::getInstance().log(ERROR, "ResponseBuilder::generateDeleteHTML : deleteFileStream failed to write data");
+			throw Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR);
+		}
+		else
+			Logger::getInstance().log(DEBUG, "ResponseBuilder::generateDeleteHTML : deleteFileStream correctly wrote data");
+		
+		_deleteURI = true;
+		Logger::getInstance().log(DEBUG, "ResponseBuilder::generateDeleteHTML : The _realURI will be deleted");
+		
+	}
+	else 
+	{
+		Logger::getInstance().log(ERROR, "ResponseBuilder::generateDeleteHTML : deleteFileStream failed to open");
+		throw Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR);
+	}
+
+	deleteFileStream.close();
+	if (deleteFileStream.fail())
+	{
+		Logger::getInstance().log(ERROR, "ResponseBuilder::generateDeleteHTML : deleteFileStream failed to close");
+		throw Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR);
+	}
 }
 
 /**
