@@ -176,6 +176,8 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 
 	// Comment this to make listing.html
 	_deleteURI = true;
+	Logger::getInstance().log(DEBUG, "ResponseBuilder::listingHTMLBuilder : The _realURI will be deleted");
+	
 
 	if (*_realURI.begin() == '/')
 		_realURI.erase(_realURI.begin() + 0); // turn a regular URI ("/index.html" into "index.html")

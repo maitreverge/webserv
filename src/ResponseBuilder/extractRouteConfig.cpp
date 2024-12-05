@@ -9,11 +9,7 @@ void ResponseBuilder::clearingRoutes( vector< string >&routeNames, vector< strin
 	vector < string > toClear;
 	RoutesData *routes = &_config->_serverStruct[_config->index].routesData;
 
-	// print("=============================");
-	// printColor(BOLD_YELLOW, _config->_serverStruct->port);
-	// print("=============================");
-
-	// extracting all uris
+	// Extracting all uris
 	for (mapIterator it = routes->begin(); it != routes->end(); ++it)
 	{
 		vector< string > curVector;
@@ -50,10 +46,15 @@ void ResponseBuilder::clearingRoutes( vector< string >&routeNames, vector< strin
 }
 
 void	ResponseBuilder::buildRouteConfig( string path ){
+
+
 	RoutesData *routes = &_config->_serverStruct[_config->index].routesData;
+	
+	// ! uri
 	try
 	{
 		_myconfig.uri = *routes->at(path).at("uri").begin();
+
 		// Every URI needs to start with a "/" and end without.
 		if (_myconfig.uri.size() > 1)
 		{
@@ -63,20 +64,14 @@ void	ResponseBuilder::buildRouteConfig( string path ){
 				_myconfig.uri.erase(_myconfig.uri.end() - 1);
 		}
 	}
-	catch(const std::exception& e)
-	{
-		// log something here
-	}
+	catch(const std::exception& e) {}
 
 	// ! allowedMethods
 	try
 	{
 		_myconfig.allowedMethods = routes->at(path).at("allowedMethods");
 	}
-	catch(const std::exception& e)
-	{
-		// log something here
-	}
+	catch(const std::exception& e) {}
 
 	// ! redirection
 	try
@@ -90,10 +85,7 @@ void	ResponseBuilder::buildRouteConfig( string path ){
 				_myconfig.redirection += "/";
 		}
 	}
-	catch(const std::exception& e)
-	{
-		// log something here
-	}
+	catch(const std::exception& e) {}
 	
 	// ! root
 	try
@@ -107,10 +99,7 @@ void	ResponseBuilder::buildRouteConfig( string path ){
 				_myconfig.root += "/";
 		}
 	}
-	catch(const std::exception& e)
-	{
-		// log something here
-	}
+	catch(const std::exception& e) {}
 
 	// ! listingDirectory
 	try
@@ -122,54 +111,43 @@ void	ResponseBuilder::buildRouteConfig( string path ){
 		else
 			_myconfig.listingDirectory = false;
 	}
-	catch(const std::exception& e)
-	{
-		// log something here
-	}
+	catch(const std::exception& e) {}
 
 	// ! index
 	try
 	{
 		_myconfig.index = *routes->at(path).at("index").begin();
 	}
-	catch(const std::exception& e)
-	{
-		// log something here
-	}
+	catch(const std::exception& e) {}
 
 	// ! cgiAllowed
 	try
 	{
 		_myconfig.cgiAllowed = routes->at(path).at("cgiAllowed");
 	}
-	catch(const std::exception& e)
-	{
-		// log something here
-	}
+	catch(const std::exception& e) {}
 
 	// ! uploadAllowed
 	try
 	{
 		string myString = *routes->at(path).at("uploadAllowed").begin();
-		_myconfig.uploadAllowed = (myString[0] == '0') ? false : true;
+		if (myString.size() == 1 and myString[0] == '1')
+			_myconfig.uploadAllowed = true;
+		else
+			_myconfig.uploadAllowed = false;
 	}
-	catch(const std::exception& e)
-	{
-		// log something here
-	}
+	catch(const std::exception& e) {}
 
 	// ! uploadDirectory
 	try
 	{
 		_myconfig.uploadDirectory = *routes->at(path).at("uploadDirectory").begin();
+		
 		// Delete first '/' char from the path if so
 		if (!_myconfig.uploadDirectory.empty() && (*_myconfig.uploadDirectory.begin() == '/') )
 			_myconfig.uploadDirectory.erase(_myconfig.uploadDirectory.begin());
 	}
-	catch(const std::exception& e)
-	{
-		// log something here
-	}
+	catch(const std::exception& e) {}
 }
 
 void ResponseBuilder::extractRedirectionIndex( vector< string >&routeNames, vector< string >&routeURIS ){

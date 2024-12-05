@@ -40,7 +40,10 @@ bool ResponseBuilder::getBody( Client &inputClient ){
 		// Delete the HTML response that has been generated 
 		// such as listings.html, and backup.html (for self generated errors)
 		if (_deleteURI)
+		{
 			std::remove(_realURI.c_str());
+			Logger::getInstance().log(INFO, "ResponseBuilder::getBody : The self-generated page has been deleted");
+		}
 	}
 	else if (this->_ifs.is_open())
 	{
