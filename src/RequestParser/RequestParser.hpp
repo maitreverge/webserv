@@ -6,6 +6,7 @@
 #include <iostream>
 #include <cstring>
 #include <sstream>
+#include "master.hpp"
 
 typedef std::map<std::string, std::vector<std::string> > Headers_Map;
 typedef std::map<std::string, std::string> Cookies_Map;
