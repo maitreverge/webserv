@@ -3,7 +3,7 @@
 
 string ResponseBuilder::parseServerName( string &str ){
 
-	// Remove the double-quotes from "festival" within the config file.
+	// Remove the double-quotes from  "  "festival"  "" within the config file.
 	return ( str.substr(str.find_first_of("\"") + 1, str.find_last_of("\"") - 1) );
 }
 

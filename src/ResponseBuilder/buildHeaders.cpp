@@ -5,7 +5,6 @@ void	ResponseBuilder::buildHeaders(){
 
 	Logger::getInstance().log(INFO, "FUNCTION CALL : ResponseBuilder::buildHeaders", *_client);
 
-
 	errorCode codes;
 	
 	stringstream	streamStatusLine,
@@ -33,7 +32,6 @@ void	ResponseBuilder::buildHeaders(){
 	// 					<< HTTP_HEADER_SEPARATOR;
 	// Headers.timeStamp = streamTimeStamp.str();
 	
-	
 	// ! Content-Length
 	if (not isErrorRedirect())
 	{
@@ -45,7 +43,6 @@ void	ResponseBuilder::buildHeaders(){
 		Headers.contentLenght = streamContentLenght.str();
 	}
 
-	
 	// --------------  Optionals Headers --------------  
 	// ! Content-Type
 	if (Headers.bodyLenght > 0)
@@ -80,7 +77,6 @@ void	ResponseBuilder::buildHeaders(){
 						<< HTTP_HEADER_SEPARATOR;
 		Headers.location = streamLocation.str();
 	}
-
 
 	// ======================== BONUS METHODS ========================
 

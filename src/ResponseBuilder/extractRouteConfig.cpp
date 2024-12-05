@@ -20,7 +20,6 @@ void ResponseBuilder::clearingRoutes( vector< string >&routeNames, vector< strin
 				throw std::bad_exception();
 			if (curVector[0].size() > 1 and *curVector[0].begin() != '/')
 				curVector[0].insert(0, "/");
-				// curVector[0].erase(curVector[0].begin());
 			routeURIS.push_back(curVector[0]);
 			routeNames.push_back(it->first); // get the current route Names [route1], [route2], ect...
 		}
@@ -184,7 +183,7 @@ void ResponseBuilder::extractRedirectionIndex( vector< string >&routeNames, vect
 		}
 		catch(const std::exception& e)
 		{
-			Logger::getInstance().log(DEBUG, "Index Redirection not Found");
+			Logger::getInstance().log(DEBUG, "ResponseBuilder::extractRedirectionIndex : Index Redirection not Found");
 		}
 	}
 
@@ -203,12 +202,11 @@ void	ResponseBuilder::extractRouteConfig( void ){
 
 	clearingRoutes(routeNames, routeURIS);
 
-	// string originalURI = _realURI;
 	string trimmedRoute = _realURI;
+
 	if (trimmedRoute.size() > 1 and *trimmedRoute.rbegin() != '/')
 		trimmedRoute += "/";
-	// if (trimmedRoute.size() > 1 and  *trimmedRoute.begin() == '/' and trimmedRoute.find_first_of('/') != trimmedRoute.find_last_of('/') )
-	// 	trimmedRoute.erase(trimmedRoute.begin());
+	
 	bool found = false;
 	u_int8_t pos;
 

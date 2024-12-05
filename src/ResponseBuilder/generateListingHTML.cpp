@@ -71,21 +71,12 @@ void ResponseBuilder::makeHeaderListing(std::stringstream &result) {
 		   << "\ttext-decoration: underline;\n"
 		   << "\tcolor: blue;\n"
 		   << "}\n";
-	// ! ADD ICONS STYLING
 
 	result << "</style>\n</head>\n<body>\n<ul>";
 }
 
 void	ResponseBuilder::listingHTMLBuilder( void ){
 
-	// TODO  EDGE CASE TO HANDLE :  what is we can't write in the directory
-
-	/*
-		! NOTE FOR EDGE CASE
-		Either I make a timeStamp checker + a authorization checker to avoiding generating the same file over and over
-		OR
-		I just check the authorizations within the 
-	*/
 	char cwd[1024];
 
 	if (*_realURI.rbegin() != '/')
@@ -189,7 +180,6 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 
 void ResponseBuilder::generateListingHTML( void ){
 
-	// ! STEP 0 : check if we can read in the directory
 	if ( _myconfig.listingDirectory == false and _myconfig.index.empty())
 	{
 		Logger::getInstance().log(ERROR, "404 Detected from `generateListingHTML`");

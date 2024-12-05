@@ -5,7 +5,7 @@ void	ResponseBuilder::initCurrentFiles( vector< string>& duplicatesFileNames ){
 
 	DIR *dir = opendir(_uploadTargetDirectory.c_str());
 
-	if (dir == NULL) // TODO : Gerer erreur d'ouverture de buffer
+	if (dir == NULL)
 	{
 		Logger::getInstance().log(ERROR, "Failing Openning Directory in ResponseBuilder::initCurrentFiles");
 		return;
@@ -165,7 +165,6 @@ ResponseBuilder::e_lineNature ResponseBuilder::processCurrentLine(vector< char >
 	return OTHER;
 }
 
-// This is now the SetBody only for MultiPart form Data
 void	ResponseBuilder::setMultiPartPost( Client & client ){
 
 	Logger::getInstance().log(DEBUG, "FUNCTION CALL : ResponseBuilder::setMultiPartPost");
@@ -224,7 +223,7 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 				extractFileBodyName(curLine, duplicatesFileNames);
 				break;
 			
-			case OTHER:
+			case OTHER: // No incidence
 				break;
 			
 			case LINE_SEPARATOR: // next processed lines will be the binary data
@@ -240,13 +239,6 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 				// Writting actual data
 				this->_ofs.write(curLine.data(), static_cast<std::streamsize>(curLine.size()));
 
-				// TODO : Managing errors
-				if (!this->_ofs)
-				{
-					// error CODE_500 ??
-					//Utile de rappeller getHeader ou renvoyer une exception a Seb pour qu'il puisse me rappeller avec un getHeader(.., .., CODE_500)
-				}
-
 				if (this->_ofs.is_open())
 					this->_ofs.close();
 				
@@ -258,6 +250,7 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 				break;
 		}
 		
+		// Reset buffers
 		curLine.clear();
 		curLine = nextLine;
 		nextLine.clear();

@@ -7,7 +7,7 @@ void ResponseBuilder::removeDotSegments( void ){
 
 	vector< string >targetsToErase;
 
-	// To remove
+	// Targets to remove
 	targetsToErase.push_back("../");
 	targetsToErase.push_back("./");
 	targetsToErase.push_back("..");

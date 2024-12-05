@@ -118,15 +118,7 @@ void	ResponseBuilder::checkAutho( void ){
 
 void	ResponseBuilder::extractFileNature( string &target){
 
-	// TODO : Handle shitty names files and put default values
-	// if (_method == POST)
-	// {
-	// 	_fileName = target;
-	// }
-	// else
-	{
-		_fileName = target.substr(target.find_last_of("/") + 1); // extract file name // DOUBT for POST
-	}
+	_fileName = target.substr(target.find_last_of("/") + 1); // extract file name // DOUBT for POST
 
 	_fileExtension = _fileName.substr(_fileName.find_last_of(".") + 1); // extract file extension
 }				
@@ -168,7 +160,7 @@ void	ResponseBuilder::checkNature( void ){
 					extractFileNature( _realURI );
 			}
 		}
-		else
+		else // The file is neither a file or a directory, then webserv can't process it
 		{
 			Logger::getInstance().log(ERROR, "422 Detected from `checkNature`");
 			setError(CODE_422_UNPROCESSABLE_ENTITY);
@@ -215,7 +207,7 @@ void ResponseBuilder::setError(e_errorCodes code, bool skip){
 	}
 	catch(const std::exception& e)
 	{
-		Logger::getInstance().log(INFO, "Asked error page is self generated");
+		Logger::getInstance().log(WARNING, "Required Error Page is not found. Webserv generates a new one.");
 		errorNotFoundGenerator();
 		setContentLenght();
 	}
@@ -230,7 +222,7 @@ void ResponseBuilder::setError(e_errorCodes code, bool skip){
 	// Allows the setError function to raise an exception, and skip the useless others checks
 	if (!skip)
 	{
-		Logger::getInstance().log(DEBUG, "Internal Error raised from ResponseBuilder");
+		Logger::getInstance().log(ERROR, "Internal Error raised from ResponseBuilder");
 		throw Server::ShortCircuitException(code);
 	}
 }
@@ -276,6 +268,7 @@ void ResponseBuilder::extraStartingChecks()
 	string contentType = _client->headerRequest.getHeaders().ContentType;
 	
 	target.clear();
+
 	// Detects if the current body is multipart form data
 	if (contentType.find("multipart/form-data") != std::string::npos)
 		_isMultipart = true;
@@ -320,8 +313,6 @@ void ResponseBuilder::extraStartingChecks()
 		Logger::getInstance().log(ERROR, "403 Detected from `extraStartingChecks`: The route do not have `uploadAllowed` route config enabled");
 		setError(CODE_403_FORBIDDEN);
 	}
-
-	// pathSlashs(_originalURI);
 }
 
 void ResponseBuilder::pathSlashs(string &target){
@@ -373,9 +364,4 @@ string ResponseBuilder::generateFileName( void ){
 		baseName = generateRandomString(10);
 	
 	return baseName;
-}
-
-ResponseBuilder::e_method ResponseBuilder::getMethod( void ){
-	
-	return this->_method;
 }
