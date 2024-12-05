@@ -1,5 +1,8 @@
 #include "ConfigFileParser.hpp"
 
+/**========================================================================
+ *                           CONSTRUCTOR
+ *========================================================================**/
 ConfigFileParser::ConfigFileParser()
 {
 	routeKey.push_back("allowedMethods"); 
@@ -13,11 +16,27 @@ ConfigFileParser::ConfigFileParser()
 	routeKey.push_back("uploadDirectory");
 }
 
+/**========================================================================
+ *                           MAIN FUNCS
+ *========================================================================**/
 void ConfigFileParser::parseConfigFile(Config& configStruct, char* path)
 {
 	extractDataFromConfigFile(path);
 	intializeConfigStruct(configStruct);
 	assignRoutesToServers(configStruct);
+}
+
+void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
+{
+	int	i = 0;
+	for (catIt catIt = _data.begin(); catIt != _data.end(); ++catIt)
+	{
+		if (!configStruct._serverStruct[i].host.empty() && !configStruct._serverStruct[i].port.empty())
+			i++;
+		for (itemIt itemIt = catIt->second.begin(); itemIt != catIt->second.end(); ++itemIt)
+			for (valIt valIt = itemIt->second.begin(); valIt != itemIt->second.end(); ++valIt)
+				setAllConfigValues(catIt, itemIt, valIt, configStruct, i);
+	}
 }
 
 void ConfigFileParser::setAllConfigValues(catIt& catIt, itemIt& itemIt, valIt& valIt, Config& configStruct, int& i)
@@ -32,7 +51,7 @@ void ConfigFileParser::setAllConfigValues(catIt& catIt, itemIt& itemIt, valIt& v
 	setConfigValue(catIt, itemIt, configStruct.timeoutCgi, "timeoutCgi");
 	setConfigValue(catIt, itemIt, configStruct.listingDirectories, "listingDirectories");
 	setConfigValue(catIt, itemIt, configStruct.handleCookies, "handleCookies");
-	setConfigValue(catIt, itemIt, valIt, configStruct.indexFiles, "indexFiles");
+	setConfigValue(itemIt, valIt, configStruct.indexFiles, "indexFiles");
 	// category "errorPages"
 	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_201", CODE_201_CREATED);
 	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_400", CODE_400_BAD_REQUEST);
@@ -51,26 +70,11 @@ void ConfigFileParser::setAllConfigValues(catIt& catIt, itemIt& itemIt, valIt& v
 	// category server
 	setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].host, "host");
 	setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].port, "port");
-	setConfigValue(catIt, itemIt, configStruct._serverStruct[i], i);
+	setConfigValue(catIt, configStruct._serverStruct[i]);
 	setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].serverName, "serverName");
-	setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].allowedRoutes, "allowedRoutes");
+	setConfigValue(itemIt, valIt, configStruct._serverStruct[i].allowedRoutes, "allowedRoutes");
 	// category routes (inner loop)
-	setConfigValue(catIt, itemIt, valIt, configStruct, i);
-}
-
-void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
-{
-	int	i = 0;
-	for (catIt catIt = _data.begin(); catIt != _data.end(); ++catIt)
-	{
-		if (!configStruct._serverStruct[i].host.empty() && !configStruct._serverStruct[i].port.empty())
-			i++;
-		for (itemIt itemIt = catIt->second.begin(); itemIt != catIt->second.end(); ++itemIt)
-		{
-			for (valIt valIt = itemIt->second.begin(); valIt != itemIt->second.end(); ++valIt)
-				setAllConfigValues(catIt, itemIt, valIt, configStruct, i);
-		}
-	}
+	setConfigValue(catIt, itemIt, valIt, configStruct);
 }
 
 void ConfigFileParser::assignRoutesToServers(Config& configStruct)
@@ -83,7 +87,6 @@ void ConfigFileParser::assignRoutesToServers(Config& configStruct)
 			RoutesData::const_iterator routeIt = configStruct.routes.find(routeName);
 			if (routeIt != configStruct.routes.end())
 				configStruct._serverStruct[i].routesData[routeName] = routeIt->second;
-
 		}
 	}
 }
@@ -106,16 +109,13 @@ void	ConfigFileParser::initializeServers(Config& configStruct, int& i)
  *                           SETCONFIGVALUE OVERLOADS
  *========================================================================**/
 //? routes data
-void	ConfigFileParser::setConfigValue(catIt catIt, itemIt itemIt, valIt valIt, Config& configStruct, int j)
+void	ConfigFileParser::setConfigValue(catIt catIt, itemIt itemIt, valIt valIt, Config& configStruct)
 {
-	(void)j;
 	for (size_t i = 0; i < routeKey.size(); i++)
 	{
 		if (isRouteData(catIt->first) && itemIt->first == routeKey[i])
-		{
 			if (!(*valIt).empty())
 				configStruct.routes[catIt->first][routeKey[i]] = itemIt->second;
-		}
 	}
 }
 
@@ -143,15 +143,10 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt
 	}
 }
 
-void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, server& serverStruct, int i)
+void	ConfigFileParser::setConfigValue(catIt& catIt, server& serverStruct)
 {
 	if (!serverStruct.port.empty() && !serverStruct.host.empty())
-	{
 		serverStruct.serverStructName = catIt->first;
-	}
-
-	(void)itemIt;
-	(void)i;
 }
 
 //? maxBodySize
@@ -254,9 +249,8 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, bool& field,
 }
 
 //? indexFiles
-void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::vector<std::string>& vec, const char str[])
+void	ConfigFileParser::setConfigValue(itemIt& itemIt, valIt& valIt, std::vector<std::string>& vec, const char str[])
 {
-	(void)catIt;
 	static bool hasUserConfig = false;
 	if (itemIt->first == str)
 		if (!(*valIt).empty())
@@ -267,7 +261,6 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt
 				hasUserConfig = true;
 			}
 			vec.push_back(*valIt);
-			// printColor(RED, *valIt);
 		}
 }
 
@@ -421,7 +414,8 @@ void ConfigFileParser::printServerData(const server _serverStruct[], size_t size
 	}
 }
 
-void ConfigFileParser::printConfig(const Config& config) {
+void ConfigFileParser::printConfig(const Config& config)
+{
 	std::cout << "maxClient: " << config.maxClient << std::endl;
 	std::cout << "recv_buff_size: " << config.recv_buff_size << std::endl;
 	std::cout << "send_buff_size: " << config.send_buff_size << std::endl;
