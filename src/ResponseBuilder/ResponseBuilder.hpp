@@ -159,7 +159,6 @@ class ResponseBuilder
 	void	initMimes( void );
 	void	initServerNames( void );
 
-
 	// ---------- deleteEngine.cpp
 	void	generateDeleteHTML( void );
 	void	deleteEngine( void );
@@ -190,7 +189,7 @@ class ResponseBuilder
 
 	// ---------- ResponseBuilder.cpp
 	void	resolveURI( void );
-	bool 	redirectURI( void );
+	void 	redirectURI( void );
 	void 	rootMapping( void );
 	void	checkMethod( void );
 	bool	isDirectory(string &);

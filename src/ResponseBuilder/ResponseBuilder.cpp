@@ -1,11 +1,10 @@
 #include "ResponseBuilder.hpp"
 #include "Logger.hpp"
 
-// Need to refactor this function in `void` instead of `bool`
-bool ResponseBuilder::redirectURI( void ){
+void	ResponseBuilder::redirectURI( void ){
 
 	if (_myconfig.redirection.empty())
-		return false;
+		return ;
 	else if (_realURI == "/" and _myconfig.redirection == "/")
 	{
 		Logger::getInstance().log(ERROR, "508 LOOP : Both _realURi and Redirection == \"/\"");
@@ -17,32 +16,11 @@ bool ResponseBuilder::redirectURI( void ){
 		_realURI = _myconfig.redirection;
 		setError(CODE_302_FOUND);
 	}
-	else if (_myconfig.uri == "/" and _realURI.find(_myconfig.redirection) != std::string::npos )// ! FROM HERE, _REALURI SIZE > 1
+	else if (_myconfig.uri == "/" and _realURI.find(_myconfig.redirection) != std::string::npos)
 	{
 		Logger::getInstance().log(ERROR, "Redirection Loop Detected");
 		setError(CODE_508_LOOP_DETECTED);
 	}
-	// else if (_realURI.size() > 1 and _realURI.find(_myconfig.redirection) != std::string::npos )//!
-
-	// TODO : Client keeps asking the same redirection over and over
-	// if (_realURI == _myconfig.redirection)
-	// if (( *_realURI.begin() == '/' and _realURI.size() > 1 ) and ( _myconfig.uri == "/" ) and ( *_myconfig.redirection.begin() == '/' and _myconfig.redirection.size() > 1 ) )
-	// if (_realURI.size() > 1 and )
-	// {
-	// 	Logger::getInstance().log(ERROR, "Redirection Loop Detected in base config \"/\"");
-	// 	setError(CODE_508_LOOP_DETECTED);
-	// }
-	
-	/*
-		! I had a doubt on this one, need to dig deeper when working on redirections
-		Original line :
-		_realURI = _myconfig.redirection + _myconfig.indexRedirection;
-	*/
-	// _realURI = _myconfig.redirection;
-
-	
-	// setError(CODE_302_FOUND);
-	return false;
 }
 
 void ResponseBuilder::rootMapping( void ){
@@ -50,15 +28,12 @@ void ResponseBuilder::rootMapping( void ){
 	if (_myconfig.root.empty())
 		return;
 	
-	// slashManip(_myconfig.root);
-	
 	Logger::getInstance().log(INFO, "ROOT MAPPING CALLED");
 	if (_realURI.find(_myconfig.root) == std::string::npos)
 	{
 		Logger::getInstance().log(DEBUG, "URI BEFORE MAPPING");
 		Logger::getInstance().log(DEBUG, _realURI);
 
-		// _realURI.replace(0, _myconfig.uri.size(), _myconfig.root);
 		_realURI.insert(0, _myconfig.root);
 		
 		Logger::getInstance().log(DEBUG, "URI AFTER MAPPING");
@@ -80,14 +55,9 @@ void	ResponseBuilder::slashManip( string &target, bool makeRedirection ){
 	bool beginWithSlash = !target.empty() && (*target.begin() == '/');
 	bool endWithSlash = !target.empty() && (*target.rbegin() == '/');
 	
-	if (target.empty())
+	if (target != "/" and beginWithSlash)
 	{
-
-	}
-	else if (target != "/")
-	{
-		if (beginWithSlash)
-			target.erase(target.begin());
+		target.erase(target.begin());
 	}
 
 	if ( isDirectory(target) )
@@ -106,7 +76,7 @@ void	ResponseBuilder::slashManip( string &target, bool makeRedirection ){
 				target += "/";
 		}
 		if (_method == GET and _myconfig.listingDirectory == false)
-			target += _myconfig.index; // after checking the nature
+			target += _myconfig.index;
 		
 		// Refresh the bool
 		beginWithSlash = !target.empty() && (*target.begin() == '/');
@@ -117,22 +87,19 @@ void	ResponseBuilder::slashManip( string &target, bool makeRedirection ){
 
 void ResponseBuilder::resolveURI( void ) {
 	
-	// ! STEP 1 : Check the rootMapping
+	// STEP 1 : Check the rootMapping
 	rootMapping();
 
-	// Step 2: Handle redirection
-    if (redirectURI())
-	{
-        return;
-    }
+	// STEP 2: Handle redirection
+    redirectURI();
 	
-	// ! STEP 3 : Trim all "../" from the URI for transversal path attacks
-	// sanatizeURI(_realURI); // ! STAY COMMENTED until refactoring for better "../" erasing process
+	//  STEP 3 : Trim all ".." transerval attacks from the URI.
+	removeDotSegments();
 
-	// ! STEP 4  : Deleting URI first 
+	//  STEP 4  : Deleting URI first 
 	slashManip(_realURI, true);
 
-	// ! STEP 5 : Check for DELETE + webserv
+	//  STEP 5 : Check for DELETE + webserv
 	if (_method == DELETE and _realURI == "webserv")
 	{
 		Logger::getInstance().log(ERROR, "User tried to delete the `webserv` binary");
@@ -143,9 +110,7 @@ void ResponseBuilder::resolveURI( void ) {
 void	ResponseBuilder::checkMethod( void ){
 
 	if (_myconfig.allowedMethods.empty())
-	{
 		return;
-	}
 	
 	for (std::vector<string>::iterator it = _myconfig.allowedMethods.begin(); it != _myconfig.allowedMethods.end(); ++it)
 	{
@@ -156,22 +121,24 @@ void	ResponseBuilder::checkMethod( void ){
 		else if (*(it) == "DELETE" and _method == DELETE)
 			return;
 	}
+
 	Logger::getInstance().log(ERROR, "Method not found");
+
 	setError(CODE_405_METHOD_NOT_ALLOWED);
 }
 
 void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_errorCodes codeInput ){
 
-	Logger::getInstance().log(DEBUG, "ResponseBuilder Get Header", inputClient);
+	Logger::getInstance().log(DEBUG, "FUNCTION CALL : ResponseBuilder::getHeader");
 		
-	_client = &inputClient; // init client
-	_config = &inputConfig; // init config
+	_client = &inputClient;
+	_config = &inputConfig;
 
 	resetMyVariables();
 	
 	if (codeInput != CODE_200_OK)
 	{
-		Logger::getInstance().log(DEBUG, "ResponseBuilder::getHeader invoked from above with an error code");
+		Logger::getInstance().log(DEBUG, "ResponseBuilder::getHeader invoked straight with an error code");
 		_method = GET;
 		setError(codeInput, true);
 		setContentLenght();
@@ -186,9 +153,11 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	_errorType = CODE_200_OK;
 
 	extractRouteConfig();
+
 	#ifdef DEB
 		printMyConfig();
 	#endif
+
 	try
 	{
 		checkSessionIdCookie(inputClient);
@@ -207,9 +176,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 			_errorType = CODE_200_OK;
 
 		if (_method != DELETE)
-		{
 			checkCGI();
-		}
 
 		resolveURI();
 		
@@ -220,11 +187,9 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 		if (_isCGI)
 			_cgi.launch(inputClient);
 		
-		// ! WORK NEEDLE
 		if (_isDirectory and (_method == GET) and (not _isCGI))
-		{
 			generateListingHTML();
-		}
+	
 	}
 	catch(const CodeErrorRaised& e)
 	{
@@ -237,15 +202,10 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	} 
 
 	if (not isErrorRedirect())
-	{
-		setContentLenght(); // Sets up body.lenghts
-	}
-	
+		setContentLenght();
 	
 	if (_method == DELETE and _errorType == CODE_200_OK)
-	{
 		deleteEngine();	
-	}
 
 	buildHeaders();
 
@@ -255,16 +215,13 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 		_method = GET;
 
 	// Copying the build Headers in headerResponse
-	// ! Si on mixe les headers du CGI + de ResponseBuilder
 	if (!_isCGI)
-	{
 		inputClient.headerRespons = Headers.masterHeader;
-	}
 	else
-	{
 		inputClient.headerRespons.clear();
-	}
 
-	// printAllHeaders();
+	#ifdef DEB
+		printAllHeaders();
+	#endif
 }
 
