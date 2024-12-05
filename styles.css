@@ -9,7 +9,6 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    text-align: center;
 }
 
 .container {
@@ -19,6 +18,7 @@ body {
     padding: 30px;
     max-width: 600px;
     width: 100%;
+    text-align: left; /* Aligner le contenu à gauche */
 }
 
 h1 {
