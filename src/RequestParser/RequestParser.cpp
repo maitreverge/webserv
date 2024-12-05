@@ -82,7 +82,7 @@ void Headers::reset()
 	Host = "";
 	Accept = std::vector<std::string>();
 	ContentLength = 0;
-	Cookie = Cookies_Map();
+	Cookie = CookiesMap();
 	
 }
 
@@ -233,7 +233,7 @@ void	RequestParser::assignHeader(const std::string& key, size_t& headerField)
 		headerField = static_cast<size_t>(atoi(it->second[0].c_str()));
 }
 
-void	RequestParser::assignHeader(const std::string& key, Cookies_Map& headerField)
+void	RequestParser::assignHeader(const std::string& key, CookiesMap& headerField)
 {
 	Headers_Map::const_iterator it = _tmpHeaders.find(key);
 	if (it != _tmpHeaders.end() && !it->second.empty())
@@ -243,9 +243,9 @@ void	RequestParser::assignHeader(const std::string& key, Cookies_Map& headerFiel
 /**========================================================================
  *                           EXTRACTCOOKIES
  *========================================================================**/
-Cookies_Map RequestParser::extractCookies(std::vector<std::string> vec)
+CookiesMap RequestParser::extractCookies(std::vector<std::string> vec)
 {
-	Cookies_Map cookiesMap;
+	CookiesMap cookiesMap;
 
 	for (std::vector<std::string>::iterator it = vec.begin(); it != vec.end(); ++it)
 	{
@@ -339,7 +339,7 @@ void		RequestParser::displayHeaders() const
 	std::cout << "ContentLength: " << _Headers.ContentLength << std::endl; 
 	if (_Headers.Cookie.size())
 	{
-		Cookies_Map::const_iterator it = _Headers.Cookie.begin();
+		CookiesMap::const_iterator it = _Headers.Cookie.begin();
 		print("Cookie: ");
 		for (; it != _Headers.Cookie.end(); it++)
 			print("	" + it->first + " => " + it->second);

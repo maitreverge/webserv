@@ -7,35 +7,12 @@
 #include <cstring>
 #include <sstream>
 #include "master.hpp"
+#include "Headers.hpp"
 
 typedef std::map<std::string, std::vector<std::string> > Headers_Map;
-typedef std::map<std::string, std::string> Cookies_Map;
+typedef std::map<std::string, std::string> CookiesMap;
 
-struct Headers
-{
-	std::string							Connection;
-	std::string							ContentType;
-	std::string							Host;
-	std::string							TransferEncoding;
-	std::vector<std::string>			Accept;
-	size_t								ContentLength;
-	Cookies_Map							Cookie;
-	bool								isConnected;
-	
-	// ! FLO ADD
-	
-	void	reset();
 
-	bool operator==(const Headers& other) const
-	{
-	return Connection == other.Connection &&
-			ContentType == other.ContentType &&
-			Host == other.Host &&
-			ContentLength == other.ContentLength &&
-			Cookie == other.Cookie &&
-			std::equal(Accept.begin(), Accept.end(), other.Accept.begin());
-	}
-};
 
 struct Client;
 class Server;
@@ -74,7 +51,7 @@ class RequestParser
 		void	assignHeader(const std::string& key, size_t& headerField);
 		void	assignHeader(const std::string& key, std::map<std::string,
 							std::string>& cookieField);
-		Cookies_Map	extractCookies(std::vector<std::string> vec);
+		CookiesMap	extractCookies(std::vector<std::string> vec);
 		void	displayHeaders() const;
 		void	reset_values();
 		void	extractWebToken(const std::vector<std::string>& key);
