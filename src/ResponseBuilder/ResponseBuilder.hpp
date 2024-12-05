@@ -185,9 +185,11 @@ class ResponseBuilder
 
 	// ---------- getBody.cpp //! PUBLIC METHOD
 
+	// ---------- removeDotSegments.cpp
+	void removeDotSegments( void );
+
 	// ---------- ResponseBuilder.cpp
 	void	resolveURI( void );
-	void	sanatizeURI( string & );
 	bool 	redirectURI( void );
 	void 	rootMapping( void );
 	void	checkMethod( void );

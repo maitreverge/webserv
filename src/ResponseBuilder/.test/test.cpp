@@ -1,28 +1,61 @@
-// #include <dirent.h>
-// #include <iostream>
-// #include <cstring>
+#include <dirent.h>
+#include <iostream>
+#include <cstring>
+#include <vector>
 
-// using namespace std;
+using namespace std;
 
 
-// int main() {
+int main() {
 
-// 	string foo = "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary1XN99skGpOHP8Og8";
+	#define itVector vector<string>::iterator
+
+
+	vector< string > targets;
+
+	targets.push_back("/a/b/c/./../../g");
+	targets.push_back("../a/b/c/./../../g");
+	targets.push_back("./b/c/.../.../.../.g");
+	targets.push_back("./b./c/./../../g");
+	targets.push_back("/c/../............./../g");
+	targets.push_back("/./../../g");
+	targets.push_back("/../../g");
+	targets.push_back("/../g");
+	targets.push_back("/g");
 	
-// 	string needle = "boundary=";
 
-// 	size_t startPos = foo.find(needle);
-// 	size_t endPos;
+	vector< string >needle;
+	// To remove
+	needle.push_back("../");
+	needle.push_back("./");
+	needle.push_back("..");
 
-// 	if (startPos != std::string::npos)
-// 	{
-// 		startPos += needle.length();
 
-// 		endPos = foo.find(" ", startPos);
+	int i = 0;
+	for (itVector it = targets.begin(); it != targets.end(); ++it, ++i)
+	{
+		std::cout << "Current target "<< i <<  " BEFORE = " << *it << std::endl;
+	}
+	i = 0;
 
-// 		string hey = foo.substr(startPos, endPos - startPos);
 
-// 		std::cout << hey << std::endl;
-// 	}
+	for (itVector outterIT = needle.begin(); outterIT != needle.end(); ++outterIT )
+	{
 
-// }
+		for (itVector innerIT = targets.begin(); innerIT != targets.end(); ++innerIT )
+		{
+			while (innerIT->find(*outterIT) != std::string::npos)
+			{
+				innerIT->erase(innerIT->find(*outterIT), outterIT->length());
+			}
+		}
+	}
+
+	std::cout << "=================" << std::endl;
+
+	for (itVector it = targets.begin(); it != targets.end(); ++it, ++i)
+	{
+		std::cout << "Current target "<< i <<  " AFTER = " << *it << std::endl;
+	}
+
+}

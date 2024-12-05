@@ -1,24 +1,6 @@
 #include "ResponseBuilder.hpp"
 #include "Logger.hpp"
 
-// ------------------------- METHODS ---------------------------------
-
-void ResponseBuilder::sanatizeURI( string &oldURI ){
-
-	// TODO : refactor this function to avoid trimming usefull "../", as long as we don't escape the root webserv
-	string needle = "../";
-
-	std::string::size_type found = oldURI.find(needle);
-
-	while (found != std::string::npos)
-	{
-		Logger::getInstance().log(DEBUG, "FUNCTION CALL : ResponseBuilder::sanatizeURI : Original URI contains a \"../\" pattern");
-
-		oldURI.erase(found, 3);
-		found = oldURI.find(needle);
-	}
-}
-
 // Need to refactor this function in `void` instead of `bool`
 bool ResponseBuilder::redirectURI( void ){
 
