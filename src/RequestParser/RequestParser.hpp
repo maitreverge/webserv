@@ -12,10 +12,9 @@
 typedef std::map<std::string, std::vector<std::string> > Headers_Map;
 typedef std::map<std::string, std::string> CookiesMap;
 
-
-
 struct Client;
 class Server;
+
 /**========================================================================
  *                           REQUESTPARSER
  * ? gets the request as a std::vector<char>
@@ -49,8 +48,7 @@ class RequestParser
 		void	assignHeader(const std::string& key, std::string& value);
 		void	assignHeader(const std::string& key, std::vector<std::string>& headerField);
 		void	assignHeader(const std::string& key, size_t& headerField);
-		void	assignHeader(const std::string& key, std::map<std::string,
-							std::string>& cookieField);
+		void	assignHeader(const std::string& key, CookiesMap& headerField);
 		CookiesMap	extractCookies(std::vector<std::string> vec);
 		void	displayHeaders() const;
 		void	reset_values();
@@ -70,9 +68,7 @@ class RequestParser
 		Client*		getClient() const;
 		Headers		getHeaders() const;
 		Headers_Map	getTmpHeaders() const;
-
-		std::string	getWebToken() const; // ! FLO
-
+		std::string	getWebToken() const;
 
 		// display methods
 		void	displayParsingResult() const;
