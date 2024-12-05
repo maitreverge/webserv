@@ -5,7 +5,6 @@
 #include <string>
 #include "Server.hpp"
 #include "RequestParser.hpp"
-#include "Error.hpp"
 #include "timeStamp.hpp"
 #include "Kernel.hpp"
 #include "Client.hpp"
@@ -65,7 +64,7 @@ class Logger
 		void log(logLevel logLevel, const std::string& message, const Client& client, bool yesNo);
 		void log(logLevel logLevel, const std::string& message, const Server&server, bool yesNo);
 		void log(logLevel logLevel, const std::string& message, const Client& client, const Server&obj);
-		void log(logLevel logLevel, std::string& message, struct Client& client, const Error& error);
+		// void log(logLevel logLevel, std::string& message, struct Client& client, const Error& error);
 		void log(logLevel logLevel, const std::string& message, const Server&server);
 		static Logger& getInstance(int verbose = 1);
 };

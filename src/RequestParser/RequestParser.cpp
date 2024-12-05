@@ -1,7 +1,6 @@
 #include "RequestParser.hpp"
 #include "../../includes/master.hpp"
 #include "Logger.hpp"
-#include "Error.hpp"
 
 /**========================================================================
  *                  CONSTRUCTORS / DESTRUCTOR / INIT

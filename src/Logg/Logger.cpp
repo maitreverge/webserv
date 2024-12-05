@@ -290,21 +290,3 @@ void Logger::log(logLevel logLevel, const std::string& message, const Server&ser
 		std::cerr << "Erreur : impossible d'ouvrir le fichier de log." << std::endl;
 	}
 }
-
-void Logger::log(logLevel logLevel, std::string& message, struct Client& client, const Error& error)
-{
-	if (_logLevel[logLevel] == 0)
-		return ;
-	// [timestamp][errorCode][loglevel][message][ip][port]
-	std::string logEntry = 	BLUE + timeStamp::getTime() + ": " 
-							+ formatLogLevel(logLevel) 
-							+ RED + intToString(error.getErrorCode()) + " "
-							+ GREEN + message + " "
-							+ GREEN
-							+ MAGENTA + "Client: " + ipToString(client.address) + " "
-							+ HIGH_INTENSITY_YELLOW + intToString(portToInt(client.address)) + " "
-							+ GREEN + intToString(client.fd) + " "
-							+ RESET + "\n";
-	logOut(logLevel, logEntry);
-	(void)error;
-}
