@@ -113,12 +113,12 @@ void Cgi::child(Client & client)
 
 std::string Cgi::getApiKey(Client & client, std::string & interPath)
 {
-	ifstream ifs("apike");
+	ifstream ifs("apikey");
 	if (!ifs)
 	{
-
-		std::string().swap(interPath); Logger::getInstance().log(ERROR, "get api key", client),
-			std::exit(200);
+		std::string().swap(interPath);
+		Logger::getInstance().log(ERROR, "get api key", client);
+		std::exit(200);
 	}
 	return (std::string(std::istreambuf_iterator<char>(ifs),
 		std::istreambuf_iterator<char>())); 
@@ -131,23 +131,15 @@ void Cgi::callExecve(Client & client, const std::string & interpreter)
 	char actualPath[PATH_MAX];	
 	if (!getcwd(actualPath, PATH_MAX))
 		Logger::getInstance().log(ERROR, "getcwd", client), std::exit(200);	
-	std::string tempPath = this->getPath(client, interpreter);
-
-	std::string interPath;
-	interPath.swap(tempPath); // Échange les contenus et libère immédiatement `tempPath`
-				 
-	std::string envOpenAI = this->getApiKey(client, interPath);
-	
-	std::string envPathInfo("PATH_INFO=" + client.responseBuilder._pathInfo);
-	// std::string envOpenAI("OPENAI_API_KEY=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");  
-	 
-	char *env[] = {const_cast<char *>(envPathInfo.c_str()), const_cast<char *>(envOpenAI.c_str()), NULL}; 
+	std::string interPath = this->getPath(client, interpreter);				 
+	std::string envOpenAI = this->getApiKey(client, interPath);	
+	std::string envPathInfo("PATH_INFO=" + client.responseBuilder._pathInfo);	 
+	char *env[] = {const_cast<char *>(envPathInfo.c_str()),
+		const_cast<char *>(envOpenAI.c_str()), NULL}; 
 	std::string execPath(std::string(actualPath)
-		+ '/' + client.responseBuilder._fileName);
-	
+		+ '/' + client.responseBuilder._fileName);	
 	char *argv[] = {const_cast<char *>(interpreter.c_str()),
 		const_cast<char *>(execPath.c_str()), NULL};
-
 	Logger::getInstance().~Logger();
 	Kernel::getInstance().exitKernel();	
 	execve(interPath.c_str(), argv, env);
@@ -159,7 +151,7 @@ std::string Cgi::getPath(Client & client, const std::string & interpreter)
 	{
 		{
 			std::string path;
-			// path.reserve(128);
+			path.reserve(128);
 			std::istringstream ss(env);
 			std::string line;
 			while (std::getline(ss, line, ':'))
