@@ -7,8 +7,7 @@ bool Server::_nl = false;
 Server::Server(sockaddr_in & sockAddr, Config & conf): _conf(conf)
 {
 	static int i;
-	this->_fd = -1;		
-	// this->_conf = conf;		
+	this->_fd = -1;			
 	this->_conf.index = i++;
 	this->_sockAddr = sockAddr;
 	this->_clients.reserve(static_cast<size_t>(this->_conf.maxClient));
@@ -19,15 +18,14 @@ Server::Server(sockaddr_in & sockAddr, Config & conf): _conf(conf)
 Server::Server(const Server & src): _conf(src._conf)
 {
 	this->_fd = -1;
-	// this->_clients.reserve(static_cast<size_t>(this->_conf.maxClient));
-	// this->_readBuffer.reserve(src._conf.recv_buff_size);	
-	// this->_writeBuffer.reserve(src._conf.send_buff_size);
+	this->_clients.reserve(static_cast<size_t>(this->_conf.maxClient));
+	this->_readBuffer.reserve(src._conf.recv_buff_size);	
+	this->_writeBuffer.reserve(src._conf.send_buff_size);
 	*this = src;	
 }
 
 Server & Server::operator=(const Server & rhs)
 {
-	// this->_conf = rhs._conf;
 	this->_sockAddr = rhs._sockAddr;
 	this->_writeBuffer = rhs._writeBuffer;
 	this->_readBuffer = rhs._readBuffer;	
