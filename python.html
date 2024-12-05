@@ -6,7 +6,7 @@
     <title>SkyNet</title>
 </head>
 <body style="background-color:#649e95">
-	<image src="/IA_Test/bubble1.webp" id="bubble" style="width: 30vw; position:absolute; top:2vh; left:80%; transform: translateX(-50%)"></image>    
+	<image src="/IA_Test/bubble1.webp" id="bubble"></image>    
 	<div id="ia_cont">
 		<image id="ia" src="/IA_Test/ia_round7.webp"></image>
 		<form id="myForm" method="POST" enctype="text/plain">
@@ -22,10 +22,10 @@
 				}
 
 				#ia_cont {
-					display:flex;
+					/* display:flex; */
 					background-color: red;
 					position:absolute;					
-					width:max(25%, 15rem);
+					width:min(50%, 22rem);
 					top:10vh;
 					height:80vh;
 					/* position:relative; */
@@ -33,17 +33,24 @@
 					transform: translate(-50%);
 					
 				}
+				form {
+					display:block;
+					position:absolute;
+					/* bottom:10%; */
+					width:100%;
+					/* background-color:green; */
+				}
 				#ia {
 					/* width:min(25vw, 550px); */
-					align-self: flex-start;
+					/* align-self: flex-start; */
 					width:100%;
 					/* height:100%; */
-					/* display: inline; */
+					display: block;
 					position:relative;		
 					
 				}
 				textarea {
-					align-self: flex-end;
+					/* align-self: flex-end; */
 					border-radius: 10px;
 					position: relative;
 					/* position: absolute; */
@@ -53,7 +60,7 @@
 					/* height:5%; */
 					aspect-ratio: 7 / 1;
 					/* position: relative; */
-					/* margin:10% 5%; */
+					margin:10% 5%;
 					
 					font-size:1rem;
 					border:none;
@@ -65,7 +72,22 @@
 				}
 
 				#bubble, #result {
-					opacity:0;
+					opacity:1;
+					width: 30vw;
+					position:absolute;
+					/* top:2vh; */
+					left:65%;
+					/* transform: translateX(-50%); */
+					background-color: green;
+					font-size: .6vw;
+					/* top:20vh; */
+					/* left:80%; */
+					/* width:20vw; */
+					/* height:20vw; */
+					/* transform: translateX(-50%); */
+					text-align: center;
+					width:min(50%, 22rem);
+					aspect-ratio: 1 / 1;
 				}
 			
 		
@@ -95,13 +117,12 @@
 				}
 
 				button {
-					background-color: none;
-					opacity: .5;
+					background-color: white;
 					padding:5px 7px;			
 					border-radius: 4px;
 				}
 			</style>
-			<div style="position: relative; left:50%; transform:translatex(-50%); width:fit-content; height :fit-content">
+			<div style="position: relative; left:50%; transform:translatex(-50%); width:fit-content;">
 				<button type="submit" formaction="/IA_Test/ia_test.py/very angry">👿</button>
 				<button type="submit" formaction="/IA_Test/ia_test.py/very sad">😭</button>
 				<button type="submit" formaction="/IA_Test/ia_test.py/very funny">🤣</button>
@@ -109,7 +130,7 @@
 			</div>			
 		</form>
 	</div>
-	<div id="result" style=" position:absolute; font-size: .6vw; top:20vh; left:80%; width:20vw; height:20vw; transform: translateX(-50%); background-color:blue; display:block; text-align: center;">		
+	<div id="result">		
 	</div>
 	<script src="IA_Test/scriptia.js"></script>
 </body>
