@@ -1,8 +1,6 @@
 #include "Cgi.hpp"
 #include "Logger.hpp"
 
-void errnoHandle(); //! a suppr
-
 void Cgi::hasError(Client & client, std::string err)
 {
 	Logger::getInstance().log(DEBUG, "Cgi Has Error", client);
@@ -72,12 +70,9 @@ void Cgi::retHandle(Client & client, ssize_t ret, std::string err,
 
     if (!ret)    
         Logger::getInstance().log(DEBUG, info);
-    else if (ret < 0)
-    {	      
-        errnoHandle();//! a suppr  !!!
+    else if (ret < 0)   
 		throw (Logger::getInstance().log(ERROR, err, client),
-			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
-    }
+			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));    
 	if (gettimeofday(&this->_start, NULL))
 		throw (Logger::getInstance().log(ERROR, "retH gettimeofday", client),
 			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));	

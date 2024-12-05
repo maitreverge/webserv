@@ -71,23 +71,6 @@ void Cgi::launch(Client & client)
         close(this->_fds[0]);
 }
 
-void provC(Client & client) //! a suppr
-{
-	if (chdir(client.responseBuilder._folderCGI.c_str()) < 0)	
-		Logger::getInstance().log(ERROR, "chdir", client), std::exit(200);			
-	char actualPath[PATH_MAX];	
-	if (!getcwd(actualPath, PATH_MAX))	
-		Logger::getInstance().log(ERROR, "getcwd", client), std::exit(200);				 
-	std::string envPathInfo("PATH_INFO=" + client.responseBuilder._pathInfo);
-	char *env[] = {const_cast<char *>(envPathInfo.c_str()), NULL};
-	std::string execPath = std::string(actualPath) + '/'
-		+ client.responseBuilder._fileName; 
-	char *argv[] = {const_cast<char *>(execPath.c_str()), NULL};	
-	Logger::getInstance().~Logger();
-	Kernel::getInstance().exitKernel();	
-	execve(execPath.c_str(), argv, env);
-}
-
 void Cgi::child(Client & client)
 {
     Logger::getInstance().log(DEBUG, "Child", client);
@@ -101,10 +84,8 @@ void Cgi::child(Client & client)
 		std::exit(200);	
 	}		
 	close(this->_fds[0]); this->_fds[0] = -1;	
-	close(this->_fds[1]); this->_fds[1] = -1;			
-	if (client.responseBuilder._fileExtension == "out") //! a suppr
-		provC(client);
-	else if (client.responseBuilder._fileExtension == "php")		
+	close(this->_fds[1]); this->_fds[1] = -1;
+	if (client.responseBuilder._fileExtension == "php")		
 		this->callExecve(client, "php-cgi");
 	else if (client.responseBuilder._fileExtension == "py")	
 		this->callExecve(client, "python3");		
