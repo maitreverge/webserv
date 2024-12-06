@@ -1,7 +1,5 @@
 #include "RequestParser.hpp"
-#include "../../includes/master.hpp"
 #include "Logger.hpp"
-#include "Error.hpp"
 
 /**========================================================================
  *                  CONSTRUCTORS / DESTRUCTOR / INIT
@@ -35,12 +33,12 @@ Headers	RequestParser::getHeaders() const			{return (_Headers);}
 
 Client*		RequestParser::getClient() const		{return (_Client);}
 
-std::map<std::string, std::vector<std::string> >		RequestParser::getTmpHeaders() const
+Headers_Map		RequestParser::getTmpHeaders() const
 {
 	return (_tmpHeaders);
 }
 
-std::string	RequestParser::getWebToken() const		{return (_WebToken);} // ! FLO
+std::string	RequestParser::getWebToken() const		{return (_WebToken);}
 
 /**========================================================================
  *                           UTILS
@@ -63,26 +61,15 @@ void	RequestParser::trim(std::string& str)
  * then headers are extracted form the headers (following lines)
  * Everything after '\r\n\r\n' (end of header) is IGNORED
  *========================================================================**/
-/**========================================================================
- *!                             COOKIES WIP
- *!  
- *!	data struct in server:	std::map<std::string, SessionData> UserSessions;  
- *!  
- *! accessed by client._server.UserSessions
- *========================================================================**/
 void	RequestParser::parse(Client& client, Server & server)
 {
 	reset_values();
 	std::istringstream requestStream(charVectorToString(client.messageRecv));
-	// print(charVectorToString(client.messageRecv));
 	Logger::getInstance().log(DEBUG, "request parsing started", *this);
 	handleFirstLine(requestStream);
 	handleHeaderLines(requestStream);
 	extractHeaders();
-	// displayHeaders();
-	// check if cookie sessionID exists
 	client.cookies.checkSessionCookie(_Headers, server, _URI);
-
 }
 
 /**========================================================================
@@ -95,7 +82,7 @@ void Headers::reset()
 	Host = "";
 	Accept = std::vector<std::string>();
 	ContentLength = 0;
-	Cookie = std::map<std::string, std::string>();
+	Cookie = CookiesMap();
 	
 }
 
@@ -181,39 +168,28 @@ void	RequestParser::extractHeaders()
 void RequestParser::extractWebToken(const std::vector<std::string>& key){
 
 	string target("");
-
 	string needle = "boundary=";
 
 	for (std::vector<std::string>::const_iterator it = key.begin(); it != key.end(); ++it)
 	{
-		// if (it->find)
 		if (it->find(needle) != std::string::npos)
 		{
 			target = *it;
 			break;
 		}
 	}
-
-	// If "boundary=" needle has not been found
 	if (target.empty())
 		return;
-
 	size_t startPos = target.find(needle);
-	
 	size_t endPos;
-
 	startPos += needle.length();
-
-	// Extract to the next space, or the end of the line
 	endPos = target.find(" ", startPos);
-
 	_WebToken = target.substr(startPos, endPos - startPos);
 }
 
 void RequestParser::assignHeader(const std::string& key, std::string& headerField)
 {
-	std::map<std::string, std::vector<std::string> >::const_iterator it = _tmpHeaders.find(key);
-
+	Headers_Map::const_iterator it = _tmpHeaders.find(key);
 
 	if (it != _tmpHeaders.end())
 	{
@@ -232,7 +208,7 @@ void RequestParser::assignHeader(const std::string& key, std::string& headerFiel
 
 void	RequestParser::assignHeader(const std::string& key, std::vector<std::string>& headerField)
 {
-	std::map<std::string, std::vector<std::string> >::const_iterator it = _tmpHeaders.find(key);
+	Headers_Map::const_iterator it = _tmpHeaders.find(key);
 
 	if (it != _tmpHeaders.end() && !it->second.empty())
 	{
@@ -252,14 +228,14 @@ void	RequestParser::assignHeader(const std::string& key, std::vector<std::string
 
 void	RequestParser::assignHeader(const std::string& key, size_t& headerField)
 {
-	std::map<std::string, std::vector<std::string> >::const_iterator it = _tmpHeaders.find(key);
+	Headers_Map::const_iterator it = _tmpHeaders.find(key);
 	if (it != _tmpHeaders.end() && !it->second.empty())
 		headerField = static_cast<size_t>(atoi(it->second[0].c_str()));
 }
 
-void	RequestParser::assignHeader(const std::string& key, std::map<std::string, std::string>& headerField)
+void	RequestParser::assignHeader(const std::string& key, CookiesMap& headerField)
 {
-	std::map<std::string, std::vector<std::string> >::const_iterator it = _tmpHeaders.find(key);
+	Headers_Map::const_iterator it = _tmpHeaders.find(key);
 	if (it != _tmpHeaders.end() && !it->second.empty())
 		headerField = extractCookies(it->second);
 }
@@ -267,9 +243,9 @@ void	RequestParser::assignHeader(const std::string& key, std::map<std::string, s
 /**========================================================================
  *                           EXTRACTCOOKIES
  *========================================================================**/
-std::map<std::string, std::string> RequestParser::extractCookies(std::vector<std::string> vec)
+CookiesMap RequestParser::extractCookies(std::vector<std::string> vec)
 {
-	std::map<std::string, std::string> cookiesMap;
+	CookiesMap cookiesMap;
 
 	for (std::vector<std::string>::iterator it = vec.begin(); it != vec.end(); ++it)
 	{
@@ -363,7 +339,7 @@ void		RequestParser::displayHeaders() const
 	std::cout << "ContentLength: " << _Headers.ContentLength << std::endl; 
 	if (_Headers.Cookie.size())
 	{
-		std::map<std::string, std::string>::const_iterator it = _Headers.Cookie.begin();
+		CookiesMap::const_iterator it = _Headers.Cookie.begin();
 		print("Cookie: ");
 		for (; it != _Headers.Cookie.end(); it++)
 			print("	" + it->first + " => " + it->second);

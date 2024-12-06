@@ -1,6 +1,8 @@
 #include "ConfigFileParser.hpp"
-#include "Logger.hpp"
 
+/**========================================================================
+ *                           CONSTRUCTOR
+ *========================================================================**/
 ConfigFileParser::ConfigFileParser()
 {
 	routeKey.push_back("allowedMethods"); 
@@ -15,20 +17,13 @@ ConfigFileParser::ConfigFileParser()
 }
 
 /**========================================================================
- *                             WIP
- *?  il faut brancher la classe au reste du projet!
-*?  Il devrait etre possible d'initialiser cette structure dans Kernel,
-*?  et linker la structure de config dans les servers
-*?  => tests a faire!
-*========================================================================**/
-
+ *                           MAIN FUNCS
+ *========================================================================**/
 void ConfigFileParser::parseConfigFile(Config& configStruct, char* path)
 {
 	extractDataFromConfigFile(path);
 	intializeConfigStruct(configStruct);
 	assignRoutesToServers(configStruct);
-	// printServerData(configStruct._serverStruct, 4);
-	
 }
 
 void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
@@ -36,49 +31,50 @@ void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
 	int	i = 0;
 	for (catIt catIt = _data.begin(); catIt != _data.end(); ++catIt)
 	{
-		if (!configStruct._serverStruct[i].host.empty() && !configStruct._serverStruct[i].port.empty())
-			i++;
+		if (!configStruct._serverStruct[i].host.empty()
+				&& !configStruct._serverStruct[i].port.empty()) i++;
 		for (itemIt itemIt = catIt->second.begin(); itemIt != catIt->second.end(); ++itemIt)
-		{
 			for (valIt valIt = itemIt->second.begin(); valIt != itemIt->second.end(); ++valIt)
-			{
-				// Category "global"
-				setConfigValue(catIt, itemIt, configStruct.maxClient, "maxClient");
-				setConfigValue(catIt, itemIt, configStruct.maxHeaderSize, "maxHeaderSize");
-				setConfigValue(catIt, itemIt, configStruct.maxServerNbr, "maxServerNbr");
-				setConfigValue(catIt, itemIt, configStruct.maxBodySize, "maxBodySize");
-				setConfigValue(catIt, itemIt, configStruct.recv_buff_size, "recv_buff_size");
-				setConfigValue(catIt, itemIt, configStruct.send_buff_size, "send_buff_size");
-				setConfigValue(catIt, itemIt, configStruct.timeoutCgi, "timeoutCgi");
-				setConfigValue(catIt, itemIt, configStruct.listingDirectories, "listingDirectories");
-				setConfigValue(catIt, itemIt, configStruct.handleCookies, "handleCookies");
-				setConfigValue(catIt, itemIt, valIt, configStruct.indexFiles, "indexFiles");
-				// category "errorPages"
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_201", CODE_201_CREATED);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_400", CODE_400_BAD_REQUEST);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_401", CODE_401_UNAUTHORIZED);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_403", CODE_403_FORBIDDEN);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_404", CODE_404_NOT_FOUND);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_405", CODE_405_METHOD_NOT_ALLOWED);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_413", CODE_413_PAYLOAD_TOO_LARGE);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_422", CODE_422_UNPROCESSABLE_ENTITY);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_431", CODE_431_REQUEST_HEADER_FIELDS_TOO_LARGE);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_500", CODE_500_INTERNAL_SERVER_ERROR);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_502", CODE_502_BAD_GATEWAY);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_503", CODE_503_SERVICE_UNAVAILABLE);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_504", CODE_504_GATEWAY_TIMEOUT);
-				setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_508", CODE_508_LOOP_DETECTED);
-				// category server
-				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].host, "host");
-				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].port, "port");
-				setConfigValue(catIt, itemIt, configStruct._serverStruct[i], i);
-				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].serverName, "serverName");
-				setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].allowedRoutes, "allowedRoutes");
-				// category routes (inner loop)
-				setConfigValue(catIt, itemIt, valIt, configStruct, i);
-			}
-		}
+				setAllConfigValues(catIt, itemIt, valIt, configStruct, i);
 	}
+}
+
+void ConfigFileParser::setAllConfigValues(catIt& catIt, itemIt& itemIt, valIt& valIt, Config& configStruct, int& i)
+{
+	// Category "global"
+	setConfigValue(catIt, itemIt, configStruct.maxClient, "maxClient");
+	setConfigValue(catIt, itemIt, configStruct.maxHeaderSize, "maxHeaderSize");
+	setConfigValue(catIt, itemIt, configStruct.maxServerNbr, "maxServerNbr");
+	setConfigValue(catIt, itemIt, configStruct.maxBodySize, "maxBodySize");
+	setConfigValue(catIt, itemIt, configStruct.recv_buff_size, "recv_buff_size");
+	setConfigValue(catIt, itemIt, configStruct.send_buff_size, "send_buff_size");
+	setConfigValue(catIt, itemIt, configStruct.timeoutCgi, "timeoutCgi");
+	setConfigValue(catIt, itemIt, configStruct.listingDirectories, "listingDirectories");
+	setConfigValue(catIt, itemIt, configStruct.handleCookies, "handleCookies");
+	setConfigValue(itemIt, valIt, configStruct.indexFiles, "indexFiles");
+	// category "errorPages"
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_201", CODE_201_CREATED);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_400", CODE_400_BAD_REQUEST);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_401", CODE_401_UNAUTHORIZED);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_403", CODE_403_FORBIDDEN);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_404", CODE_404_NOT_FOUND);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_405", CODE_405_METHOD_NOT_ALLOWED);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_413", CODE_413_PAYLOAD_TOO_LARGE);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_422", CODE_422_UNPROCESSABLE_ENTITY);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_431", CODE_431_REQUEST_HEADER_FIELDS_TOO_LARGE);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_500", CODE_500_INTERNAL_SERVER_ERROR);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_502", CODE_502_BAD_GATEWAY);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_503", CODE_503_SERVICE_UNAVAILABLE);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_504", CODE_504_GATEWAY_TIMEOUT);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_508", CODE_508_LOOP_DETECTED);
+	// category server
+	setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].host, "host");
+	setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].port, "port");
+	setConfigValue(catIt, configStruct._serverStruct[i]);
+	setConfigValue(catIt, itemIt, valIt, configStruct._serverStruct[i].serverName, "serverName");
+	setConfigValue(itemIt, valIt, configStruct._serverStruct[i].allowedRoutes, "allowedRoutes");
+	// category routes (inner loop)
+	setConfigValue(catIt, itemIt, valIt, configStruct);
 }
 
 void ConfigFileParser::assignRoutesToServers(Config& configStruct)
@@ -91,7 +87,6 @@ void ConfigFileParser::assignRoutesToServers(Config& configStruct)
 			RoutesData::const_iterator routeIt = configStruct.routes.find(routeName);
 			if (routeIt != configStruct.routes.end())
 				configStruct._serverStruct[i].routesData[routeName] = routeIt->second;
-
 		}
 	}
 }
@@ -114,16 +109,13 @@ void	ConfigFileParser::initializeServers(Config& configStruct, int& i)
  *                           SETCONFIGVALUE OVERLOADS
  *========================================================================**/
 //? routes data
-void	ConfigFileParser::setConfigValue(catIt catIt, itemIt itemIt, valIt valIt, Config& configStruct, int j)
+void	ConfigFileParser::setConfigValue(catIt catIt, itemIt itemIt, valIt valIt, Config& configStruct)
 {
-	(void)j;
 	for (size_t i = 0; i < routeKey.size(); i++)
 	{
 		if (isRouteData(catIt->first) && itemIt->first == routeKey[i])
-		{
 			if (!(*valIt).empty())
 				configStruct.routes[catIt->first][routeKey[i]] = itemIt->second;
-		}
 	}
 }
 
@@ -151,15 +143,10 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt
 	}
 }
 
-void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, server& serverStruct, int i)
+void	ConfigFileParser::setConfigValue(catIt& catIt, server& serverStruct)
 {
 	if (!serverStruct.port.empty() && !serverStruct.host.empty())
-	{
 		serverStruct.serverStructName = catIt->first;
-	}
-
-	(void)itemIt;
-	(void)i;
 }
 
 //? maxBodySize
@@ -262,9 +249,8 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, bool& field,
 }
 
 //? indexFiles
-void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt, std::vector<std::string>& vec, const char str[])
+void	ConfigFileParser::setConfigValue(itemIt& itemIt, valIt& valIt, std::vector<std::string>& vec, const char str[])
 {
-	(void)catIt;
 	static bool hasUserConfig = false;
 	if (itemIt->first == str)
 		if (!(*valIt).empty())
@@ -275,7 +261,6 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt
 				hasUserConfig = true;
 			}
 			vec.push_back(*valIt);
-			// printColor(RED, *valIt);
 		}
 }
 
@@ -289,12 +274,12 @@ void	ConfigFileParser::extractKeyValuePairs(std::string& line, std::string& curr
 	{
 		std::string key = line.substr(0, colonPos);
 		std::string value = line.substr(colonPos + 1);
-		trim(key); trim(value);
+		RequestParser::trim(key); RequestParser::trim(value);
 		std::istringstream valueStream(value);
 		std::string singleValue;
 		while (std::getline(valueStream, singleValue, ','))
 		{
-			trim(singleValue);
+			RequestParser::trim(singleValue);
 			_data[currentCategory][key].push_back(singleValue);
 		}
 	}
@@ -324,7 +309,7 @@ int	ConfigFileParser::extractDataFromConfigFile(const std::string& path)
  *========================================================================**/
 int	ConfigFileParser::ignoreComents(std::string& line)
 {
-	trim(line);
+	RequestParser::trim(line);
 	size_t firstChar = line.find('#');
 	if (firstChar != std::string::npos)
 		line.erase(firstChar);
@@ -345,7 +330,7 @@ int	ConfigFileParser::ignoreComents(std::string& line)
 
 int	ConfigFileParser::getCurrentCategory(std::string& line, std::string& currentCategory)
 {
-	trim(line);
+	RequestParser::trim(line);
 	if (!line.empty() && line[0] == '[')
 	{
 		size_t lastChar = line.find_last_not_of(" \t");
@@ -377,17 +362,6 @@ bool ConfigFileParser::isAllowedRoute(const std::string& str, server& serverStru
 	std::vector<std::string>::iterator it;
 	it = std::find(serverStruct.allowedRoutes.begin(), serverStruct.allowedRoutes.end(), str);
 	return it != serverStruct.allowedRoutes.end();
-}
-
-void	ConfigFileParser::print(std::string str)
-{
-	std::cout << str << std::endl;
-}
-
-void	ConfigFileParser::trim(std::string& str)
-{
-	str.erase(0, str.find_first_not_of(" \t\r\n"));
-	str.erase(str.find_last_not_of(" \t\r\n") + 1);
 }
 
 /**========================================================================
@@ -429,7 +403,8 @@ void ConfigFileParser::printServerData(const server _serverStruct[], size_t size
 	}
 }
 
-void ConfigFileParser::printConfig(const Config& config) {
+void ConfigFileParser::printConfig(const Config& config)
+{
 	std::cout << "maxClient: " << config.maxClient << std::endl;
 	std::cout << "recv_buff_size: " << config.recv_buff_size << std::endl;
 	std::cout << "send_buff_size: " << config.send_buff_size << std::endl;

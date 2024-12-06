@@ -11,33 +11,22 @@ void	ResponseBuilder::checkSessionIdCookie(Client &inputClient)
 		throw Server::ShortCircuitException(CODE_242_CONNECTION);
 }
 
-
 std::string ResponseBuilder::generateUniqueToken(const std::string& clientIP)
 {
-	// Obtenir le timestamp actuel
-	std::time_t currentTime = std::time(NULL);
-	
-	// Construire une chaîne avec IP + timestamp
+	std::time_t currentTime;
 	std::stringstream ss;
+	
+	currentTime = std::time(NULL);
 	ss << clientIP << "_" << currentTime;
-
-	// Une fonction de hachage rudimentaire pour simuler l'unicité
 	unsigned int hash = 0;
 	std::string baseString = ss.str();
 	for (size_t i = 0; i < baseString.size(); ++i)
-	{
 		hash = (hash * 31) + static_cast<unsigned int>(baseString[i]);
-	}
-
-	// Retourner le token unique
 	std::stringstream token;
 	token << hash;
 	return token.str();
 }
-/**========================================================================
- * !                          DON'T FORGET
- * ! uncomment printVector func...
- *========================================================================**/
+
 void	ResponseBuilder::buildSetCookieHeader()
 {
 	string clientIP = Logger::ipToString(_client->address);
@@ -51,8 +40,5 @@ void	ResponseBuilder::buildSetCookieHeader()
 						<< "sessionID=" << token
 						<< HTTP_HEADER_SEPARATOR;
 		Headers.cookie = streamCookie.str();
-		printColorNoEndl(CYAN, "Unique Token generated: ");
-		printColor(CYAN, token);
 	}
-
 }

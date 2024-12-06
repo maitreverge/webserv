@@ -5,10 +5,11 @@
 #include <string>
 #include "Server.hpp"
 #include "RequestParser.hpp"
-#include "Error.hpp"
 #include "timeStamp.hpp"
 #include "Kernel.hpp"
 #include "Client.hpp"
+#include <ctime>
+#include <arpa/inet.h>
 
 class Kernel;
 class Server;
@@ -51,21 +52,17 @@ class Logger
 		int			portToInt(const struct sockaddr_in& addr);
 		std::string	intToString(int value);
 	public:
-		static std::string ipToString(const struct sockaddr_in& addr);
-
 		int	_logLevel[LOG_LEVEL_COUNT];
+		static std::string ipToString(const struct sockaddr_in& addr);
 
 		Logger(int verbose = 1);
 		~Logger();
 		void log(logLevel logLevel, const std::string& message);
-		void log(logLevel logLevel, const std::string& message, const Kernel& context);
 		void log(logLevel logLevel, const std::string& message, const RequestParser& context);
 		void log(logLevel logLevel, const std::string& message, const Client& context);
-		// void log(logLevel logLevel, const std::string& message, const class buildResponse& obj);
 		void log(logLevel logLevel, const std::string& message, const Client& client, bool yesNo);
 		void log(logLevel logLevel, const std::string& message, const Server&server, bool yesNo);
 		void log(logLevel logLevel, const std::string& message, const Client& client, const Server&obj);
-		void log(logLevel logLevel, std::string& message, struct Client& client, const Error& error);
 		void log(logLevel logLevel, const std::string& message, const Server&server);
 		static Logger& getInstance(int verbose = 1);
 };

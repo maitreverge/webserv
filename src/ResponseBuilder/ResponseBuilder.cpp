@@ -21,16 +21,16 @@ void	ResponseBuilder::redirectURI( void ){
 		Logger::getInstance().log(ERROR, "508 LOOP : Both _realURi and Redirection == \"/\"");
 		setError(CODE_508_LOOP_DETECTED);
 	}
-	else if (_realURI.size() == 1 and *_realURI.begin() == '/')
+	else if (_myconfig.uri == "/" and _realURI.find(_myconfig.redirection) != std::string::npos )// ! FROM HERE, _REALURI SIZE > 1
+	{
+		Logger::getInstance().log(ERROR, "Redirection Loop Detected");
+		setError(CODE_508_LOOP_DETECTED);
+	}
+	else
 	{
 		Logger::getInstance().log(INFO, "Regular redirection activated");
 		_realURI = _myconfig.redirection;
 		setError(CODE_302_FOUND);
-	}
-	else if (_myconfig.uri == "/" and _realURI.find(_myconfig.redirection) != std::string::npos)
-	{
-		Logger::getInstance().log(ERROR, "Redirection Loop Detected");
-		setError(CODE_508_LOOP_DETECTED);
 	}
 }
 
