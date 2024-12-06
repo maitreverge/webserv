@@ -1,6 +1,5 @@
 #include "Config.hpp"
 #include "ConfigFileParser.hpp"
-#include "master.hpp"
 
 /**========================================================================
  *                           CONSTRUCTORS

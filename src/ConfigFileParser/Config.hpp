@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <cstring>
 #include "errorCode.hpp"
+#include "master.hpp"
 
 typedef map<std::string, map<std::string, std::vector<std::string> > > RoutesData;
 
