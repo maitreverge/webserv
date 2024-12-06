@@ -16,7 +16,7 @@ void	Cookies::checkSessionCookie(Headers& _Headers, Server& server, std::string 
 			_cookies["sessionID"] = value;
 			Logger::getInstance().log(INFO, "Active session found.");
 		}
-		else if (URI == "/connect?")
+		else if (URI == "/connect")
 		{
 			SessionData sessionData = {value};
 			server.UserSessions[value] = sessionData;
