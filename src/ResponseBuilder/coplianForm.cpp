@@ -48,8 +48,6 @@ void	ResponseBuilder::initServerNames( void ){
 
 ResponseBuilder::ResponseBuilder( void ){
 	
-	// SEB UTILS
-	// Logger::getInstance().log(INFO, "ResponseBuilder constructor");
 	initMimes();
 
 	initServerNames();
@@ -68,7 +66,7 @@ ResponseBuilder::ResponseBuilder( void ){
 
 	_backupNameFile = "backup.html";
 
-	this->_ifsStreamHead = 0; // ! NE PAS TOUCHER	
+	this->_ifsStreamHead = 0;
 
 	_writeReady = false;
 	_parsedBoundaryToken = false;
@@ -82,10 +80,7 @@ ResponseBuilder::ResponseBuilder( void ){
 
 }
 
-ResponseBuilder::ResponseBuilder( const ResponseBuilder & src)
-{
-	*this = src;
-}
+ResponseBuilder::ResponseBuilder( const ResponseBuilder & src) { *this = src; }
 
 ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 {
@@ -141,12 +136,8 @@ ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 	return *this;
 };
 
-void ResponseBuilder::setMethod( const e_method& method )
-{
-	_method = method;
-}
+void ResponseBuilder::setMethod( const e_method& method ) { _method = method; }
 
-ResponseBuilder::~ResponseBuilder( void )
-{	
-	// this->_ifs.close();
-}
+ResponseBuilder::~ResponseBuilder( void ){}
+
+ResponseBuilder::e_method ResponseBuilder::getMethod( void ){ return this->_method; }

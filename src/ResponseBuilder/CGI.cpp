@@ -1,6 +1,13 @@
 #include "ResponseBuilder.hpp"
 #include "Logger.hpp"
 
+/**
+ * @brief Checks if the requested URI corresponds to a CGI script (PHP or Python).
+ * 
+ * This function determines if the requested URI contains a PHP or Python script extension.
+ * If a CGI script is found and allowed, it sets the appropriate flags and extracts the path info.
+ * It also updates the URI to include only the script part and sets the CGI folder path.
+ */
 void ResponseBuilder::checkCGI( void ){
 
 	Logger::getInstance().log(DEBUG, "FUNCTION CALL : ResponseBuilder::checkCGI");

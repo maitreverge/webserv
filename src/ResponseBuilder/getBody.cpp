@@ -1,6 +1,15 @@
 #include "ResponseBuilder.hpp"
 #include "Logger.hpp"
 
+/**
+ * @brief Handles the process of retrieving the body of the response.
+ *
+ * This function attempts to retrieve the body of the response for the given client.
+ * It handles CGI responses, file reading, and error redirections.
+ *
+ * @param inputClient The client for which the response body is being retrieved.
+ * @return true if the body was successfully retrieved, false otherwise.
+ */
 bool ResponseBuilder::getBody( Client &inputClient ){
 
 	Logger::getInstance().log(DEBUG, "Response Builder Get Body", inputClient);
@@ -15,8 +24,7 @@ bool ResponseBuilder::getBody( Client &inputClient ){
 		return false;
 	}
 	
-	// Edge case where you don't need a body
-	if (isErrorRedirect() ) // Code 300 Redirect
+	if ( isErrorRedirect() )
 	{
 		Logger::getInstance().log(INFO, "ResponseBuilder::getBody : Redirection happended, no body is required");
 		return false;
@@ -26,23 +34,24 @@ bool ResponseBuilder::getBody( Client &inputClient ){
 	{	
 		Logger::getInstance().log(DEBUG, "ResponseBuilder::getBody, the targetet URI is = " + _realURI);	
 
-		if (_method == POST and _isCGI) //!COND JUMP
+		if (_method == POST and _isCGI)
 			this->_ifs.open(_fileName.c_str(), std::ios::binary);	
 		else
-			this->_ifs.open(_realURI.c_str(), std::ios::binary);	
+			this->_ifs.open(_realURI.c_str(), std::ios::binary);
+
+		if (!this->_ifs.is_open())
+		{
+			Logger::getInstance().log(ERROR, "ResponseBuilder::getBody : this->_ifs failed to open");
+			throw Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR);
+		}
 		
-		//! FAIRE CTRL C PNDT UN TRANSFERT ET VALGRINDS
 	}
-	// ! ADVANCED TEST : keskis passe si le stream fail malgre l'URI correcte 
+
 	if (this->_ifs.eof()) 
 	{
-		Logger::getInstance().log(DEBUG, "file end", inputClient);						
+		Logger::getInstance().log(DEBUG, "ResponseBuilder::getBody : Body ended");						
 		this->_ifs.close();		
 		
-		/*
-			Delete the HTML response that has been generated 
-			such as listings.html, and backup.html (for self generated errors)
-		*/
 		if (_deleteURI)
 		{
 			std::remove(_realURI.c_str());
@@ -52,26 +61,16 @@ bool ResponseBuilder::getBody( Client &inputClient ){
 	else if (this->_ifs.is_open())
 	{
 		this->_ifs.seekg(this->_ifsStreamHead);
+
 		inputClient.messageSend.clear();
-		inputClient.messageSend.resize(inputClient.conf->send_buff_size);//!
-		// ! ADVANCED TEST : keskis passe si READ se passe mal 
-		this->_ifs.read(inputClient.messageSend.data(),
-			static_cast<std::streamsize>(inputClient.messageSend.size()));	
+
+		inputClient.messageSend.resize(inputClient.conf->send_buff_size);
+
+		this->_ifs.read(inputClient.messageSend.data(), static_cast<std::streamsize>(inputClient.messageSend.size()));
+
 		this->_ifsStreamHead = this->_ifs.tellg();
 		
-		inputClient.messageSend.erase(inputClient.messageSend.begin()
-			+ this->_ifs.gcount(), inputClient.messageSend.end());
-		/*
-			! Does this EOF condition needs to be nested within this condition ?
-		*/
-		// if (this->_ifs.eof()) 
-		// {
-		// 	Logger::getInstance().log(DEBUG, "file end", inputClient);						
-		// 	this->_ifs.close();		
-			
-		// 	if (_deleteURI) // ! Potentially delete my shit
-		// 		std::remove(_realURI.c_str());
-		// }
+		inputClient.messageSend.erase(inputClient.messageSend.begin() + this->_ifs.gcount(), inputClient.messageSend.end());
 
 		std::stringstream ss;
 		ss << "gcount: " << this->_ifs.gcount();
@@ -79,22 +78,10 @@ bool ResponseBuilder::getBody( Client &inputClient ){
 		
 		return false;
     }
-	else // failed stream
+	else
 	{
-		/*
-			! IF THE STREAM CAN'T HAPPEN
-			Find a way to regenerate a Code 500 error, or at least tell the client
-			Possibly just do
-			----------------
-			string error = "Internal error Message";
-			inputClient->messageSend.insert(inputClient->messageSend.end(), error.begin(), error.end());
-			----------------
-			despite already sent a Content-Lenght in the headers (or possibly not)
-
-			exitClient();
-		*/
 		Logger::getInstance().log(ERROR, "Failed Stream happend", inputClient);
-		setError(CODE_500_INTERNAL_SERVER_ERROR);
+		throw Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR);
     }
 	
 	return false;
