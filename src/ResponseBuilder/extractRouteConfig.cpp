@@ -41,17 +41,27 @@ void ResponseBuilder::clearingRoutes( vector< string >&routeNames, vector< strin
 		curVector.clear();
 	}
 
-	// TODO : clear nodes without the URI
-	
-	// for (vectorIterator it = toClear.begin(); it != toClear.end(); ++it)
-	// {
-	// 	routes->erase(*it); // erase only in ResponseBuilder scope
-	// }
-
-	// TODO : Delete duplicates nodes with the same URI
+	// Clear nodes without the URI
+	for (vectorIterator it = toClear.begin(); it != toClear.end(); ++it)
 	{
-		// don't forget to update routeURIS and routeNames accordingly
+		routes->erase(*it); // erase only in ResponseBuilder scope
 	}
+
+	// Delete duplicates nodes with the same URI (same name has already been excluded by Dan)
+	// Nodes will be deleted from the back
+	vector<string> tempRouteNames;
+	vector<string> tempRouteURIS;
+	vectorIterator itNAMES = routeNames.begin();
+	for (vectorIterator itURIS = routeURIS.begin(); itURIS != routeURIS.end(); ++itURIS, ++itNAMES)
+	{
+		if (std::find(tempRouteURIS.begin(), tempRouteURIS.end(), *itURIS) == tempRouteURIS.end())
+		{
+			tempRouteURIS.push_back(*itURIS);
+			tempRouteNames.push_back(*itNAMES);
+		}
+	}
+	routeNames = tempRouteNames;
+	routeURIS = tempRouteURIS;
 }
 
 /**

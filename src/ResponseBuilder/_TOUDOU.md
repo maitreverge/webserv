@@ -1,8 +1,6 @@
 ## CURRENT WORK
-- curl command from the correction --resolve 🔴
 
 ## ASK SEB / DAN
-- Finish cookies with Dan 🔴
 
 ## HOTFIX :
 
@@ -36,6 +34,8 @@
 IF NOT : Need to generate a random 10 lenghts string + an extension to save the file 🟢
 - Stabilize simple GET / DELETE REQUESTS 🟢
 - Finish the multipart-form data POST logic 🟢
+- Finish cookies with Dan 🟢
+- curl command from the correction --resolve 🟢
 
 ## BLOODY REDIRECTIONS :
 
