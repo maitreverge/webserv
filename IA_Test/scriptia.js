@@ -44,9 +44,9 @@ buttons.forEach((button) => {
             })
             .then((result) => {
                 // Affiche le résultat dans la div
-                resultDiv.innerHTML = result;
+                resultDiv.innerHTML = result; 
 				fadeIn();
-            })
+            })          
             .catch((error) => {
                 console.error('Erreur lors de la requête :', error);
                 resultDiv.innerHTML = `<p style="color: red;">Une erreur s'est produite : ${error.message}</p>`;

@@ -38,39 +38,43 @@
 							
 		}
 
+		body {
+			overflow-x: hidden;	
+		}
+
 		#cont {
 			position: absolute;
 			width: 50vw;
 			height: 100%;
 			left:50%;
 			/* transform: translateX(-125px); */
-			background-color: violet;
-			overflow-x: hidden;	
+			/* background-color: violet;			 */
 		}
 
 		#bubble_cont {
 			display:inline-block;
 			position: relative;
 			/* width:250px; */
-			width:min(70vw, 30rem);
+			width:min(80vw, 40rem);
 			aspect-ratio: 1 / 1;
 			/* height: 250px; */
 			/* top:-50px; */
-			/* vertical-align: middle; */
-			background-color: green;
-			transform: translate(-50%);
+			vertical-align: top;
+			/* background-color: green; */
+			transform: translateX(-50%);
 			
 		}
 
 		#ia_cont {
 			display:inline-block;
 			/* display:flex; */
-			background-color: red;
+			/* background-color: red; */
 			position:relative;					
 			width:min(70vw, 30rem);
 			/* width:250px; */
 			/* height: 250px; */
-			/* top:10vh; */
+			/* top:25vh; */
+			margin-top: 20%;
 			height:fit-content;
 			/* position:relative; */
 			/* left:50%; */
@@ -84,7 +88,8 @@
 			/* bottom:10%; */
 			width:100%;
 			height:fit-content;
-			background-color:blue;
+			/* background-color:blue; */
+			padding-top:5%;
 		}
 
 		#ia {
@@ -126,7 +131,8 @@
 			/* top:2vh; */
 			/* left:65%; */
 			/* transform: translateX(-50%); */
-			font-size: .6vw;
+			font-size: max(.7rem, .7vw);
+			margin-left: 10%;
 			/* top:20vh; */
 			/* left:80%; */
 			/* width:20vw; */
@@ -136,9 +142,23 @@
 			/* width:min(50%, 22rem);
 			 */
 			width: 100%;
-			aspect-ratio: 1 / 1;
+			height:fit-content;
+			/* aspect-ratio: 1 / 1; */
+			/* background-color: violet; */
 		}
-			
+		
+		#result {
+			top:38%;
+			left:50%;
+			width:50%;
+			/* aspect-ratio: none; */
+			height:fit-content;
+			transform: translate(-50%, -50%);
+			text-align: center;
+			/* background-color: #ff6347; */
+
+		}
+		
 		textarea:focus {
 			outline: none; /* Supprime le contour bleu par défaut */
 			border: 1px solid lightgray; /* Conserve le style sans surbrillance */
