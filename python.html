@@ -39,10 +39,10 @@
 
 		#cont {
 			position: absolute;
-			width: 70%;
+			width: 50%;
 			height: 100%;
 			left:50%;
-			transform: translateX(-125px);
+			/* transform: translateX(-125px); */
 			background-color: violet;
 		}
 
@@ -53,10 +53,13 @@
 			width:min(70%, 30rem);
 			aspect-ratio: 1 / 1;
 			/* height: 250px; */
+			/* top:-50px; */
+			vertical-align: middle;
 			background-color: green;
-
+			transform: translate(-50%);
 			
 		}
+
 		#ia_cont {
 			display:inline-block;
 			/* display:flex; */
@@ -66,19 +69,20 @@
 			/* width:250px; */
 			/* height: 250px; */
 			/* top:10vh; */
-			height:60vh;
+			height:fit-content;
 			/* position:relative; */
 			/* left:50%; */
-			/* transform: translate(-50%); */
+			transform: translate(-50%);
 			
 		}
 
 		form {
 			display:block;
-			position:absolute;
+			position:relative;;
 			/* bottom:10%; */
 			width:100%;
-			/* background-color:blue; */
+			height:fit-content;
+			background-color:blue;
 		}
 
 		#ia {
