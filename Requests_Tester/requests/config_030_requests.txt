@@ -1,16 +1,12 @@
-curl -X GET http://festival.com.localhost:3030/
+curl -i -s -X GET http://festival.com.localhost:3030/
 --END-REQUEST--
-curl -X GET http://gaming.com.localhost:3130/
+curl -i -s -X GET http://gaming.com.localhost:3130/
 --END-REQUEST--
-curl -X GET http://villa.com.localhost:3230/
+curl -i -s -X GET http://villa.com.localhost:3230/
 --END-REQUEST--
-curl -X GET http://example.com.localhost:3330/
+curl -i -s -X GET http://festival.com.localhost:3030
 --END-REQUEST--
-curl -X GET http://festival.com.localhost:3030
+curl -i -s -X GET http://gaming.com.localhost:3130
 --END-REQUEST--
-curl -X GET http://gaming.com.localhost:3130
---END-REQUEST--
-curl -X GET http://villa.com.localhost:3230
---END-REQUEST--
-curl -X GET http://example.com.localhost:3330
+curl -i -s -X GET http://villa.com.localhost:3230
 --END-REQUEST--
