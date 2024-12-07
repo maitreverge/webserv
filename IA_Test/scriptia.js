@@ -18,6 +18,7 @@ function fadeIn() {
 }
 const form = document.getElementById('myForm');
 const resultDiv = document.getElementById('result');
+const bubble = document.getElementById('bubble_cont');
 const buttons = form.querySelectorAll('button[type="submit"]');
 // Ajout d'un écouteur d'événement à chaque bouton
 buttons.forEach((button) => {
@@ -44,9 +45,26 @@ buttons.forEach((button) => {
             })
             .then((result) => {
                 // Affiche le résultat dans la div
-                resultDiv.innerHTML = result; 
+                resultDiv.innerHTML = result;
+				bubble.style.display = "block";
+				
+				// Défile vers le bas de la page
+			
+				// setTimeout(() => {
+				// 	window.scrollTo({
+				// 	  top: document.body.scrollHeight,
+				// 	  behavior: 'smooth'
+				// 	}, 1);
+				// void document.body.offsetHeight;
+
+// Maintenant, scrolle vers le bas
+window.scrollTo({
+  top: "1000", // Définit la position tout en bas
+  behavior: 'smooth'
+});
 				fadeIn();
-            })          
+            })
+	        
             .catch((error) => {
                 console.error('Erreur lors de la requête :', error);
                 resultDiv.innerHTML = `<p style="color: red;">Une erreur s'est produite : ${error.message}</p>`;

@@ -94,7 +94,7 @@ void Cgi::child(Client & client)
 
 std::string Cgi::getApiKey(Client & client, std::string & interPath)
 {
-	ifstream ifs("apik/apikey");
+	ifstream ifs("apikey");
 	if (!ifs)
 	{
 		std::string().swap(interPath);
