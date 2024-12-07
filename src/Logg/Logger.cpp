@@ -11,6 +11,7 @@ Logger::Logger(int verbose) : logToStdOut(1)
 		_logLevel[DEBUG] = 	1;	
 	#endif
 	_logLevel[WARNING] = 	1;
+	_logLevel[EVAL] = 		1;
 	_logLevel[ERROR] = 		1;
 	_accessFile.open("access.log", std::ios::trunc);
 	_errorFile.open("error.log", std::ios::trunc);
@@ -43,6 +44,8 @@ std::string Logger::formatLogLevel(logLevel level) const
 			return std::string(GREEN) + "[INFO] " + RESET;
 		case DEBUG:
 			return std::string(BLUE) + "[DEBUG] " + RESET;
+		case EVAL:
+			return std::string(MAGENTA) + "[EVAL] " + RESET;
 		case WARNING:
 			return std::string(HIGH_INTENSITY_YELLOW) + "[WARNING] " + RESET;
 		case ERROR:
