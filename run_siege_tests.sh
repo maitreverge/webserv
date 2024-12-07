@@ -18,7 +18,7 @@ echo "
 "
 docker run --rm -t jstarcher/siege -c10 -r20  "$ip:1512"  | grep -v "HTTP"
 
-echo "
+echo "make re
 *************************
 ***Tests de Stress ******
 *************************
