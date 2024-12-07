@@ -95,9 +95,11 @@ $(OBJ_DIR_DEBUG)/%.o : %.cpp $(HDR)
 	@$(GXX) $(CFLAGS) $< -c -o $@
 
 $(NAME) : $(OBJ)
-ifndef NO_PIP # If you do not want to install Python dependencies, just do : `export NO_PIP=1`		
-		@python3 -m pip install --upgrade pip --user -q
-		@pip install --upgrade openai --user -q
+ifndef NO_PIP # If you do not want to install Python dependencies, just do : `export NO_PIP=1`
+
+	@python3 -m pip install --upgrade pip --user -q 	
+	@pip install --force-reinstall --no-cache-dir flatbuffers==2.0 --user -q --no-warn-script-location
+	@pip install --upgrade openai --user -q --no-warn-script-location
 endif
 	
 	@echo -n "$(HIDE_CURSOR)"
