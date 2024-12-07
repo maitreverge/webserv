@@ -10,6 +10,7 @@ cleanup() {
             kill -9 "$webserv_pid" 2>/dev/null
         }
     fi
+	./Requests_Tester/delete_file_script.sh
     exit 1  # Sortie propre du script
 }
 
