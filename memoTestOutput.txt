@@ -1,23 +1,21 @@
-==163913== Memcheck, a memory error detector
-==163913== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==163913== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==163913== Command: ./webserv -s
-==163913== 
+==170710== Memcheck, a memory error detector
+==170710== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==170710== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==170710== Command: ./webserv -s
+==170710== 
 
 
-[34mSat, 7 Dec 2024 10:29:55 GMT: [31m[ERROR] [0m[32mbind [32mServer: [35m0.0.0.0 [93m1510 [32m5 [0m
-[34mSat, 7 Dec 2024 10:29:55 GMT: [31m[ERROR] [0m[32mbind [32mServer: [35m0.0.0.0 [93m1511 [32m5 [0m
-[34mSat, 7 Dec 2024 10:29:55 GMT: [31m[ERROR] [0m[32mbind [32mServer: [35m0.0.0.0 [93m1512 [32m5 [0m
 
 
-==163913== 
-==163913== FILE DESCRIPTORS: 3 open (3 std) at exit.
-==163913== 
-==163913== HEAP SUMMARY:
-==163913==     in use at exit: 0 bytes in 0 blocks
-==163913==   total heap usage: 1,060 allocs, 1,060 frees, 9,271,699 bytes allocated
-==163913== 
-==163913== All heap blocks were freed -- no leaks are possible
-==163913== 
-==163913== For lists of detected and suppressed errors, rerun with: -s
-==163913== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+==170710== 
+==170710== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==170710== 
+==170710== HEAP SUMMARY:
+==170710==     in use at exit: 0 bytes in 0 blocks
+==170710==   total heap usage: 186,536 allocs, 186,536 frees, 1,628,693,370 bytes allocated
+==170710== 
+==170710== All heap blocks were freed -- no leaks are possible
+==170710== 
+==170710== For lists of detected and suppressed errors, rerun with: -s
+==170710== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
