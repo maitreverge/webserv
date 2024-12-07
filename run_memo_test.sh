@@ -4,7 +4,7 @@
 echo "" > memoTestOutput.txt
 
 # Lancer Valgrind et rediriger la sortie immédiatement
-valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes ./webserv -s > memoTestOutput.txt 2>&1 &
+valgrind --trace-children=yes --leak-check=full --show-leak-kinds=all --track-fds=yes ./webserv -s > memoTestOutput.txt 2>&1 &
 
 sleep 4
 
