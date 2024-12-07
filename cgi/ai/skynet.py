@@ -20,13 +20,14 @@ path_info = os.getenv("PATH_INFO", "").replace("%20", " ").strip("/")
 mood = path_info if path_info else "neutre"
  
 pre_prompt = f"""Réponds selon l'humeur suivante : {mood}.
-	Sois court et pertinent. Utilise les informations sur l'utilisateur
-    suivantes {data} pour les integrers d'une facon eloquente dans la réponse.
-    Surtout ne depasse jamais 400 characteres,
-    n'hesite pas a mettre des emojies."""
+	Sois court et pertinent. Surtout ne depasse jamais 400 characteres,
+    n'hesite pas a mettre des emojies. Utilise les informations, sur
+    l'utilisateur, suivantes: {data} pour les integrers d'une facon eloquente
+    dans la réponse.
+    """
 
 user_input = sys.stdin.read().strip()
-
+print(user_input, file=sys.stderr)
 try:
     client = OpenAI()
     response = client.chat.completions.create(
