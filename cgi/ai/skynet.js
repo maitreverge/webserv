@@ -9,28 +9,23 @@ function fadeIn() {
 		opacity += 0.05; 
 		bubble.style.opacity = opacity;
 		text.style.opacity = opacity;
-	} else {
-		clearInterval(fadeEffect);
-	}
+	} else
+		clearInterval(fadeEffect);	
 	}, 100);
 }
+
 const form = document.getElementById('myForm');
 const resultDiv = document.getElementById('result');
 const bubble = document.getElementById('bubble_cont');
 const buttons = form.querySelectorAll('button[type="submit"]');
-// Ajout d'un écouteur d'événement à chaque bouton
+
 buttons.forEach((button) => {
-    button.addEventListener('click', (event) => {
-        // Empêche le rechargement de la page
-        event.preventDefault();
+    button.addEventListener('click', (event) => {  
 
-        // Récupère l'URL spécifique au bouton
-        const formAction = button.getAttribute('formaction');
-
-        // Récupération des données du formulaire
+        event.preventDefault();       
+        const formAction = button.getAttribute('formaction');     
         const formData = new FormData(form);
-
-        // Envoi de la requête POST avec la bonne URL
+       
         fetch(formAction, {
             method: 'POST',
             body: formData,
@@ -39,33 +34,21 @@ buttons.forEach((button) => {
                 if (!response.ok) {
                     throw new Error(`Erreur HTTP : ${response.status}`);
                 }
-                return response.text(); // ou response.json() si tu attends un JSON
+                return response.text();
             })
-            .then((result) => {
-                // Affiche le résultat dans la div
+            .then((result) => {               
                 resultDiv.innerHTML = result;
-				bubble.style.display = "block";
-				
-				// Défile vers le bas de la page
-			
-				// setTimeout(() => {
-				// 	window.scrollTo({
-				// 	  top: document.body.scrollHeight,
-				// 	  behavior: 'smooth'
-				// 	}, 1);
-				// void document.body.offsetHeight;
-
-// Maintenant, scrolle vers le bas
-window.scrollTo({
-  top: "1000", // Définit la position tout en bas
-  behavior: 'smooth'
-});
+				bubble.style.display = "block";		
+				window.scrollTo({
+				top: "1000", 
+				behavior: 'smooth'
+				});
 				fadeIn();
-            })
-	        
+            })	        
             .catch((error) => {
                 console.error('Erreur lors de la requête :', error);
-                resultDiv.innerHTML = `<p style="color: red;">Une erreur s'est produite : ${error.message}</p>`;
+                resultDiv.innerHTML = `<p style="color: red;">Une erreur` +
+					`s'est produite : ${error.message}</p>`;
             });
     });
 });
