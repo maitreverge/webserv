@@ -1,6 +1,5 @@
 HTTP/1.1 242 Connection
 Content-Length: 379
-Set-Cookie: sessionID=3504588969
 Content-Type: text/html
 
 <!DOCTYPE html>
