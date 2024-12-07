@@ -1,5 +1,21 @@
 #!/bin/bash
 
+# Fonction de nettoyage pour arrêter tous les processus
+cleanup() {
+    echo -e "${RED}Arrêt des tests en cours...${NC}"
+    # Tuer le processus Webserv si nécessaire
+    if [ -n "$webserv_pid" ]; then
+        kill "$webserv_pid"
+        wait "$webserv_pid" 2>/dev/null || {
+            kill -9 "$webserv_pid" 2>/dev/null
+        }
+    fi
+    exit 1  # Sortie propre du script
+}
+
+# Ajouter un trap pour attraper le SIGINT et lancer la fonction cleanup
+trap cleanup SIGINT
+
 # variables de compteurs de tests réussis qui vont bien
 total_tests=1
 successful_tests=1
