@@ -38,7 +38,7 @@ buttons.forEach((button) => {
             })
             .then((result) => {               
                 resultDiv.innerHTML = result;
-				bubble.style.display = "block";		
+				bubble.style.display = "inline-block";		
 				window.scrollTo({
 				top: "1000", 
 				behavior: 'smooth'
