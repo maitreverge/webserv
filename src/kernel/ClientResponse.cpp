@@ -26,12 +26,22 @@ void Server::replyClients()
 	}
 }
 
-void Server::fillMessageSend(const size_t i)
-{	
+void Server::fillMessageSend(const size_t i) 
+{
+	Logger::getInstance().log(DEBUG, "Fill Message Send", this->_clients[i]);
+		
 	if (this->_clients[i].responseBuilder.getBody(this->_clients[i]))
 		return ;
 	if (this->_clients[i].messageSend.empty())
+	{
+		this->printVector(this->_clients[i], this->_clients[i].sendBuffer);
+		std::string statusLine = "HTTP/1.1 200 OK";
+		if (this->_clients[i].responseBuilder._isCGI &&
+			(std::search(this->_clients[i].sendBuffer.begin(), this->_clients[i].sendBuffer.end(), statusLine.begin(), statusLine.end()) == this->_clients[i].sendBuffer.end()))
+			throw (Logger::getInstance().log(ERROR, "cgi bad status code",	this->_clients[i]),
+					Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));	
 		this->_clients[i].sendFlag = true;
+	}
 	else										
 		this->sendBuffering(i, this->_clients[i].messageSend);
 }
