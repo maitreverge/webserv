@@ -1,19 +1,17 @@
-// Sélection du formulaire, de la zone de résultat, et des boutons
 
 function fadeIn() {
-	const element = document.getElementById('bubble');
+	const bubble = document.getElementById('bubble');
 	const text = document.getElementById('result');
-	element.style.display = 'block'; // Rendre visible si c'était caché
-	let opacity = parseFloat(window.getComputedStyle(element).opacity);
+	let opacity = parseFloat(window.getComputedStyle(bubble).opacity);
   
 	const fadeEffect = setInterval(() => {
-	  if (opacity < 1) {
-		opacity += 0.05; // Augmente l'opacité
-		element.style.opacity = opacity;
+    if (opacity < 1) {
+		opacity += 0.05; 
+		bubble.style.opacity = opacity;
 		text.style.opacity = opacity;
-	  } else {
-		clearInterval(fadeEffect); // Arrête l'effet à l'opacité maximale
-	  }
+	} else {
+		clearInterval(fadeEffect);
+	}
 	}, 100);
 }
 const form = document.getElementById('myForm');
