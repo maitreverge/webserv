@@ -28,6 +28,9 @@ try:
 		eloquente dans la réponse.
 		"""
 
+	while True:
+		...
+
 	user_input = sys.stdin.read().strip()
 	print(user_input, file=sys.stderr)
 

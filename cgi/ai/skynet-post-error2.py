@@ -28,6 +28,8 @@ try:
 		eloquente dans la réponse.
 		"""
 
+	exit(1)
+
 	user_input = sys.stdin.read().strip()
 	print(user_input, file=sys.stderr)
 

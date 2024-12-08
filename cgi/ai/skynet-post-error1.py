@@ -5,6 +5,8 @@ import sys
 import os
 import requests
 
+exit(1)
+	
 try:
 
 	url = (
