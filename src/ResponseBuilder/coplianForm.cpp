@@ -37,10 +37,23 @@ void ResponseBuilder::initMimes( void ){
 
 void	ResponseBuilder::initServerNames( void ){
 
+	// Main websites
 	_servernameType.insert(std::make_pair("festival.com", "_websites/festival/"));
 	_servernameType.insert(std::make_pair("gaming.com", "_websites/cyborg_gaming/"));
 	_servernameType.insert(std::make_pair("villa.com", "_websites/villa_agency/"));
-	_servernameType.insert(std::make_pair("example.com", "http://www.example.com"));
+
+	// Main routes configs
+	_servernameType.insert(std::make_pair("cgi.ok", "TO DETERMINE"));
+	_servernameType.insert(std::make_pair("cgi.ko", "TO DETERMINE"));
+
+	_servernameType.insert(std::make_pair("redirection.ok", "TO DETERMINE"));
+	_servernameType.insert(std::make_pair("redirection.ko", "TO DETERMINE"));
+
+	_servernameType.insert(std::make_pair("root.ok", "TO DETERMINE"));
+	_servernameType.insert(std::make_pair("root.ko", "TO DETERMINE"));
+	
+	_servernameType.insert(std::make_pair("listing.ok", "TO DETERMINE"));
+	_servernameType.insert(std::make_pair("listing.ko", "TO DETERMINE"));
 }
 
 ResponseBuilder::ResponseBuilder( void ){
