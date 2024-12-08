@@ -96,9 +96,9 @@ $(OBJ_DIR_DEBUG)/%.o : %.cpp $(HDR)
 
 $(NAME) : $(OBJ)
 ifndef NO_PIP # If you do not want to install Python dependencies, just do : `export NO_PIP=1`
-		@echo -n "Installing python dependecies"
-		@python3 -m pip install --upgrade pip --user
-		@pip install --upgrade openai --user
+		# @echo -n "Installing python dependecies"
+		@python3 -m pip install --upgrade pip --user -q --break-system-packages
+		@pip install --upgrade openai --user -q --break-system-packages
 endif
 	
 	@echo -n "$(HIDE_CURSOR)"
