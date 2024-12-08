@@ -74,7 +74,7 @@ buttons.forEach((button) => {
             })	        
             .catch((error) => {
 				clearInterval(wait);
-                console.error('Erreur lors de la requête :', error);				
+                console.error('Error request: ', error);				
                 resultDiv.innerHTML = `<p style="color: red;">
 					${error.message}</p>`;
 				bubbleAppear();
