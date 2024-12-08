@@ -3,7 +3,7 @@
 
 void	ResponseBuilder::buildHeaders(){
 
-	Logger::getInstance().log(INFO, "FUNCTION CALL : ResponseBuilder::buildHeaders", *_client);
+	Logger::getInstance().log(DEBUG, "FUNCTION CALL : ResponseBuilder::buildHeaders", *_client);
 
 
 	errorCode codes;
