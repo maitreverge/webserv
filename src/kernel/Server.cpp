@@ -117,9 +117,9 @@ void Server::printVector(Client & client, const std::vector<char> & response,
 
 	for (size_t i = 0; i < response.size(); i++)
 	{
-		if (i > 700)
+		if (i > 1000)
 		{
-			ss << std::endl << "[...]";
+			ss << std::endl << HIGH_INTENSITY_YELLOW << "[...]" << color;
 			break ;
 		}
 		if (response[i] == '\r')
