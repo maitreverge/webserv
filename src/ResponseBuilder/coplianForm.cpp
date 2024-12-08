@@ -42,6 +42,19 @@ void	ResponseBuilder::initServerNames( void ){
 	_servernameType.insert(std::make_pair("gaming.com", "_websites/cyborg_gaming/"));
 	_servernameType.insert(std::make_pair("villa.com", "_websites/villa_agency/"));
 
+	// Easy configs
+	_servernameType.insert(std::make_pair("get.ok", "TO DETERMINE"));
+	_servernameType.insert(std::make_pair("get.ko", "TO DETERMINE"));
+	_servernameType.insert(std::make_pair("post.ok", "TO DETERMINE"));
+	_servernameType.insert(std::make_pair("post.ko", "TO DETERMINE"));
+	_servernameType.insert(std::make_pair("delete.ok", "TO DETERMINE"));
+	_servernameType.insert(std::make_pair("delete.ko", "TO DETERMINE"));
+	_servernameType.insert(std::make_pair("unknown_method.ko", "TO DETERMINE"));
+
+	// Easy configs
+	_servernameType.insert(std::make_pair("post.postman", "TO DETERMINE"));
+	_servernameType.insert(std::make_pair("post.multipart", "TO DETERMINE"));
+
 	// Main routes configs
 	_servernameType.insert(std::make_pair("cgi.ok", "TO DETERMINE"));
 	_servernameType.insert(std::make_pair("cgi.ko", "TO DETERMINE"));
@@ -51,9 +64,15 @@ void	ResponseBuilder::initServerNames( void ){
 
 	_servernameType.insert(std::make_pair("root.ok", "TO DETERMINE"));
 	_servernameType.insert(std::make_pair("root.ko", "TO DETERMINE"));
-	
+
 	_servernameType.insert(std::make_pair("listing.ok", "TO DETERMINE"));
 	_servernameType.insert(std::make_pair("listing.ko", "TO DETERMINE"));
+
+	_servernameType.insert(std::make_pair("upload.ok", "TO DETERMINE"));
+	_servernameType.insert(std::make_pair("upload.ko", "TO DETERMINE"));
+
+	_servernameType.insert(std::make_pair("cookies.ok", "TO DETERMINE"));
+	_servernameType.insert(std::make_pair("cookies.ko", "TO DETERMINE"));
 }
 
 ResponseBuilder::ResponseBuilder( void ){
