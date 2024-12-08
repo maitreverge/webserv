@@ -31,8 +31,7 @@ try:
 		"""
 
 	user_input = sys.stdin.read().strip()
-	print(user_input, file=sys.stderr)
-
+	
 	client = OpenAI()
 	response = client.chat.completions.create(
 		model="gpt-4o-mini",
