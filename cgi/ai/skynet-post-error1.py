@@ -5,8 +5,7 @@ import sys
 import os
 import requests
 
-while True:
-	...
+exit(1)
 	
 try:
 
@@ -32,7 +31,7 @@ try:
 		"""
 
 	user_input = sys.stdin.read().strip()
-
+	
 	client = OpenAI()
 	response = client.chat.completions.create(
 		model="gpt-4o-mini",

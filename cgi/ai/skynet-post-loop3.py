@@ -5,9 +5,6 @@ import sys
 import os
 import requests
 
-while True:
-	...
-	
 try:
 
 	url = (
@@ -46,6 +43,10 @@ try:
 	output = response.choices[0].message.content
 	content_length = len(output.encode('utf-8'))
 	print("HTTP/1.1 200 OK")
+
+	while True:
+		...
+
 	print("Content-Type: text/plain; charset=utf-8")
 	print(f"Content-Length: {content_length}")
 	print()

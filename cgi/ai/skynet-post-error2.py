@@ -5,9 +5,6 @@ import sys
 import os
 import requests
 
-while True:
-	...
-	
 try:
 
 	url = (
@@ -30,6 +27,8 @@ try:
 		l'utilisateur, suivantes: {data} pour les integrers d'une facon
 		eloquente dans la réponse.
 		"""
+
+	exit(1)
 
 	user_input = sys.stdin.read().strip()
 
