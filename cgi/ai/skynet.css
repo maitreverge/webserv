@@ -96,7 +96,7 @@ button {
 	display:none;
 	position: relative;
 	top:10%;
-	left:5%;
+	left:3%;
 	width:min(70vw, 22rem);
 	aspect-ratio: 1 / 1; 
 	vertical-align: top;
@@ -137,6 +137,6 @@ button {
         background-color: #c7342f;
     }
     100% {
-        background-color: #506962;
+        background-color: #23453c;
     }
 }
