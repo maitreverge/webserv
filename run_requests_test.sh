@@ -18,8 +18,8 @@ cleanup() {
 trap cleanup SIGINT
 
 # variables de compteurs de tests réussis qui vont bien
-total_tests=1
-successful_tests=1
+total_tests=0
+successful_tests=0
 
 # Codes de couleurs ANSI pour la colorisation
 RED='\033[31m'
@@ -199,7 +199,6 @@ fi
 echo ""
 echo -e "${CYAN}Résumé global :${NC}"
 echo -e "${GREEN}Tests réussis : $successful_tests/$total_tests${NC}"
-
 if [ "$successful_tests" -ne "$total_tests" ]; then
     echo -e "${RED}Certains tests ont échoué. Veuillez vérifier les résultats.${NC}"
 else
