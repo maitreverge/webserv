@@ -5,13 +5,34 @@ function fadeIn() {
 	let opacity = parseFloat(window.getComputedStyle(bubble).opacity);
   
 	const fadeEffect = setInterval(() => {
-    if (opacity < 1) {
-		opacity += 0.05; 
-		bubble.style.opacity = opacity;
-		text.style.opacity = opacity;
-	} else
-		clearInterval(fadeEffect);	
-	}, 100);
+		if (opacity < 1) {
+			opacity += 0.05; 
+			bubble.style.opacity = opacity;
+			text.style.opacity = opacity;
+		} else
+			clearInterval(fadeEffect);	
+	}, 80);
+}
+
+let wait;
+let angle = 0;
+function waiting() {
+	const ai = document.getElementById('ai');
+		
+	let flag = false;
+	wait = setInterval(() => {
+		if (!flag && angle < 2) {
+			angle += 0.1; 
+			ai.style.transform = 'rotateZ(' + angle + 'deg)';
+			
+		} else {
+			flag = true;	
+			angle -= 0.1; 
+			ai.style.transform = 'rotateZ(' + angle + 'deg)';
+		}
+		if (angle < 0)
+			flag = false;
+	}, 10);	
 }
 
 const form = document.getElementById('myForm');
@@ -25,7 +46,8 @@ buttons.forEach((button) => {
         event.preventDefault();       
         const formAction = button.getAttribute('formaction');     
         const formData = new FormData(form);
-       
+
+		waiting();	
         fetch(formAction, {
             method: 'POST',
             body: formData,
@@ -36,7 +58,8 @@ buttons.forEach((button) => {
                 }
                 return response.text();
             })
-            .then((result) => {               
+            .then((result) => {
+				clearInterval(wait);               
                 resultDiv.innerHTML = result;
 				bubble.style.display = "inline-block";		
 				window.scrollTo({
