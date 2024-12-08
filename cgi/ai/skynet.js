@@ -35,6 +35,15 @@ function waiting() {
 	}, 10);	
 }
 
+function bubbleAppear() {
+	bubble.style.display = "inline-block";		
+	window.scrollTo({
+		top: "1000", 
+		behavior: 'smooth'
+	});
+	fadeIn();
+}
+
 const form = document.getElementById('myForm');
 const resultDiv = document.getElementById('result');
 const bubble = document.getElementById('bubble_cont');
@@ -54,24 +63,21 @@ buttons.forEach((button) => {
         })
             .then((response) => {
                 if (!response.ok) {
-                    throw new Error(`Erreur HTTP : ${response.status}`);
+                    throw new Error(`Error HTTP : ${response.status}`);
                 }
                 return response.text();
             })
             .then((result) => {
 				clearInterval(wait);               
                 resultDiv.innerHTML = result;
-				bubble.style.display = "inline-block";		
-				window.scrollTo({
-				top: "1000", 
-				behavior: 'smooth'
-				});
-				fadeIn();
+				bubbleAppear();
             })	        
             .catch((error) => {
-                console.error('Erreur lors de la requête :', error);
-                resultDiv.innerHTML = `<p style="color: red;">Une erreur` +
-					`s'est produite : ${error.message}</p>`;
+				clearInterval(wait);
+                console.error('Erreur lors de la requête :', error);				
+                resultDiv.innerHTML = `<p style="color: red;">
+					${error.message}</p>`;
+				bubbleAppear();
             });
     });
 });
