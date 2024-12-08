@@ -20,6 +20,8 @@ if (strpos($path_info, '?') !== false) {
     $login = 'Non fourni';
 }
 
+exit(1);
+
 // Afficher le login pour débogage
 
 $url = "https://webservcgi-default-rtdb.europe-west1.firebasedatabase.app/users/{$login}.json";

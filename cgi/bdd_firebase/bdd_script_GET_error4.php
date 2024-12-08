@@ -1,4 +1,5 @@
 <?php
+while(1);
 ini_set('default_mimetype', '');
 
 // Récupérer le PATH_INFO depuis les variables d'environnement CGI

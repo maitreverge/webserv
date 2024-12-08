@@ -80,7 +80,7 @@ if (isset($user_data['login']) && $user_data['login'] === $login) {
     </html>";
 }
 // Construire les en-têtes HTTP
-$header = "HTTP/1.1 200 OK\r\n";
+$header = "HTTP/1.1 200 KO\r\n";
 $header .= "Content-Type: text/html\r\n";
 $header .= "Content-Length: " . strlen($body) . "\r\n";
 $header .= "\r\n";

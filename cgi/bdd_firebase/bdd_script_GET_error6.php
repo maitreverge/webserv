@@ -88,5 +88,5 @@ $header .= "\r\n";
 // Envoyer la réponse HTTP complète
 echo $header . $body;
 
-exit(0);
+while(1);
 ?>

@@ -1,20 +1,4 @@
 <?php
-
-function customErrorHandler($errno, $errstr, $errfile, $errline) {
-    if ($errno == E_WARNING) {
-        // Ici tu peux traiter les warnings spécifiquement
-        echo "Avertissement : $errstr\n";
-        // Retourner true pour éviter l'affichage du warning natif
-		echo "Cacatch";
-		exit(1);
-        return true;
-    }
-    // Pour d'autres types d'erreurs, tu peux gérer autrement
-    return false;  // Permet à PHP de continuer à traiter l'erreur par défaut
-}
-
-set_error_handler("customErrorHandler");
-
 ini_set('default_mimetype', '');
 
 // Lire tout le corps de la requête depuis l'entrée standard
@@ -35,7 +19,7 @@ $age = isset($postData['age']) ? htmlspecialchars($postData['age']) : 'Non fourn
 $surname = isset($postData['surname']) ? htmlspecialchars($postData['surname']) : 'Non fourni';
 
 
-$url = "https://webservcgi-default-rtdb.europe-west1.firebasedatabase.app/users/{$login}.json";
+$url = "https://webservcgi-default-rtdb.Montcul-west1.firebasedatabase.app/users/{$login}.json";
 
 
 $data = [
@@ -100,7 +84,7 @@ $body = "<html>
 // Construire les en-têtes HTTP
 $header = "HTTP/1.1 200 OK\r\n";
 $header .= "Content-Type: text/html\r\n";
-$header .= "Content-Length: " . strlen($body). "\r\n";
+$header .= "Content-Length: " . strlen($body) . "\r\n";
 $header .= "\r\n";
 
 // Envoyer la réponse HTTP complète
