@@ -24,10 +24,10 @@ Client::Client(Config * _conf, Server* server) : conf(_conf), _server(server)
 Client::Client(const Client & src)
 {
 	this->fd = -1;
-	// messageRecv.reserve(static_cast<size_t>(src.conf->maxHeaderSize));
-	// headerRespons.reserve(static_cast<size_t>(src.conf->maxHeaderSize)); 
-	// messageSend.reserve(src.conf->send_buff_size);
-	// sendBuffer.reserve(src.conf->maxBodySize);
+	messageRecv.reserve(static_cast<size_t>(src.conf->maxHeaderSize));
+	headerRespons.reserve(static_cast<size_t>(src.conf->maxHeaderSize)); 
+	messageSend.reserve(src.conf->send_buff_size);
+	sendBuffer.reserve(src.conf->maxBodySize);
 	*this = src;
 }
 

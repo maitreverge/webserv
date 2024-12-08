@@ -23,6 +23,7 @@ class Cgi
     void 		retHandle(Client & client, ssize_t ret, std::string err, 
     	std::string info);
 	bool 		shutdownHandle(Client & client, bool eof);
+	std::string getApiKey(Client & client, std::string & interPath);
 
     public:
     

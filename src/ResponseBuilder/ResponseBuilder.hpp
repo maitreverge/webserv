@@ -108,9 +108,6 @@ class ResponseBuilder
 	bool _isDirectory;
 	bool _isFile;
 
-	// CGI Stuff
-	bool _isCGI;
-
 	// File Characteristics
 	bool _isROK;
 	bool _isWOK;
@@ -257,8 +254,9 @@ public:
 	string 			_pathInfo; //! need public for seb
 	string 			_folderCGI; //! need public for seb
 	string 			_fileName; //! need public for seb
-	string 			_fileExtension; //! need public for seb
-
+	string 			_fileExtension; //! need public for seb	
+	bool 			_isCGI; //! need public for seb	
+	
 	ResponseBuilder( void );
 	~ResponseBuilder( void );
 	ResponseBuilder( const ResponseBuilder & );

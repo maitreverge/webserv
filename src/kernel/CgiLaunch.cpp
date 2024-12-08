@@ -71,23 +71,6 @@ void Cgi::launch(Client & client)
         close(this->_fds[0]);
 }
 
-void provC(Client & client) //! a suppr
-{
-	if (chdir(client.responseBuilder._folderCGI.c_str()) < 0)	
-		Logger::getInstance().log(ERROR, "chdir", client), exit(200);			
-	char actualPath[PATH_MAX];	
-	if (!getcwd(actualPath, PATH_MAX))	
-		Logger::getInstance().log(ERROR, "getcwd", client), exit(200);				 
-	std::string envPathInfo("PATH_INFO=" + client.responseBuilder._pathInfo);
-	char *env[] = {const_cast<char *>(envPathInfo.c_str()), NULL};
-	std::string execPath = std::string(actualPath) + '/'
-		+ client.responseBuilder._fileName; 
-	char *argv[] = {const_cast<char *>(execPath.c_str()), NULL};	
-	Logger::getInstance().~Logger();
-	Kernel::getInstance().exitKernel();	
-	execve(execPath.c_str(), argv, env);
-}
-
 void Cgi::child(Client & client)
 {
     Logger::getInstance().log(DEBUG, "Child", client);
@@ -101,36 +84,45 @@ void Cgi::child(Client & client)
 		std::exit(200);	
 	}		
 	close(this->_fds[0]); this->_fds[0] = -1;	
-	close(this->_fds[1]); this->_fds[1] = -1;			
-	if (client.responseBuilder._fileExtension == "out") //! a suppr
-		provC(client);
-	else if (client.responseBuilder._fileExtension == "php")		
+	close(this->_fds[1]); this->_fds[1] = -1;
+	if (client.responseBuilder._fileExtension == "php")		
 		this->callExecve(client, "php-cgi");
 	else if (client.responseBuilder._fileExtension == "py")	
 		this->callExecve(client, "python3");		
 	std::exit(242);
 }
 
+std::string Cgi::getApiKey(Client & client, std::string & interPath)
+{
+	if (client.responseBuilder._fileExtension != "py")
+		return "";
+	ifstream ifs("apikey");
+	if (!ifs)
+	{
+		std::string().swap(interPath);
+		Logger::getInstance().log(ERROR, "get api key", client);
+		std::exit(200);
+	}
+	return (std::string(std::istreambuf_iterator<char>(ifs),
+		std::istreambuf_iterator<char>())); 
+}
+
 void Cgi::callExecve(Client & client, const std::string & interpreter)
 {
 	if (chdir(client.responseBuilder._folderCGI.c_str()) < 0)
-		Logger::getInstance().log(ERROR, "chdir", client), exit(200);				
+		Logger::getInstance().log(ERROR, "chdir", client), std::exit(200);				
 	char actualPath[PATH_MAX];	
 	if (!getcwd(actualPath, PATH_MAX))
-		Logger::getInstance().log(ERROR, "getcwd", client), exit(200);					 
-	std::string interPath = this->getPath(client, interpreter);
-	
-	std::string envPathInfo("PATH_INFO=" + client.responseBuilder._pathInfo);
-	std::string envOpenAI("OPENAI_API_KEY=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");  
-	 
-	char *env[] = {const_cast<char *>(envPathInfo.c_str()), const_cast<char *>(envOpenAI.c_str()), NULL}; 
-
+		Logger::getInstance().log(ERROR, "getcwd", client), std::exit(200);	
+	std::string interPath = this->getPath(client, interpreter);				 
+	std::string envApiKey = this->getApiKey(client, interPath);	
+	std::string envPathInfo("PATH_INFO=" + client.responseBuilder._pathInfo);	 
+	char *env[] = {const_cast<char *>(envPathInfo.c_str()),
+		const_cast<char *>(envApiKey.c_str()), NULL}; 
 	std::string execPath(std::string(actualPath)
-		+ '/' + client.responseBuilder._fileName);
-	
+		+ '/' + client.responseBuilder._fileName);	
 	char *argv[] = {const_cast<char *>(interpreter.c_str()),
 		const_cast<char *>(execPath.c_str()), NULL};
-
 	Logger::getInstance().~Logger();
 	Kernel::getInstance().exitKernel();	
 	execve(interPath.c_str(), argv, env);
@@ -153,10 +145,10 @@ std::string Cgi::getPath(Client & client, const std::string & interpreter)
 			}
 		}
 		Logger::getInstance().log(ERROR, "interpreter not exist", client);
-		exit(200);			
+		std::exit(200);			
 	}
 	Logger::getInstance().log(ERROR, "PATH not exist", client);
-	exit(200);		
+	std::exit(200);		
 }
 
 double Cgi::getTimeSpan(Client & client) const
