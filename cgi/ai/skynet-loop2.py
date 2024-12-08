@@ -3,6 +3,7 @@
 import sys
 
 try:
+	
 	while True:
 		...
 			

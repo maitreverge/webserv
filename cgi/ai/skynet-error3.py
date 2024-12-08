@@ -5,15 +5,12 @@ import sys
 try:
 	with open("skynet.html", 'r') as html:
 		output = html.read()
+
+	exit(1)
 		
 	content_length = len(output.encode('utf-8'))
 	print("HTTP/1.1 200 OK")
-
-	while True:
-		...
-		
 	print("Content-Type: text/html; charset=utf-8")
-	
 	print(f"Content-Length: {content_length}")
 	print()
 	print(output)

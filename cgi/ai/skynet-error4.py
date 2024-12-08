@@ -9,9 +9,8 @@ try:
 	content_length = len(output.encode('utf-8'))
 	print("HTTP/1.1 200 OK")
 
-	while True:
-		...
-		
+	exit(1)
+	
 	print("Content-Type: text/html; charset=utf-8")
 	
 	print(f"Content-Length: {content_length}")
