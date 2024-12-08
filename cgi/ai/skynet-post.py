@@ -22,7 +22,7 @@ try:
 	mood = path_info if path_info else "neutre"
 	
 	pre_prompt = f"""Réponds selon l'humeur suivante : {mood}.
-		Sois court et pertinent. Surtout ne depasse jamais 400 characteres,
+		Sois court et pertinent. Surtout ne depasse jamais 300 characteres,
 		n'hesite pas a mettre des emojies. Utilise les informations, sur
 		l'utilisateur, suivantes: {data} pour les integrers d'une facon
 		eloquente dans la réponse.
@@ -37,7 +37,7 @@ try:
 			{"role": "system", "content": pre_prompt},
 			{"role": "user", "content": user_input}
 		],
-		max_tokens=500
+		max_tokens=400
 	)
 
 	output = response.choices[0].message.content
