@@ -117,6 +117,11 @@ void Server::printVector(Client & client, const std::vector<char> & response,
 
 	for (size_t i = 0; i < response.size(); i++)
 	{
+		if (i > 700)
+		{
+			ss << std::endl << "[...]";
+			break ;
+		}
 		if (response[i] == '\r')
 		    ss << "\e[31m\\r\e[0m" << HIGH_INTENSITY_YELLOW;
 		else if (response[i] == '\n')
