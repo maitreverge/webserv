@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+while True:
+    ...
+
 import sys
 
 try:

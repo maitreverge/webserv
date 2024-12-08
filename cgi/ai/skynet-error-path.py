@@ -3,7 +3,7 @@
 import sys
 
 try:
-    with open("skynet.html", 'r') as html:
+    with open("skynete.html", 'r') as html:
         output = html.read()
         
     content_length = len(output.encode('utf-8'))
