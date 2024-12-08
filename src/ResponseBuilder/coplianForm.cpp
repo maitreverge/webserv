@@ -68,11 +68,11 @@ void	ResponseBuilder::initServerNames( void ){
 	_servernameType.insert(std::make_pair("listing.ok", "TO DETERMINE"));
 	_servernameType.insert(std::make_pair("listing.ko", "TO DETERMINE"));
 
-	_servernameType.insert(std::make_pair("upload.ok", "TO DETERMINE"));
-	_servernameType.insert(std::make_pair("upload.ko", "TO DETERMINE"));
+	// _servernameType.insert(std::make_pair("upload.ok", "TO DETERMINE"));
+	// _servernameType.insert(std::make_pair("upload.ko", "TO DETERMINE"));
 
-	_servernameType.insert(std::make_pair("cookies.ok", "TO DETERMINE"));
-	_servernameType.insert(std::make_pair("cookies.ko", "TO DETERMINE"));
+	_servernameType.insert(std::make_pair("cookie.ok", "TO DETERMINE"));
+	_servernameType.insert(std::make_pair("cookie.ko", "TO DETERMINE"));
 }
 
 ResponseBuilder::ResponseBuilder( void ){
