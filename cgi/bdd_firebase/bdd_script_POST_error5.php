@@ -4,8 +4,7 @@ ini_set('default_mimetype', '');
 // Lire tout le corps de la requête depuis l'entrée standard
 $rawInput = file_get_contents("php://stdin");
 
-// Écrire l'entrée brute dans la sortie d'erreur pour débogage (facultatif)
-fwrite(fopen("php://stderr", "w"), "Données brutes : $rawInput\n");
+
 
 // Parser les données reçues si elles sont au format application/x-www-form-urlencoded
 parse_str($rawInput, $postData);
