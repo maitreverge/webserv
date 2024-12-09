@@ -7,10 +7,10 @@ try:
         output = html.read()
         
     content_length = len(output.encode('utf-8'))
-    print("HTTP/1.1 200 OK")
-    print("Content-Type: text/html; charset=utf-8")
-    print(f"Content-Length: {content_length}")
-    print()
+    print("HTTP/1.1 200 OK\r")
+    print("Content-Type: text/html; charset=utf-8\r")
+    print(f"Content-Length: {content_length}\r")
+    print("\r")
     print(output)
 
 except Exception as e:

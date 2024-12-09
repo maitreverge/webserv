@@ -48,6 +48,5 @@ try:
 	print("\r")
 	print(output)
 
-except Exception as e:    
-    print(f"Erreur : {str(e)}")
+except Exception as e:
     sys.exit(1)

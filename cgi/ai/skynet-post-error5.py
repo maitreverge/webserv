@@ -42,15 +42,13 @@ try:
 
 	output = response.choices[0].message.content
 	content_length = len(output.encode('utf-8'))
-	print("HTTP/1.1 200 OK")
-
-	print("Content-Type: text/plain; charset=utf-8")
-	print(f"Content-Length: {content_length}")
-	print()
+	print("HTTP/1.1 200 OK\r")
+	print("Content-Type: text/plain; charset=utf-8\r")
+	print(f"Content-Length: {content_length}\r")
+	print("\r")
 	print(output)
 		
-except Exception as e:    
-    print(f"Erreur : {str(e)}")
+except Exception as e:
     sys.exit(1)
 
 sys.exit(1)

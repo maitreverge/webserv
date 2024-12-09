@@ -28,53 +28,21 @@ void Server::replyClients()
 
 void Server::checkCgiStatusLine(const size_t i)
 {
-	std::vector<char>::iterator it;
-	// if (this->isDelimiterFind("\r\n", i, it) && std::string(this->_clients[i].sendBuffer.begin(), it) != "HTTP/1.1 200 OK");
-std::cout << "check!!!" << std::endl;
-	std::string line;
 	if (!this->_clients[i].responseBuilder._isCGI)
-		return ;
+		return ;		
+	std::vector<char>::iterator it;
 	if (this->isDelimiterFind("\r\n", it, this->_clients[i].sendBuffer))
 	{
-		if (std::string(this->_clients[i].sendBuffer.begin(), it) != "HTTP/1.1 200 OK")
-			throw (Logger::getInstance().log(ERROR, "bad cgi http response", this->_clients[i]),
-			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
+		if (std::string(this->_clients[i].sendBuffer.begin(), it)
+			!= "HTTP/1.1 200 OK")
+			throw (Logger::getInstance().log(ERROR, "bad cgi http response",
+				this->_clients[i]),
+				Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
 	}
 	else
-		throw (Logger::getInstance().log(ERROR, "bad cgi http response", this->_clients[i]),
-			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
-		// std::cout << "find!!!" << std::endl;
-		// std::istringstream iss(std::string(this->_clients[i].sendBuffer.begin(), it));
-		// if (std::getline(iss, line, ' '))
-		// {
-		// 	if (line != "HTTP/1.1")
-				
-		// 	throw Server::ShortCircuitException(CODE_400_BAD_REQUEST);
-		// 		std::cout << "http error" << std::endl;
-		// 	iss.clear(); // JE SUI SENSE APPELER CLEAR ICI ? je ne pense pas car sinon on serai ds le else
-		// 	std::cout << line << std::endl;
-		// 	if (std::getline(iss, line, ' '))
-		// 	{
-		// 		int status = 0;
-		// 		std::cout << line << std::endl;
-		// 		// ss.str("");
-		// 		// ss.clear(); // JE SUI SENSE APPELER CLEAR ICI ? je ne pense pas car sinon on serai ds le else
-		// 		iss.clear(); 
-		// 		iss.str(line);				
-		// 		iss >> status;
-		// 		if (!iss)
-		// 			std::cout << "status: is not number:" << status << std::endl;
-		// 		else
-		// 			std::cout << "status: " << status << std::endl;
-
-		// 	}
-		// 	else
-		// 		std::cout << "getline error" << std::endl;
-		// }
-		// else
-		// 	std::cout << "getline error" << std::endl;
-	// }
-
+		throw (Logger::getInstance().log(ERROR, "bad cgi http response",
+			this->_clients[i]),
+			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));	
 }
 
 void Server::fillMessageSend(const size_t i)
@@ -86,15 +54,7 @@ void Server::fillMessageSend(const size_t i)
 	if (this->_clients[i].messageSend.empty())
 	{
 		this->printVector(this->_clients[i], this->_clients[i].sendBuffer);
-		this->checkCgiStatusLine(i);
-		// std::string statusLine = "HTTP/1.1 200 OK";
-		// if (this->_clients[i].responseBuilder._isCGI &&
-		// 	(std::search(this->_clients[i].sendBuffer.begin(),
-		// 	this->_clients[i].sendBuffer.end(), statusLine.begin(),
-		// 	statusLine.end()) == this->_clients[i].sendBuffer.end()))
-		// 	throw (Logger::getInstance().log(ERROR, "cgi bad status code",
-		// 		this->_clients[i]),
-		// 		Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));	
+		this->checkCgiStatusLine(i);	
 		this->_clients[i].sendFlag = true;
 	}
 	else										
