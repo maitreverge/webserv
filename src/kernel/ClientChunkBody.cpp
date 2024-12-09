@@ -25,7 +25,7 @@ bool Server::firstDelim(const size_t i)
 {
 	std::vector<char>::iterator it;
 	if (this->_clients[i].chunkSize >= 0
-		|| this->isDelimiterFind("\r\n", i, it))
+		|| this->isDelimiterFind("\r\n", it, this->_clients[i].messageRecv))
 	{
 		Logger::getInstance().log(DEBUG, "first delim found",
 			this->_clients[i]);
@@ -66,7 +66,7 @@ void Server::calculateChunkSize(const size_t i,
 
 bool Server::secondDelim(const size_t i, std::vector<char>::iterator & it)
 {
-	if (this->isDelimiterFind("\r\n", i, it))
+	if (this->isDelimiterFind("\r\n", it, this->_clients[i].messageRecv))
 	{
 		Logger::getInstance().log(DEBUG, "second delim found",
 			this->_clients[i]);

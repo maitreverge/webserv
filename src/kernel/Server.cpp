@@ -135,6 +135,14 @@ void Server::printVector(Client & client, const std::vector<char> & response,
 		std::cerr << std::endl;	
 }
 
+bool Server::isDelimiterFind(std::string delimiter,
+	std::vector<char>::iterator & it, std::vector<char> & vector)
+{	
+	it = std::search(vector.begin(), vector.end(),
+		delimiter.begin(), delimiter.end());
+	return (it != vector.end());	
+}
+
 void Server::shortCircuit(const e_errorCodes err, const size_t i)
 {
 	errorCode errCode;

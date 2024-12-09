@@ -28,8 +28,8 @@ class Server
 	void retrySend(const size_t i);
 	void headerCheckin(const size_t i, const size_t ret);
 	void bodyCheckin(const size_t i, const size_t addBodysize);
-	bool isDelimiterFind(std::string delimiter, const size_t i,
-		std::vector<char>::iterator & it);
+	bool isDelimiterFind(std::string delimiter,
+		std::vector<char>::iterator & it, std::vector<char> & vector);
 	void shortCircuit(const e_errorCodes err, const size_t i);
 	void isMaxHeaderSize(std::vector<char>::iterator it, const size_t i);
 	void isContentLengthValid(const size_t i);
