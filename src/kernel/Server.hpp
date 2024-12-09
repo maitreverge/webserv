@@ -46,6 +46,7 @@ class Server
 
 	void sendBuffering(const size_t i, std::vector<char> & response);
 	bool replyClient(const size_t i, std::vector<char> & response);
+	void checkCgiStatusLine(const size_t i);
 	void fillMessageSend(const size_t i);
 	bool endReply(const size_t i);
 	void exitClient(const size_t index);

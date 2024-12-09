@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-exit(1)
-
 import sys
+
+sys.exit(1)
 
 try:
     with open("skynet.html", 'r') as html:

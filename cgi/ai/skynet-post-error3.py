@@ -44,7 +44,7 @@ try:
 	content_length = len(output.encode('utf-8'))
 	print("HTTP/1.1 200 OK")
 
-	exit(1)
+	sys.exit(1)
 
 	print("Content-Type: text/plain; charset=utf-8")
 	print(f"Content-Length: {content_length}")
@@ -53,4 +53,4 @@ try:
 
 except Exception as e:    
     print(f"Erreur : {str(e)}")
-    exit(1)
+    sys.exit(1)

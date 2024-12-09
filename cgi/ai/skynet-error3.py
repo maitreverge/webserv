@@ -6,7 +6,7 @@ try:
 	with open("skynet.html", 'r') as html:
 		output = html.read()
 
-	exit(1)
+	sys.exit(1)
 		
 	content_length = len(output.encode('utf-8'))
 	print("HTTP/1.1 200 OK")

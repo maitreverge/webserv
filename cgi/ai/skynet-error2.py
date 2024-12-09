@@ -4,7 +4,7 @@ import sys
 
 try:
 	
-	exit(1)
+	sys.exit(1)
 			
 	with open("skynet.html", 'r') as html:
 		output = html.read()

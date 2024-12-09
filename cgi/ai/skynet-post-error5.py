@@ -51,6 +51,6 @@ try:
 		
 except Exception as e:    
     print(f"Erreur : {str(e)}")
-    exit(1)
+    sys.exit(1)
 
-exit(1)
+sys.exit(1)

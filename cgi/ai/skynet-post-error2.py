@@ -28,7 +28,7 @@ try:
 		eloquente dans la réponse.
 		"""
 
-	exit(1)
+	sys.exit(1)
 
 	user_input = sys.stdin.read().strip()
 
@@ -52,4 +52,4 @@ try:
 
 except Exception as e:    
     print(f"Erreur : {str(e)}")
-    exit(1)
+    sys.exit(1)

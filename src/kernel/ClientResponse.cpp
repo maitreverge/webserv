@@ -26,6 +26,26 @@ void Server::replyClients()
 	}
 }
 
+void Server::checkCgiStatusLine(const size_t i)
+{
+	std::vector<char>::iterator it;
+	// if (this->isDelimiterFind("\r\n", i, it) && std::string(this->_clients[i].sendBuffer.begin(), it) != "HTTP/1.1 200 OK");
+
+	std::string line;
+	if (this->isDelimiterFind("\r\n", i, it))
+	{
+	std::istringstream iss(std::string(this->_clients[i].sendBuffer.begin(), it));
+		if (std::getline(iss, line))
+		{
+
+			std::cout << line;
+			if (std::getline(iss, line))
+				std::cout << line;
+		}
+	}
+
+}
+
 void Server::fillMessageSend(const size_t i)
 {
 	Logger::getInstance().log(DEBUG, "Fill Message Send", this->_clients[i]);
@@ -35,14 +55,15 @@ void Server::fillMessageSend(const size_t i)
 	if (this->_clients[i].messageSend.empty())
 	{
 		this->printVector(this->_clients[i], this->_clients[i].sendBuffer);
-		std::string statusLine = "HTTP/1.1 200 OK";
-		if (this->_clients[i].responseBuilder._isCGI &&
-			(std::search(this->_clients[i].sendBuffer.begin(),
-			this->_clients[i].sendBuffer.end(), statusLine.begin(),
-			statusLine.end()) == this->_clients[i].sendBuffer.end()))
-			throw (Logger::getInstance().log(ERROR, "cgi bad status code",
-				this->_clients[i]),
-				Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));	
+		this->checkCgiStatusLine(i);
+		// std::string statusLine = "HTTP/1.1 200 OK";
+		// if (this->_clients[i].responseBuilder._isCGI &&
+		// 	(std::search(this->_clients[i].sendBuffer.begin(),
+		// 	this->_clients[i].sendBuffer.end(), statusLine.begin(),
+		// 	statusLine.end()) == this->_clients[i].sendBuffer.end()))
+		// 	throw (Logger::getInstance().log(ERROR, "cgi bad status code",
+		// 		this->_clients[i]),
+		// 		Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));	
 		this->_clients[i].sendFlag = true;
 	}
 	else										

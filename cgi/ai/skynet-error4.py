@@ -9,7 +9,7 @@ try:
 	content_length = len(output.encode('utf-8'))
 	print("HTTP/1.1 200 OK")
 
-	exit(1)
+	sys.exit(1)
 	
 	print("Content-Type: text/html; charset=utf-8")
 	
