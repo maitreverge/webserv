@@ -45,11 +45,11 @@ void	ResponseBuilder::initServerNames( void ){
 
 	// ====================== ENTRYPOINT FOR MAIN WEBSITE ======================
 
-	_servernameType.insert(std::make_pair("webserv.main", "_websites/webserv_website/"));
+	_servernameType.insert(std::make_pair("webserv.main", "_websites/webserv_website/"));// TODO
 
 	// =================== ENTRYPOINT FOR CORRECTION WEBSITE ===================
 	
-	_servernameType.insert(std::make_pair("webserv.correction", "_websites/correction/"));
+	_servernameType.insert(std::make_pair("webserv.correction", "_websites/correction/"));// ! WORK NEEDLE
 
 	// ====================== MAIN SERVER NAMES FOR CORRECTIONS ================
 	
