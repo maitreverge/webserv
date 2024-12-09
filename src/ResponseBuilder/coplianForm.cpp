@@ -37,42 +37,50 @@ void ResponseBuilder::initMimes( void ){
 
 void	ResponseBuilder::initServerNames( void ){
 
-	// Main websites
-	_servernameType.insert(std::make_pair("festival.com", "_websites/festival/"));
-	_servernameType.insert(std::make_pair("gaming.com", "_websites/cyborg_gaming/"));
-	_servernameType.insert(std::make_pair("villa.com", "_websites/villa_agency/"));
+	// =========================== TEMPLATES WEBSITES ==========================
 
-	// Easy configs
-	_servernameType.insert(std::make_pair("get.ok", "TO DETERMINE"));
-	_servernameType.insert(std::make_pair("get.ko", "TO DETERMINE"));
-	_servernameType.insert(std::make_pair("post.ok", "TO DETERMINE"));
-	_servernameType.insert(std::make_pair("post.ko", "TO DETERMINE"));
-	_servernameType.insert(std::make_pair("delete.ok", "TO DETERMINE"));
-	_servernameType.insert(std::make_pair("delete.ko", "TO DETERMINE"));
-	_servernameType.insert(std::make_pair("unknown_method.ko", "TO DETERMINE"));
+	_servernameType.insert(std::make_pair("festival.com", "_websites/festival/")); // ! DONE
+	_servernameType.insert(std::make_pair("gaming.com", "_websites/cyborg_gaming/"));// ! DONE
+	_servernameType.insert(std::make_pair("villa.com", "_websites/villa_agency/"));// ! DONE
 
-	// Easy configs
-	_servernameType.insert(std::make_pair("post.postman", "TO DETERMINE"));
-	_servernameType.insert(std::make_pair("post.multipart", "TO DETERMINE"));
+	// ====================== ENTRYPOINT FOR MAIN WEBSITE ======================
+
+	_servernameType.insert(std::make_pair("webserv.main", "_websites/webserv_website/"));
+
+	// =================== ENTRYPOINT FOR CORRECTION WEBSITE ===================
+	
+	_servernameType.insert(std::make_pair("webserv.correction", "_websites/correction/"));
+
+	// ====================== MAIN SERVER NAMES FOR CORRECTIONS ================
+	
+	// Simple configs
+	_servernameType.insert(std::make_pair("get.ok", "_websites/correction/get_ok/"));
+	_servernameType.insert(std::make_pair("get.ko", "_websites/correction/get_ko/"));
+	_servernameType.insert(std::make_pair("post.ok", "_websites/correction/post_ok/"));
+	_servernameType.insert(std::make_pair("post.ko", "_websites/correction/post_ko/"));
+	_servernameType.insert(std::make_pair("delete.ok", "_websites/correction/delete_ok/"));
+	_servernameType.insert(std::make_pair("delete.ko", "_websites/correction/delete_ko/"));
+	_servernameType.insert(std::make_pair("unknown_method", "_websites/correction/unknown_method/"));
+
+	// Real Post configs
+	_servernameType.insert(std::make_pair("post.postman", "_websites/correction/post_postman/"));
+	_servernameType.insert(std::make_pair("post.multipart", "_websites/correction/post_multipart/"));
 
 	// Main routes configs
-	_servernameType.insert(std::make_pair("cgi.ok", "TO DETERMINE"));
-	_servernameType.insert(std::make_pair("cgi.ko", "TO DETERMINE"));
+	_servernameType.insert(std::make_pair("cgi.ok", "_websites/correction/cgi_ok/"));
+	_servernameType.insert(std::make_pair("cgi.ko", "_websites/correction/cgi_ko/"));
 
-	_servernameType.insert(std::make_pair("redirection.ok", "TO DETERMINE"));
-	_servernameType.insert(std::make_pair("redirection.ko", "TO DETERMINE"));
+	_servernameType.insert(std::make_pair("redirection.ok", "_websites/correction/redirection_ok/"));
+	_servernameType.insert(std::make_pair("redirection.ko", "_websites/correction/redirection_ko/"));
 
-	_servernameType.insert(std::make_pair("root.ok", "TO DETERMINE"));
-	_servernameType.insert(std::make_pair("root.ko", "TO DETERMINE"));
+	_servernameType.insert(std::make_pair("root.ok", "_websites/correction/root_ok/"));
+	_servernameType.insert(std::make_pair("root.ko", "_websites/correction/root_ko/"));
 
-	_servernameType.insert(std::make_pair("listing.ok", "TO DETERMINE"));
-	_servernameType.insert(std::make_pair("listing.ko", "TO DETERMINE"));
+	_servernameType.insert(std::make_pair("listing.ok", "_websites/correction/listing_ok/"));
+	_servernameType.insert(std::make_pair("listing.ko", "_websites/correction/listing_ko/"));
 
-	// _servernameType.insert(std::make_pair("upload.ok", "TO DETERMINE"));
-	// _servernameType.insert(std::make_pair("upload.ko", "TO DETERMINE"));
-
-	_servernameType.insert(std::make_pair("cookie.ok", "TO DETERMINE"));
-	_servernameType.insert(std::make_pair("cookie.ko", "TO DETERMINE"));
+	// _servernameType.insert(std::make_pair("cookie.ok", "_websites/correction/"));
+	// _servernameType.insert(std::make_pair("cookie.ko", "_websites/correction/"));
 }
 
 ResponseBuilder::ResponseBuilder( void ){
