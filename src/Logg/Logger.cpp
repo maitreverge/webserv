@@ -3,16 +3,16 @@
 /**========================================================================
  *                           CONSTRUCTOR && DESTRUCTOR
  *========================================================================**/
-Logger::Logger(int verbose) : logToStdOut(1)
+Logger::Logger(int flags) : logToStdOut(1), _flags(flags)
 {
-	_logLevel[INFO] = 		verbose;
+	_logLevel[INFO] = 		1;
 	_logLevel[DEBUG] = 		0;
 	#ifdef DEB
 		_logLevel[DEBUG] = 	1;	
 	#endif
 	_logLevel[WARNING] = 	1;
-	_logLevel[EVAL] = 		1;
 	_logLevel[ERROR] = 		1;
+	_logLevel[EVAL] = 		1;
 	_accessFile.open("access.log", std::ios::trunc);
 	_errorFile.open("error.log", std::ios::trunc);
 	if (!_accessFile.is_open() || !_errorFile.is_open())
@@ -112,32 +112,21 @@ void Logger::logOut(logLevel logLevel, const std::string& message)
 	}
 }
 
-void Logger::log(logLevel logLevel, const std::string& message)
+void Logger::log(logLevel logLevel, const std::string& message, int _logFlags)
 {
 	std::string logEntry;
 
-	if (_logLevel[logLevel] == 0)
+	if (_logLevel[logLevel] == int _logFlags & ALW)
 		return ;
 	logEntry =	BLUE + timeStamp::getTime() + ": " 
 				+ formatLogLevel(logLevel) 
 				+ GREEN + message 
 				+ RESET + "\n";
-	if (logToStdOut)
-		std::cerr << logEntry;
-	logEntry = removeAnsiCodes(logEntry);
-	if (logLevel == INFO || logLevel == DEBUG)
-	{
-		_accessFile << logEntry;
-		_accessFile.flush();
-	}
-	else if (logLevel == WARNING || logLevel == ERROR)
-	{
-		_errorFile << logEntry;
-		_errorFile.flush();
-	}
+				
+	logOut(logLevel, logEntry);
 }
 
-void Logger::log(logLevel logLevel, const std::string& message, const RequestParser& obj)
+void Logger::log(logLevel logLevel, const std::string& message, const RequestParser& obj, int _logFlags)
 {
 	std::string logEntry;
 
@@ -164,7 +153,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const RequestPar
 	logOut(logLevel, logEntry);
 }
 
-void Logger::log(logLevel logLevel, const std::string& message, const Client& client)
+void Logger::log(logLevel logLevel, const std::string& message, const Client& client, int _logFlags)
 {
 	std::string logEntry;
 
@@ -181,11 +170,11 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 	logOut(logLevel, logEntry);
 }
 
-void Logger::log(logLevel logLevel, const std::string& message, const Client& client, const Server&server)
+void Logger::log(logLevel logLevel, const std::string& message, const Client& client, const Server& server, int _logFlags)
 {
 	std::string logEntry;
 
-	if (_logLevel[logLevel] == 0)
+	if (_logLevel[logLevel] == 0 && !(_logFlags & logFlags::ALW)  )
 		return ;
 	//[timestamp][loglevel][message][ip][port][fd]
 	logEntry = 	BLUE + timeStamp::getTime() + ": " 
@@ -202,33 +191,33 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 	logOut(logLevel, logEntry);
 }
 
-void Logger::log(logLevel logLevel, const std::string& message, const Client& client, bool yesNo)
-{
-	std::string logEntry;
+// void Logger::log(logLevel logLevel, const std::string& message, const Client& client, bool yesNo)
+// {
+// 	std::string logEntry;
 
-	if (_logLevel[logLevel] == 0)
-		return ;
-	//[timestamp][loglevel][message][ip][port][fd]
-	logEntry = 	BLUE + timeStamp::getTime() + ": " 
-							+ formatLogLevel(logLevel) + " "
-							+ BOLD_HIGH_INTENSITY_WHITE + message
-							+ MAGENTA + "Client: " + ipToString(client.address) + " "
-							+ HIGH_INTENSITY_YELLOW + intToString(portToInt(client.address)) + " "
-							+ GREEN + intToString(client.fd) + " "
-							+ BOLD_HIGH_INTENSITY_WHITE + "Server: "
-							+ RESET + "\n";
-    std::string filename = intToString(client.fd) + ".log";  
-    std::ofstream logFile(filename.c_str());      
-    if (logFile.is_open() && yesNo)
-    {
-        logFile << removeAnsiCodes(logEntry);
-        logFile.close();
-    } 
-    else 
-        std::cerr << "Erreur : impossible d'ouvrir le fichier de log." << std::endl;
-}
+// 	if (_logLevel[logLevel] == 0)
+// 		return ;
+// 	//[timestamp][loglevel][message][ip][port][fd]
+// 	logEntry = 	BLUE + timeStamp::getTime() + ": " 
+// 							+ formatLogLevel(logLevel) + " "
+// 							+ BOLD_HIGH_INTENSITY_WHITE + message
+// 							+ MAGENTA + "Client: " + ipToString(client.address) + " "
+// 							+ HIGH_INTENSITY_YELLOW + intToString(portToInt(client.address)) + " "
+// 							+ GREEN + intToString(client.fd) + " "
+// 							+ BOLD_HIGH_INTENSITY_WHITE + "Server: "
+// 							+ RESET + "\n";
+//     std::string filename = intToString(client.fd) + ".log";  
+//     std::ofstream logFile(filename.c_str());      
+//     if (logFile.is_open() && yesNo)
+//     {
+//         logFile << removeAnsiCodes(logEntry);
+//         logFile.close();
+//     } 
+//     else 
+//         std::cerr << "Erreur : impossible d'ouvrir le fichier de log." << std::endl;
+// }
 
-void Logger::log(logLevel logLevel, const std::string& message, const Server&server)
+void Logger::log(logLevel logLevel, const std::string& message, const Server& server, int _logFlags)
 {
 	std::string logEntry;
 	if (_logLevel[logLevel] == 0)
@@ -245,26 +234,26 @@ void Logger::log(logLevel logLevel, const std::string& message, const Server&ser
 	logOut(logLevel, logEntry);
 }
 
-void Logger::log(logLevel logLevel, const std::string& message, const Server&server, bool yesNo)
-{
-	std::string logEntry;
+// void Logger::log(logLevel logLevel, const std::string& message, const Server&server, bool yesNo)
+// {
+// 	std::string logEntry;
 
-	if (_logLevel[logLevel] == 0)
-		return ;
-	//[timestamp][loglevel][message][ip][port]
-	logEntry = 	BLUE + timeStamp::getTime() + ": " 
-							+ formatLogLevel(logLevel) 
-							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
-							+ BOLD_HIGH_INTENSITY_WHITE + "Server: "
-							+ MAGENTA + ipToString(server.getSockAdress()) + " "
-							+ HIGH_INTENSITY_YELLOW + intToString(portToInt(server.getSockAdress())) + " "
-							+ RESET + "\n";
-	std::ofstream logFile("debugOutput.log", std::ios_base::app);  
-	if (logFile.is_open() && yesNo)
-	{
-		logFile << removeAnsiCodes(logEntry);
-		logFile.close();
-	}
-	else
-		std::cerr << "Erreur : impossible d'ouvrir le fichier de log." << std::endl;
-}
+// 	if (_logLevel[logLevel] == 0)
+// 		return ;
+// 	//[timestamp][loglevel][message][ip][port]
+// 	logEntry = 	BLUE + timeStamp::getTime() + ": " 
+// 							+ formatLogLevel(logLevel) 
+// 							+ BOLD_HIGH_INTENSITY_WHITE + message + " "
+// 							+ BOLD_HIGH_INTENSITY_WHITE + "Server: "
+// 							+ MAGENTA + ipToString(server.getSockAdress()) + " "
+// 							+ HIGH_INTENSITY_YELLOW + intToString(portToInt(server.getSockAdress())) + " "
+// 							+ RESET + "\n";
+// 	std::ofstream logFile("debugOutput.log", std::ios_base::app);  
+// 	if (logFile.is_open() && yesNo)
+// 	{
+// 		logFile << removeAnsiCodes(logEntry);
+// 		logFile.close();
+// 	}
+// 	else
+// 		std::cerr << "Erreur : impossible d'ouvrir le fichier de log." << std::endl;
+// }

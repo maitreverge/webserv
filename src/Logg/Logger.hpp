@@ -24,6 +24,19 @@ typedef enum
 	LOG_LEVEL_COUNT
 }	logLevel;
 
+typedef enum
+{
+	DEB = 1,
+	VRB = 2,
+	SLN = 4
+}	flags;
+
+typedef enum
+{
+	ALW = 1,
+	VRB = 2
+}	logFlags;
+
 /**========================================================================
  *                             LOGGER
  *  LOG CONFIG: values to be changed in .cpp file:
@@ -46,7 +59,8 @@ class Logger
 		std::ofstream	_accessFile;
 		std::ofstream	_errorFile;
 		bool			logToStdOut;
-		
+		int				_flags;
+
 		void		logOut(logLevel logLevel, const std::string& message);
 		std::string	formatLogLevel(logLevel loglevel) const;
 		std::string removeAnsiCodes(const std::string& message);
@@ -56,15 +70,15 @@ class Logger
 		int	_logLevel[LOG_LEVEL_COUNT];
 		static std::string ipToString(const struct sockaddr_in& addr);
 
-		Logger(int verbose = 1);
+		Logger(int verbosez = 1);
 		~Logger();
-		void log(logLevel logLevel, const std::string& message);
-		void log(logLevel logLevel, const std::string& message, const RequestParser& context);
-		void log(logLevel logLevel, const std::string& message, const Client& context);
-		void log(logLevel logLevel, const std::string& message, const Client& client, bool yesNo);
-		void log(logLevel logLevel, const std::string& message, const Server&server, bool yesNo);
-		void log(logLevel logLevel, const std::string& message, const Client& client, const Server&obj);
-		void log(logLevel logLevel, const std::string& message, const Server&server);
-		static Logger& getInstance(int verbose = 1);
+		void log(logLevel logLevel, const std::string& message, int _logFlags = 0);
+		void log(logLevel logLevel, const std::string& message, const RequestParser& context, int _logFlags = 0);
+		void log(logLevel logLevel, const std::string& message, const Client& context, int _logFlags = 0);
+		// void log(logLevel logLevel, const std::string& message, const Client& client, bool yesNo);
+		// void log(logLevel logLevel, const std::string& message, const Server&server, bool yesNo);
+		void log(logLevel logLevel, const std::string& message, const Client& client, const Server&obj, int _logFlags = 0);
+		void log(logLevel logLevel, const std::string& message, const Server&server, int _logFlags = 0);
+		static Logger& getInstance(int verbosez = 1);
 };
 
