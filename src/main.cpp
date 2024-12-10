@@ -19,24 +19,65 @@ void signalHandle(int)
 	Kernel::_exit = true;	
 }
 
-int main(int argc, char* argv[])
+int searchFlags(char* argv[])
+{
+	int flags = 0;
+
+	while (*++argv)
+	{
+		std::string str(*argv);
+		if (!str.empty() && str[0] == '-')
+			for (size_t i = 1; i < str.size(); ++i)
+			{
+				if (str[i] == 'v')
+					flags |= L_VRB;
+				else if (str[i] == 's')
+					flags |= L_SLN;
+				else if (str[i] == 'd')
+					flags |= L_DEB;
+				else
+					std::cerr <<
+						"Bad-Flag Usage: ./webserv [-v-s-d] [config.ini]"
+						<< std::endl, std::exit(1);					
+			}			
+	}
+	return flags;
+}
+
+char * searchFile(char* argv[])
+{
+	char * file = NULL;
+
+	while (*++argv)
+	{
+		std::string str(*argv);
+		if (!str.empty() && str[0] != '-')
+		{
+			if (!file)
+				file = *argv;
+			else
+				std::cerr << "Usage: ./webserv [-v -s -d] [config.ini]"
+					<< std::endl, std::exit(1);						
+		}
+	}
+	return file;
+}
+
+int main(int, char* argv[])
 {
 	std::signal(2, signalHandle);
 	std::signal(3, signalHandle);
 	disableSignalEcho();
-	int verbose = 0;
-	if (argv[1] && std::string(argv[1]) == "-s")	
-		argc--,	argv++,	verbose |= L_SLN;	
-	if (argc > 2)
-		return std::cerr << "Usage: ./webserv -s [config.ini]" << std::endl, 1;
+
+	char * file = searchFile(argv);
+
 	std::cout << std::endl;
-	Logger::getInstance(verbose).log(INFO, "\e[1;3;36mServer is Online!\e[0m",
-		L_ALW);
-	std::cout << std::endl;	
-	if (argc == 1)
-		Kernel::getInstance();
-	else
-		Kernel::getInstance(argv[1]);		
+	Logger::getInstance(searchFlags(argv)).
+		log(INFO, "\e[1;3;36mServer is Online!\e[0m", L_ALW);
+	std::cout << std::endl;
+
+	Kernel::getInstance(file);
+			
 	std::cout << std::endl;
 	Logger::getInstance().log(INFO, "\e[1;3;91mServer is Offline.\e[0m", L_ALW);	
 	std::cout << std::endl;	
