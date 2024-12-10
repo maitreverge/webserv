@@ -6,42 +6,42 @@
     <title>Multiple Servers with Different Ports</title>
 </head>
 <body>
-    <h1>For testing the Body limit, launch another instance of webserv with the following config</h1>
+    <h2>For testing the Body limit, launch another instance of webserv with the following config</h2>
 	
     <pre>
 		<code id="codeBlock1">
 			./webserv _websites/correction/7_limit_body/limit_body.ini
         </code>
-        <button onclick="copyToClipboard('codeBlock1')">Copy</button>
+        <button onclick="copyToClipboard('codeBlock1', this)">Copy</button>
     </pre>
 	
-	<h1>NOTA BENE : In this config, the limit is setup at 10, and uploads to <b>uploads/</b> base directory !</h1>
-	<h1>The goal is then to try with a body size == 10, &lt; to 10 and &gt; to 10 </h1>
+	<h2>NOTA BENE : In this config, the limit is setup at 10, and uploads to <b>uploads/</b> base directory !</h2>
+	<h2>The goal is then to try with a body size == 10, &lt; to 10 and &gt; to 10 </h2>
 
-	<h1>You can open the console, and test the following CURL commands :</h1>
+	<h2>You can open the console, and test the following CURL commands :</h2>
 
 	<p>Command with body of size &lt; 10</p>
 	<pre>
-		<code id="codeBlock1">
+		<code id="codeBlock2">
 			curl -i -s -X POST -H "Content-Type: text/plain" -d '123456789-10' http://localhost:3008
         </code>
-        <button onclick="copyToClipboard('codeBlock1')">Copy</button>
+        <button onclick="copyToClipboard('codeBlock2', this)">Copy</button>
     </pre>
 	
 	<p>Command with body of size == 10</p>
 	<pre>
-		<code id="codeBlock1">
+		<code id="codeBlock3">
 			curl -i -s -X POST -H "Content-Type: text/plain" -d '1234567890' http://localhost:3008
         </code>
-        <button onclick="copyToClipboard('codeBlock1')">Copy</button>
+        <button onclick="copyToClipboard('codeBlock3', this)">Copy</button>
     </pre>
 	
 	<p>Command with body of size &gt; 10</p>
 	<pre>
-        <code id="codeBlock1">
+        <code id="codeBlock4">
             curl -i -s -X POST -H "Content-Type: text/plain" -d '123456789' http://localhost:3008
         </code>
-        <button onclick="copyToClipboard('codeBlock1')">Copy</button>
+        <button onclick="copyToClipboard('codeBlock4', this)">Copy</button>
     </pre>
 
 	<p>
