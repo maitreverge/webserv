@@ -5,7 +5,7 @@
  *========================================================================**/
 Logger::Logger(int flags) : logToStdOut(1), _flags(flags)
 {	
-	_logLevel[INFO] = _flags & F_SLN ? 0 : 1;
+	_logLevel[INFO] = _flags & L_SLN ? 0 : 1;
 	
 	_logLevel[DEBUG] = 		0;
 	#ifdef DEB
@@ -117,7 +117,8 @@ void Logger::log(logLevel logLevel, const std::string& message, int _logFlags)
 {
 	std::string logEntry;
 
-	if (_logLevel[logLevel] == 0 && ~_logFlags & L_ALW && ~_logFlags & L_VRB && ~_flags & F_VRB)
+	if ((_logLevel[logLevel] == 0 || (_logFlags & L_VRB && ~_flags & L_VRB))
+		&& ~_logFlags & L_ALW)
 		return ;
 	logEntry =	BLUE + timeStamp::getTime() + ": " 
 				+ formatLogLevel(logLevel) 
@@ -131,7 +132,8 @@ void Logger::log(logLevel logLevel, const std::string& message, const RequestPar
 {
 	std::string logEntry;
 
-	if (_logLevel[logLevel] == 0 && ~_logFlags & L_ALW && ~_logFlags & L_VRB && ~_flags & F_VRB)
+	if ((_logLevel[logLevel] == 0 || (_logFlags & L_VRB && ~_flags & L_VRB))
+		&& ~_logFlags & L_ALW)
 		return ;
 	//[timestamp][loglevel][message][method][ip][port][fd]
 	if (obj.getClient())
@@ -158,7 +160,8 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 {
 	std::string logEntry;
 
-	if (_logLevel[logLevel] == 0 && ~_logFlags & L_ALW && ~_logFlags & L_VRB && ~_flags & F_VRB)
+	if ((_logLevel[logLevel] == 0 || (_logFlags & L_VRB && ~_flags & L_VRB))
+		&& ~_logFlags & L_ALW)
 		return ;
 	//[timestamp][loglevel][message][ip][port][fd]
 	logEntry = 	BLUE + timeStamp::getTime() + ": " 
@@ -175,7 +178,8 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 {
 	std::string logEntry;
 
-	if (_logLevel[logLevel] == 0 && ~_logFlags & L_ALW && ~_logFlags & L_VRB && ~_flags & F_VRB)
+	if ((_logLevel[logLevel] == 0 || (_logFlags & L_VRB && ~_flags & L_VRB))
+		&& ~_logFlags & L_ALW)
 		return ;
 	//[timestamp][loglevel][message][ip][port][fd]
 	logEntry = 	BLUE + timeStamp::getTime() + ": " 
@@ -221,7 +225,9 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 void Logger::log(logLevel logLevel, const std::string& message, const Server& server, int _logFlags)
 {
 	std::string logEntry;
-	if (_logLevel[logLevel] == 0 && ~_logFlags & L_ALW && ~_logFlags & L_VRB && ~_flags & F_VRB)
+	
+	if ((_logLevel[logLevel] == 0 || (_logFlags & L_VRB && ~_flags & L_VRB))
+		&& ~_logFlags & L_ALW)
 		return ;
 	//[timestamp][loglevel][message][ip][port]
 	logEntry = 	BLUE + timeStamp::getTime() + ": " 

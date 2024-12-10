@@ -26,15 +26,10 @@ typedef enum
 
 typedef enum
 {
-	F_DEB = 1,
-	F_VRB = 2,
-	F_SLN = 4
-}	flags;
-
-typedef enum
-{
-	L_ALW = 1,
-	L_VRB = 2
+	L_DEB = 1,
+	L_VRB = 2,
+	L_SLN = 4,
+	L_ALW = 8,	
 }	logFlags;
 
 /**========================================================================

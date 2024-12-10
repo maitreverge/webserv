@@ -88,7 +88,7 @@ void Server::catchClients(Kernel & kernel)
 			return Logger::getInstance().log(ERROR, "accept");		
 		if (kernel.countClients() >= this->_conf.maxClient)		
 			return Logger::getInstance().log(WARNING, "max clients", client);					
-		Logger::getInstance().log(INFO, "\e[30;101mnew client\e[0m", client);
+		Logger::getInstance().log(INFO, "\e[30;101mnew client\e[0m", client, L_VRB);
 		struct timeval timeout = {SND_TIMEOUT, 0};	
 		if (setsockopt(client.fd, SOL_SOCKET, SO_SNDTIMEO, &timeout,
 			sizeof(timeout)) < 0)
