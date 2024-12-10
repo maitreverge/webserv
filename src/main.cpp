@@ -22,7 +22,7 @@ void signalHandle(int)
 int searchFlags(char* argv[])
 {
 	int flags = 0;
-
+	
 	while (*++argv)
 	{
 		std::string str(*argv);
@@ -82,7 +82,8 @@ int main(int, char* argv[])
 	Kernel::getInstance(file);
 
 	std::cout << std::endl;
-	Logger::getInstance().log(INFO, "\e[1;3;91mServer is Offline.\e[0m", L_ALW);	
+	Logger::getInstance().
+		log(INFO, "\e[1;3;91mServer is Offline.\e[0m", L_ALW);	
 	std::cout << std::endl;	
 	return (0);
 }

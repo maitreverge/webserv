@@ -5,12 +5,8 @@
  *========================================================================**/
 Logger::Logger(int flags) : logToStdOut(1), _flags(flags)
 {	
+	_logLevel[DEBUG] = _flags & L_DEB ? 1 : 0;
 	_logLevel[INFO] = _flags & L_SLN ? 0 : 1;
-	
-	_logLevel[DEBUG] = 		0;
-	#ifdef DEB
-		_logLevel[DEBUG] = 	1;	
-	#endif
 	_logLevel[WARNING] = 	1;
 	_logLevel[ERROR] = 		1;
 	_logLevel[EVAL] = 		1;

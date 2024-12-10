@@ -291,7 +291,8 @@ void ResponseBuilder::setError(e_errorCodes code, bool skip){
 }
 
 void	ResponseBuilder::printAllHeaders( void ) const{
-
+	
+	print("");
 	print("=========== printAllHeaders ========");
 
 	printColorNoEndl(BOLD_RED, "REAL URI : ");
@@ -316,6 +317,7 @@ void	ResponseBuilder::printAllHeaders( void ) const{
 	print(Headers.bodyLenght);
 
 	print("=========== printAllHeaders ========");
+	print("");
 }
 
 /**

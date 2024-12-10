@@ -224,10 +224,10 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 
 	extractRouteConfig();
 
-	#ifdef DEB
+	if (Logger::getInstance()._logLevel[INFO]
+			&& Logger::getInstance()._flags & L_VRB)
 		printMyConfig();
-	#endif
-
+	
 	try
 	{
 		checkSessionIdCookie(inputClient);
@@ -285,8 +285,8 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	else
 		inputClient.headerRespons.clear();
 
-	#ifdef DEB
+	if (Logger::getInstance()._logLevel[INFO]
+		&& Logger::getInstance()._flags & L_VRB)
 		printAllHeaders();
-	#endif
 }
 
