@@ -375,6 +375,7 @@ void ResponseBuilder::extraStartingChecks()
 	if (!_myconfig.uploadDirectory.empty())
 	{
 		pathSlashs(_myconfig.uploadDirectory);
+		_myconfig.uploadDirectory.insert(0, _serverName);
 		if (stat(_myconfig.uploadDirectory.c_str(), &_fileInfo) == 0 and (_fileInfo.st_mode & S_IFDIR))
 		{
 			bool uploadWrite = _fileInfo.st_mode & S_IWUSR;
