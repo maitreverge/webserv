@@ -72,7 +72,7 @@ bool Server::setup()
 		return Logger::getInstance().log(ERROR, "bind", *this), false;	
 	if (listen(this->_fd, this->_conf.maxClient) < 0)
 		return Logger::getInstance().log(ERROR, "listen", *this), false;
-	Logger::getInstance().log(INFO, "listen", *this);
+	Logger::getInstance().log(INFO, "listen", *this, L_ALW);
 	return true;
 }
 

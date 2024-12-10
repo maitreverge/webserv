@@ -30,14 +30,16 @@ int main(int argc, char* argv[])
 	if (argc > 2)
 		return std::cerr << "Usage: ./webserv -s [config.ini]" << std::endl, 1;
 	std::cout << std::endl;
-	Logger::getInstance(verbose).log(INFO, "\e[1;3;36mServer is Online!\e[0m");
+	Logger::getInstance(verbose).log(INFO, "\e[1;3;36mServer is Online!\e[0m",
+		L_ALW);
 	std::cout << std::endl;	
 	if (argc == 1)
 		Kernel::getInstance();
 	else
 		Kernel::getInstance(argv[1]);		
 	std::cout << std::endl;
-	Logger::getInstance().log(INFO, "\e[1;3;91mServer is Offline.\e[0m");	
+	Logger::getInstance().log(INFO, "\e[1;3;91mServer is Offline.\e[0m",
+		L_ALW);	
 	std::cout << std::endl;	
 	return (0);
 }
