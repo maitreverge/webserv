@@ -8,7 +8,7 @@
 <body>
 	<!-- ! Two files can be uploaded within the same request, fuck my life -->
     <h1>Upload One File</h1>
-    <form id="uploadForm" action="/uploads/" method="POST" enctype="multipart/form-data">
+    <form id="uploadForm" action="/post_multipart/" method="POST" enctype="multipart/form-data">
         <input type="file" name="file1" id="fileInput1" required>
         <button type="submit">Submit</button>
     </form>
