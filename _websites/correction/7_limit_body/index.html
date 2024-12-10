@@ -20,7 +20,7 @@
 
 	<h2>You can open the console, and test the following CURL commands :</h2>
 
-	<p>Command with body of size &lt; 10</p>
+	<p>Command with body of size &gt; 10</p>
 	<pre>
 		<code id="codeBlock2">
 			curl -i -s -X POST -H "Content-Type: text/plain" -d '123456789-10' http://localhost:3008
@@ -36,7 +36,7 @@
         <button onclick="copyToClipboard('codeBlock3', this)">Copy</button>
     </pre>
 	
-	<p>Command with body of size &gt; 10</p>
+	<p>Command with body of size &lt; 10</p>
 	<pre>
         <code id="codeBlock4">
             curl -i -s -X POST -H "Content-Type: text/plain" -d '123456789' http://localhost:3008
@@ -53,6 +53,18 @@
         <span style="color: brown;">-d '123456789'</span>
         <span style="color: teal;">http://localhost:3008</span>
     </p>
+
+	<p>
+        <span style="color: red;">CURL COMMAND</span>
+        <span style="color: green;">-i : Append HTTP Headers</span>
+        <span style="color: blue;">-s : Silence CURL progress bar.</span>
+        <span style="color: orange;">-X : Specify the Method Used</span>
+        <span style="color: purple;">-H : Append a manual HTTP Header</span>
+        <span style="color: brown;">-d : Append data to the POST Method</span>
+        <span style="color: teal;">URL</span>
+    </p>
+
+
 
 	
     <script>
