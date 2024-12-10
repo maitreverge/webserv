@@ -26,9 +26,9 @@ typedef enum
 
 typedef enum
 {
-	DEB = 1,
-	VRB = 2,
-	SLN = 4
+	F_DEB = 1,
+	F_VRB = 2,
+	F_SLN = 4
 }	flags;
 
 typedef enum
