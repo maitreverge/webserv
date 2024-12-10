@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple Servers with Different Ports</title>
+</head>
+<body>
+    <h1>For testing the Body limit, launch another instance of webserv with the following config</h1>
+	
+    <pre>
+		<code id="codeBlock1">
+			./webserv _websites/correction/7_limit_body/limit_body.ini
+        </code>
+        <button onclick="copyToClipboard('codeBlock1')">Copy</button>
+    </pre>
+	
+	<h1>NOTA BENE : In this config, the limit is setup at 10, and uploads to <b>uploads/</b> base directory !</h1>
+	<h1>The goal is then to try with a body size == 10, &lt; to 10 and &gt; to 10 </h1>
+
+	<h1>You can open the console, and test the following CURL commands :</h1>
+
+	<p>Command with body of size &lt; 10</p>
+	<pre>
+		<code id="codeBlock1">
+			curl -i -s -X POST -H "Content-Type: text/plain" -d '123456789-10' http://localhost:3008
+        </code>
+        <button onclick="copyToClipboard('codeBlock1')">Copy</button>
+    </pre>
+	
+	<p>Command with body of size == 10</p>
+	<pre>
+		<code id="codeBlock1">
+			curl -i -s -X POST -H "Content-Type: text/plain" -d '1234567890' http://localhost:3008
+        </code>
+        <button onclick="copyToClipboard('codeBlock1')">Copy</button>
+    </pre>
+	
+	<p>Command with body of size &gt; 10</p>
+	<pre>
+        <code id="codeBlock1">
+            curl -i -s -X POST -H "Content-Type: text/plain" -d '123456789' http://localhost:3008
+        </code>
+        <button onclick="copyToClipboard('codeBlock1')">Copy</button>
+    </pre>
+
+	<p>
+        <span style="color: red;">curl</span>
+        <span style="color: green;">-i</span>
+        <span style="color: blue;">-s</span>
+        <span style="color: orange;">-X POST</span>
+        <span style="color: purple;">-H "Content-Type: text/plain"</span>
+        <span style="color: brown;">-d '123456789'</span>
+        <span style="color: teal;">http://localhost:3008</span>
+    </p>
+
+	
+    <script>
+        function copyToClipboard(id, button) {
+            const text = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.innerText;
+                button.innerText = 'Copied!';
+                setTimeout(() => {
+                    button.innerText = originalText;
+                }, 20000000);
+            });
+        }
+    </script>
+
+    <img src="https://i.redd.it/e2fcfbac4wa31.jpg" alt="cat" style="width:1000px;height:auto;">
+</body>
+</html>
