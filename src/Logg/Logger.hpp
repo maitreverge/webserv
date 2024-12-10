@@ -29,7 +29,8 @@ typedef enum
 	L_DEB = 1,
 	L_VRB = 2,
 	L_SLN = 4,
-	L_ALW = 8,	
+	L_ALW = 8,
+	L_UNR = 16	
 }	logFlags;
 
 /**========================================================================
@@ -54,14 +55,16 @@ class Logger
 		std::ofstream	_accessFile;
 		std::ofstream	_errorFile;
 		bool			logToStdOut;
-		int				_flags;
 
 		void		logOut(logLevel logLevel, const std::string& message);
 		std::string	formatLogLevel(logLevel loglevel) const;
 		std::string removeAnsiCodes(const std::string& message);
 		int			portToInt(const struct sockaddr_in& addr);
 		std::string	intToString(int value);
+
 	public:
+	
+		int	_flags;
 		int	_logLevel[LOG_LEVEL_COUNT];
 		static std::string ipToString(const struct sockaddr_in& addr);
 

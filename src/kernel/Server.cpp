@@ -117,7 +117,7 @@ void Server::printVector(Client & client, const std::vector<char> & response,
 
 	for (size_t i = 0; i < response.size(); i++)
 	{
-		if (i > 1000)
+		if (i > 1000 && ~Logger::getInstance()._flags & L_UNR)
 		{
 			ss << std::endl << HIGH_INTENSITY_YELLOW << "[...]" << color;
 			break ;

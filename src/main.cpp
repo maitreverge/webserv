@@ -35,6 +35,8 @@ int searchFlags(char* argv[])
 					flags |= L_SLN;
 				else if (str[i] == 'd')
 					flags |= L_DEB;
+				else if (str[i] == 'u')
+					flags |= L_UNR;
 				else
 					std::cerr <<
 						"Bad-Flag Usage: ./webserv [-v-s-d] [config.ini]"
@@ -56,7 +58,8 @@ char * searchFile(char* argv[])
 			if (!file)
 				file = *argv;
 			else
-				std::cerr << "Usage: ./webserv [-v -s -d] [config.ini]"
+				std::cerr <<
+					"Too-Many-Files Usage: ./webserv [-v -s -d] [config.ini]"
 					<< std::endl, std::exit(1);						
 		}
 	}
@@ -77,7 +80,7 @@ int main(int, char* argv[])
 	std::cout << std::endl;
 
 	Kernel::getInstance(file);
-			
+
 	std::cout << std::endl;
 	Logger::getInstance().log(INFO, "\e[1;3;91mServer is Offline.\e[0m", L_ALW);	
 	std::cout << std::endl;	
