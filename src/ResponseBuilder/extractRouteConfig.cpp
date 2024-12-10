@@ -4,6 +4,16 @@
 typedef std::map< string, map<string, vector< string > > >::iterator mapIterator;
 typedef std::vector< string >::iterator vectorIterator;
 
+/**
+ * @brief Clears routes without URIs and handles duplicate URIs.
+ * 
+ * This function processes the routes data, extracting URIs and route names.
+ * It identifies routes without URIs and marks them for deletion. Additionally,
+ * it prepares for the removal of duplicate routes with the same URI.
+ * 
+ * @param routeNames A vector to store the names of the routes.
+ * @param routeURIS A vector to store the URIs of the routes.
+ */
 void ResponseBuilder::clearingRoutes( vector< string >&routeNames, vector< string >&routeURIS ){
 
 	vector < string > toClear;
@@ -20,7 +30,6 @@ void ResponseBuilder::clearingRoutes( vector< string >&routeNames, vector< strin
 				throw std::bad_exception();
 			if (curVector[0].size() > 1 and *curVector[0].begin() != '/')
 				curVector[0].insert(0, "/");
-				// curVector[0].erase(curVector[0].begin());
 			routeURIS.push_back(curVector[0]);
 			routeNames.push_back(it->first); // get the current route Names [route1], [route2], ect...
 		}
@@ -32,21 +41,39 @@ void ResponseBuilder::clearingRoutes( vector< string >&routeNames, vector< strin
 		curVector.clear();
 	}
 
-	// TODO : clear nodes without the URI
-	
-	// for (vectorIterator it = toClear.begin(); it != toClear.end(); ++it)
-	// {
-	// 	routes->erase(*it); // erase only in ResponseBuilder scope
-	// }
-
-	// TODO : Delete duplicates nodes with the same URI
+	// Clear nodes without the URI
+	for (vectorIterator it = toClear.begin(); it != toClear.end(); ++it)
 	{
-		// don't forget to update routeURIS and routeNames accordingly
+		routes->erase(*it); // erase only in ResponseBuilder scope
 	}
+
+	// Delete duplicates nodes with the same URI (same name has already been excluded by Dan)
+	// Nodes will be deleted from the back
+	vector<string> tempRouteNames;
+	vector<string> tempRouteURIS;
+	vectorIterator itNAMES = routeNames.begin();
+	for (vectorIterator itURIS = routeURIS.begin(); itURIS != routeURIS.end(); ++itURIS, ++itNAMES)
+	{
+		if (std::find(tempRouteURIS.begin(), tempRouteURIS.end(), *itURIS) == tempRouteURIS.end())
+		{
+			tempRouteURIS.push_back(*itURIS);
+			tempRouteNames.push_back(*itNAMES);
+		}
+	}
+	routeNames = tempRouteNames;
+	routeURIS = tempRouteURIS;
 }
 
+/**
+ * @brief Builds the route configuration for a given path.
+ * 
+ * This function extracts and sets various route configuration parameters
+ * such as URI, allowed methods, redirection, root, directory listing, index,
+ * CGI allowance, upload allowance, and upload directory from the server configuration.
+ * 
+ * @param path The path for which the route configuration is to be built.
+ */
 void	ResponseBuilder::buildRouteConfig( string path ){
-
 
 	RoutesData *routes = &_config->_serverStruct[_config->index].routesData;
 	
@@ -150,6 +177,18 @@ void	ResponseBuilder::buildRouteConfig( string path ){
 	catch(const std::exception& e) {}
 }
 
+/**
+ * @brief Extracts the redirection index from the route configuration.
+ * 
+ * This function searches through the provided route names to find a route
+ * that has a redirection configuration. Once found, it attempts to extract
+ * the index associated with that redirection. If the index is found, it is
+ * stored in the _myconfig.indexRedirection member variable. The function
+ * ensures that the extracted index starts with a '/' and does not end with a '/'.
+ * 
+ * @param routeNames A vector of route names to search through.
+ * @param routeURIS A vector of route URIs (currently unused).
+ */
 void ResponseBuilder::extractRedirectionIndex( vector< string >&routeNames, vector< string >&routeURIS ){
 
 	static_cast<void>(routeURIS); // might need later for refactoring with Dan routes
@@ -184,7 +223,7 @@ void ResponseBuilder::extractRedirectionIndex( vector< string >&routeNames, vect
 		}
 		catch(const std::exception& e)
 		{
-			Logger::getInstance().log(DEBUG, "Index Redirection not Found");
+			Logger::getInstance().log(DEBUG, "ResponseBuilder::extractRedirectionIndex : Index Redirection not Found");
 		}
 	}
 
@@ -196,6 +235,16 @@ void ResponseBuilder::extractRedirectionIndex( vector< string >&routeNames, vect
 	_myconfig.indexRedirection = needleIndex;
 }
 
+/**
+ * @brief Extracts the route configuration based on the real URI.
+ *
+ * This function processes the real URI to find a matching route configuration.
+ * It trims the URI and searches for a match in the routeURIS vector. If a match
+ * is found, it builds the route configuration. If a redirection is specified
+ * in the configuration, it extracts the redirection index.
+ *
+ * @note The function modifies the trimmedRoute to find the best matching route.
+ */
 void	ResponseBuilder::extractRouteConfig( void ){
 
 	vector< string > routeNames;
@@ -203,12 +252,11 @@ void	ResponseBuilder::extractRouteConfig( void ){
 
 	clearingRoutes(routeNames, routeURIS);
 
-	// string originalURI = _realURI;
 	string trimmedRoute = _realURI;
+
 	if (trimmedRoute.size() > 1 and *trimmedRoute.rbegin() != '/')
 		trimmedRoute += "/";
-	// if (trimmedRoute.size() > 1 and  *trimmedRoute.begin() == '/' and trimmedRoute.find_first_of('/') != trimmedRoute.find_last_of('/') )
-	// 	trimmedRoute.erase(trimmedRoute.begin());
+	
 	bool found = false;
 	u_int8_t pos;
 

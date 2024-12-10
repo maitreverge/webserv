@@ -1,5 +1,5 @@
 HTTP/1.1 200 OK
-Content-Length: 32229
+Content-Length: 32238
 Content-Type: text/html
 
 <!doctype html>
@@ -22,7 +22,7 @@ Content-Type: text/html
                 
         <link href="css/bootstrap.min.css" rel="stylesheet">
 
-        <link href="css/bootstrap-icons.css" rel="stylesheet">
+        <!-- <link href="css/bootstrap-icons.css" rel="stylesheet"> -->
 
         <link href="css/templatemo-festava-live.css" rel="stylesheet">
         

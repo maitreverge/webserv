@@ -1,10 +1,18 @@
 #include "ResponseBuilder.hpp"
 #include "Logger.hpp"
 
+
+/**
+ * @brief Builds the HTTP response headers.
+ * 
+ * This function constructs the mandatory and optional HTTP headers for the response.
+ * It includes the status line, content length, content type, and location headers.
+ * Additionally, it handles error redirection and sets cookies if applicable.
+ * The final headers are stored in a master header vector.
+ */
 void	ResponseBuilder::buildHeaders(){
 
 	Logger::getInstance().log(DEBUG, "FUNCTION CALL : ResponseBuilder::buildHeaders", *_client);
-
 
 	errorCode codes;
 	
@@ -33,7 +41,6 @@ void	ResponseBuilder::buildHeaders(){
 	// 					<< HTTP_HEADER_SEPARATOR;
 	// Headers.timeStamp = streamTimeStamp.str();
 	
-	
 	// ! Content-Length
 	if (not isErrorRedirect())
 	{
@@ -45,7 +52,6 @@ void	ResponseBuilder::buildHeaders(){
 		Headers.contentLenght = streamContentLenght.str();
 	}
 
-	
 	// --------------  Optionals Headers --------------  
 	// ! Content-Type
 	if (Headers.bodyLenght > 0)
@@ -80,7 +86,6 @@ void	ResponseBuilder::buildHeaders(){
 						<< HTTP_HEADER_SEPARATOR;
 		Headers.location = streamLocation.str();
 	}
-
 
 	// ======================== BONUS METHODS ========================
 

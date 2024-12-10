@@ -1,8 +1,6 @@
 ## CURRENT WORK
-- curl command from the correction --resolve 🔴
 
 ## ASK SEB / DAN
-- Finish cookies with Dan 🔴
 
 ## HOTFIX :
 
@@ -18,7 +16,9 @@
 
 - Reactivate Finalenames for post uploading for final project 🔴
 
-- Missing `HOST` headers or double => 400 BAD REQUEST
+- Missing `HOST` headers or double => 400 BAD REQUEST 🔴
+
+- reliker en dur le vrai fichier de config une fois fait
 
 
 
@@ -36,6 +36,8 @@
 IF NOT : Need to generate a random 10 lenghts string + an extension to save the file 🟢
 - Stabilize simple GET / DELETE REQUESTS 🟢
 - Finish the multipart-form data POST logic 🟢
+- Finish cookies with Dan 🟢
+- curl command from the correction --resolve 🟢
 
 ## BLOODY REDIRECTIONS :
 
