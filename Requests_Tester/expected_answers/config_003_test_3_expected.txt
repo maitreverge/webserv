@@ -1,5 +1,5 @@
 HTTP/1.1 200 OK
 Content-Length: 27
-Content-Type: text/txt
+Content-Type: text/plain
 
 This is file_1.txt content

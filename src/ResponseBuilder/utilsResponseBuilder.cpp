@@ -124,7 +124,7 @@ void	ResponseBuilder::checkAutho( void ){
 				}
 				if (_uploadTargetDirectory.empty())
 				{
-					string tempURI = _originalURI;
+					string tempURI = _realURI;
 					pathSlashs(tempURI);
 					_uploadTargetDirectory =  tempURI;
 				}

@@ -6,7 +6,7 @@ void ResponseBuilder::initMimes( void ){
 	// Text Based Types
 	_mimeTypes.insert(std::make_pair("html", "text/html"));
 	_mimeTypes.insert(std::make_pair("htm", "text/htm"));
-	_mimeTypes.insert(std::make_pair("txt", "text/txt"));
+	_mimeTypes.insert(std::make_pair("txt", "text/plain"));
 	_mimeTypes.insert(std::make_pair("css", "text/css"));
 	_mimeTypes.insert(std::make_pair("xml", "text/xml"));
 	// Application Content Types
