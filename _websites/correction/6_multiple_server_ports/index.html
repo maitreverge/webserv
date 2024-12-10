@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple Servers with Different Ports</title>
+</head>
+<body>
+    <h1>Try those URLS :</h1>
+
+    <pre>
+        <code id="codeBlock1">
+            festival.com.localhost:1024/
+        </code>
+        <button onclick="copyToClipboard('codeBlock1')">Copy</button>
+    </pre>
+	
+    <pre>
+		<code id="codeBlock2">
+			gaming.com.localhost:1025/
+        </code>
+        <button onclick="copyToClipboard('codeBlock2')">Copy</button>
+    </pre>
+	
+    <pre>
+		<code id="codeBlock3">
+			villa.com.localhost:1026/
+        </code>
+        <button onclick="copyToClipboard('codeBlock3')">Copy</button>
+    </pre>
+
+    <script>
+        function copyToClipboard(id, button) {
+            const text = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.innerText;
+                button.innerText = 'Copied!';
+                setTimeout(() => {
+                    button.innerText = originalText;
+                }, 20000000);
+            });
+        }
+    </script>
+
+    <img src="https://i.redd.it/e2fcfbac4wa31.jpg" alt="cat" style="width:1000px;height:auto;">
+</body>
+</html>
