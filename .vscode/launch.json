@@ -10,7 +10,7 @@
 			"request": "launch",
 			"program": "${workspaceFolder}/debug_webserv",
 			// "args": [],
-			"args": ["Requests_Tester/config_files/config_031.ini"],
+			"args": ["_configs/master_config.ini"],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}",
 			"environment": [],

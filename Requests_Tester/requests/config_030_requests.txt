@@ -1,28 +1,12 @@
-curl --resolve festival.com:3030:127.0.0.1 http://festival.com:3030/
+curl -i -s -X GET http://festival.com.localhost:3030/
 --END-REQUEST--
-curl --resolve site1.com:3130:127.0.0.1 http://site1.com:3130/
+curl -i -s -X GET http://gaming.com.localhost:3130/
 --END-REQUEST--
-curl --resolve cyborg.com:3230:127.0.0.1 http://cyborg.com:3230/
+curl -i -s -X GET http://villa.com.localhost:3230/
 --END-REQUEST--
-curl --resolve site2.com:3330:127.0.0.1 http://site2.com:3330/
+curl -i -s -X GET http://festival.com.localhost:3030
 --END-REQUEST--
-curl --resolve villa.com:3430:127.0.0.1 http://villa.com:3430/
+curl -i -s -X GET http://gaming.com.localhost:3130
 --END-REQUEST--
-curl --resolve site3.com:3530:127.0.0.1 http://site3.com:3530/
---END-REQUEST--
-curl --resolve example.com:3630:127.0.0.1 http://example.com:3630/
---END-REQUEST--
-curl --resolve festival.com:3030:127.0.0.1 http://festival.com:3030
---END-REQUEST--
-curl --resolve site1.com:3130:127.0.0.1 http://site1.com:3130
---END-REQUEST--
-curl --resolve cyborg.com:3230:127.0.0.1 http://cyborg.com:3230
---END-REQUEST--
-curl --resolve site2.com:3330:127.0.0.1 http://site2.com:3330
---END-REQUEST--
-curl --resolve villa.com:3430:127.0.0.1 http://villa.com:3430
---END-REQUEST--
-curl --resolve site3.com:3530:127.0.0.1 http://site3.com:3530
---END-REQUEST--
-curl --resolve example.com:3630:127.0.0.1 http://example.com:3630
+curl -i -s -X GET http://villa.com.localhost:3230
 --END-REQUEST--
