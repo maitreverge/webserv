@@ -79,17 +79,6 @@ void Server::clientMessage(const size_t i, const ssize_t ret)
 		this->bodyCheckin(i, static_cast<size_t>(ret));	
 }
 
-bool Server::isDelimiterFind(std::string delimiter, const size_t i,
-	std::vector<char>::iterator & it)
-{	
-	it = std::search
-		(this->_clients[i].messageRecv.begin(),
-		this->_clients[i].messageRecv.end(),
-		delimiter.begin(),
-		delimiter.end());
-	return (it != this->_clients[i].messageRecv.end());	
-}
-
 void Server::headerCheckin(const size_t i, const size_t ret)
 {
 	{ std::stringstream ss;
@@ -97,7 +86,7 @@ void Server::headerCheckin(const size_t i, const size_t ret)
 	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
 	Server::printVector(this->_clients[i], this->_clients[i].messageRecv); }
 	std::vector<char>::iterator it;		
-	if (this->isDelimiterFind("\r\n\r\n", i, it))		
+	if (this->isDelimiterFind("\r\n\r\n", it, this->_clients[i].messageRecv))		
 	{	
 		Logger::getInstance().log(DEBUG, "header terminated",
 			this->_clients[i]);

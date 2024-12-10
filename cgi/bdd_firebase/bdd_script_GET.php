@@ -5,7 +5,6 @@ ini_set('default_mimetype', '');
 $path_info = getenv('PATH_INFO');
 
 // Afficher le PATH_INFO pour débogage
-fwrite(fopen("php://stderr", "w"), "PATH_INFO : $path_info\n");
 
 // Vérifier que PATH_INFO contient une chaîne de requête après le "?".
 if (strpos($path_info, '?') !== false) {
@@ -22,7 +21,6 @@ if (strpos($path_info, '?') !== false) {
 }
 
 // Afficher le login pour débogage
-fwrite(fopen("php://stderr", "w"), "Login extrait : $login\n");
 
 $url = "https://webservcgi-default-rtdb.europe-west1.firebasedatabase.app/users/{$login}.json";
 

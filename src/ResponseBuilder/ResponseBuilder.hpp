@@ -106,10 +106,11 @@ class ResponseBuilder
 	// Nature File
 	bool _isDirectory;
 	bool _isFile;
+
+	// File Characteristics
 	bool _isROK;
 	bool _isWOK;
 	bool _isXOK;
-	bool _isCGI;
 
 	// errorNotFoundGenerator
 	bool _deleteURI; // used for auto generated errors or listing.html
@@ -260,6 +261,9 @@ public:
 	// ============================= PUBLIC VARIABLES ==========================
 
 	// ---- Coplian Form
+
+	bool 			_isCGI; //! need public for seb	
+	
 	ResponseBuilder( void );
 	~ResponseBuilder( void );
 	ResponseBuilder( const ResponseBuilder & );

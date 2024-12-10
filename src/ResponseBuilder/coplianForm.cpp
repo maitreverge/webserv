@@ -85,6 +85,7 @@ ResponseBuilder::ResponseBuilder( const ResponseBuilder & src) { *this = src; }
 ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 {
 	initMimes();
+	initServerNames(); //? should be added here?
 	
 	_isDirectory = rhs._isDirectory;
 	_isFile = rhs._isFile;

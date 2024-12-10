@@ -94,6 +94,8 @@ void Cgi::child(Client & client)
 
 std::string Cgi::getApiKey(Client & client, std::string & interPath)
 {
+	if (client.responseBuilder._fileExtension != "py")
+		return "";
 	ifstream ifs("apikey");
 	if (!ifs)
 	{
@@ -113,10 +115,10 @@ void Cgi::callExecve(Client & client, const std::string & interpreter)
 	if (!getcwd(actualPath, PATH_MAX))
 		Logger::getInstance().log(ERROR, "getcwd", client), std::exit(200);	
 	std::string interPath = this->getPath(client, interpreter);				 
-	std::string envOpenAI = this->getApiKey(client, interPath);	
+	std::string envApiKey = this->getApiKey(client, interPath);	
 	std::string envPathInfo("PATH_INFO=" + client.responseBuilder._pathInfo);	 
 	char *env[] = {const_cast<char *>(envPathInfo.c_str()),
-		const_cast<char *>(envOpenAI.c_str()), NULL}; 
+		const_cast<char *>(envApiKey.c_str()), NULL}; 
 	std::string execPath(std::string(actualPath)
 		+ '/' + client.responseBuilder._fileName);	
 	char *argv[] = {const_cast<char *>(interpreter.c_str()),

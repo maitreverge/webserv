@@ -16,6 +16,6 @@ public:
 
 	CookiesMap _cookies;
 	CookiesMap getCookies() const;
-	void	checkSessionCookie(Headers& _Headers, Server& server, std::string URI);
+void	checkSessionCookie(Headers& _Headers, Server& server, std::string URI, Client& client);
 };
 

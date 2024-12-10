@@ -1,0 +1,20 @@
+HTTP/1.1 242 Connection
+Content-Length: 379
+Content-Type: text/html
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookies</title>
+</head>
+<body>
+    <h1>You must accept cookies to get in!</h1>
+
+    <!-- Formulaire avec un bouton qui envoie une requête GET vers /connect -->
+<a href="/connect">Click to accept cookies</a>
+
+
+</body>
+</html>
