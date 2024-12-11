@@ -65,7 +65,7 @@ void	RequestParser::parse(Client& client, Server & server)
 {
 	reset_values();
 	std::istringstream requestStream(charVectorToString(client.messageRecv));
-	Logger::getInstance().log(DEBUG, "request parsing started", *this);
+	Logger::getInstance().log(INFO, "Request Parsing Started", *this, L_VRB);
 	handleFirstLine(requestStream);
 	handleHeaderLines(requestStream);
 	extractHeaders();

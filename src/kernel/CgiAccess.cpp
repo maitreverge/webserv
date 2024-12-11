@@ -3,7 +3,7 @@
 
 void Cgi::hasError(Client & client, std::string err)
 {
-	Logger::getInstance().log(DEBUG, "Cgi Has Error", client);
+	Logger::getInstance().log(DEBUG, "Check Cgi Error", client);
 
 	int status;
 	pid_t pid = waitpid(this->_pid, &status, WNOHANG);
@@ -38,7 +38,7 @@ void Cgi::exitCodeHandle(int status, Client & client, std::string & err)
 
 void Cgi::isTimeout(Client & client, std::string err)
 {
-	Logger::getInstance().log(DEBUG, "Cgi Is Timeout", client);
+	Logger::getInstance().log(DEBUG, "Check Cgi Timeout", client);
 
 	if (!this->_start.tv_sec && gettimeofday(&this->_start, NULL))
 		throw (Logger::getInstance().log(ERROR, "isTimeS gettimeofday", client),
@@ -108,8 +108,8 @@ void Cgi::setBody(Client & client, bool eof)
 	this->retHandle(client, ret, "send", "cgi exited");    			
 	std::vector<char> str(client.messageRecv.data(), client.messageRecv.data()
 		+ static_cast<size_t>(ret));
-	Logger::getInstance().log(DEBUG, "sent to cgi", client);	
-		Server::printVector(client, str);
+	Logger::getInstance().log(INFO, "sent to cgi", client, L_VRB);	
+		Server::printVector(client, str, static_cast<int>(INFO), true);
 	client.messageRecv.erase(client.messageRecv.begin(),
         client.messageRecv.begin() + ret);
 	this->shutdownHandle(client, eof);

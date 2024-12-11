@@ -3,12 +3,12 @@
 
 bool Server::isChunked(const size_t i)
 {
-	Logger::getInstance().log(DEBUG, "Is Chunked", this->_clients[i]);
+	Logger::getInstance().log(INFO, "Check Chunked", this->_clients[i], L_VRB);
 
 	if (this->_clients[i].headerRequest.getHeaders().TransferEncoding
 		== "chunked")
 	{	
-		Logger::getInstance().log(DEBUG, "chunked", this->_clients[i]);
+		Logger::getInstance().log(INFO, "chunked !", this->_clients[i], L_DEB);
 
 		this->_clients[i].retryChunked = false;
 		if (!this->firstDelim(i))	
@@ -96,8 +96,8 @@ bool Server::isChunkPartComplete(const size_t i,
 	if (std::distance(this->_clients[i].messageRecv.begin(), it)
 		== static_cast<std::ptrdiff_t>(this->_clients[i].chunkSize))
 	{
-		Logger::getInstance().log(DEBUG, "chunk part completed",
-			this->_clients[i]);
+		Logger::getInstance().log(INFO, "chunk part completed",
+			this->_clients[i], L_VRB);
 		std::vector<char> tmp(it, this->_clients[i].messageRecv.end());
 		this->_clients[i].messageRecv.
 			erase(it, this->_clients[i].messageRecv.end());

@@ -48,7 +48,7 @@ bool Server::recevData(const size_t i)
 
 void Server::retrySend(const size_t i)
 {
-	Logger::getInstance().log(DEBUG, "Retry Send", this->_clients[i]);	
+	Logger::getInstance().log(INFO, "Retry Send", this->_clients[i], L_VRB);	
 
 	std::stringstream ss; ss << "Content-Length: "
 		<< this->_clients[i].headerRequest.getHeaders().ContentLength
@@ -83,13 +83,13 @@ void Server::headerCheckin(const size_t i, const size_t ret)
 {
 	{ std::stringstream ss;
 	ss << "Header Checkin - recv " << ret << " bytes";
-	Logger::getInstance().log(DEBUG, ss.str(), this->_clients[i]);
+	Logger::getInstance().log(INFO, ss.str(), this->_clients[i], L_VRB);
 	Server::printVector(this->_clients[i], this->_clients[i].messageRecv); }
 	std::vector<char>::iterator it;		
 	if (this->isDelimiterFind("\r\n\r\n", it, this->_clients[i].messageRecv))		
 	{	
-		Logger::getInstance().log(DEBUG, "header terminated",
-			this->_clients[i]);
+		Logger::getInstance().log(INFO, "header terminated",
+			this->_clients[i], L_VRB);
 		this->isMaxHeaderSize(it + 4, i);					
 		this->_clients[i].headerRequest.parse(this->_clients[i], *this);
 		if (Logger::getInstance()._logLevel[INFO]

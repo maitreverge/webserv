@@ -100,7 +100,7 @@ bool Server::replyClient(const size_t i, std::vector<char> & resp)
 
 bool Server::endReply(const size_t i)
 {
-	Logger::getInstance().log(DEBUG, "End Reply", this->_clients[i]);
+	Logger::getInstance().log(INFO, "End Reply", this->_clients[i], L_VRB);
 
 	if (this->_clients[i].exitRequired)	
 		return this->exitClient(i), true;						

@@ -63,8 +63,8 @@ class Server
 		~Server();
 
 		static void printVector(Client & client,
-			const std::vector<char> & response,
-			const std::string color = GREEN, const int level = 1);
+			const std::vector<char> & response,	const std::string color = GREEN,
+			const int level = 1, const bool verbose = 0);
 		const sockaddr_in & getSockAdress() const;
 
 		bool setup();

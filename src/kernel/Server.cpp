@@ -88,7 +88,7 @@ void Server::catchClients(Kernel & kernel)
 			return Logger::getInstance().log(ERROR, "accept");		
 		if (kernel.countClients() >= this->_conf.maxClient)		
 			return Logger::getInstance().log(WARNING, "max clients", client);					
-		Logger::getInstance().log(INFO, "\e[30;101mnew client\e[0m", client, L_VRB);
+		Logger::getInstance().log(INFO, "\e[30;101mnew client\e[0m", client);
 		struct timeval timeout = {SND_TIMEOUT, 0};	
 		if (setsockopt(client.fd, SOL_SOCKET, SO_SNDTIMEO, &timeout,
 			sizeof(timeout)) < 0)
@@ -108,8 +108,10 @@ void Server::exitClient(size_t i)
 }
 
 void Server::printVector(Client & client, const std::vector<char> & response,
-	const std::string color, const int level)
+	const std::string color, const int level, const bool verbose)
 {
+	if (verbose && ~Logger::getInstance()._flags & L_VRB)
+		return ;
 	std::stringstream ss;
 	ss << color << "Print data : " << HIGH_INTENSITY_YELLOW
 		<< response.size() << " bytes" << color << std::endl << std::endl;
