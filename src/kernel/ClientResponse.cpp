@@ -35,12 +35,12 @@ void Server::checkCgiStatusLine(const size_t i)
 	{
 		if (std::string(this->_clients[i].sendBuffer.begin(), it)
 			!= "HTTP/1.1 200 OK")
-			throw (Logger::getInstance().log(ERROR, "bad cgi http response",
+			throw (Logger::getInstance().log(ERROR, "bad cgi http response 1",
 				this->_clients[i]),
 				Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
 	}
 	else
-		throw (Logger::getInstance().log(ERROR, "bad cgi http response",
+		throw (Logger::getInstance().log(ERROR, "bad cgi http response 2",
 			this->_clients[i]),
 			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));	
 }
