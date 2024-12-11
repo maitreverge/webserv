@@ -33,21 +33,11 @@ void Server::checkCgiStatusLine(const size_t i)
 	std::vector<char>::iterator it;
 	if (this->isDelimiterFind("\r\n", it, this->_clients[i].sendBuffer))
 	{
-		std::string delimiter = "\r\n";
-		it = std::search(it + 2, this->_clients[i].sendBuffer.end(),
-		delimiter.begin(), delimiter.end());
-		if (this->isDelimiterFind("\r\n", it, this->_clients[i].sendBuffer))
-		{
-			if (std::string(this->_clients[i].sendBuffer.begin(), it)
+		if (std::string(this->_clients[i].sendBuffer.begin(), it)
 				!= "HTTP/1.1 200 OK")
-				throw (Logger::getInstance().log(ERROR, "bad cgi http response",
-					this->_clients[i]),	Server::ShortCircuitException
-					(CODE_500_INTERNAL_SERVER_ERROR));
-		}
-		else
-		throw (Logger::getInstance().log(ERROR, "bad cgi http response",
-			this->_clients[i]),
-			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
+			throw (Logger::getInstance().log(ERROR, "bad cgi http response",
+				this->_clients[i]),
+				Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
 	}
 	else
 		throw (Logger::getInstance().log(ERROR, "bad cgi http response",
