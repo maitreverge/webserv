@@ -294,7 +294,8 @@ void	ResponseBuilder::printAllHeaders( void ) const{
 	
 	print("");
 	print("=========== printAllHeaders ========");
-
+	print("");
+	
 	printColorNoEndl(BOLD_RED, "REAL URI : ");
 	print(_realURI);
 
@@ -316,6 +317,7 @@ void	ResponseBuilder::printAllHeaders( void ) const{
 	printColorNoEndl(BOLD_BLUE, "Body Lenght (uint64_t)");
 	print(Headers.bodyLenght);
 
+	print("");
 	print("=========== printAllHeaders ========");
 	print("");
 }

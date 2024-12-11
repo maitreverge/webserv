@@ -68,7 +68,7 @@ bool Server::setup()
 	Kernel::_maxFd = std::max(Kernel::_maxFd, this->_fd);
 	FD_SET(this->_fd, &Kernel::_actualSet);
 	if (bind(this->_fd, reinterpret_cast<const sockaddr *>
-		(&this->_sockAddr), sizeof(this->_sockAddr)) < 0)		
+			(&this->_sockAddr), sizeof(this->_sockAddr)) < 0)		
 		return Logger::getInstance().log(ERROR, "bind", *this), false;	
 	if (listen(this->_fd, this->_conf.maxClient) < 0)
 		return Logger::getInstance().log(ERROR, "listen", *this), false;

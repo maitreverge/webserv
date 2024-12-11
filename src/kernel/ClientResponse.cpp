@@ -34,7 +34,7 @@ void Server::checkCgiStatusLine(const size_t i)
 	if (this->isDelimiterFind("\r\n", it, this->_clients[i].sendBuffer))
 	{
 		if (std::string(this->_clients[i].sendBuffer.begin(), it)
-			!= "HTTP/1.1 200 OK")
+				!= "HTTP/1.1 200 OK")
 			throw (Logger::getInstance().log(ERROR, "bad cgi http response",
 				this->_clients[i]),
 				Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));

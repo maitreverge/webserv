@@ -72,8 +72,8 @@ void Server::clientMessage(const size_t i, const ssize_t ret)
 		this->_readBuffer.begin(),
 		this->_readBuffer.begin() + ret);				
 	if (!this->_clients[i].headerRequest.getHeaders().ContentLength
-		&& this->_clients[i].headerRequest.getHeaders().TransferEncoding
-		!= "chunked")
+			&& this->_clients[i].headerRequest.getHeaders().TransferEncoding
+			!= "chunked")
 		this->headerCheckin(i, static_cast<size_t>(ret));
 	else
 		this->bodyCheckin(i, static_cast<size_t>(ret));	
@@ -93,7 +93,7 @@ void Server::headerCheckin(const size_t i, const size_t ret)
 		this->isMaxHeaderSize(it + 4, i);					
 		this->_clients[i].headerRequest.parse(this->_clients[i], *this);
 		if (Logger::getInstance()._logLevel[INFO]
-			&& Logger::getInstance()._flags & L_VRB)									
+				&& Logger::getInstance()._flags & L_VRB)									
 			this->_clients[i].headerRequest.displayParsingResult();	
 		if (!this->_clients[i].headerRequest.getIsValid())
 			throw Server::ShortCircuitException(CODE_400_BAD_REQUEST);

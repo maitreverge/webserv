@@ -182,7 +182,7 @@ void	ResponseBuilder::checkMethod( void ){
 
 	Logger::getInstance().log(ERROR, "Method not found");
 
-	setError(CODE_405_METHOD_NOT_ALLOWED);
+	setError(CODE_405_METHOD_NOT_ALLOWED); //! WHY DONT USE SHORT CIRCUIT ? le client ne sera pas exited en cas de bad methode
 }
 
 /**
@@ -199,7 +199,7 @@ void	ResponseBuilder::checkMethod( void ){
  */
 void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_errorCodes codeInput ){
 
-	Logger::getInstance().log(DEBUG, "FUNCTION CALL : ResponseBuilder::getHeader");
+	Logger::getInstance().log(INFO, "Build Response Header", L_VRB);
 		
 	_client = &inputClient;
 	_config = &inputConfig;
@@ -263,7 +263,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	}
 	catch(const CodeErrorRaised& e)
 	{
-		Logger::getInstance().log(DEBUG, "Code Error Raised in the getHeader building process", inputClient);
+		Logger::getInstance().log(DEBUG, "Code Error Raised in the getHeader building process", inputClient); //! WHY DEBUG ? SHOULD BE ERROR
 	}
 
 	if (not isErrorRedirect())
