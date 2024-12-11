@@ -40,18 +40,18 @@ curl -i -s -X GET --connect-timeout 10 --max-time 10 http://localhost:3022/cgi/a
 --END-REQUEST--
 curl -i -s -X GET --connect-timeout 10 --max-time 10 http://localhost:3022/cgi/ai/skynet-loop5.py
 --END-REQUEST--
-curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: text/plain" -d '1234567891' http://localhost:3022/cgi/bdd_firebase/bdd_script_POST_error1.php?login=user1
+curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: text/plain" -d '1234567891' http://localhost:3122/cgi/bdd_firebase/bdd_script_POST_error1.php?login=user1
 --END-REQUEST--
-curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: text/plain" -d '1234567891' http://localhost:3022/cgi/bdd_firebase/bdd_script_POST_error2.php?login=user1
+curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: text/plain" -d '1234567891' http://localhost:3122/cgi/bdd_firebase/bdd_script_POST_error2.php?login=user1
 --END-REQUEST--
-curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: text/plain" -d '1234567891' http://localhost:3022/cgi/bdd_firebase/bdd_script_POST_error3.php?login=user1
+curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: text/plain" -d '1234567891' http://localhost:3122/cgi/bdd_firebase/bdd_script_POST_error3.php?login=user1
 --END-REQUEST--
-curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: text/plain" -d '1234567891' http://localhost:3022/cgi/bdd_firebase/bdd_script_POST_error4.php?login=user1
+curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: text/plain" -d '1234567891' http://localhost:3122/cgi/bdd_firebase/bdd_script_POST_error4.php?login=user1
 --END-REQUEST--
-curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: text/plain" -d '1234567891' http://localhost:3022/cgi/bdd_firebase/bdd_script_POST_error5.php?login=user1
+curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: text/plain" -d '1234567891' http://localhost:3122/cgi/bdd_firebase/bdd_script_POST_error5.php?login=user1
 --END-REQUEST--
-curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: text/plain" -d '1234567891' http://localhost:3022/cgi/bdd_firebase/bdd_script_POST_error6.php?login=user1
+curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: text/plain" -d '1234567891' http://localhost:3122/cgi/bdd_firebase/bdd_script_POST_error6.php?login=user1
 --END-REQUEST--
-curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: text/plain" -d '1234567891' http://localhost:3022/cgi/bdd_firebase/bdd_script_POST_wrongStatusLine.php?login=user1
+curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: text/plain" -d '1234567891' http://localhost:3122/cgi/bdd_firebase/bdd_script_POST_wrongStatusLine.php?login=user1
 --END-REQUEST--
-curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: text/plain" -d '1234567891' http://localhost:3022/cgi/bdd_firebase/bdd_script_POST_wrongURL.php?login=user1
+curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: text/plain" -d '1234567891' http://localhost:3122/cgi/bdd_firebase/bdd_script_POST_wrongURL.php?login=user1

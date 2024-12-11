@@ -1,5 +1,5 @@
-HTTP/1.1 500 Internal Server Error
-Content-Length: 2907
+HTTP/1.1 503 Service Unavailable
+Content-Length: 2850
 Content-Type: text/html
 
 <!DOCTYPE html>
@@ -125,10 +125,10 @@ Content-Type: text/html
 	<div class="noise"></div>
 	<div class="overlay"></div>
 	<div class="terminal">
-	  <h1>Error <span class="errorcode">500 Internal Server Error</span></h1>
-	  <p class="output">The server encountered an unexpected condition that prevented it from fulfilling the request.</p>
+	  <h1>Error <span class="errorcode">503 Service unavailable</span></h1>
+	  <p class="output">The server is not ready to handle the request.</p>
 	  <p class="output">Please try to <a href="javascript:history.back()">go back</a> or <a href="/">return to the homepage</a>.</p>
-	<p class="output"><i>To deny our own impulses is to deny the very thing that makes us human.</i></p>
+	<p class="output"><i>Have you ever had a dream, Neo, that you were so sure was real?</i></p>
 	</div>
 </body>
 </html>
