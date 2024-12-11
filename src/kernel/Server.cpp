@@ -131,7 +131,7 @@ void Server::printVector(Client & client, const std::vector<char> & response,
 	ss << "-\e[0m";
 	Logger::getInstance().log(static_cast<logLevel>(level), ss.str(), client);
 	if (Logger::getInstance()._logLevel[static_cast<logLevel>(level)])	
-		std::cerr << std::endl;	
+		std::cerr << std::endl, Logger::getInstance()._nl = false;	
 }
 
 bool Server::isDelimiterFind(std::string delimiter,
