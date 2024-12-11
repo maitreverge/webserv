@@ -98,10 +98,9 @@ void Kernel::launch()
 	{
 		struct timeval timeout = {SLCT_TIMEOUT, 0};
 		Kernel::_readSet = Kernel::_writeSet = Kernel::_actualSet;
-		#ifdef EVAL	
-			sleep(1);
-			Logger::getInstance().log(WARNING, "\e[31;103mselect\e[0m");
-		#endif
+		if (Logger::getInstance()._logLevel[EVAL])	
+			Logger::getInstance().log(WARNING, "\e[31;103mselect\e[0m"),
+				sleep(1);		
 		if (select(Kernel::_maxFd + 1, &Kernel::_readSet, &Kernel::_writeSet,
 			0, &timeout) < 0) 
 		{	

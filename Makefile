@@ -60,14 +60,6 @@ debug: design_debug emoticon_debug $(DEBUG_NAME)
 nof:
 	@$(eval CFLAGS = $(HDRFLAGS))
 	@:
-	
-deb:
-	@$(eval CFLAGS += -DDEB)
-	@:
-
-eval: deb
-	@$(eval CFLAGS += -DEVAL)
-	@:
 
 TOG = 0
 TOG_DEBUG = 0

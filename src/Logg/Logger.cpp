@@ -5,11 +5,12 @@
  *========================================================================**/
 Logger::Logger(int flags) : logToStdOut(1), _flags(flags)
 {	
+	_logLevel[EVAL] = _flags & L_EVL ? 1 : 0;
 	_logLevel[DEBUG] = _flags & L_DEB ? 1 : 0;
 	_logLevel[INFO] = _flags & L_SLN ? 0 : 1;
 	_logLevel[WARNING] = 	1;
 	_logLevel[ERROR] = 		1;
-	_logLevel[EVAL] = 		1;
+
 	_accessFile.open("access.log", std::ios::trunc);
 	_errorFile.open("error.log", std::ios::trunc);
 	if (!_accessFile.is_open() || !_errorFile.is_open())

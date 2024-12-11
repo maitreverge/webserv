@@ -19,6 +19,33 @@ void signalHandle(int)
 	Kernel::_exit = true;	
 }
 
+// int searchFlags(char* argv[])
+// {
+// 	int flags = 0;
+	
+// 	while (*++argv)
+// 	{
+// 		std::string str(*argv);
+// 		if (!str.empty() && str[0] == '-')
+// 			for (size_t i = 1; i < str.size(); ++i)
+// 			{
+// 				if (str[i] == 'v')
+// 					flags |= L_VRB;
+// 				else if (str[i] == 's')
+// 					flags |= L_SLN;
+// 				else if (str[i] == 'd')
+// 					flags |= L_DEB;
+// 				else if (str[i] == 'u')
+// 					flags |= L_UNR;
+// 				else
+// 					std::cerr <<
+// 						"Bad-Flag Usage: ./webserv [-v-s-d] [config.ini]"
+// 						<< std::endl, std::exit(1);					
+// 			}			
+// 	}
+// 	return flags;
+// }
+
 int searchFlags(char* argv[])
 {
 	int flags = 0;
@@ -29,18 +56,28 @@ int searchFlags(char* argv[])
 		if (!str.empty() && str[0] == '-')
 			for (size_t i = 1; i < str.size(); ++i)
 			{
-				if (str[i] == 'v')
-					flags |= L_VRB;
-				else if (str[i] == 's')
-					flags |= L_SLN;
-				else if (str[i] == 'd')
-					flags |= L_DEB;
-				else if (str[i] == 'u')
-					flags |= L_UNR;
-				else
-					std::cerr <<
-						"Bad-Flag Usage: ./webserv [-v-s-d] [config.ini]"
-						<< std::endl, std::exit(1);					
+				switch (str[i])
+				{	
+					case 's':
+						flags = L_SLN;
+						return flags;
+					case 'u':
+						flags |= L_UNR;
+						break;
+					case 'e':
+						flags |= L_EVL;
+						// Intentionally fall through
+					case 'd':
+						flags |= L_DEB;
+						// Intentionally fall through
+					case 'v':
+						flags |= L_VRB;
+						break;
+					default:
+						std::cerr <<
+							"Bad-Flag Usage: ./webserv [-v-s-d] [config.ini]"
+							<< std::endl, std::exit(1);
+				}							
 			}			
 	}
 	return flags;
