@@ -1,5 +1,5 @@
 HTTP/1.1 201 Created
-Content-Length: 988
+Content-Length: 1195
 Content-Type: text/html
 
 <!DOCTYPE html>
@@ -8,6 +8,12 @@ Content-Type: text/html
     <title>Upload Successful</title>
     <meta charset="UTF-8">
     <style>
+		        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to left, #38bdf8, #fb7185, #84cc16);
+            text-align: center;
+            padding: 40px;
+        }
         @keyframes pulse {
             0% {
                 transform: scale(1);
@@ -26,7 +32,7 @@ Content-Type: text/html
 </head>
 <body style="font-family: Arial, sans-serif; background-color: #f0f8ff; text-align: center; padding: 40px;">
     <h1 style="color: #0046df;">SUCCESS ✅</h1>
-    <h1><p style="color: #4CAF50;">Your data has been uploaded to the server !</p></h1>
+    <h1><p style="color: #0f7c12;">Your data has been uploaded to the server !</p></h1>
     	<img src="https://i.kym-cdn.com/photos/images/facebook/000/071/862/happycat.jpg" alt="happy_cat" style="width: 500px; height: auto; border: 2px solid #4CAF50; border-radius: 10px; animation: pulse 2s infinite;">
 </body>
 </html>
