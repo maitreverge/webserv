@@ -263,7 +263,7 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 	}
 	catch(const CodeErrorRaised& e)
 	{
-		Logger::getInstance().log(DEBUG, "Code Error Raised in the getHeader building process", inputClient); //! WHY DEBUG ? SHOULD BE ERROR
+		Logger::getInstance().log(DEBUG, "Code Error Raised in the getHeader building process", inputClient);
 	}
 
 	if (not isErrorRedirect())
@@ -286,7 +286,8 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 		inputClient.headerRespons.clear();
 
 	if (Logger::getInstance()._logLevel[INFO]
-		&& Logger::getInstance()._flags & L_VRB)
+			&& Logger::getInstance()._flags & L_VRB)
+		Logger::getInstance().log(INFO, "Headers Computed", inputClient, L_VRB),
 		printAllHeaders();
 }
 
