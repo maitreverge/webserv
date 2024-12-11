@@ -19,11 +19,30 @@ void signalHandle(int)
 	Kernel::_exit = true;	
 }
 
+void help()
+{
+	std::cerr << std::endl;
+	std::cerr << HIGH_INTENSITY_YELLOW
+		<<" Usage: ./webserv -[hsvdeu] [config.ini]" << RESET << std::endl;
+	std::cerr << std::endl;
+	std::cerr << "-h : help" << std::endl; 
+	std::cerr << "-s : silent" << std::endl;
+	std::cerr << "-v : verbose" << std::endl;
+	std::cerr << "-d : debug" << std::endl;
+	std::cerr << "-e : eval" << std::endl;
+	std::cerr << "-u : unroll text" << std::endl;
+	std::cerr << std::endl;
+	std::exit(1);
+}
+
 void switchFlags(const char letter, int & flags)
 {
 	switch (letter)
-	{	
+	{
 		case '-':
+			break;	
+		case 'h':
+			help();
 			break;
 		case 's':
 			flags = L_SLN;
@@ -32,19 +51,16 @@ void switchFlags(const char letter, int & flags)
 			flags |= L_UNR;
 			break;
 		case 'e':
-			flags |= L_EVL;
-			// Intentionally fall through
+			flags |= L_EVL;	// Intentionally fall through
 		case 'd':
-			flags |= L_DEB;
-			// Intentionally fall through
+			flags |= L_DEB;	// Intentionally fall through
 		case 'v':
 			flags |= L_VRB;
 			flags &= ~L_SLN;
 			break;
 		default:
-			std::cerr <<
-				"Bad-Flag Usage: ./webserv [-v-s-d] [config.ini]"
-				<< std::endl, std::exit(1);
+			std::cerr << std::endl << "\e[1;31m    🏴‍☠️   Error: \e[1;95m"
+				<< "Bad-Flag" << "   🤢 🤮\e[0m" << std::endl, help();						
 	}
 }
 
@@ -74,9 +90,9 @@ char * searchFile(char* argv[])
 			if (!file)
 				file = *argv;
 			else
-				std::cerr <<
-					"Too-Many-Files Usage: ./webserv [-v -s -d] [config.ini]"
-					<< std::endl, std::exit(1);						
+				std::cerr << std::endl << "\e[1;31m  🏴‍☠️   Error: \e[1;95m"
+					<< "Too-Many-Args Usage: ./webserv -[hsvdeu] [config.ini]"
+					<< "   🤢 🤮\e[0m" << std::endl << std::endl, std::exit(1);						
 		}
 	}
 	return file;
@@ -89,9 +105,10 @@ int main(int, char* argv[])
 	disableSignalEcho();
 
 	char * file = searchFile(argv);
+	int flags = searchFlags(argv);
 
 	std::cout << std::endl;
-	Logger::getInstance(searchFlags(argv)).
+	Logger::getInstance(flags).
 		log(INFO, "\e[1;3;36mServer is Online!\e[0m", L_ALW);
 	std::cout << std::endl;
 
