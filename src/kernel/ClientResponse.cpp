@@ -29,7 +29,10 @@ void Server::replyClients()
 void Server::checkCgiStatusLine(const size_t i)
 {
 	if (!this->_clients[i].responseBuilder._isCGI)
-		return ;		
+		return ;
+	std::vector<char>& buffer = this->_clients[i].sendBuffer;
+	if (buffer.size() >= 2 && buffer[0] == '\r' && buffer[1] == '\n')
+		buffer.erase(buffer.begin(), buffer.begin() + 2);
 	std::vector<char>::iterator it;
 	if (this->isDelimiterFind("\r\n", it, this->_clients[i].sendBuffer))
 	{

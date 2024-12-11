@@ -159,8 +159,11 @@ else
 			response_file="$ANSWERS_DIR/config_${config_number}_test_${test_counter}_actual.txt"
 			http_response=$(eval $request)
 			echo "$http_response" > "$response_file"
-			
 			expected_answer_file="$EXPECTED_ANSWERS_DIR/config_${config_number}_test_${test_counter}_expected.txt"
+			#TODO&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+			# echo "$http_response" > "$expected_answer_file"
+			#TODO&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
 			echo -e "${RED}--- Requête : $request${NC}" >> "$CHECK_FILE"
 			echo >> "$CHECK_FILE"
 			echo -e "${BLUE}--- Expected Answer :${NC}" >> "$CHECK_FILE"
