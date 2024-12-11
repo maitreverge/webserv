@@ -88,7 +88,9 @@ ResponseBuilder::ResponseBuilder( void ){
 	initMimes();
 
 	initServerNames();
-	
+
+	initForbiddenFiles();
+
 	// Init priv variables
 	_isDirectory = false;
 	_isFile = false;
@@ -114,7 +116,21 @@ ResponseBuilder::ResponseBuilder( void ){
 	_serverNameChecked = false;
 	_isServerName = false;
 	_serverName.clear();
+}
 
+void ResponseBuilder::initForbiddenFiles()
+{
+	_forbiddenFiles.push_back("php");
+	_forbiddenFiles.push_back("py");
+	_forbiddenFiles.push_back("cpp");
+	_forbiddenFiles.push_back("hpp");
+	_forbiddenFiles.push_back("sh");
+	_forbiddenFiles.push_back("ini");
+	_forbiddenFiles.push_back("out");
+	_forbiddenFiles.push_back("c");
+	_forbiddenFiles.push_back("o");
+	_forbiddenFiles.push_back("ans");
+	_forbiddenFiles.push_back("diff");
 }
 
 ResponseBuilder::ResponseBuilder( const ResponseBuilder & src) { *this = src; }

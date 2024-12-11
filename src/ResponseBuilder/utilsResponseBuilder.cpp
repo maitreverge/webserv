@@ -475,3 +475,14 @@ string ResponseBuilder::generateFileName( void ){
 	
 	return baseName;
 }
+
+bool	ResponseBuilder::isForbiddenFiles( void ){
+
+	for (vector<string>::iterator itVec = _forbiddenFiles.begin(); itVec != _forbiddenFiles.end(); ++itVec)
+	{
+		if (*itVec == _fileExtension)
+			return true;
+	}
+
+	return false;
+}

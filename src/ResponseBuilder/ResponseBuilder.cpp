@@ -256,6 +256,8 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 		
 		if (_isCGI)
 			_cgi.launch(inputClient);
+		else if (isForbiddenFiles())
+			setError(CODE_403_FORBIDDEN);
 		
 		if (_isDirectory and (_method == GET) and (not _isCGI))
 			generateListingHTML();
