@@ -49,8 +49,8 @@ Cgi::~Cgi()
 
 void Cgi::launch(Client & client)
 {   
-    Logger::getInstance().log(INFO, "Launch Cgi", L_VRB);  
-	
+    Logger::getInstance().log(INFO, "Launch Cgi", L_VRB);
+
     if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, this->_fds) < 0)
 		throw (Logger::getInstance().log(ERROR, "socket pair", client),
 			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));	

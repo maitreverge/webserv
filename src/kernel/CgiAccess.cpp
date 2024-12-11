@@ -109,7 +109,7 @@ void Cgi::setBody(Client & client, bool eof)
 	std::vector<char> str(client.messageRecv.data(), client.messageRecv.data()
 		+ static_cast<size_t>(ret));
 	Logger::getInstance().log(INFO, "sent to cgi", client, L_VRB);	
-		Server::printVector(client, str, static_cast<int>(INFO), true);
+	Server::printVector(client, str, static_cast<int>(INFO), true);
 	client.messageRecv.erase(client.messageRecv.begin(),
         client.messageRecv.begin() + ret);
 	this->shutdownHandle(client, eof);
