@@ -1,2 +1,42 @@
-curl -i -s --connect-timeout 10 --max-time 10 http://localhost:3022/cgi/bdd_firebase/bdd_script_GET.php
+curl -i -s --connect-timeout 10 --max-time 10 http://localhost:3022/cgi/bdd_firebase/bdd_script_GET_error1.php
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 http://localhost:3022/cgi/bdd_firebase/bdd_script_GET_error2.php
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 http://localhost:3022/cgi/bdd_firebase/bdd_script_GET_error3.php
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 http://localhost:3022/cgi/bdd_firebase/bdd_script_GET_error4.php
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 http://localhost:3022/cgi/bdd_firebase/bdd_script_GET_error5.php
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 http://localhost:3022/cgi/bdd_firebase/bdd_script_GET_error6.php
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 http://localhost:3022/cgi/bdd_firebase/bdd_script_GET_wrongStatusLine.php
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 http://localhost:3022/cgi/bdd_firebase/bdd_script_GET_wrongURL.php
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 http://localhost:3022/cgi/ai/skynet-error-path.py
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 http://localhost:3022/cgi/ai/skynet-error-statusline.py
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 http://localhost:3022/cgi/ai/skynet-error1.py
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 http://localhost:3022/cgi/ai/skynet-error2.py
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 http://localhost:3022/cgi/ai/skynet-error3.py
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 http://localhost:3022/cgi/ai/skynet-error4.py
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 http://localhost:3022/cgi/ai/skynet-error5.py
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 http://localhost:3022/cgi/ai/skynet-error5.py
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 http://localhost:3022/cgi/ai/skynet-loop1.py
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 http://localhost:3022/cgi/ai/skynet-loop2.py
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 http://localhost:3022/cgi/ai/skynet-loop3.py
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 http://localhost:3022/cgi/ai/skynet-loop4.py
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 http://localhost:3022/cgi/ai/skynet-loop5.py
 --END-REQUEST--
