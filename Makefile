@@ -134,7 +134,7 @@ test: $(TEST_NAME)
 	
 emoticon:
 	@mkdir -p $(OBJ_DIR)
-	@echo "\n 💗 😀 😃 😍\n"
+	@echo "\n 🌐 📡 👽 🛸\n"
 
 emoticon_debug:
 	@mkdir -p $(OBJ_DIR_DEBUG)
