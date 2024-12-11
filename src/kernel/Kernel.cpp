@@ -1,6 +1,6 @@
 #include "Kernel.hpp"
 
-bool Kernel::_exit = false;
+volatile bool Kernel::_exit = false;
 int Kernel::_maxFd = 0;
 fd_set Kernel::_actualSet;
 fd_set Kernel::_readSet;

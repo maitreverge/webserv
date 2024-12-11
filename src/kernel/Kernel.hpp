@@ -22,12 +22,12 @@ class Kernel
 	
 	public:
 
-		Config			_conf;
-		static bool		_exit;
-		static int		_maxFd; 
-		static fd_set	_actualSet;
-		static fd_set 	_readSet;
-		static fd_set 	_writeSet;
+		static volatile bool	_exit;
+		Config					_conf;
+		static int				_maxFd; 
+		static fd_set			_actualSet;
+		static fd_set 			_readSet;
+		static fd_set 			_writeSet;
 	
 		Kernel(void);
 		Kernel(char* path);
