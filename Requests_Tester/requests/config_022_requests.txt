@@ -55,3 +55,18 @@ curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: text/pla
 curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: text/plain" -d '1234567891' http://localhost:3122/cgi/bdd_firebase/bdd_script_POST_wrongStatusLine.php?login=user1
 --END-REQUEST--
 curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: text/plain" -d '1234567891' http://localhost:3122/cgi/bdd_firebase/bdd_script_POST_wrongURL.php?login=user1
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: text/plain" -d '1234567891'  http://localhost:3122/cgi/ai/skynet-post-error1.py
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: text/plain" -d '1234567891'  http://localhost:3122/cgi/ai/skynet-post-error2.py
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: text/plain" -d '1234567891'  http://localhost:3122/cgi/ai/skynet-post-error3.py
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: text/plain" -d '1234567891'  http://localhost:3122/cgi/ai/skynet-post-error4.py
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 -X POST -H "Content-Type: text/plain" -d '1234567891'  http://localhost:3122/cgi/ai/skynet-post-error5.py
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 -X POST http://localhost:3122/cgi/ai/skynet-post-error5.py
+--END-REQUEST--
+curl -i -s --connect-timeout 10 --max-time 10 -X POST http://localhost:3122/cgi/bdd_firebase/bdd_script_POST_error1.php?login=user1
+--END-REQUEST--
