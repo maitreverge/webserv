@@ -1,0 +1,4 @@
+curl -s GET http://localhost:3048
+--END-REQUEST--
+curl -s -X POST http://localhost:3048
+--END-REQUEST--

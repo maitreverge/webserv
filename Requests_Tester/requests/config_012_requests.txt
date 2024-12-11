@@ -1,6 +1,6 @@
 curl -i -s -X GET http://festival.com.localhost:3012/index.html
 --END-REQUEST--
-curl -i -s -X GET http://cyborg.com.localhost:3112/index.html
+curl -i -s -X GET http://gaming.com.localhost:3112/index.html
 --END-REQUEST--
 curl -i -s -X GET http://villa.com.localhost:3212/index.html
 --END-REQUEST--

@@ -1,8 +1,25 @@
 #!/bin/bash
 
+# Fonction de nettoyage pour arrêter tous les processus
+cleanup() {
+    echo -e "${RED}Arrêt des tests en cours...${NC}"
+    # Tuer le processus Webserv si nécessaire
+    if [ -n "$webserv_pid" ]; then
+        kill "$webserv_pid"
+        wait "$webserv_pid" 2>/dev/null || {
+            kill -9 "$webserv_pid" 2>/dev/null
+        }
+    fi
+	./Requests_Tester/delete_file_script.sh
+    exit 1  # Sortie propre du script
+}
+
+# Ajouter un trap pour attraper le SIGINT et lancer la fonction cleanup
+trap cleanup SIGINT
+
 # variables de compteurs de tests réussis qui vont bien
-total_tests=1
-successful_tests=1
+total_tests=0
+successful_tests=0
 
 # Codes de couleurs ANSI pour la colorisation
 RED='\033[31m'
@@ -142,8 +159,11 @@ else
 			response_file="$ANSWERS_DIR/config_${config_number}_test_${test_counter}_actual.txt"
 			http_response=$(eval $request)
 			echo "$http_response" > "$response_file"
-			
 			expected_answer_file="$EXPECTED_ANSWERS_DIR/config_${config_number}_test_${test_counter}_expected.txt"
+			#TODO&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+			# echo "$http_response" > "$expected_answer_file"
+			#TODO&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
 			echo -e "${RED}--- Requête : $request${NC}" >> "$CHECK_FILE"
 			echo >> "$CHECK_FILE"
 			echo -e "${BLUE}--- Expected Answer :${NC}" >> "$CHECK_FILE"
@@ -182,7 +202,6 @@ fi
 echo ""
 echo -e "${CYAN}Résumé global :${NC}"
 echo -e "${GREEN}Tests réussis : $successful_tests/$total_tests${NC}"
-
 if [ "$successful_tests" -ne "$total_tests" ]; then
     echo -e "${RED}Certains tests ont échoué. Veuillez vérifier les résultats.${NC}"
 else

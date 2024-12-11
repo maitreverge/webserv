@@ -16,7 +16,9 @@
 
 - Reactivate Finalenames for post uploading for final project 🔴
 
-- Missing `HOST` headers or double => 400 BAD REQUEST
+- Missing `HOST` headers or double => 400 BAD REQUEST 🔴
+
+- reliker en dur le vrai fichier de config une fois fait
 
 
 

@@ -1,0 +1,30 @@
+==277938== Memcheck, a memory error detector
+==277938== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==277938== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==277938== Command: ./webserv -s
+==277938== 
+==277938== Syscall param ioctl(TCSET{S,SW,SF}) points to uninitialised byte(s)
+==277938==    at 0x4CBDDE5: tcsetattr (tcsetattr.c:83)
+==277938==    by 0x452EAA: disableSignalEcho() (main.cpp:13)
+==277938==    by 0x452F25: main (main.cpp:25)
+==277938==  Address 0x1ffefffbe0 is on thread 1's stack
+==277938==  in frame #0, created by tcsetattr (tcsetattr.c:45)
+==277938== 
+
+
+[34mTue, 10 Dec 2024 10:57:50 GMT: [93m[WARNING] [0m[32mConfig file error: wrong buff_size value[0m
+
+
+
+==277938== 
+==277938== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==277938== 
+==277938== HEAP SUMMARY:
+==277938==     in use at exit: 0 bytes in 0 blocks
+==277938==   total heap usage: 2,394,432 allocs, 2,394,432 frees, 33,992,595,311 bytes allocated
+==277938== 
+==277938== All heap blocks were freed -- no leaks are possible
+==277938== 
+==277938== Use --track-origins=yes to see where uninitialised values come from
+==277938== For lists of detected and suppressed errors, rerun with: -s
+==277938== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)

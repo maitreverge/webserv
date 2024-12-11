@@ -18,6 +18,7 @@ typedef enum
 {
 	INFO = 0,
 	DEBUG,
+	EVAL,
 	WARNING,
 	ERROR,
 	LOG_LEVEL_COUNT

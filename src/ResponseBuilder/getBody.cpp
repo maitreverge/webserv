@@ -55,7 +55,7 @@ bool ResponseBuilder::getBody( Client &inputClient ){
 		if (_deleteURI)
 		{
 			std::remove(_realURI.c_str());
-			Logger::getInstance().log(INFO, "ResponseBuilder::getBody : The self-generated page has been deleted");
+			Logger::getInstance().log(DEBUG, "ResponseBuilder::getBody : The self-generated page has been deleted");
 		}
 	}
 	else if (this->_ifs.is_open())

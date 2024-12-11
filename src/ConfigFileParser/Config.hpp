@@ -21,23 +21,24 @@ struct server
  
 struct Config
 {
-	bool								handleCookies;
-	int									index;
-	size_t								maxBodySize;
-	ssize_t								maxHeaderSize;
-	int									maxServerNbr;
-	int									timeoutCgi;
-	struct server						_serverStruct[8];
-	short int							maxClient;
-	std::vector<struct sockaddr_in> 	sockAddress;
-	std::vector<std::string>			indexFiles;
-	bool								listingDirectories;
-	map<e_errorCodes, string>			errorPaths;	
-	map<string, string>					redirection;
-	std::string							errorPagesPath;
-	RoutesData							routes;
-	unsigned short						recv_buff_size;
-	unsigned short						send_buff_size;
+	bool							handleCookies;
+	int								index;
+	size_t							maxBodySize;
+	ssize_t							maxHeaderSize;
+	int								maxServerNbr;
+	int								timeoutCgi;
+	struct server					_serverStruct[8];
+	short int						maxClient;
+	std::vector<struct sockaddr_in> sockAddress;
+	std::vector<std::string>		indexFiles;			// default files names if the URI == "/"
+	bool							listingDirectories; // activer ou non le listing des repertoires
+	map<e_errorCodes, string>		errorPaths;	
+	map<string, string>				redirection;
+	std::string						errorPagesPath;
+	RoutesData						routes;
+	
+	unsigned long					recv_buff_size;
+	unsigned long					send_buff_size;
 
 	Config();
 	Config(char* path);

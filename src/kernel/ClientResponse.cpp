@@ -26,12 +26,42 @@ void Server::replyClients()
 	}
 }
 
+void Server::checkCgiStatusLine(const size_t i)
+{
+	if (!this->_clients[i].responseBuilder._isCGI)
+		return ;
+	// trois ligne de code ajoutées par ChatGPT pour régler le probleme...
+	std::vector<char>& buffer = this->_clients[i].sendBuffer;
+	if (buffer.size() >= 2 && buffer[0] == '\r' && buffer[1] == '\n')
+		buffer.erase(buffer.begin(), buffer.begin() + 2);
+	// fin de l'ajout chatGPT
+	std::vector<char>::iterator it;
+	if (this->isDelimiterFind("\r\n", it, this->_clients[i].sendBuffer))
+	{
+		if ((std::string(this->_clients[i].sendBuffer.begin(), it)
+			!= "HTTP/1.1 200 OK"))
+			throw (Logger::getInstance().log(ERROR, "bad cgi http response",
+				this->_clients[i]),
+				Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
+	}
+	else
+		throw (Logger::getInstance().log(ERROR, "bad cgi http response",
+			this->_clients[i]),
+			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));	
+}
+
 void Server::fillMessageSend(const size_t i)
-{	
+{
+	Logger::getInstance().log(DEBUG, "Fill Message Send", this->_clients[i]);
+		
 	if (this->_clients[i].responseBuilder.getBody(this->_clients[i]))
 		return ;
 	if (this->_clients[i].messageSend.empty())
+	{
+		this->printVector(this->_clients[i], this->_clients[i].sendBuffer);
+		this->checkCgiStatusLine(i);	
 		this->_clients[i].sendFlag = true;
+	}
 	else										
 		this->sendBuffering(i, this->_clients[i].messageSend);
 }

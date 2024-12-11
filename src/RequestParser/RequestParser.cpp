@@ -69,7 +69,7 @@ void	RequestParser::parse(Client& client, Server & server)
 	handleFirstLine(requestStream);
 	handleHeaderLines(requestStream);
 	extractHeaders();
-	client.cookies.checkSessionCookie(_Headers, server, _URI);
+	client.cookies.checkSessionCookie(_Headers, server, _URI, client);
 }
 
 /**========================================================================

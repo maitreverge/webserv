@@ -117,6 +117,11 @@ void Server::printVector(Client & client, const std::vector<char> & response,
 
 	for (size_t i = 0; i < response.size(); i++)
 	{
+		if (i > 1000)
+		{
+			ss << std::endl << HIGH_INTENSITY_YELLOW << "[...]" << color;
+			break ;
+		}
 		if (response[i] == '\r')
 		    ss << "\e[31m\\r\e[0m" << HIGH_INTENSITY_YELLOW;
 		else if (response[i] == '\n')
@@ -128,6 +133,14 @@ void Server::printVector(Client & client, const std::vector<char> & response,
 	Logger::getInstance().log(static_cast<logLevel>(level), ss.str(), client);
 	if (Logger::getInstance()._logLevel[static_cast<logLevel>(level)])	
 		std::cerr << std::endl;	
+}
+
+bool Server::isDelimiterFind(std::string delimiter,
+	std::vector<char>::iterator & it, std::vector<char> & vector)
+{	
+	it = std::search(vector.begin(), vector.end(),
+		delimiter.begin(), delimiter.end());
+	return (it != vector.end());	
 }
 
 void Server::shortCircuit(const e_errorCodes err, const size_t i)
