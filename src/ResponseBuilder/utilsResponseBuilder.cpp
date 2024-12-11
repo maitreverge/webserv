@@ -476,12 +476,22 @@ string ResponseBuilder::generateFileName( void ){
 	return baseName;
 }
 
+/**
+ * @brief Checks if the _fileExtension of the asked ressource is part
+ * of forbidden file list as in coplianForm.cpp
+ * 
+ * @return true 
+ * @return false 
+ */
 bool	ResponseBuilder::isForbiddenFiles( void ){
 
 	for (vector<string>::iterator itVec = _forbiddenFiles.begin(); itVec != _forbiddenFiles.end(); ++itVec)
 	{
 		if (*itVec == _fileExtension)
+		{
+			Logger::getInstance().log(WARNING, "A forbidden file extension has been detected, ressource refused.");
 			return true;
+		}
 	}
 
 	return false;
