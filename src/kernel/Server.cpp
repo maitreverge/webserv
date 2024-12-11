@@ -2,8 +2,6 @@
 #include "Logger.hpp" 
 #include "ConfigFileParser.hpp"
 
-bool Server::_nl = false;
-
 Server::Server(sockaddr_in & sockAddr, Config & conf): _conf(conf)
 {
 	static int i;
@@ -72,16 +70,14 @@ bool Server::setup()
 		return Logger::getInstance().log(ERROR, "bind", *this), false;	
 	if (listen(this->_fd, this->_conf.maxClient) < 0)
 		return Logger::getInstance().log(ERROR, "listen", *this), false;
-	Logger::getInstance().log(INFO, "listen", *this, L_ALW);
+	Logger::getInstance().log(INFO, "listen", *this, L_ALW);	
 	return true;
 }
 
 void Server::catchClients(Kernel & kernel)
 {
 	if (FD_ISSET(this->_fd, &Kernel::_readSet))
-	{	
-		if (Logger::getInstance()._logLevel[INFO])
-			Server::_nl = !Server::_nl ? std::cout << std::endl, true : true;		
+	{			
 		Client client(&kernel._conf, this);			
 		client.fd = accept(this->_fd, reinterpret_cast<sockaddr *>
 			(&client.address), &client.addressLen);			

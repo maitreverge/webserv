@@ -21,8 +21,7 @@ class Server
 	sockaddr_in			_sockAddr;
 	std::vector<char>	_writeBuffer;
 	std::vector<char>	_readBuffer;
-	static bool			_nl;
-	
+		
 	bool recevData(const size_t i);
 	void clientMessage(const size_t i, const ssize_t ret);
 	void retrySend(const size_t i);

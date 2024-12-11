@@ -21,7 +21,7 @@ class Kernel
 	static void callReply(Server & server);
 	
 	public:
-
+	
 		static volatile bool	_exit;
 		Config					_conf;
 		static int				_maxFd; 

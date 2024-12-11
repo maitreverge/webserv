@@ -75,7 +75,9 @@ void Kernel::setup()
 		Server server(this->_conf.sockAddress[i], this->_conf);
 		if (server.setup())
 			this->_servers.push_back(server);	
-	}	
+	}
+	Logger::getInstance()._nl = false;
+	std::cout << std::endl;	
 }
 
 void Kernel::cleanFdSet(Client & client)
@@ -93,7 +95,7 @@ void Kernel::cleanFdSet(Client & client)
 }
 
 void Kernel::launch()
-{
+{	
 	while (true)
 	{
 		struct timeval timeout = {SLCT_TIMEOUT, 0};

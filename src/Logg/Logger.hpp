@@ -64,9 +64,10 @@ class Logger
 		std::string	intToString(int value);
 
 	public:
-	
-		int	_flags;
-		int	_logLevel[LOG_LEVEL_COUNT];
+
+		bool	_nl;
+		int		_flags;
+		int		_logLevel[LOG_LEVEL_COUNT];
 		static std::string ipToString(const struct sockaddr_in& addr);
 
 		Logger(int verbosez = 1);

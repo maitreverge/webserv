@@ -3,7 +3,7 @@
 /**========================================================================
  *                           CONSTRUCTOR && DESTRUCTOR
  *========================================================================**/
-Logger::Logger(int flags) : logToStdOut(1), _flags(flags)
+Logger::Logger(int flags) : logToStdOut(1),  _nl(false), _flags(flags)
 {	
 	_logLevel[EVAL] = _flags & L_EVL ? 1 : 0;
 	_logLevel[DEBUG] = _flags & L_DEB ? 1 : 0;
@@ -117,6 +117,7 @@ void Logger::log(logLevel logLevel, const std::string& message, int _logFlags)
 	if ((_logLevel[logLevel] == 0 || (_logFlags & L_VRB && ~_flags & L_VRB))
 		&& ~_logFlags & L_ALW)
 		return ;
+	_nl = true;
 	logEntry =	BLUE + timeStamp::getTime() + ": " 
 				+ formatLogLevel(logLevel) 
 				+ GREEN + message 
@@ -132,6 +133,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const RequestPar
 	if ((_logLevel[logLevel] == 0 || (_logFlags & L_VRB && ~_flags & L_VRB))
 		&& ~_logFlags & L_ALW)
 		return ;
+	_nl = true;
 	//[timestamp][loglevel][message][method][ip][port][fd]
 	if (obj.getClient())
 	{
@@ -160,6 +162,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 	if ((_logLevel[logLevel] == 0 || (_logFlags & L_VRB && ~_flags & L_VRB))
 		&& ~_logFlags & L_ALW)
 		return ;
+	_nl = true;
 	//[timestamp][loglevel][message][ip][port][fd]
 	logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) 
@@ -178,6 +181,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const Client& cl
 	if ((_logLevel[logLevel] == 0 || (_logFlags & L_VRB && ~_flags & L_VRB))
 		&& ~_logFlags & L_ALW)
 		return ;
+	_nl = true;
 	//[timestamp][loglevel][message][ip][port][fd]
 	logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) + " "
@@ -226,6 +230,7 @@ void Logger::log(logLevel logLevel, const std::string& message, const Server& se
 	if ((_logLevel[logLevel] == 0 || (_logFlags & L_VRB && ~_flags & L_VRB))
 		&& ~_logFlags & L_ALW)
 		return ;
+	_nl = true;
 	//[timestamp][loglevel][message][ip][port]
 	logEntry = 	BLUE + timeStamp::getTime() + ": " 
 							+ formatLogLevel(logLevel) 

@@ -97,7 +97,8 @@ int main(int, char* argv[])
 
 	Kernel::getInstance(file);
 
-	std::cout << std::endl;
+	if (Logger::getInstance()._nl)
+		std::cout << std::endl;
 	Logger::getInstance().
 		log(INFO, "\e[1;3;91mServer is Offline.\e[0m", L_ALW);	
 	std::cout << std::endl;	
