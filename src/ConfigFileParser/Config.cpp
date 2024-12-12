@@ -54,6 +54,8 @@ void	Config::intitializeVars()
 
 void	Config::initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddress)
 {
+	printColor(GREEN, "IL EST PASSE PAR ICI");
+
 	if (port)
 	{
 		struct sockaddr_in server;	

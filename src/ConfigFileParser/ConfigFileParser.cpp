@@ -93,6 +93,7 @@ void ConfigFileParser::assignRoutesToServers(Config& configStruct)
 
 void	ConfigFileParser::initializeServers(Config& configStruct, int& i)
 {
+	printColor(RED, "IL EST PASSE PAR ICI");
 	for (int j = 0; j < i + 1; j++)
 	{
 		struct sockaddr_in server;	
