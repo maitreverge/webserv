@@ -295,11 +295,14 @@ int	ConfigFileParser::extractDataFromConfigFile(const std::string& path)
 	std::ifstream file(path.c_str());
 	if (!file.is_open())
 	{
-		Logger::getInstance().log(ERROR, "could not open config file. Starting Webserv with default file...");
+		Logger::getInstance().log(WARNING, "could not open config file. Starting Webserv with default file...");
 		file.open("_configs/base_test/base_test_ok_1.ini");
 	}
 	if (!file.is_open())
-		Logger::getInstance().log(ERROR, "could not open config file. go fuck off...");
+	{
+		Logger::getInstance().log(ERROR, "could not open config file. Stop dun us...");
+		throw std::exception();
+	}
 	std::string line;
 	std::string currentCategory;
 	while (getline(file, line))

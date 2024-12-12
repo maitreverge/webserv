@@ -112,8 +112,11 @@ int main(int, char* argv[])
 		log(INFO, "\e[1;3;36mServer is Online!\e[0m", L_ALW);
 	std::cout << std::endl;
 
-	Kernel::getInstance(file);
-
+	try	{
+		Kernel::getInstance(file);
+	}
+	catch(...){}
+	
 	if (Logger::getInstance()._nl)
 		std::cout << std::endl;
 	Logger::getInstance().
