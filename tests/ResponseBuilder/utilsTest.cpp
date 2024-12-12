@@ -4,7 +4,7 @@ TEST_F(ResponseBuilderTest, Returns_Correct_Mimes_Types) {
     // Préparer les mime types pour le test
     responseBuilder->_mimeTypes.insert(std::make_pair("html", "text/html"));
     responseBuilder->_mimeTypes.insert(std::make_pair("htm", "text/htm"));
-    responseBuilder->_mimeTypes.insert(std::make_pair("txt", "text/txt"));
+    responseBuilder->_mimeTypes.insert(std::make_pair("txt", "text/plain"));
     responseBuilder->_mimeTypes.insert(std::make_pair("css", "text/css"));
     responseBuilder->_mimeTypes.insert(std::make_pair("xml", "text/xml"));
     responseBuilder->_mimeTypes.insert(std::make_pair("js", "application/javascript"));
@@ -29,7 +29,7 @@ TEST_F(ResponseBuilderTest, Returns_Correct_Mimes_Types) {
     // Test for each known MIME type
     EXPECT_EQ(responseBuilder->extractType("html"), "text/html");
     EXPECT_EQ(responseBuilder->extractType("htm"), "text/htm");
-    EXPECT_EQ(responseBuilder->extractType("txt"), "text/txt");
+    EXPECT_EQ(responseBuilder->extractType("txt"), "text/plain");
     EXPECT_EQ(responseBuilder->extractType("css"), "text/css");
     EXPECT_EQ(responseBuilder->extractType("xml"), "text/xml");
     EXPECT_EQ(responseBuilder->extractType("js"), "application/javascript");

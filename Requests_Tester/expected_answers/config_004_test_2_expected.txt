@@ -125,7 +125,7 @@ Content-Type: text/html
 	<div class="noise"></div>
 	<div class="overlay"></div>
 	<div class="terminal">
-	  <h1>Error <span class="errorcode">404 Bad Request</span></h1>
+	  <h1>Error <span class="errorcode">400 Bad Request</span></h1>
 	  <p class="output">The server could not understand the request due to invalid syntax.</p>
 	  <p class="output">Please try to <a href="javascript:history.back()">go back</a> or <a href="/">return to the homepage</a>.</p>
 	<p class="output"><i>You have to let it all go, Neo. Fear, doubt, and disbelief. Free your mind.</i></p>

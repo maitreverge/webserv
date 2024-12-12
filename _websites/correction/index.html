@@ -11,146 +11,172 @@
 </head>
 <body>
 
-<!-- Side Navigation -->
-<nav class="w3-sidebar w3-bar-block w3-card w3-animate-left w3-center" style="display:none" id="mySidebar">
-  <h1 class="w3-xxxlarge w3-text-theme">Side Navigation</h1>
-  <button class="w3-bar-item w3-button" onclick="w3_close()">Close <i class="fa fa-remove"></i></button>
-  <a href="#" class="w3-bar-item w3-button">Link 1</a>
-  <a href="#" class="w3-bar-item w3-button">Link 2</a>
-  <a href="#" class="w3-bar-item w3-button">Link 3</a>
-  <a href="#" class="w3-bar-item w3-button">Link 4</a>
-</nav>
-
 <!-- Header -->
 <header class="w3-container w3-theme w3-padding" id="myHeader">
-  <i onclick="w3_open()" class="fa fa-bars w3-xlarge w3-button w3-theme"></i> 
-  <div class="w3-center">
-  <h1>WEBSERV CORRECTION WELCOME PAGE</h1>
-    <div class="w3-padding-32">
-      <button class="w3-btn w3-xlarge w3-dark-grey w3-hover-light-grey" onclick="document.getElementById('id01').style.display='block'" style="font-weight:900;">DOES THIS BUTTON WORKS ?</button>
-    </div>
+	<i onclick="w3_open()" class="fa fa-bars w3-xlarge w3-button w3-theme"></i> 
+	<div class="w3-center">
+	<h1>WEBSERV CORRECTION WELCOME PAGE</h1>
+	  <div class="w3-padding-32">
+		<button class="w3-btn w3-xlarge w3-dark-grey w3-hover-light-grey" onclick="openVideoModal()" style="font-weight:900;">Does this button works ?</button>
+	  </div>
+	</div>
+  </header>
+  
+  <!-- Modal -->
+  <div id="id01" class="w3-modal">
+	  <div class="w3-modal-content w3-card-4 w3-animate-top">
+		<header class="w3-container w3-theme-l1"> 
+		  <span onclick="document.getElementById('id01').style.display='none'"
+		  class="w3-button w3-display-topright">×</span>
+		  <h4>Yes it does !</h4>
+		</header>
+	  </div>
   </div>
-</header>
+  
+  <!-- Video Modal -->
+  <div id="videoModal" class="w3-modal" style="display:none;">
+	  <div class="w3-modal-content w3-card-4 w3-animate-top">
+		<header class="w3-container w3-theme-l1"> 
+		  <span onclick="closeVideoModal()"
+		  class="w3-button w3-display-topright">×</span>
+		  <h4>YES THIS BUTTON WORKS</h4>
+		</header>
+		<div class="w3-container">
+		  <iframe id="videoFrame" width="560" height="315" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+		</div>
+	  </div>
+  </div>
+  
+  <script>
+  function openVideoModal() {
+	  var videoModal = document.getElementById('videoModal');
+	  var videoFrame = document.getElementById('videoFrame');
+	  videoFrame.src = "https://www.youtube.com/embed/czfvEpLfCV0?autoplay=1";
+	  videoModal.style.display = 'block';
+  }
+  
+  function closeVideoModal() {
+	  var videoModal = document.getElementById('videoModal');
+	  var videoFrame = document.getElementById('videoFrame');
+	  videoFrame.src = "";
+	  videoModal.style.display = 'none';
+  }
+  </script>
 
-<!-- Modal -->
-<div id="id01" class="w3-modal">
-    <div class="w3-modal-content w3-card-4 w3-animate-top">
-      <header class="w3-container w3-theme-l1"> 
-        <span onclick="document.getElementById('id01').style.display='none'"
-        class="w3-button w3-display-topright">×</span>
-        <h4>Yes it does !</h4>
-      </header>
-    </div>
-</div>
-
-<!-- 1st BLOCK -->
+<!-- 1st ROW -->
 <div class="w3-row-padding w3-center w3-margin-top">
 	<div class="w3-third">
 		<div class="w3-card w3-container" style="min-height:200px">
-			<h3>GET REQUESTS</h3><br>
-			<a href="get_ok/">
+				<h3 class="custom-heading">GET REQUESTS</h3><br>
+			<a href="1_get_ok/">
 				<span class="download"></span>
 			</a>
-			<!-- <p>heheheheh</p> -->
 		</div>
 	</div>
 	
 	<div class="w3-third">
 		<div class="w3-card w3-container" style="min-height:200px">
-			<h3>POST REQUESTS</h3><br>
-			<a href="post_ok/">
+			<h3 class="custom-heading">POST REQUESTS</h3><br>
+			<a href="2_post_ok/">
 				<span class="upload"></span>
 			</a>
-			<!-- <p>hehehehhe</p> -->
-		</div>
-	</div>
-
-	<div class="w3-third">
-		<div class="w3-card w3-container" style="min-height:200px">
-			<h3>DELETE REQUESTS</h3><br>
-		<span class="delete"></span>
-		<!-- <p>Paper like design</p> -->
-	</div>
-</div>
-</div>
-
-<!-- 2nd BLOCK -->
-<div class="w3-row-padding w3-center w3-margin-top">
-	<div class="w3-third">
-		<div class="w3-card w3-container" style="min-height:200px">
-			<h3>UNKNOWN METHOD</h3><br>
-			<span class="question-box"></span>
-			<!-- <p>heheheheh</p> -->
 		</div>
 	</div>
 	
 	<div class="w3-third">
 		<div class="w3-card w3-container" style="min-height:200px">
-			<h3>UPLOAD A FILE</h3><br>
-			<span class="upload-file"></span>
-		<!-- <p>hehehehhe</p> -->
+			<h3 class="custom-heading">DELETE REQUESTS</h3><br>
+			<a href="3_delete_ok/">
+				<span class="delete"></span>
+			</a>
+		</div>
 	</div>
 </div>
 
-<div class="w3-third">
-	<div class="w3-card w3-container" style="min-height:200px">
-		<h4>MULTIPLE SERVERS WITH DIFFERENT PORTS</h4><br>
-		<span class="server"></span>
-		<!-- <p>Paper like design</p> -->
-	</div>
-</div>
-</div>
-
-<!-- 3rd BLOCK -->
+<!-- 2nd ROW -->
 <div class="w3-row-padding w3-center w3-margin-top">
 	<div class="w3-third">
 		<div class="w3-card w3-container" style="min-height:200px">
-			<h3>LIMIT CLIENT BODY</h3><br>
-			<span class="body"></span>
-			<!-- <p>heheheheh</p> -->
+			<h3 class="custom-heading">UNKNOWN METHOD</h3><br>
+			<a href="4_unknown_method/">
+				<span class="question-box"></span>
+			</a>
 		</div>
 	</div>
 	
 	<div class="w3-third">
 		<div class="w3-card w3-container" style="min-height:200px">
-			<h3>ROUTES TO DIFFERENT DIRECTORIES</h3><br>
-			<span class="folders"></span>
-		<!-- <p>hehehehhe</p> -->
-	</div>
-</div>
-
-<div class="w3-third">
-	<div class="w3-card w3-container" style="min-height:200px">
-		<h4>MULTIPLES PORTS DIFFERENTS WEBSITES</h4><br>
-		<span class="internet"></span>
-		<!-- <p>Paper like design</p> -->
-	</div>
-</div>
-</div>
-
-<!-- 4th BLOCK -->
-<div class="w3-row-padding w3-center w3-margin-top">
-	<div class="w3-third">
-		<div class="w3-card w3-container" style="min-height:200px">
-			<h3>LISTING DIRECTORY</h3><br>
-			<span class="listing"></span>
-			<!-- <p>heheheheh</p> -->
+			<h3 class="custom-heading">UPLOAD A FILE</h3><br>
+			<a href="5_post_multipart/">
+				<span class="upload-file"></span>
+			</a>
 		</div>
 	</div>
 	
 	<div class="w3-third">
 		<div class="w3-card w3-container" style="min-height:200px">
-			<h3>REDIRECTION</h3>
-			<span class="arrow"></span>
-		<!-- <p>hehehehhe</p> -->
+			<h4 class="custom-heading">MULTIPLE SERVERS WITH DIFFERENT PORTS</h4><br>
+			<a href="6_multiple_server_ports/">
+				<span class="server"></span>
+			</a>
+		</div>
 	</div>
 </div>
 
-<div class="w3-third">
-	<div class="w3-card w3-container" style="min-height:200px">
-		<h4>TRY ANYTHING YOU WANT</h4>
-		<span class="internet-question"></span>
-		<!-- <p>rickroll him</p> -->
+<!-- 3rd ROW -->
+<div class="w3-row-padding w3-center w3-margin-top">
+	<div class="w3-third">
+		<div class="w3-card w3-container" style="min-height:200px">
+			<h3 class="custom-heading">LIMIT CLIENT BODY</h3><br>
+			<a href="7_limit_body/">
+				<span class="body"></span>
+			</a>
+		</div>
+	</div>
+	
+	<div class="w3-third">
+		<div class="w3-card w3-container" style="min-height:200px">
+			<h3 class="custom-heading">ROUTES TO DIFFERENT DIRECTORIES</h3><br>
+			<span class="folders" onclick="alert('Click any other icons an pay attention to the URL')"></span>
+		</div>
+	</div>
+	
+	<div class="w3-third">
+		<div class="w3-card w3-container" style="min-height:200px">
+			<h4 class="custom-heading">MULTIPLES PORTS DIFFERENTS WEBSITES</h4><br>
+			<a href="6_multiple_server_ports/">
+				<span class="internet"></span>
+			</a>
+		</div>
+	</div>
+</div>
+
+<!-- 4th ROW -->
+<div class="w3-row-padding w3-center w3-margin-top">
+	<div class="w3-third">
+		<div class="w3-card w3-container" style="min-height:200px">
+			<h3 class="custom-heading">LISTING DIRECTORY</h3><br>
+			<a href="8_listing_ok/">
+				<span class="listing"></span>
+			</a>
+		</div>
+	</div>
+	
+	<div class="w3-third">
+		<div class="w3-card w3-container" style="min-height:200px">
+			<h3 class="custom-heading">REDIRECTION</h3>
+			<a href="9_redirection_ok/">
+				<span class="arrow"></span>
+			</a>
+		</div>
+	</div>
+	
+	<div class="w3-third">
+		<div class="w3-card w3-container" style="min-height:200px">
+			<h4 class="custom-heading">TRY ANYTHING YOU WANT</h4>
+			<a href="10_surprise/">
+				<span class="internet-question"></span>
+			</a>
 	</div>
 </div>
 </div>
@@ -159,53 +185,6 @@
 
 <!-- Script for Sidebar, Tabs, Accordions, Progress bars and slideshows -->
 <script>
-// Side navigation
-function w3_open() {
-  var x = document.getElementById("mySidebar");
-  x.style.width = "100%";
-  x.style.fontSize = "40px";
-  x.style.paddingTop = "10%";
-  x.style.display = "block";
-}
-function w3_close() {
-  document.getElementById("mySidebar").style.display = "none";
-}
-
-// Tabs
-function openCity(evt, cityName) {
-  var i;
-  var x = document.getElementsByClassName("city");
-  for (i = 0; i < x.length; i++) {
-    x[i].style.display = "none";
-  }
-  var activebtn = document.getElementsByClassName("testbtn");
-  for (i = 0; i < x.length; i++) {
-    activebtn[i].className = activebtn[i].className.replace(" w3-dark-grey", "");
-  }
-  document.getElementById(cityName).style.display = "block";
-  evt.currentTarget.className += " w3-dark-grey";
-}
-
-var mybtn = document.getElementsByClassName("testbtn")[0];
-mybtn.click();
-
-// Accordions
-function myAccFunc(id) {
-  var x = document.getElementById(id);
-  if (x.className.indexOf("w3-show") == -1) {
-    x.className += " w3-show";
-  } else { 
-    x.className = x.className.replace(" w3-show", "");
-  }
-}
-
-// Slideshows
-var slideIndex = 1;
-
-function plusDivs(n) {
-  slideIndex = slideIndex + n;
-  showDivs(slideIndex);
-}
 
 function showDivs(n) {
   var x = document.getElementsByClassName("mySlides");

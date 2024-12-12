@@ -124,7 +124,7 @@ void	ResponseBuilder::checkAutho( void ){
 				}
 				if (_uploadTargetDirectory.empty())
 				{
-					string tempURI = _originalURI;
+					string tempURI = _realURI;
 					pathSlashs(tempURI);
 					_uploadTargetDirectory =  tempURI;
 				}
@@ -379,6 +379,7 @@ void ResponseBuilder::extraStartingChecks()
 	if (!_myconfig.uploadDirectory.empty())
 	{
 		pathSlashs(_myconfig.uploadDirectory);
+		_myconfig.uploadDirectory.insert(0, _serverName);
 		if (stat(_myconfig.uploadDirectory.c_str(), &_fileInfo) == 0 and (_fileInfo.st_mode & S_IFDIR))
 		{
 			bool uploadWrite = _fileInfo.st_mode & S_IWUSR;
@@ -477,4 +478,25 @@ string ResponseBuilder::generateFileName( void ){
 		baseName = generateRandomString(10);
 	
 	return baseName;
+}
+
+/**
+ * @brief Checks if the _fileExtension of the asked ressource is part
+ * of forbidden file list as in coplianForm.cpp
+ * 
+ * @return true 
+ * @return false 
+ */
+bool	ResponseBuilder::isForbiddenFiles( void ){
+
+	for (vector<string>::iterator itVec = _forbiddenFiles.begin(); itVec != _forbiddenFiles.end(); ++itVec)
+	{
+		if (*itVec == _fileExtension)
+		{
+			Logger::getInstance().log(WARNING, "A forbidden file extension has been detected, ressource refused.");
+			return true;
+		}
+	}
+
+	return false;
 }

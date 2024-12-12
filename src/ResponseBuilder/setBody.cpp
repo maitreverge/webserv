@@ -184,6 +184,8 @@ void	ResponseBuilder::extractFileBodyName( vector< char >& curLine, vector< stri
 
 		_fileStreamName = temp.substr(startPos, endPos - startPos);
 
+		_fileStreamName.insert(0, "/");
+
 		_fileStreamName.insert(0, _uploadTargetDirectory);
 
 		/*
