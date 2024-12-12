@@ -161,6 +161,11 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, size_t& fiel
 				Logger::getInstance().log(WARNING, "Config file error: wrong maxBodySize value");
 				field = 0;
 			}
+			if (field > INT64_MAX && (itemIt->first == "send_buff_size" || itemIt->first == "recv_buff_size"))
+			{
+				Logger::getInstance().log(WARNING, "Config file error: wrong buffSize value");
+				field = 0;
+			}
 		}
 }
 
