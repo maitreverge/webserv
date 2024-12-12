@@ -1,6 +1,6 @@
 HTTP/1.1 200 OK
 Content-Length: 2740
-Content-Type: text/txt
+Content-Type: text/plain
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam volutpat tincidunt neque, sed fermentum urna convallis non. Fusce a ipsum nec odio vulputate malesuada ut at urna. Curabitur euismod mi non ex gravida, et ultricies est interdum. Suspendisse interdum neque non lorem vehicula, non hendrerit ligula ultricies. Integer tincidunt risus non augue tincidunt, nec dictum turpis pulvinar. Quisque sit amet feugiat magna. Vivamus nec varius nulla, ac tincidunt libero. Ut accumsan, augue sit amet scelerisque efficitur, est tortor euismod mi, sit amet gravida risus lectus ac neque. Integer ut vestibulum quam.
 

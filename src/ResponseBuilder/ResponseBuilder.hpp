@@ -136,6 +136,8 @@ class ResponseBuilder
 
 	map< string, string >_servernameType;
 
+	vector< string > _forbiddenFiles;
+
 	// ===================== PRIVATE METHODS ==================
 
 	// ---------- buildHeaders.cpp
@@ -145,13 +147,14 @@ class ResponseBuilder
 	void	checkCGI( void );
 
 	// ---------- coockiesAndSession.cpp // ! DAN FUNCTIONS
-	void		buildSetCookieHeader();
-	void		checkSessionIdCookie(Client &inputClient);
-	std::string	generateUniqueToken(const std::string& clientIP);
+	void		buildSetCookieHeader( void );
+	void		checkSessionIdCookie( Client &inputClient );
+	std::string	generateUniqueToken( const std::string& clientIP );
 
 	// ---------- coplianForm.cpp
 	void	initMimes( void );
 	void	initServerNames( void );
+	void	initForbiddenFiles( void );
 
 	// ---------- deleteEngine.cpp
 	void	generateDeleteHTML( void );
@@ -162,8 +165,8 @@ class ResponseBuilder
 
 	// ---------- extractRouteConfig
 	void 	extractRouteConfig(void);
-	void 	extraStartingChecks();
-	void 	resetMyVariables();
+	void 	extraStartingChecks( void );
+	void 	resetMyVariables( void );
 	void	clearingRoutes( vector< string >&, vector< string >& );
 	void	buildRouteConfig( string );
 	void	printMyConfig( void );
@@ -172,8 +175,8 @@ class ResponseBuilder
 	// ---------- generateListingHTML.cpp
 	bool	foundDefaultPath( void );
 	bool	isFileIgnored( string & );
-	void 	listingHTMLBuilder(void);
-	void 	makeHeaderListing(std::stringstream &);
+	void 	listingHTMLBuilder( void );
+	void 	makeHeaderListing( std::stringstream & );
 	void	generateListingHTML( void );
 
 	// ---------- getBody.cpp //! PUBLIC METHOD
@@ -194,7 +197,7 @@ class ResponseBuilder
 	string	parseServerName( string & );
 	void 	applyServerName( void );
 	void 	serverNameChecking(void);
-	void 	extractServerName();
+	void 	extractServerName( void );
 
 	// ---------- setBody.cpp
 	void					initCurrentFiles( vector< string> & );
@@ -217,8 +220,10 @@ class ResponseBuilder
 	bool	isErrorRedirect( void );
 	void	pathSlashs(string &);
 	string	generateFileName( void );
-	string	generateRandomString(size_t, bool underscoreNeeded = false );
+	string	generateRandomString( size_t, bool underscoreNeeded = false );
 	void	setError( e_errorCodes, bool skip = false );
+	bool	isForbiddenFiles( void );
+
 
 public:
 
@@ -262,9 +267,9 @@ public:
 
 	// ---- Coplian Form
 
-	bool 			_isCGI; //! need public for seb	
-	
-	ResponseBuilder( void );
+	bool 			_isCGI; //! need public for seb
+
+	ResponseBuilder(void);
 	~ResponseBuilder( void );
 	ResponseBuilder( const ResponseBuilder & );
 	ResponseBuilder & operator=( const ResponseBuilder & rhs);

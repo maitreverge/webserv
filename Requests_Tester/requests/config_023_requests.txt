@@ -1,12 +1,12 @@
-curl -i -s --connect-timeout 2 --max-time 2 --output response.bin -X GET http://localhost:3023/cgi/main_inout.out
+curl -i -s -X GET --connect-timeout 10 --max-time 10 http://localhost:3023/cgi/bdd_firebase/bdd_script_GET.php
 --END-REQUEST--
-curl -i -s --connect-timeout 2 --max-time 2 -X POST http://localhost:3023/cgi/main_inout.out
+curl -i -s -X GET --connect-timeout 10 --max-time 10 http://localhost:3023/cgi/ai/skynet-post.py
 --END-REQUEST--
-curl -i -s --connect-timeout 2 --max-time 2 --output response.bin -X GET http://localhost:3123/cgi/main_inout.out
+curl -i -s -X GET --connect-timeout 10 --max-time 10 http://localhost:3123/cgi/bdd_firebase/bdd_script_GET.php?login=user1
 --END-REQUEST--
-curl -i -s --connect-timeout 2 --max-time 2 -X POST http://localhost:3123/cgi/main_inout.out
+curl -i -s -X GET --connect-timeout 10 --max-time 10 http://localhost:3123/cgi/ai/skynet-post.py
 --END-REQUEST--
-curl -i -s --connect-timeout 2 --max-time 2 -X GET http://localhost:3223/cgi/main_inout.out
+curl -i -s -X GET --connect-timeout 10 --max-time 10 http://localhost:3223/cgi/bdd_firebase/bdd_script_GET.php?login=user1
 --END-REQUEST--
-curl -i -s --connect-timeout 2 --max-time 2 -X POST http://localhost:3223/cgi/main_inout.out
+curl -i -s -X GET --connect-timeout 10 --max-time 10 http://localhost:3223/cgi/ai/skynet-post.py
 --END-REQUEST--

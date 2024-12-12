@@ -6,7 +6,7 @@ void ResponseBuilder::initMimes( void ){
 	// Text Based Types
 	_mimeTypes.insert(std::make_pair("html", "text/html"));
 	_mimeTypes.insert(std::make_pair("htm", "text/htm"));
-	_mimeTypes.insert(std::make_pair("txt", "text/txt"));
+	_mimeTypes.insert(std::make_pair("txt", "text/plain"));
 	_mimeTypes.insert(std::make_pair("css", "text/css"));
 	_mimeTypes.insert(std::make_pair("xml", "text/xml"));
 	// Application Content Types
@@ -88,7 +88,9 @@ ResponseBuilder::ResponseBuilder( void ){
 	initMimes();
 
 	initServerNames();
-	
+
+	initForbiddenFiles();
+
 	// Init priv variables
 	_isDirectory = false;
 	_isFile = false;
@@ -114,7 +116,21 @@ ResponseBuilder::ResponseBuilder( void ){
 	_serverNameChecked = false;
 	_isServerName = false;
 	_serverName.clear();
+}
 
+void ResponseBuilder::initForbiddenFiles()
+{
+	_forbiddenFiles.push_back("php");
+	_forbiddenFiles.push_back("py");
+	_forbiddenFiles.push_back("cpp");
+	_forbiddenFiles.push_back("hpp");
+	_forbiddenFiles.push_back("sh");
+	_forbiddenFiles.push_back("ini");
+	_forbiddenFiles.push_back("out");
+	_forbiddenFiles.push_back("c");
+	_forbiddenFiles.push_back("o");
+	_forbiddenFiles.push_back("ans");
+	_forbiddenFiles.push_back("diff");
 }
 
 ResponseBuilder::ResponseBuilder( const ResponseBuilder & src) { *this = src; }

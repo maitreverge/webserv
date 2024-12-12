@@ -1,8 +1,8 @@
- curl -i -s -X POST -H "Content-Type: text/txt" -d '12345678910' http://localhost:3008
+ curl -i -s -X POST -H "Content-Type: text/plain" -d '12345678910' http://localhost:3008
 --END-REQUEST--
  curl -i -s -X GET http://localhost:3008/uploads/file.txt
 --END-REQUEST--
- curl -i -s -X POST -H "Content-Type: text/txt" -d '123456789' http://localhost:3008
+ curl -i -s -X POST -H "Content-Type: text/plain" -d '123456789' http://localhost:3008
 --END-REQUEST--
  curl -i -s -X GET http://localhost:3008/uploads/file.txt
 --END-REQUEST--
@@ -10,7 +10,7 @@
 --END-REQUEST--
  curl -i -s -X GET http://localhost:3008/uploads/file.txt
 --END-REQUEST--
- curl -i -s -X POST -H "Content-Type: text/txt" -d '1234567891' http://localhost:3008
+ curl -i -s -X POST -H "Content-Type: text/plain" -d '1234567891' http://localhost:3008
 --END-REQUEST--
  curl -i -s -X GET http://localhost:3008/uploads/file.txt
 --END-REQUEST--
