@@ -58,7 +58,7 @@ void Server::fillMessageSend(const size_t i)
 	{
 		Logger::getInstance().log(INFO, "Fill Message Send End",
 			this->_clients[i], L_VRB);
-		this->printVector(this->_clients[i], this->_clients[i].sendBuffer, RED,
+		Server::printVector(this->_clients[i], this->_clients[i].sendBuffer, RED,
 			static_cast<int>(INFO), true);
 		this->checkCgiStatusLine(i);	
 		this->_clients[i].sendFlag = true;
@@ -70,12 +70,16 @@ void Server::fillMessageSend(const size_t i)
 void Server::sendBuffering(const size_t i, std::vector<char> & response)
 {
 	Logger::getInstance().log(INFO, "Send Buffering", this->_clients[i], L_VRB);
-	this->printVector(this->_clients[i], response, RED,
+	Server::printVector(this->_clients[i], response, RED,
 		static_cast<int>(INFO), true);
 
 	this->_clients[i].sendBuffer.insert(this->_clients[i].sendBuffer.end(),
-		response.begin(), response.end());
+		response.begin(), response.end());		
 	response.clear();
+
+	Logger::getInstance().log(INFO, "Buffer Content", this->_clients[i], L_VRB);
+	Server::printVector(this->_clients[i], this->_clients[i].sendBuffer, GREEN,
+		static_cast<int>(INFO), true);
 }
 
 bool Server::replyClient(const size_t i, std::vector<char> & resp)

@@ -82,7 +82,9 @@ bool Server::isBodyEnd(const size_t i)
 void Server::sendBodyPart(const size_t i)
 {
 	Logger::getInstance().log(INFO, "Send Body Part", this->_clients[i], L_VRB);
-	Server::printVector(this->_clients[i], this->_clients[i].messageRecv);
+	Server::printVector(this->_clients[i], this->_clients[i].messageRecv, RED,
+		static_cast<int>(INFO), true);
+	
 	if (this->_clients[i].headerRequest.getMethod() == "POST")
 		this->_clients[i].responseBuilder.setBody(this->_clients[i], false);		
 	else
@@ -92,7 +94,9 @@ void Server::sendBodyPart(const size_t i)
 void Server::sendBodyEnd(const size_t i)
 {	
 	Logger::getInstance().log(INFO, "Send Body End", this->_clients[i], L_VRB);
-	Server::printVector(this->_clients[i], this->_clients[i].messageRecv);
+	Server::printVector(this->_clients[i], this->_clients[i].messageRecv, RED,
+		static_cast<int>(INFO), true);
+
 	if (this->_clients[i].headerRequest.getMethod() == "POST")
 		this->_clients[i].responseBuilder.setBody(this->_clients[i], true);						
 	else
