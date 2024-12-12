@@ -17,7 +17,7 @@ void Cgi::hasError(Client & client, std::string err, int option)
 		{
             Logger::getInstance().log(DEBUG, "cgi signaled", client);     
 			throw(Logger::getInstance().log(ERROR, err, client), Server::
-				ShortCircuitException(CODE_503_SERVICE_UNAVAILABLE));
+				ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
 		}		
 	}
 	else if (pid < 0)
@@ -37,7 +37,7 @@ void Cgi::exitCodeHandle(int status, Client & client, std::string & err)
 		Logger::getInstance().log(ERROR, "execve", client);
 	if (exitCode != 0)
 		throw(Logger::getInstance().log(ERROR, err, client), Server::
-			ShortCircuitException(CODE_503_SERVICE_UNAVAILABLE));
+			ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
 }
 
 void Cgi::isTimeout(Client & client, std::string err)
