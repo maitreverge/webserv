@@ -44,7 +44,6 @@ body {
 
 .copy-curl:hover {
 	background-color: #0095ff;
-	/* Darker green */
 	transform: scale(1.4);
 }
 
