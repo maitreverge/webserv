@@ -35,9 +35,9 @@ void help()
 	std::exit(1);
 }
 
-void switchFlags(const char letter, int & flags)
+void switchFlags(const char lt, int & flags)
 {
-	switch (letter)
+	switch (lt)
 	{
 		case '-':
 			break;	
@@ -60,7 +60,7 @@ void switchFlags(const char letter, int & flags)
 			break;
 		default:
 			std::cerr << std::endl << "\e[1;31m    🏴‍☠️   Error: \e[1;95m"
-				<< "Bad-Flag" << "   🤢 🤮\e[0m" << std::endl, help();						
+				<< "Bad-Flag: -" << lt << "   🤢 🤮\e[0m" << std::endl, help();						
 	}
 }
 
