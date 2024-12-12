@@ -18,26 +18,36 @@
 			border-radius: 15px;
 			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 		}
+
+		#submitButton {
+			display: none;
+		}
 	</style>
 </head>
 
 <body>
 	<h1>📤 Upload Multiple Files 📤</h1>
 	<p> You need to choose 3 files before submitting.</p>
+	<p id="alertMessage" style="color: red; display: none;">Please choose all 3 files before submitting!</p>
 	<form id="uploadForm" action="/5_post_multipart/" method="POST" enctype="multipart/form-data">
 		<label for="fileInput1" class="custom-file-upload">Choose File 1</label>
 		<input type="file" name="file1" id="fileInput1" required>
+		<span id="fileName1"></span>
 
 		<label for="fileInput2" class="custom-file-upload">Choose File 2</label>
 		<input type="file" name="file2" id="fileInput2" required>
+		<span id="fileName2"></span>
 
 		<label for="fileInput3" class="custom-file-upload">Choose File 3</label>
 		<input type="file" name="file3" id="fileInput3" required>
+		<span id="fileName3"></span>
+
 		<br>
 		<br>
 		<br>
-		<button type="submit" class="styled-button">Submit</button>
+		<button type="submit" id="submitButton" class="styled-button">Submit</button>
 	</form>
+
 	<br>
 	<br>
 
@@ -48,6 +58,31 @@
 	<a href="simpleUpload.html" class="styled-link">Go to Single Upload Page</a>
 	<br>
 
+	<script>
+		document.getElementById('fileInput1').addEventListener('change', function () {
+			document.getElementById('fileName1').textContent = this.files[0].name;
+			checkFiles();
+		});
+
+		document.getElementById('fileInput2').addEventListener('change', function () {
+			document.getElementById('fileName2').textContent = this.files[0].name;
+			checkFiles();
+		});
+
+		document.getElementById('fileInput3').addEventListener('change', function () {
+			document.getElementById('fileName3').textContent = this.files[0].name;
+			checkFiles();
+		});
+
+		function checkFiles() {
+			const fileInput1 = document.getElementById('fileInput1').files.length;
+			const fileInput2 = document.getElementById('fileInput2').files.length;
+			const fileInput3 = document.getElementById('fileInput3').files.length;
+
+			document.getElementById('submitButton').style.display =
+				(fileInput1 > 0 && fileInput2 > 0 && fileInput3 > 0) ? 'inline-block' : 'none';
+		}
+	</script>
 </body>
 
 </html>
