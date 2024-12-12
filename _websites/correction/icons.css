@@ -107,9 +107,9 @@
   }
 
   .custom-heading {
-	color: #ff6347;
+	color: #fb1e1e;
 	font-family: 'Gill Sans Extrabold', sans-serif; /* Change to your preferred font */
 	font-size: 24px;
 	font-weight: bold;
-	text-shadow: 2px 2px 4px #410ad6;
+	text-shadow: 2px 2px 4px #00000074;
   }
