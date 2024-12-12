@@ -1,15 +1,15 @@
 #include "Cgi.hpp"
 #include "Logger.hpp"
 
-void Cgi::hasError(Client & client, std::string err)
+void Cgi::hasError(Client & client, std::string err, int option)
 {
 	Logger::getInstance().log(DEBUG, "Check Cgi Error", client);
 
 	int status;
-	pid_t pid = waitpid(this->_pid, &status, WNOHANG);
+	pid_t pid = waitpid(this->_pid, &status, option);
 	if (pid > 0)
 	{	
-		Logger::getInstance().log(DEBUG, "cgi exited", client);	
+		Logger::getInstance().log(DEBUG, "cgi exited", client);
 
 		if (WIFEXITED(status))		
 			this->exitCodeHandle(status, client, err);		
@@ -71,10 +71,10 @@ void Cgi::retHandle(Client & client, ssize_t ret, std::string err,
 {		
 	std::stringstream ss; ss << "ret: " << ret;
 	Logger::getInstance().log(DEBUG, ss.str());
-
-	this->hasError(client, "ret handle");
+	
     if (!ret)	
-        Logger::getInstance().log(DEBUG, info);	   
+        Logger::getInstance().log(DEBUG, info),	   
+			this->hasError(client, "ret handle", 0);		
     else if (ret < 0)   
 		throw (Logger::getInstance().log(ERROR, err, client),
 			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));    
@@ -100,7 +100,6 @@ void Cgi::setBody(Client & client, bool eof)
 {
     Logger::getInstance().log(DEBUG, "Cgi Set Body", client);
 
-	this->hasError(client, "cgi get body has error");
 	this->isTimeout(client, "Timeout is over");
 	if (this->shutdownHandle(client, eof))
 		return;
@@ -124,7 +123,6 @@ bool Cgi::getBody(Client & client)
 {
     Logger::getInstance().log(DEBUG, "Cgi Get Body", client);
 
-	this->hasError(client, "cgi get body has error");
 	this->isTimeout(client, "Timeout is over");
     if (!FD_ISSET(this->_fds[1], &Kernel::_readSet))  
         return Logger::getInstance().

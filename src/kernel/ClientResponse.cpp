@@ -38,12 +38,12 @@ void Server::checkCgiStatusLine(const size_t i)
 	{
 		if (std::string(this->_clients[i].sendBuffer.begin(), it)
 				!= "HTTP/1.1 200 OK")
-			throw (Logger::getInstance().log(ERROR, "bad cgi http response 1",
+			throw (Logger::getInstance().log(ERROR, "bad cgi statusline 1",
 				this->_clients[i]),
 				Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));
 	}
 	else
-		throw (Logger::getInstance().log(ERROR, "bad cgi http response 2",
+		throw (Logger::getInstance().log(ERROR, "bad cgi statusline 2",
 			this->_clients[i]),
 			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));	
 }
@@ -58,8 +58,8 @@ void Server::fillMessageSend(const size_t i)
 	{
 		Logger::getInstance().log(INFO, "Fill Message Send End",
 			this->_clients[i], L_VRB);
-		Server::printVector(this->_clients[i], this->_clients[i].sendBuffer, RED,
-			static_cast<int>(INFO), true);
+		Server::printVector(this->_clients[i], this->_clients[i].sendBuffer,
+		 	RED, static_cast<int>(INFO), true);
 		this->checkCgiStatusLine(i);	
 		this->_clients[i].sendFlag = true;
 	}
