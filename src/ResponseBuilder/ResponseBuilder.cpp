@@ -199,7 +199,7 @@ void	ResponseBuilder::checkMethod( void ){
  */
 void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_errorCodes codeInput ){
 
-	Logger::getInstance().log(INFO, "Build Response Header", L_VRB);
+	Logger::getInstance().log(INFO, "Build Response Header", inputClient, L_VRB);
 		
 	_client = &inputClient;
 	_config = &inputConfig;
