@@ -1,20 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multiple Servers with Different Ports</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Multiple Servers with Different Ports</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background: linear-gradient(to right, #e2aff5, #d205fb);
+			text-align: center;
+			padding: 40px;
+		}
+
+		.soft-frame {
+			border-radius: 15px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+		}
+
+		.copy-link {
+    display: inline-block;
+    font-size: 18px;
+    padding: 10px 20px;
+    background-color: #4CAF50; /* Green */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.copy-link:hover {
+    background-color: #45a049; /* Darker green */
+    transform: scale(1.1);
+}
+		</style>
+	</style>
 </head>
+
 <body>
-    <h2>For testing the Body limit, launch another instance of webserv with the following config</h2>
-	
-    <pre>
-		<code id="codeBlock1">
-			./webserv _websites/correction/7_limit_body/limit_body.ini
-        </code>
-        <button onclick="copyToClipboard('codeBlock1', this)">Copy</button>
-    </pre>
-	
+	<h1>🚦 BODY LIMIT TESTING 🚦</h1>
+	<h2> Launch another instance of <i>webserv</i> with the following config</h2>
+
+				<a href="#" onclick="copyToClipboard('./webserv _websites/correction/7_limit_body/limit_body.ini', this)" class="copy-link">Copy Text</a>
+
 	<h2>NOTA BENE : In this config, the limit is setup at 10, and uploads to <b>uploads/</b> base directory !</h2>
 	<h2>The goal is then to try with a body size == 10, &lt; to 10 and &gt; to 10 </h2>
 
@@ -27,7 +56,7 @@
         </code>
         <button onclick="copyToClipboard('codeBlock2', this)">Copy</button>
     </pre>
-	
+
 	<p>Command with body of size == 10</p>
 	<pre>
 		<code id="codeBlock3">
@@ -35,7 +64,7 @@
         </code>
         <button onclick="copyToClipboard('codeBlock3', this)">Copy</button>
     </pre>
-	
+
 	<p>Command with body of size &lt; 10</p>
 	<pre>
         <code id="codeBlock4">
@@ -45,41 +74,47 @@
     </pre>
 
 	<p>
-        <span style="color: red;">curl</span>
-        <span style="color: green;">-i</span>
-        <span style="color: blue;">-s</span>
-        <span style="color: orange;">-X POST</span>
-        <span style="color: purple;">-H "Content-Type: text/plain"</span>
-        <span style="color: brown;">-d '123456789'</span>
-        <span style="color: teal;">http://localhost:3008</span>
-    </p>
+		<span style="color: red;">curl</span>
+		<span style="color: green;">-i</span>
+		<span style="color: blue;">-s</span>
+		<span style="color: orange;">-X POST</span>
+		<span style="color: purple;">-H "Content-Type: text/plain"</span>
+		<span style="color: brown;">-d '123456789'</span>
+		<span style="color: teal;">http://localhost:3008</span>
+	</p>
 
 	<p>
-        <span style="color: red;">CURL COMMAND</span>
-        <span style="color: green;">-i : Append HTTP Headers</span>
-        <span style="color: blue;">-s : Silence CURL progress bar.</span>
-        <span style="color: orange;">-X : Specify the Method Used</span>
-        <span style="color: purple;">-H : Append a manual HTTP Header</span>
-        <span style="color: brown;">-d : Append data to the POST Method</span>
-        <span style="color: teal;">URL</span>
-    </p>
+		<span style="color: red;">CURL COMMAND</span>
+		<span style="color: green;">-i : Append HTTP Headers</span>
+		<span style="color: blue;">-s : Silence CURL progress bar.</span>
+		<span style="color: orange;">-X : Specify the Method Used</span>
+		<span style="color: purple;">-H : Append a manual HTTP Header</span>
+		<span style="color: brown;">-d : Append data to the POST Method</span>
+		<span style="color: teal;">URL</span>
+	</p>
 
 
 
-	
-    <script>
-        function copyToClipboard(id, button) {
-            const text = document.getElementById(id).innerText;
-            navigator.clipboard.writeText(text).then(() => {
-                const originalText = button.innerText;
-                button.innerText = 'Copied!';
-                setTimeout(() => {
-                    button.innerText = originalText;
-                }, 20000000);
-            });
-        }
-    </script>
 
-    <img src="https://i.redd.it/e2fcfbac4wa31.jpg" alt="cat" style="width:1000px;height:auto;">
+		<script>
+		function copyToClipboard(text, element) {
+			const tempInput = document.createElement('input');
+			tempInput.value = text;
+			document.body.appendChild(tempInput);
+			tempInput.select();
+			document.execCommand('copy');
+			document.body.removeChild(tempInput);
+			
+			const originalText = element.innerText;
+			element.innerText = 'Copied';
+			setTimeout(() => {
+				element.innerText = originalText;
+			}, 2000);
+		}
+		</script>
+
+	<img src="https://preview.redd.it/funny-cat-expressions-go-v0-ueiam9zbf2ld1.jpeg?auto=webp&s=405507f0695c110a6c8150d515fd825d00eb4b39"
+		alt="cat" style="width:1000px;height:auto;">
 </body>
+
 </html>
