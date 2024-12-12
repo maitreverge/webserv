@@ -33,13 +33,18 @@ Config::Config()
 void	Config::intitializeVars()
 {
 	maxClient = 1024;
-	recv_buff_size = 4192;
+	maxHeaderSize = 8192;
+	maxBodySize = 10000;
+	maxServerNbr = 8;
+	timeoutCgi = 20;
 	send_buff_size = 4192;
+	recv_buff_size = 4192;
+	handleCookies = 0;
 	errorPagesPath = "errorPages/";
 	indexFiles.push_back("index.html");
 	indexFiles.push_back("index.htm");
 	indexFiles.push_back("default.html");
-	listingDirectories = true;
+	// listingDirectories = true;
 
 	errorPaths.insert(std::make_pair(CODE_242_CONNECTION, errorPagesPath + "242.html"));
 	errorPaths.insert(std::make_pair(CODE_400_BAD_REQUEST, errorPagesPath + "400.html"));
@@ -54,8 +59,6 @@ void	Config::intitializeVars()
 
 void	Config::initializeServer(uint16_t port, std::vector<sockaddr_in>& sockAddress)
 {
-	printColor(GREEN, "IL EST PASSE PAR ICI");
-
 	if (port)
 	{
 		struct sockaddr_in server;	
