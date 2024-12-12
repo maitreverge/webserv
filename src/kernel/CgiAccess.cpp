@@ -13,8 +13,12 @@ void Cgi::hasError(Client & client, std::string err)
 
 		if (WIFEXITED(status))		
 			this->exitCodeHandle(status, client, err);		
-		else if (WIFSIGNALED(status)) 		
+		else if (WIFSIGNALED(status)) 
+		{
             Logger::getInstance().log(DEBUG, "cgi signaled", client);     
+			throw(Logger::getInstance().log(ERROR, err, client), Server::
+				ShortCircuitException(CODE_503_SERVICE_UNAVAILABLE));
+		}		
 	}
 	else if (pid < 0)
 		Logger::getInstance().log(DEBUG, "waitpid yet finish", client);
@@ -68,8 +72,9 @@ void Cgi::retHandle(Client & client, ssize_t ret, std::string err,
 	std::stringstream ss; ss << "ret: " << ret;
 	Logger::getInstance().log(DEBUG, ss.str());
 
-    if (!ret)    
-        Logger::getInstance().log(DEBUG, info);
+	this->hasError(client, "ret handle");
+    if (!ret)	
+        Logger::getInstance().log(DEBUG, info);	   
     else if (ret < 0)   
 		throw (Logger::getInstance().log(ERROR, err, client),
 			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));    

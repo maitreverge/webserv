@@ -56,7 +56,10 @@ void Server::fillMessageSend(const size_t i)
 		return ;
 	if (this->_clients[i].messageSend.empty())
 	{
-		this->printVector(this->_clients[i], this->_clients[i].sendBuffer);
+		Logger::getInstance().log(INFO, "Fill Message Send End",
+			this->_clients[i], L_VRB);
+		this->printVector(this->_clients[i], this->_clients[i].sendBuffer, RED,
+			static_cast<int>(INFO), true);
 		this->checkCgiStatusLine(i);	
 		this->_clients[i].sendFlag = true;
 	}
