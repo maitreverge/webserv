@@ -38,11 +38,11 @@ IF NOT : Need to generate a random 10 lenghts string + an extension to save the 
 - Delete duplicates nodes with the same URI in `extractRouteConfig` 🟢
 - Clear nodes without the URI in `extractRouteConfig` 🟢
 - Clear useless variables 🟢
+Feedback sur le multipart form data : pas de feedback sur les trois fichiers 🟢
 
 ## BLOODY REDIRECTIONS :
 
 ## WEBSITE :
-Feedback sur le multipart form data : pas de feedback sur les trois fichiers 🔴
 Avoir le feedback sur les fichiersd uploades 🔴
 Mettre des liens pour revenir a la page de depart / page d'upload 🔴
 
