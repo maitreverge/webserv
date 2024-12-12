@@ -3,14 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="upload_style.css">
     <title>Simple MultiPart-Form-Data File Upload</title>
+	<style>
+				body {
+			font-family: Arial, sans-serif;
+			background: linear-gradient(to right, #a7d8ed, #0acdf9);
+			text-align: center;
+			padding: 40px;
+		}
+		.soft-frame {
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+		}
+
+	</style>
 </head>
 <body>
-	<!-- ! Two files can be uploaded within the same request, fuck my life -->
-    <h1>Upload One File</h1>
-    <form id="uploadForm" action="/post_multipart/" method="POST" enctype="multipart/form-data">
-        <input type="file" name="file1" id="fileInput1" required>
-        <button type="submit">Submit</button>
-    </form>
+    <h1>📤 Upload One File 📤</h1>
+	<form id="uploadForm" action="/post_multipart/" method="POST" enctype="multipart/form-data">
+		<label for="fileInput1" class="custom-file-upload">Choose File 1</label>
+		<input type="file" name="file1" id="fileInput1" required>
+		
+		<br>
+		<br>
+		<br>
+		<button type="submit" class="styled-button">Submit</button>
+	</form>
+
+	<br>
+	<img src="https://i.redd.it/18gjv96mt1zb1.jpg" alt="cat" class="soft-frame" style="width:500px;height:auto;">
+	<br>
+	<br>
+		<a href="index.html" class="styled-link">Go back to Multiples File Upload</a>
+	<br>
 </body>
 </html>

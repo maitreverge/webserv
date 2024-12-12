@@ -3,18 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="upload_style.css">
     <title>Multiple MultiPart-Form-Data File Upload</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background: linear-gradient(to right, #d7aba0, #e82121);
+			text-align: center;
+			padding: 40px;
+		}
+		.soft-frame {
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+		}
+
+</style>
+</style>
 </head>
 <body>
-	<!-- ! Two files can be uploaded within the same request, fuck my life -->
-    <h1>Upload Multiple Files</h1>
-    <form id="uploadForm" action="/post_multipart/" method="POST" enctype="multipart/form-data">
-        <input type="file" name="file1" id="fileInput1" required>
-        <input type="file" name="file2" id="fileInput2" required>
-        <input type="file" name="file3" id="fileInput3" required>
-        <button type="submit">Submit</button>
-    </form>
+    <h1>📤 Upload Multiple Files 📤</h1>
+	<p> You need to choose 3 files before submitting.</p>
+	<form id="uploadForm" action="/post_multipart/" method="POST" enctype="multipart/form-data">
+		<label for="fileInput1" class="custom-file-upload">Choose File 1</label>
+		<input type="file" name="file1" id="fileInput1" required>
+		
+		<label for="fileInput2" class="custom-file-upload">Choose File 2</label>
+		<input type="file" name="file2" id="fileInput2" required>
+		
+		<label for="fileInput3" class="custom-file-upload">Choose File 3</label>
+		<input type="file" name="file3" id="fileInput3" required>
+		<br>
+		<br>
+		<br>
+		<button type="submit" class="styled-button">Submit</button>
+	</form>
+	<br>
+	<br>
+	
+	<img src="https://i.pinimg.com/736x/ba/92/7f/ba927ff34cd961ce2c184d47e8ead9f6.jpg" alt="cat" class="soft-frame" style="width:500px;height:auto;">
+	<br>
+	<br>
+		<a href="simpleUpload.html" class="styled-link">Go to Single Upload Page</a>
+	<br>
 
-	<a href="simpleUpload.html">Go to Simple upload Page</a>
 </body>
 </html>

@@ -4,44 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multiple Servers with Different Ports</title>
+	<style>
+		body {
+	font-family: Arial, sans-serif;
+	background: linear-gradient(to right, #a7d8ed, #0acdf9);
+	text-align: center;
+	padding: 40px;
+}
+.soft-frame {
+border-radius: 15px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+</style>
 </head>
 <body>
     <h1>Try those URLS :</h1>
 
-    <pre>
-        <code id="codeBlock1">
-            festival.com.localhost:1024/
-        </code>
-        <button onclick="copyToClipboard('codeBlock1')">Copy</button>
-    </pre>
-	
-    <pre>
-		<code id="codeBlock2">
-			gaming.com.localhost:1025/
-        </code>
-        <button onclick="copyToClipboard('codeBlock2')">Copy</button>
-    </pre>
-	
-    <pre>
-		<code id="codeBlock3">
-			villa.com.localhost:1026/
-        </code>
-        <button onclick="copyToClipboard('codeBlock3')">Copy</button>
-    </pre>
+			<a href="http://festival.com.localhost:1024/" target="_blank">festival.com.localhost:1024</a>
+			<br>
+			<a href="http://gaming.com.localhost:1025/" target="_blank">gaming.com.localhost:1025</a>
+			<br>
+			<a href="http://villa.com.localhost:1026/" target="_blank">villa.com.localhost:1026</a>
 
-    <script>
-        function copyToClipboard(id, button) {
-            const text = document.getElementById(id).innerText;
-            navigator.clipboard.writeText(text).then(() => {
-                const originalText = button.innerText;
-                button.innerText = 'Copied!';
-                setTimeout(() => {
-                    button.innerText = originalText;
-                }, 20000000);
-            });
-        }
-    </script>
+<br>
+    <img src="https://i.redd.it/e2fcfbac4wa31.jpg" alt="cat" class="soft-frame" style="width:800px;height:auto;">
 
-    <img src="https://i.redd.it/e2fcfbac4wa31.jpg" alt="cat" style="width:1000px;height:auto;">
 </body>
 </html>
