@@ -56,7 +56,7 @@ void ResponseBuilder::extractServerName()
 		{
 			_serverName = _servernameType.at(curServerName);
 
-			Logger::getInstance().log(INFO, "serverName detected");
+			Logger::getInstance().log(INFO, "serverName detected", L_VRB);
 
 			_isServerName = true;
 		}

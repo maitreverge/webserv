@@ -152,6 +152,7 @@ void Server::shortCircuit(const e_errorCodes err, const size_t i)
 	
 	this->_clients[i].sendBuffer.clear();
 	this->_clients[i].messageRecv.clear();
+	this->_clients[i].messageSend.clear();
 	this->_clients[i].responseBuilder = ResponseBuilder();
 	this->_clients[i].responseBuilder.getHeader(this->_clients[i],
 		this->_conf, err);
