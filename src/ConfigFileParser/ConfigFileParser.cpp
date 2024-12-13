@@ -136,7 +136,10 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt
 		{
 			int portNbr = std::atoi(itemIt->second[0].c_str());
 			if (portNbr > 65535 || portNbr < 1024)
+			{
 				Logger::getInstance().log(WARNING, "Config file error: wrong port value");
+				return;
+			}
 		}
 		if (!(*valIt).empty())
 			field = itemIt->second[0];		
@@ -223,7 +226,7 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, int& field, 
 	if  ((field < 0 || field > 8) && itemIt->first == "maxServerNbr")
 	{
 		Logger::getInstance().log(WARNING, "Config file error: wrong Server value");
-		field = 0;
+		throw std::exception();
 	}
 	if  ((field < 0 || field > 1000) && itemIt->first == "timeoutCgi")
 	{

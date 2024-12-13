@@ -1,16 +1,4 @@
-## CURRENT WORK
-
-## ASK SEB / DAN
-
-## HOTFIX :
-
-
 ## Mandatory Work but can wait
-- Delete duplicates nodes with the same URI in `extractRouteConfig` 🔴
-
-- Clear nodes without the URI in `extractRouteConfig` 🔴
-
-- Clear useless variables 🟠
 
 - Reactivate TimeStamps for final project 🔴
 
@@ -18,16 +6,8 @@
 
 - Missing `HOST` headers or double => 400 BAD REQUEST 🔴
 
-- reliker en dur le vrai fichier de config une fois fait
+- reliker en dur le vrai fichier de config une fois fait 🔴
 
-
-
-# ULTRA BONUS AND EDGE CASE
-- Delete webserv => 401 + kill the client 🔴
-
-- Generate `listing.html` on the go instead of writting files to the disk. 🟠
-
-- transversal attacks "../" (can go further with analyzing if "../" does exit root or not) 🔴
 
 
 ## DONE STUFF
@@ -38,29 +18,20 @@ IF NOT : Need to generate a random 10 lenghts string + an extension to save the 
 - Finish the multipart-form data POST logic 🟢
 - Finish cookies with Dan 🟢
 - curl command from the correction --resolve 🟢
+- transversal attacks "../" (can go further with analyzing if "../" does exit root or not) 🟢
+- Generate `listing.html` on the go instead of writting files to the disk. 🟢
+- Delete webserv => 401 + kill the client 🟢
+- Delete duplicates nodes with the same URI in `extractRouteConfig` 🟢
+- Clear nodes without the URI in `extractRouteConfig` 🟢
+- Clear useless variables 🟢
+Feedback sur le multipart form data : pas de feedback sur les trois fichiers 🟢
+Faire la page index.html coockies 🟢
+Mettre des liens pour revenir a la page de depart / page d'upload 🟢
+Faire en sorte que la limit body + le dosser d'upload soit plus clair, autant sur l'html que sur le fichier de config🟢
 
 ## BLOODY REDIRECTIONS :
 
-############################# This is a valid config #############################
 
-								
-								
-								DO NOT FUCKING TOUCH THIS
-
-
-
-[route1]
-uri = /
-redirection = _websites/cyborg_gaming/
-allowedMethods = GET
-
-# ... which matches a route
-[route2]
-uri = /_websites/cyborg_gaming
-allowedMethods = GET
-index = index.html
-
-############################# This is a valid config #############################
 
 🟢
 🟠

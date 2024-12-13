@@ -5,6 +5,42 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="body_limit.css">
+	<style>
+		.homepage {
+			display: inline-block;
+			font-size: 21px;
+			padding: 10px 20px;
+			background-color: #8da6ec;
+			color: white;
+			text-decoration: none;
+			border-radius: 5px;
+			transition: background-color 0.3s ease, transform 0.3s ease;
+		}
+
+		.homepage:hover {
+			background-color: #0300b2;
+			transform: scale(1.2) rotate(5deg);
+		}
+
+		.upload-directory {
+			display: inline-block;
+			font-size: 18px;
+			padding: 10px 20px;
+			background-color: #f78383;
+			/* Green */
+			color: white;
+			text-decoration: none;
+			border-radius: 5px;
+			transition: background-color 0.3s ease;
+			cursor: pointer;
+
+		}
+
+		.upload-directory:hover {
+			background-color: #e30202;
+			transform: scale(1.3);
+		}
+	</style>
 
 	<title>Multiple Servers with Different Ports</title>
 
@@ -12,15 +48,18 @@
 
 <body>
 	<h1>🚦 BODY LIMIT TESTING 🚦</h1>
-	<h2> Launch another instance of <i>webserv</i> with the following config</h2>
+	<h2> Open another terminal, and launch instance of <i>webserv</i> with the following config :</h2>
 
 	<a href="#" onclick="copyToClipboard('./webserv _websites/correction/7_limit_body/limit_body.ini', this)"
-		class="copy-link">./webserv _websites/correction/7_limit_body/limit_body.ini</a>
+		class="copy-link">( 🖱️CLICK ME🖱️ )./webserv _websites/correction/7_limit_body/limit_body.ini</a>
 
 	<h2>NOTA BENE :</h2>
 	<h2>In this config, the limit is setup at <h1>10</h1>
 	</h2>
-	<h2> and uploads to <b>uploads/</b> base directory !</h2>
+	<h2> and uploads files in </h2>
+
+	<a href="uploads_limit_body/" class="upload-directory">this directory !</a>
+
 	<h2>The goal is then to try with a body size == 10, &lt; to 10 and &gt; to 10 </h2>
 	<br>
 	<h2>You can open the console, and test the following CURL commands :</h2>
@@ -28,23 +67,28 @@
 	<h3>Command with body of size &gt; 10</h3>
 	<a href="#"
 		onclick="copyToClipboard('curl -i -s -X POST -H &quot;Content-Type: text/plain&quot; -d \'123456789-10\' http://localhost:3008', this)"
-		class="copy-curl">curl -i -s -X POST -H "Content-Type: text/plain" -d '123456789-10' http://localhost:3008</a>
+		class="copy-curl">( 🖱️CLICK ME🖱️ )curl -i -s -X POST -H "Content-Type: text/plain" -d '123456789-10'
+		http://localhost:3008</a>
 
 	<h3>Command with body of size == 10</h3>
 	<a href="#"
 		onclick="copyToClipboard('curl -i -s -X POST -H &quot;Content-Type: text/plain&quot; -d \'1234567890\' http://localhost:3008', this)"
-		class="copy-curl">curl -i -s -X POST -H "Content-Type: text/plain" -d '1234567890' http://localhost:3008</a>
+		class="copy-curl">( 🖱️CLICK ME🖱️ )curl -i -s -X POST -H "Content-Type: text/plain" -d '1234567890'
+		http://localhost:3008</a>
 
 	<h3>Command with body of size &lt; 10</h3>
 	<a href="#"
 		onclick="copyToClipboard('curl -i -s -X POST -H &quot;Content-Type: text/plain&quot; -d \'123456789\' http://localhost:3008', this)"
-		class="copy-curl">curl -i -s -X POST -H "Content-Type: text/plain" -d '123456789' http://localhost:3008</a>
+		class="copy-curl">( 🖱️CLICK ME🖱️ )curl -i -s -X POST -H "Content-Type: text/plain" -d '123456789'
+		http://localhost:3008</a>
 	<br>
 	<br>
 	<br>
 	<img src="https://preview.redd.it/funny-cat-expressions-go-v0-ueiam9zbf2ld1.jpeg?auto=webp&s=405507f0695c110a6c8150d515fd825d00eb4b39"
 		alt="cat" class="soft-frame" style="width:500px;height:auto;">
 
+	<br>
+	<a href="/" class="homepage">🏠 BACK TO HOME PAGE</a>
 	<script>
 		function copyToClipboard(text, element) {
 			const tempInput = document.createElement('input');
