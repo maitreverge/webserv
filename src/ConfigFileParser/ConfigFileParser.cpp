@@ -31,8 +31,8 @@ void	ConfigFileParser::intializeConfigStruct(Config& configStruct)
 	int	i = 0;
 	for (catIt catIt = _data.begin(); catIt != _data.end(); ++catIt)
 	{
-		if (!configStruct._serverStruct[i].host.empty()
-				&& !configStruct._serverStruct[i].port.empty()) i++;
+		if (!configStruct._serverStruct[i].port.empty())
+			i++;
 		for (itemIt itemIt = catIt->second.begin(); itemIt != catIt->second.end(); ++itemIt)
 			for (valIt valIt = itemIt->second.begin(); valIt != itemIt->second.end(); ++valIt)
 				setAllConfigValues(catIt, itemIt, valIt, configStruct, i);
@@ -145,8 +145,7 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt
 
 void	ConfigFileParser::setConfigValue(catIt& catIt, server& serverStruct)
 {
-	if (!serverStruct.port.empty() && !serverStruct.host.empty())
-		serverStruct.serverStructName = catIt->first;
+	serverStruct.serverStructName = catIt->first;
 }
 
 //? maxBodySize
