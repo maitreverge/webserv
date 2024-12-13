@@ -136,7 +136,10 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, valIt& valIt
 		{
 			int portNbr = std::atoi(itemIt->second[0].c_str());
 			if (portNbr > 65535 || portNbr < 1024)
+			{
 				Logger::getInstance().log(WARNING, "Config file error: wrong port value");
+				return;
+			}
 		}
 		if (!(*valIt).empty())
 			field = itemIt->second[0];		
