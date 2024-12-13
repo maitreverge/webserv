@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>W3.CSS Template</title>
+<title>WebServ</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -13,15 +13,18 @@
 
 <!-- Header -->
 <header class="w3-container w3-theme w3-padding" id="myHeader">
-	<i onclick="w3_open()" class="fa fa-bars w3-xlarge w3-button w3-theme"></i> 
+	<i onclick="unused()" class="fa fa-bars w3-xlarge w3-button w3-theme"></i> 
 	<div class="w3-center">
-	<h1>WEBSERV CORRECTION WELCOME PAGE</h1>
+	<h1 style="font-family: 'Arial', sans-serif; font-weight:bold;">WEBSERV CORRECTION WELCOME PAGE</h1>
 	  <div class="w3-padding-32">
 		<button class="w3-btn w3-xlarge w3-dark-grey w3-hover-light-grey" onclick="openVideoModal()" style="font-weight:900;">Does this button works ?</button>
 	  </div>
 	</div>
   </header>
   
+  <div id="sylvain" style="display:none;">
+	<img style="position:relative; left:50%; transform: translateX(-50%); border-radius:7px;" src="/_websites/correction/sylvain.jpg">
+  </div>
   <!-- Modal -->
   <div id="id01" class="w3-modal">
 	  <div class="w3-modal-content w3-card-4 w3-animate-top">
@@ -35,19 +38,29 @@
   
   <!-- Video Modal -->
   <div id="videoModal" class="w3-modal" style="display:none;">
-	  <div class="w3-modal-content w3-card-4 w3-animate-top">
+	  <div class="w3-modal-content w3-card-4 w3-animate-top" style="width:560px; height:315px">
 		<header class="w3-container w3-theme-l1"> 
 		  <span onclick="closeVideoModal()"
 		  class="w3-button w3-display-topright">×</span>
 		  <h4>YES THIS BUTTON WORKS</h4>
 		</header>
-		<div class="w3-container">
+		<div>
 		  <iframe id="videoFrame" width="560" height="315" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 		</div>
 	  </div>
   </div>
   
   <script>
+
+  function unused()
+  {
+	let sylvain = document.getElementById('sylvain');
+	sylvain.style.display = "block";
+	setTimeout(function() {
+		sylvain.style.display = "none";
+	}, 800);	
+  }	
+
   function openVideoModal() {
 	  var videoModal = document.getElementById('videoModal');
 	  var videoFrame = document.getElementById('videoFrame');

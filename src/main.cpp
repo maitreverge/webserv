@@ -35,14 +35,14 @@ void help()
 	std::exit(1);
 }
 
-void switchFlags(const char lt, int & flags)
+void switchFlags(const char lt, int & flags, bool & help_flag)
 {
 	switch (lt)
 	{
 		case '-':
 			break;	
 		case 'h':
-			help();
+			help_flag = true;
 			break;
 		case 's':
 			flags = L_SLN;
@@ -67,14 +67,16 @@ void switchFlags(const char lt, int & flags)
 int searchFlags(char* argv[])
 {
 	int flags = 0;
-	
+	bool help_flag = false;
 	while (*++argv)
 	{
 		std::string str(*argv);
 		if (!str.empty() && str[0] == '-')
 			for (size_t i = 1; i < str.size(); ++i)
-				switchFlags(str[i], flags);			
+				switchFlags(str[i], flags, help_flag);			
 	}
+	if (help_flag)
+		help();
 	return flags;
 }
 
