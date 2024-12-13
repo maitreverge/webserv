@@ -1,6 +1,7 @@
 <?php
 ini_set('default_mimetype', '');
-
+ini_set('display_errors', 0);
+error_reporting(0);
 // Récupérer le PATH_INFO depuis les variables d'environnement CGI
 $path_info = getenv('PATH_INFO');
 

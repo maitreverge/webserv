@@ -1,4 +1,7 @@
 <?php
+
+error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING); // Ignore les warnings et notices
+
 ini_set('default_mimetype', '');
 
 // Récupérer le PATH_INFO depuis les variables d'environnement CGI

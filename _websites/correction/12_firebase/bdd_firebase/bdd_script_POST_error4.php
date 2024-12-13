@@ -3,7 +3,8 @@
 while (1);
 
 ini_set('default_mimetype', '');
-
+ini_set('display_errors', 0);
+error_reporting(0);
 // Lire tout le corps de la requête depuis l'entrée standard
 $rawInput = file_get_contents("php://stdin");
 
