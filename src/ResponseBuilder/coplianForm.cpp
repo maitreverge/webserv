@@ -43,20 +43,15 @@ void	ResponseBuilder::initServerNames( void ){
 	_servernameType.insert(std::make_pair("gaming.com", "_websites/cyborg_gaming/"));// ! DONE
 	_servernameType.insert(std::make_pair("villa.com", "_websites/villa_agency/"));// ! DONE
 
-	// ====================== ENTRYPOINT FOR MAIN WEBSITE ======================
-
-	_servernameType.insert(std::make_pair("webserv.main", "_websites/webserv_website/"));// TODO
-
 	// =================== ENTRYPOINT FOR CORRECTION WEBSITE ===================
 	
 	_servernameType.insert(std::make_pair("webserv.correction", "_websites/correction/"));// ! WORK NEEDLE
+	_servernameType.insert(std::make_pair("webserv.correction2", "_websites/correction/"));// ! WORK NEEDLE
 
 	// ====================== MAIN SERVER NAMES FOR CORRECTIONS ================
 	
 	// Simple configs
-	_servernameType.insert(std::make_pair("get.ok", "_websites/correction/get_ok/"));
-	_servernameType.insert(std::make_pair("get.ko", "_websites/correction/get_ko/"));
-	_servernameType.insert(std::make_pair("post.ok", "_websites/correction/post_ok/"));
+	_servernameType.insert(std::make_pair("post.ok", "_websites/correction/2_post_ok/"));
 	_servernameType.insert(std::make_pair("post.ko", "_websites/correction/post_ko/"));
 	_servernameType.insert(std::make_pair("delete.ok", "_websites/correction/delete_ok/"));
 	_servernameType.insert(std::make_pair("delete.ko", "_websites/correction/delete_ko/"));
