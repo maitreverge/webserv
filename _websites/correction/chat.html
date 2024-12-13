@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fake Pop-up Chat</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    .chat-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px; /* Changed to position on the right */
+      width: 280px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-header {
+      background-color: #007BFF;
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+    }
+
+    .chat-body {
+      padding: 10px;
+      max-height: 300px;
+      overflow-y: auto;
+      background-color: #f9f9f9;
+    }
+
+    .message {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .text {
+      background-color: #e0e0e0;
+      padding: 8px 12px;
+      border-radius: 10px;
+      max-width: 70%;
+    }
+
+    .chat-footer {
+      padding: 10px;
+      background-color: #f1f1f1;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="chat-container" id="chat">
+  <div class="chat-header">Chat with AI Assistant</div>
+  <div class="chat-body" id="chatBody">
+    <div class="message">
+      <img class="avatar" src="img/sylvain_2.jpg" alt="Avatar">
+      <div class="text">Je suis Sylvain Durrif, et je suis la pour te guider dans ton aventure !</div>
+    </div>
+  </div>
+  <div class="chat-footer">...</div>
+</div>
+
+<script>
+  const messages = [
+    "Tu aurais-vu mon septre cosmique ?",
+    "Tu veux acheter ma crypto-monnaie : COSMIC-COIN ?",
+    "Tu es mignon(ne), tu peux me montrer comment coder ft_strlen ?",
+    "Wow, ce webserv est vraiment incroyable, il merite vraiment un outstanding !",
+    "Tu as Snap ?",
+	"Les vaisseaux de la vierge Marie viendront te recuper toi aussi, achete ma formation !"
+	"J'ai vu apparaitre des scripts python et php partout sur mon lit, ils dansaient dans tout les sens, j'etais comme dans Mooglie en fait !",
+    "Toi aussi tu as la double vue ?",
+    "N'hesites pas a t'aider de Dan, Seb et Flo, mes disciples cosmiques, dans ta quete de veritee sur webserv.",
+	"Mon nom d'ame, c'est Oriana, et je suis relie a l'energie de l'homme vert (pas Shrek du coup)",
+	"Un reseau de cite lumiere extra-terrienes, c'est la que se trouve la verite, et nulle-part ailleurs",
+	"Toi aussi tu peux etre un surhomme, a savoir un melange entre un homme-oiseau et un homme-loup",
+    "Need a joke to lighten up the mood?"
+  ];
+
+  function addMessage() {
+    const chatBody = document.getElementById("chatBody");
+    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+    
+    const messageElement = document.createElement("div");
+    messageElement.className = "message";
+    messageElement.innerHTML = `
+      <img class="avatar" src="img/sylvain_2.jpg" alt="Avatar">
+      <div class="text">${randomMessage}</div>
+    `;
+    chatBody.appendChild(messageElement);
+
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+
+  // Add a new message every 5 seconds
+  setInterval(addMessage, 5000);
+</script>
+
+</body>
+</html>
