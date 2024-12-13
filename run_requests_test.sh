@@ -125,7 +125,10 @@ if [ -n "$CONFIG_FILE" ]; then
 	done < "$request_file"
 
 	# Arrêter Webserv une fois tous les tests effectués
-	kill "$webserv_pid"
+	if kill -0 "$webserv_pid" 2>/dev/null; then
+		kill "$webserv_pid"
+
+	fi
 	wait "$webserv_pid" 2>/dev/null || {
 		kill -9 "$webserv_pid" 2>/dev/null
 	}
@@ -191,7 +194,10 @@ else
 			test_counter=$((test_counter + 1))
 		done < "$request_file"
 
-		kill "$webserv_pid"
+		if kill -0 "$webserv_pid" 2>/dev/null; then
+			kill "$webserv_pid"
+
+		fi
 		wait "$webserv_pid" 2>/dev/null || {
 			kill -9 "$webserv_pid" 2>/dev/null
 		}
