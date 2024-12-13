@@ -1,2 +1,2 @@
-curl -i -s -X GET --connect-timeout 10 --max-time 10 http://localhost:3025/cgi/bdd_firebase/bdd_script_GET.php?login=user1
+curl -i -s -X GET --connect-timeout 10 --max-time 10 http://localhost:3025/cgi/bdd_firebase/bdd_script_GET.php?login=test
 --END-REQUEST--
