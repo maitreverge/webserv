@@ -14,7 +14,7 @@ Logger::Logger(int flags) : logToStdOut(1),  _nl(false), _flags(flags)
 	_accessFile.open("access.log", std::ios::trunc);
 	_errorFile.open("error.log", std::ios::trunc);
 	if (!_accessFile.is_open() || !_errorFile.is_open())
-		Logger::getInstance().log(ERROR, "Erreur : Impossible d'ouvrir le fichier de log.");
+		Logger::getInstance().log(ERROR, "log file");
 }	
 
 Logger::~Logger()

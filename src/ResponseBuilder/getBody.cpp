@@ -80,7 +80,7 @@ bool ResponseBuilder::getBody( Client &inputClient ){
     }
 	else
 	{
-		Logger::getInstance().log(ERROR, "Failed Stream happend", inputClient);
+		Logger::getInstance().log(ERROR, "failed stream happend", inputClient);
 		throw Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR);
     }
 	

@@ -151,7 +151,7 @@ void ResponseBuilder::resolveURI( void ) {
 	//  STEP 5 : Check for DELETE + webserv
 	if (_method == DELETE and _realURI == "webserv")
 	{
-		Logger::getInstance().log(ERROR, "User tried to delete the `webserv` binary");
+		Logger::getInstance().log(ERROR, "user tried to delete the `webserv` binary");
 		setError(CODE_403_FORBIDDEN);
 	}
 }
@@ -180,7 +180,7 @@ void	ResponseBuilder::checkMethod( void ){
 			return;
 	}
 
-	Logger::getInstance().log(ERROR, "Method not found");
+	Logger::getInstance().log(ERROR, "method not found");
 
 	setError(CODE_405_METHOD_NOT_ALLOWED); //! WHY DONT USE SHORT CIRCUIT ? le client ne sera pas exited en cas de bad methode
 }

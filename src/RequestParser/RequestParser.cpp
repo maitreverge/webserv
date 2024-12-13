@@ -121,7 +121,7 @@ void	RequestParser::handleFirstLine(std::istringstream& requestStream)
 		}
 	}
 	if (_isValid == 0)
-		Logger::getInstance().log(ERROR, "Request first line wrong", *this);
+		Logger::getInstance().log(ERROR, "request first line wrong", *this);
 }
 
 void	RequestParser::handleHeaderLines(std::istringstream& requestStream)
