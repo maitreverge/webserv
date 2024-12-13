@@ -22,7 +22,22 @@
 		#submitButton {
 			display: none;
 		}
-	</style>
+		.homepage {
+			display: inline-block;
+			font-size: 21px;
+			padding: 10px 20px;
+			background-color: #8da6ec;
+			color: white;
+			text-decoration: none;
+			border-radius: 5px;
+			transition: background-color 0.3s ease, transform 0.3s ease;
+		}
+
+		.homepage:hover {
+			background-color: #0300b2;
+			transform: scale(1.2) rotate(5deg);
+		}
+		</style>
 </head>
 
 <body>
@@ -31,33 +46,35 @@
 		<label for="fileInput1" class="custom-file-upload">Choose File 1</label>
 		<input type="file" name="file1" id="fileInput1" required>
 		<span id="fileName1"></span>
-
+		
 		<br>
 		<br>
 		<br>
 		<button type="submit" id="submitButton" class="styled-button">Submit</button>
 	</form>
-
+	
 	<br>
 	<img src="https://i.redd.it/18gjv96mt1zb1.jpg" alt="cat" class="soft-frame" style="width:500px;height:auto;">
 	<br>
 	<br>
 	<a href="index.html" class="styled-link">Go back to Multiples File Upload</a>
 	<br>
-
+	
+	<br>
+	<a href="/" class="homepage">🏠 BACK TO HOME PAGE</a>
 	<script>
 		document.getElementById('fileInput1').addEventListener('change', function () {
 			document.getElementById('fileName1').textContent = this.files[0].name;
 			checkFiles();
 		});
-
+		
 		function checkFiles() {
 			const fileInput1 = document.getElementById('fileInput1').files.length;
-
+			
 			document.getElementById('submitButton').style.display =
-				(fileInput1 > 0 ) ? 'inline-block' : 'none';
+			(fileInput1 > 0 ) ? 'inline-block' : 'none';
 		}
-	</script>
+		</script>
 </body>
 
 </html>

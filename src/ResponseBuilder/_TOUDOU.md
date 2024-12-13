@@ -11,9 +11,7 @@
 
 
 ## WEBSITE :
-Faire la page index.html coockies 🔴🟢
 Avoir le feedback sur les fichiersd uploades 🔴🟢
-Mettre des liens pour revenir a la page de depart / page d'upload 🔴🟢
 
 LIMIT BODY :
 Faire en sorte que la limit body + le dosser d'upload soit plus clair, autant sur l'html que sur le fichier de config🔴
@@ -34,6 +32,8 @@ IF NOT : Need to generate a random 10 lenghts string + an extension to save the 
 - Clear nodes without the URI in `extractRouteConfig` 🟢
 - Clear useless variables 🟢
 Feedback sur le multipart form data : pas de feedback sur les trois fichiers 🟢
+Faire la page index.html coockies 🟢
+Mettre des liens pour revenir a la page de depart / page d'upload 🟢
 
 ## BLOODY REDIRECTIONS :
 
