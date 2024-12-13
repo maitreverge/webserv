@@ -8,6 +8,11 @@
 
 - reliker en dur le vrai fichier de config une fois fait 🔴
 
+#####################
+
+Mettre le meme fichier de config avec les cookies sur 1
+Modifier lage cookie
+
 
 
 ## DONE STUFF
