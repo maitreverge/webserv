@@ -1,12 +1,12 @@
-curl -i -s -X GET --connect-timeout 10 --max-time 10 http://localhost:3023/cgi/bdd_firebase/bdd_script_GET.php
+curl -i -s -X GET --connect-timeout 10 --max-time 10 http://localhost:3023/_websites/correction/12_firebase/bdd_firebase/bdd_script_GET.php
 --END-REQUEST--
-curl -i -s -X GET --connect-timeout 10 --max-time 10 http://localhost:3023/cgi/ai/skynet-post.py
+curl -i -s -X GET --connect-timeout 10 --max-time 10 http://localhost:3023/_websites/correction/13_skynet/skynet-post.py
 --END-REQUEST--
-curl -i -s -X GET --connect-timeout 10 --max-time 10 http://localhost:3123/cgi/bdd_firebase/bdd_script_GET.php?login=user1
+curl -i -s -X GET --connect-timeout 10 --max-time 10 http://localhost:3123/_websites/correction/12_firebase/bdd_firebase/bdd_script_GET.php?login=user1
 --END-REQUEST--
-curl -i -s -X GET --connect-timeout 10 --max-time 10 http://localhost:3123/cgi/ai/skynet-post.py
+curl -i -s -X GET --connect-timeout 10 --max-time 10 http://localhost:3123/_websites/correction/13_skynet/skynet-post.py
 --END-REQUEST--
-curl -i -s -X GET --connect-timeout 10 --max-time 10 http://localhost:3223/cgi/bdd_firebase/bdd_script_GET.php?login=user1
+curl -i -s -X GET --connect-timeout 10 --max-time 10 http://localhost:3223/_websites/correction/12_firebase/bdd_firebase/bdd_script_GET.php?login=user1
 --END-REQUEST--
-curl -i -s -X GET --connect-timeout 10 --max-time 10 http://localhost:3223/cgi/ai/skynet-post.py
+curl -i -s -X GET --connect-timeout 10 --max-time 10 http://localhost:3223/_websites/correction/13_skynet/skynet-post.py
 --END-REQUEST--
