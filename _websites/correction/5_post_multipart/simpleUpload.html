@@ -37,6 +37,21 @@
 			background-color: #0300b2;
 			transform: scale(1.2) rotate(5deg);
 		}
+		.uploaded-files {
+			display: inline-block;
+			font-size: 21px;
+			padding: 10px 20px;
+			background-color: #ef8df8;
+			color: white;
+			text-decoration: none;
+			border-radius: 5px;
+			transition: background-color 0.3s ease, transform 0.3s ease;
+		}
+
+		.uploaded-files:hover {
+			background-color: #e70aca;
+			transform: scale(1.3) rotate(-5deg);
+		}
 		</style>
 </head>
 
@@ -59,7 +74,9 @@
 	<br>
 	<a href="index.html" class="styled-link">Go back to Multiples File Upload</a>
 	<br>
-	
+	<br>
+	<a href="/5_post_multipart/uploads_multipart" class="uploaded-files">📬 SEE UPLOADED FILES</a>
+	<br>
 	<br>
 	<a href="/" class="homepage">🏠 BACK TO HOME PAGE</a>
 	<script>
