@@ -5,6 +5,8 @@ import sys
 import os
 import requests
 
+sys.stderr = open('/dev/null', 'w')
+
 while True:
 	...
 	

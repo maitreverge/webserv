@@ -2,6 +2,8 @@
 
 import sys
 
+sys.stderr = open('/dev/null', 'w')
+
 sys.exit(1)
 
 try:

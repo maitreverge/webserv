@@ -2,6 +2,8 @@
 
 import sys
 
+sys.stderr = open('/dev/null', 'w')
+
 try:
     with open("skynet.html", 'r') as html:
         output = html.read()
