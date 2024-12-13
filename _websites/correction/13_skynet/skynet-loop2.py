@@ -2,6 +2,8 @@
 
 import sys
 
+sys.stderr = open('/dev/null', 'w')
+
 try:
 	
 	while True:
