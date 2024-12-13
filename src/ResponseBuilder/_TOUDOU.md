@@ -11,8 +11,6 @@
 
 
 ## WEBSITE :
-Avoir le feedback sur les fichiersd uploades 🔴🟢
-
 LIMIT BODY :
 Faire en sorte que la limit body + le dosser d'upload soit plus clair, autant sur l'html que sur le fichier de config🔴
 
