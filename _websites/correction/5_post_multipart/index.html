@@ -18,36 +18,106 @@
 			border-radius: 15px;
 			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 		}
-	</style>
+
+		#submitButton {
+			display: none;
+		}
+		.homepage {
+			display: inline-block;
+			font-size: 21px;
+			padding: 10px 20px;
+			background-color: #8da6ec;
+			color: white;
+			text-decoration: none;
+			border-radius: 5px;
+			transition: background-color 0.3s ease, transform 0.3s ease;
+		}
+
+		.homepage:hover {
+			background-color: #0300b2;
+			transform: scale(1.2) rotate(5deg);
+		}
+		.uploaded-files {
+			display: inline-block;
+			font-size: 21px;
+			padding: 10px 20px;
+			background-color: #ef8df8;
+			color: white;
+			text-decoration: none;
+			border-radius: 5px;
+			transition: background-color 0.3s ease, transform 0.3s ease;
+		}
+
+		.uploaded-files:hover {
+			background-color: #e70aca;
+			transform: scale(1.3) rotate(-5deg);
+		}
+		</style>
 </head>
 
 <body>
 	<h1>📤 Upload Multiple Files 📤</h1>
 	<p> You need to choose 3 files before submitting.</p>
-	<form id="uploadForm" action="/post_multipart/" method="POST" enctype="multipart/form-data">
+	<p id="alertMessage" style="color: red; display: none;">Please choose all 3 files before submitting!</p>
+	<form id="uploadForm" action="/5_post_multipart/" method="POST" enctype="multipart/form-data">
 		<label for="fileInput1" class="custom-file-upload">Choose File 1</label>
 		<input type="file" name="file1" id="fileInput1" required>
-
+		<span id="fileName1"></span>
+		
 		<label for="fileInput2" class="custom-file-upload">Choose File 2</label>
 		<input type="file" name="file2" id="fileInput2" required>
-
+		<span id="fileName2"></span>
+		
 		<label for="fileInput3" class="custom-file-upload">Choose File 3</label>
 		<input type="file" name="file3" id="fileInput3" required>
+		<span id="fileName3"></span>
+		
 		<br>
 		<br>
 		<br>
-		<button type="submit" class="styled-button">Submit</button>
+		<button type="submit" id="submitButton" class="styled-button">Submit</button>
 	</form>
+	
 	<br>
 	<br>
-
+	
 	<img src="https://i.pinimg.com/736x/ba/92/7f/ba927ff34cd961ce2c184d47e8ead9f6.jpg" alt="cat" class="soft-frame"
-		style="width:500px;height:auto;">
+	style="width:500px;height:auto;">
 	<br>
 	<br>
 	<a href="simpleUpload.html" class="styled-link">Go to Single Upload Page</a>
 	<br>
-
+	<br>
+	<a href="/5_post_multipart/uploads_multipart" class="uploaded-files">📬 SEE UPLOADED FILES</a>
+	<br>
+	<br>
+	<a href="/" class="homepage">🏠 BACK TO HOME PAGE</a>
+	
+	<script>
+		document.getElementById('fileInput1').addEventListener('change', function () {
+			document.getElementById('fileName1').textContent = this.files[0].name;
+			checkFiles();
+		});
+		
+		document.getElementById('fileInput2').addEventListener('change', function () {
+			document.getElementById('fileName2').textContent = this.files[0].name;
+			checkFiles();
+		});
+		
+		document.getElementById('fileInput3').addEventListener('change', function () {
+			document.getElementById('fileName3').textContent = this.files[0].name;
+			checkFiles();
+		});
+		
+		function checkFiles() {
+			const fileInput1 = document.getElementById('fileInput1').files.length;
+			const fileInput2 = document.getElementById('fileInput2').files.length;
+			const fileInput3 = document.getElementById('fileInput3').files.length;
+			
+			document.getElementById('submitButton').style.display =
+			(fileInput1 > 0 && fileInput2 > 0 && fileInput3 > 0) ? 'inline-block' : 'none';
+		}
+		</script>
 </body>
 
 </html>
