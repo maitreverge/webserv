@@ -226,7 +226,7 @@ void	ConfigFileParser::setConfigValue(catIt& catIt, itemIt& itemIt, int& field, 
 	if  ((field < 0 || field > 8) && itemIt->first == "maxServerNbr")
 	{
 		Logger::getInstance().log(WARNING, "Config file error: wrong Server value");
-		field = 0;
+		throw std::exception();
 	}
 	if  ((field < 0 || field > 1000) && itemIt->first == "timeoutCgi")
 	{
