@@ -10,11 +10,6 @@
 
 
 
-## WEBSITE :
-LIMIT BODY :
-Faire en sorte que la limit body + le dosser d'upload soit plus clair, autant sur l'html que sur le fichier de config🔴
-
-
 ## DONE STUFF
 - If there is `Content-Type: multipart/form-data;`, then activate the unfinished branch 🟢
 - Exploit the Content-Type header for post requests 🟢
@@ -32,6 +27,7 @@ IF NOT : Need to generate a random 10 lenghts string + an extension to save the 
 Feedback sur le multipart form data : pas de feedback sur les trois fichiers 🟢
 Faire la page index.html coockies 🟢
 Mettre des liens pour revenir a la page de depart / page d'upload 🟢
+Faire en sorte que la limit body + le dosser d'upload soit plus clair, autant sur l'html que sur le fichier de config🟢
 
 ## BLOODY REDIRECTIONS :
 
