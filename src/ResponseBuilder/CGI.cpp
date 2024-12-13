@@ -61,6 +61,8 @@ void ResponseBuilder::checkCGI( void ){
 
 	_folderCGI = _realURI.substr(0, _realURI.find_last_of('/') + 1);
 
+	if (!_folderCGI.empty() && _folderCGI[0] == '/')
+		_folderCGI.erase(_folderCGI.begin());
 	// _folderCGI.insert(0, ".");
 
 	Logger::getInstance().log(DEBUG, "RESULT OF FUNCTION : ResponseBuilder::checkCGI");
