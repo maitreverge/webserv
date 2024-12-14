@@ -298,7 +298,7 @@ int	ConfigFileParser::extractDataFromConfigFile(const std::string& path)
 	if (!file.is_open())
 	{
 		Logger::getInstance().log(WARNING, "could not open config file. Starting Webserv with default file...");
-		file.open("_configs/base_test/base_test_ok_1.ini");
+		file.open("_configs/master_config.ini");
 	}
 	if (!file.is_open())
 	{

@@ -19,7 +19,7 @@ Config::Config()
 
 	intitializeVars();
 	ConfigFileParser parser;
-	parser.parseConfigFile(*this, (char *)("_configs/base_test/base_test_ok_1.ini")); // TODO : Relinker la vraie config par defaut
+	parser.parseConfigFile(*this, (char *)("_configs/master_config.ini")); // TODO : Relinker la vraie config par defaut
 	int i = 0;
 	for (i = 0; i < maxServerNbr; i++)
 		initializeServer((uint16_t)std::atoi(_serverStruct[i].port.c_str()), sockAddress);
