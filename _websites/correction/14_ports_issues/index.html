@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>PORTS and CONFIGURATION</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background: linear-gradient(to right, #a7d8ed, #0acdf9);
+			text-align: center;
+			padding: 40px;
+		}
+
+		.soft-frame {
+			border-radius: 15px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+		}
+
+		.styled-link {
+			display: inline-block;
+			font-size: 21px;
+			padding: 10px 20px;
+			background-color: #9998ec;
+			color: white;
+			text-decoration: none;
+			border-radius: 5px;
+			transition: background-color 0.3s ease, transform 0.3s ease;
+		}
+
+		.styled-link:hover {
+			background-color: #001bb2;
+			transform: scale(1.5);
+		}
+		.homepage {
+			display: inline-block;
+			font-size: 21px;
+			padding: 10px 20px;
+			background-color: #8da6ec;
+			color: white;
+			text-decoration: none;
+			border-radius: 5px;
+			transition: background-color 0.3s ease, transform 0.3s ease;
+		}
+
+		.homepage:hover {
+			background-color: #0300b2;
+			transform: scale(1.2) rotate(5deg);
+		}
+
+		.copy-curl {
+	display: inline-block;
+	font-size: 18px;
+	padding: 10px 20px;
+	background-color: #62f175;
+	color: white;
+	text-decoration: none;
+	border-radius: 5px;
+	transition: background-color 0.3s ease;
+	cursor: pointer;
+}
+
+.copy-curl:hover {
+	background-color: #057914;
+	transform: scale(1.4);
+}
+
+.click-text {
+  color: red;
+}
+		</style>
+</head>
+
+<body>
+	<h1>👀 Pay attention to <i>master_config.ini</i> for multiples websites accross differents ports 👀</h1>
+
+	<h2> and launch those urls :</h2>
+	
+	<a href="http://festival.com.localhost:1024/" class="styled-link" target="_blank">festival.com.localhost:1024/</a>
+	<br>
+	<br>
+	<a href="http://gaming.com.localhost:1025/" class="styled-link" target="_blank">gaming.com.localhost:1025/</a>
+	<br>
+	<br>
+	<a href="http://villa.com.localhost:1026/" class="styled-link" target="_blank">villa.com.localhost:1026/</a>
+	
+	<br>
+	<br>
+	
+	<hr style="border: 0; height: 2px; background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet); margin: 20px 0;">
+	<h2> <i>Want to setup the same port multiples times ?</i></h2>
+	<h2> Open a terminal and launch a new instance of <i>webserv</i> with the following configuration :</h2>
+	
+	<a href="#"
+	onclick="copyToClipboard('./webserv _configs/same_ports.ini', this)",
+	class="copy-curl"><span class="click-text">( 🖱️CLICK ME🖱️ )</span> ./webserv _configs/same_ports.ini </a>
+	
+	<h2> ... and you can test with the port <i>3456</i> with this URL :</h2>
+	<br>
+	
+	<a href="http://localhost:3456/" class="styled-link" target="_blank">http://localhost:3456/</a>
+	<br>
+	<hr style="border: 0; height: 2px; background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet); margin: 20px 0;">
+	<br>
+	<h2> <i>Need to launch multiple servers at the same time with different configurations but with common ports to setup the same port multiples times ?</i></h2>
+		<h2 style="color: orange;"><i> I got you...</i></h2>
+	<h2> Here is a new configuration, identical to the current one, which you can launch in a new terminal :</h2>
+
+	<a href="#"
+	onclick="copyToClipboard('./webserv _configs/common_ports_with_master_config.ini', this)",
+	class="copy-curl"><span class="click-text">( 🖱️CLICK ME🖱️ )</span> ./webserv _configs/common_ports_with_master_config.ini </a>
+	
+	<hr style="border: 0; height: 2px; background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet); margin: 20px 0;">
+	<img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.kym-cdn.com%2Feditorials%2Ficons%2Foriginal%2F000%2F006%2F177%2Fblackcatzoningout_meme.jpg&f=1&nofb=1&ipt=70c81f5d8e709c49293e9751633bf991a01ddc350f1f54c6e0e378bdaa3286b5&ipo=images"
+	alt="cat" class="soft-frame" style="width:600px;height:auto;">
+	<br>
+	<a href="/" class="homepage">🏠 BACK TO HOME PAGE</a>
+
+	<script>
+		function copyToClipboard(text, element) {
+			const tempInput = document.createElement('input');
+			tempInput.value = text;
+			document.body.appendChild(tempInput);
+			tempInput.select();
+			document.execCommand('copy');
+			document.body.removeChild(tempInput);
+
+			const originalText = element.innerText;
+			element.innerText = 'Copied';
+			setTimeout(() => {
+				element.innerText = originalText;
+			}, 2000);
+		}
+	</script>
+</body>
+
+</html>

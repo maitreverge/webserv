@@ -36,10 +36,7 @@
 ```
 
 ## BALISES HOME BUTTON + CSS
-- Finaliser master_config.ini 🟢🔴
-- Creer un doublon de master-config avec des ports differents 🟢🔴
-- Faire un fichier de config pour les multiples serveurs 🟢🔴
--  🟢🔴
+-  Reecrire la page HTML de LIMIT BODY🟢🔴
 -  🟢🔴
 - Mettre le noms des fichiers en mode production  🟢🔴
 - Reactiver les TimeStamps en mode production 🟢🔴
@@ -69,6 +66,9 @@ Faire en sorte que la limit body + le dosser d'upload soit plus clair, autant su
 - Mettre du contennu dans les 3 fichiers DELETE 🟢
 - Clean les servernames inutiles 🟢
 - Mettre du CSS sur la self-generated page DELETED 🟢
+- Finaliser master_config.ini 🟢
+- Creer un doublon de master-config avec des ports differents 🟢
+- Faire un fichier de config pour les multiples serveurs 🟢
 
 
 
