@@ -17,7 +17,6 @@ Modifier lage cookie
 - Mettre du CSS sur la self-generated page DELETED 🟢🔴
 - Finaliser master_config.ini 🟢🔴
 - Creer un doublon de master-config avec des ports differents 🟢🔴
-- Clean les server names inutiles 🟢🔴
 - Faire un fichier de config pour les multiples serveurs 🟢🔴
 -  🟢🔴
 -  🟢🔴
@@ -45,6 +44,7 @@ Faire la page index.html coockies 🟢
 Mettre des liens pour revenir a la page de depart / page d'upload 🟢
 Faire en sorte que la limit body + le dosser d'upload soit plus clair, autant sur l'html que sur le fichier de config🟢
 - Mettre du contennu dans les 3 fichiers DELETE 🟢
+- Clean les server names inutiles 🟢
 
 ## BLOODY REDIRECTIONS :
 

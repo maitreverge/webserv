@@ -46,36 +46,7 @@ void	ResponseBuilder::initServerNames( void ){
 	// =================== ENTRYPOINT FOR CORRECTION WEBSITE ===================
 	
 	_servernameType.insert(std::make_pair("webserv.correction", "_websites/correction/"));// ! WORK NEEDLE
-	_servernameType.insert(std::make_pair("webserv.correction2", "_websites/correction/"));// ! WORK NEEDLE
 
-	// ====================== MAIN SERVER NAMES FOR CORRECTIONS ================
-	
-	// Simple configs
-	_servernameType.insert(std::make_pair("post.ok", "_websites/correction/2_post_ok/"));
-	_servernameType.insert(std::make_pair("post.ko", "_websites/correction/post_ko/"));
-	_servernameType.insert(std::make_pair("delete.ok", "_websites/correction/delete_ok/"));
-	_servernameType.insert(std::make_pair("delete.ko", "_websites/correction/delete_ko/"));
-	_servernameType.insert(std::make_pair("unknown_method", "_websites/correction/unknown_method/"));
-
-	// Real Post configs
-	_servernameType.insert(std::make_pair("post.postman", "_websites/correction/post_postman/"));
-	_servernameType.insert(std::make_pair("post.multipart", "_websites/correction/post_multipart/"));
-
-	// Main routes configs
-	_servernameType.insert(std::make_pair("cgi.ok", "_websites/correction/cgi_ok/"));
-	_servernameType.insert(std::make_pair("cgi.ko", "_websites/correction/cgi_ko/"));
-
-	_servernameType.insert(std::make_pair("redirection.ok", "_websites/correction/redirection_ok/"));
-	_servernameType.insert(std::make_pair("redirection.ko", "_websites/correction/redirection_ko/"));
-
-	_servernameType.insert(std::make_pair("root.ok", "_websites/correction/root_ok/"));
-	_servernameType.insert(std::make_pair("root.ko", "_websites/correction/root_ko/"));
-
-	_servernameType.insert(std::make_pair("listing.ok", "_websites/correction/listing_ok/"));
-	_servernameType.insert(std::make_pair("listing.ko", "_websites/correction/listing_ko/"));
-
-	// _servernameType.insert(std::make_pair("cookie.ok", "_websites/correction/"));
-	// _servernameType.insert(std::make_pair("cookie.ko", "_websites/correction/"));
 }
 
 ResponseBuilder::ResponseBuilder( void ){
