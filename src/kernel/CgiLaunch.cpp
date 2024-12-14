@@ -109,9 +109,9 @@ std::string Cgi::getApiKey(Client & client, std::string & interPath)
 
 void Cgi::callExecve(Client & client, const std::string & interpreter)
 {
-	Logger::getInstance().log(INFO, "Change Dir", client, L_VRB);
-	Logger::getInstance().log(INFO, client.responseBuilder._folderCGI.c_str(),
-		client, L_VRB);
+	stringstream ss; ss << "Change Dir: " << client.responseBuilder._folderCGI;	
+	Logger::getInstance().log(INFO, ss.str(), client, L_VRB);
+	
 	if (chdir(client.responseBuilder._folderCGI.c_str()) < 0)
 		Logger::getInstance().log(ERROR, "chdir", client), std::exit(200);				
 	char actualPath[PATH_MAX];	
