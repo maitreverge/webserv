@@ -59,7 +59,6 @@ access.log
 
 # Tests Dan
 docs_dan
-tests/config/my_ip.txt
 tests/siege/siege_urls.txt
 
 # Uploads
