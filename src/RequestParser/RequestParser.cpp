@@ -113,11 +113,14 @@ void	RequestParser::handleFirstLine(std::istringstream& requestStream)
 		if (iss >> 	remainingData || _method.empty() || _URI.empty() || _HTTP_version.empty())
 			_isValid = false;
 		if (_HTTP_version != "HTTP/1.1")
+		{
 			_isValid = false;
+			throw Server::ShortCircuitException(CODE_505_HTTP_VERSION_NOT_SUPPORTED);
+		}
 		if (_method != "GET" && _method != "POST" && _method != "DELETE")
 		{
 			_isValid = false;
-			throw Server::ShortCircuitException(CODE_405_METHOD_NOT_ALLOWED);
+			throw Server::ShortCircuitException(CODE_501_NOT_IMPLEMENTED);
 		}
 	}
 	if (_isValid == 0)
