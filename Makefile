@@ -87,9 +87,18 @@ $(OBJ_DIR_DEBUG)/%.o : %.cpp $(HDR)
 	@$(GXX) $(CFLAGS) $< -c -o $@
 
 $(NAME) : $(OBJ)
-	@python3 -m pip install --upgrade pip --user -q --no-warn-script-location
-	@pip install --force-reinstall --no-cache-dir flatbuffers==2.0 --user -q --no-warn-script-location
-	@pip install --upgrade openai --user -q --no-warn-script-location	
+#@python3 -m pip install --upgrade pip --user -q --no-warn-script-location
+# @python3 -m pip uninstall flatbuffers -y -q
+# @pip install --force-reinstall --no-cache-dir flatbuffers==2.0 --user -q --no-warn-script-location
+
+# @pip install --upgrade openai --user -q --no-warn-script-location
+
+	@{ \
+		pip install --force-reinstall --no-cache-dir flatbuffers==2.0 --user -q --no-warn-script-location \
+		python3 -m pip install --upgrade pip --user -q --no-warn-script-location; \
+		pip install --upgrade openai --user -q --no-warn-script-location; \
+	} > /dev/null 2>&1	
+
 	@echo -n "$(HIDE_CURSOR)"
 	@$(MAKE) -s backline
 	@echo "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b compiled            ✅$(RESET)"	
