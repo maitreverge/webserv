@@ -65,7 +65,6 @@ tests/siege/siege_urls.txt
 testResponseBuilder/folder_to_delete/file_to_delete
 Requests_Tester/no_read_file.txt
 Requests_Tester/check_file.ans
-
 *_actual.txt
 .vscode/settings.json
 Requests_Tester/check_file.ans
