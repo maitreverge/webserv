@@ -157,7 +157,8 @@ class ResponseBuilder
 	void	initForbiddenFiles( void );
 
 	// ---------- deleteEngine.cpp
-	void	generateDeleteHTML( void );
+	void	generateDeleteHTML(void);
+	void	makeDeleteHTML(std::stringstream &result);
 	void	deleteEngine( void );
 
 	// ---------- errorNotFoundGenerator.cpp
