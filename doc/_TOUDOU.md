@@ -13,7 +13,41 @@
 Mettre le meme fichier de config avec les cookies sur 1
 Modifier lage cookie
 
-- Mettre liens HOME Firebase + Skynet 🟢🔴
+
+- Mettre liens HOME Firebase + Skynet 🟢🔴 (attendre Dan et Seb pour eviter les conflits)
+## BALISES HOME BUTTON + CSS
+
+```css
+
+
+		.homepage {
+			display: inline-block;
+			font-size: 21px;
+			padding: 10px 20px;
+			background-color: #8da6ec;
+			color: white;
+			text-decoration: none;
+			border-radius: 5px;
+			transition: background-color 0.3s ease, transform 0.3s ease;
+		}
+
+		.homepage:hover {
+			background-color: #0300b2;
+			transform: scale(1.2) rotate(5deg);
+		}
+
+
+
+```
+
+```html
+
+<a href="/" class="homepage">🏠 BACK TO HOME PAGE</a>
+
+
+```
+
+## BALISES HOME BUTTON + CSS
 - Mettre du CSS sur la self-generated page DELETED 🟢🔴
 - Finaliser master_config.ini 🟢🔴
 - Creer un doublon de master-config avec des ports differents 🟢🔴
@@ -43,8 +77,10 @@ Feedback sur le multipart form data : pas de feedback sur les trois fichiers �
 Faire la page index.html coockies 🟢
 Mettre des liens pour revenir a la page de depart / page d'upload 🟢
 Faire en sorte que la limit body + le dosser d'upload soit plus clair, autant sur l'html que sur le fichier de config🟢
+
+## FINAL SPRINT DE LA MORT QUI TUE MAIS EN VRAI CA VA MAIS QUAND MEME UN PEU
 - Mettre du contennu dans les 3 fichiers DELETE 🟢
-- Clean les server names inutiles 🟢
+- Clean les servernames inutiles 🟢
 
 ## BLOODY REDIRECTIONS :
 
