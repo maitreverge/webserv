@@ -18,12 +18,6 @@ echo "
 "
 docker run --rm -t jstarcher/siege -c10 -r20  "$ip:1024"  | grep -v "HTTP"
 
-echo "make re
-*************************
-***Tests de Stress ******
-*************************
-"
-docker run --rm -t jstarcher/siege -c50 -r50  "$ip:1024"  | grep -v "HTTP"
 echo "
 *************************
 ***Tests de Spike *******
@@ -40,12 +34,6 @@ echo "
 "
 docker run --rm -t jstarcher/siege -b -c10 -r20  "$ip:1024"  | grep -v "HTTP"
 
-echo "
-**********************************
-***Tests de Stress BRUTEFORCE ****
-**********************************
-"
-docker run --rm -t jstarcher/siege -b -c50 -r50  "$ip:1024"  | grep -v "HTTP"
 echo "
 *********************************
 ***Tests de Spike BRUTEFORCE ****
