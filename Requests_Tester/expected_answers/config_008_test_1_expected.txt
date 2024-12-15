@@ -1,5 +1,5 @@
 HTTP/1.1 413 Payload Too Large
-Content-Length: 2970
+Content-Length: 2990
 Content-Type: text/html
 
 <!DOCTYPE html>
@@ -25,6 +25,7 @@ Content-Type: text/html
 		 text-shadow:
 			 0 0 1ex rgb(63, 220, 63),
 			 0 0 2px rgba(255, 255, 255, 0.8);
+		overflow: hidden;
 	   }
 	   
 	   .noise {
