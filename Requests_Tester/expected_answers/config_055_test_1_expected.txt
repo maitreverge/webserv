@@ -44,6 +44,11 @@
 </head>
 <body>
     <h1>You must accept cookies to get in!</h1>
-    <a href="/connect">Click to accept cookies</a>
+	<form action="/connect" method="GET">
+		<label for="name">Name :</label><br>
+		<input type="text" id="name" name="name" required><br><br>
+		<button type="submit">Send</button>
+	</form>
+	<br/>
 </body>
 </html>
