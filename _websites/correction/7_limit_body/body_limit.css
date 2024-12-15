@@ -1,10 +1,3 @@
-body {
-	font-family: Arial, sans-serif;
-	background: linear-gradient(to right, #e5cced, #d205fb);
-	text-align: center;
-	padding: 40px;
-}
-
 .soft-frame {
 	border-radius: 15px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);

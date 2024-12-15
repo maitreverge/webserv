@@ -8,7 +8,7 @@
 	<style>
 		body {
 	font-family: Arial, sans-serif;
-	background: linear-gradient(to right, #eaa1a1, #ff0000);
+	background: linear-gradient(to right, #a1ceea, #0095ff);
 	text-align: center;
 	padding: 40px;
 }
@@ -73,43 +73,30 @@
 </head>
 
 <body>
-	<h1>🔴 RED PILL : CURL 🔴</h1>
-	<h2> <i>So you choosed the Red Pill...</i></h2>
+	<h1>🔵 BLUE PILL : POSTMAN 🔵</h1>
+	<h2> <i>So you took the Blue Pill...</i></h2>
 	<hr style="border: 0; height: 2px; background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet); margin: 20px 0;">
 
 
-	<h2>The goal here is to upload files with CURL. </h2>
-	<h2>You will try 3 curl commands : with a body size == 10, &lt; to 10 and lastly &gt; to 10 </h2>
+	<h2>The goal here is to upload files with POSTMAN. </h2>
+	<h2>You will try 3 POSTMAN requests commands : with a body size == 10, &lt; to 10 and lastly &gt; to 10 </h2>
+	<br>
+	<h2>You can open POSTMAN, and try those commands :</h2>
+	
+	<!-- insert postman pictures here -->
+	<img src="img/postman_sc1.png" class="soft-frame" style="width: 400px; height: auto;"/>
 	<br>
 	<br>
-	<h2>You can open the terminal, and test the following CURL commands :</h2>
-	
-	<h3>Command with body of size &gt; 10</h3>
-	<a href="#"
-	onclick="copyToClipboard('curl -i -s -X POST -H &quot;Content-Type: text/plain&quot; -d \'123456789-10\' http://localhost:3008', this)"
-	class="copy-curl"><span class="click-text"><b>( 🖱️CLICK ME   )</b></span>     curl -i -s -X POST -H "Content-Type: text/plain" -d '123456789-10'
-	http://localhost:3008</a>
-	
-	<h3>Command with body of size == 10</h3>
-	<a href="#"
-		onclick="copyToClipboard('curl -i -s -X POST -H &quot;Content-Type: text/plain&quot; -d \'1234567890\' http://localhost:3008', this)"
-		class="copy-curl"><span class="click-text"><b>( 🖱️CLICK ME   )</b></span>     curl -i -s -X POST -H "Content-Type: text/plain" -d '1234567890'
-		http://localhost:3008</a>
-		
-	<h3>Command with body of size &lt; 10</h3>
-	<a href="#"
-	onclick="copyToClipboard('curl -i -s -X POST -H &quot;Content-Type: text/plain&quot; -d \'123456789\' http://localhost:3008', this)"
-	class="copy-curl"><span class="click-text"><b>( 🖱️CLICK ME   )</b></span>     curl -i -s -X POST -H "Content-Type: text/plain" -d '123456789'
-	http://localhost:3008</a>
-		<br>
-		
-	<hr style="border: 0; height: 2px; background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet); margin: 20px 0;">
+	<br>
+	<img src="img/postman_sc2.png" class="soft-frame" style="width: 1000px; height: auto;"/>
+
 	
 	<h2> You can check the uploaded data...</h2>
-	<a href="uploads_limit_body/" class="upload-directory">...in this directory !</a>
+	<a href="uploads_limit_body/" class="upload-directory">...this directory !</a>
 	<br>
 	<br>
 	<hr style="border: 0; height: 2px; background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet); margin: 20px 0;">
+	<br>
 	<br>
 	<a href="index.html" class="goback">🔙 GO BACK</a>
 	<br>

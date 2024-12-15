@@ -6,6 +6,33 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="body_limit.css">
 	<style>
+		body {
+			margin: 0;
+			overflow: hidden;
+			position: relative;
+			text-align: center;
+		}
+
+		canvas {
+			display: block;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			z-index: -1;
+		}
+
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
+			color: white;
+			/* Change color of <h> tags */
+		}
+
 		.homepage {
 			display: inline-block;
 			font-size: 21px;
@@ -20,25 +47,6 @@
 		.homepage:hover {
 			background-color: #0300b2;
 			transform: scale(1.2) rotate(5deg);
-		}
-
-		.upload-directory {
-			display: inline-block;
-			font-size: 18px;
-			padding: 10px 20px;
-			background-color: #f78383;
-			/* Green */
-			color: white;
-			text-decoration: none;
-			border-radius: 5px;
-			transition: background-color 0.3s ease;
-			cursor: pointer;
-
-		}
-
-		.upload-directory:hover {
-			background-color: #e30202;
-			transform: scale(1.3);
 		}
 
 		.red-pill-directory {
@@ -78,8 +86,8 @@
 			background-color: #026be3;
 			transform: scale(1.3);
 		}
-		
-		.click-text{
+
+		.click-text {
 			color: #e30202;
 		}
 	</style>
@@ -93,52 +101,24 @@
 	<h2> Open another terminal, and launch an instance of <i>webserv</i> with the following config :</h2>
 
 	<a href="#" onclick="copyToClipboard('./webserv _websites/correction/7_limit_body/limit_body.ini', this)"
-		class="copy-link"><span class="click-text"><b>( 🖱️CLICK ME   )</b></span> ./webserv _websites/correction/7_limit_body/limit_body.ini</a>
+		class="copy-link"><span class="click-text"><b>( 🖱️CLICK ME )</b></span> ./webserv
+		_websites/correction/7_limit_body/limit_body.ini</a>
 
 	<h1>👀 In the same time, pay attention to <i>limit_body.ini</i> config file 👀</h1>
 
 	<h2> Now it's time for you to upload some files...</h2>
-	<h3> <i>You can choose a way, and I will show you how deep the rabbit hole goes </i> </h3>
+	<h4> <i>You can choose a way, but choose wisely...and I will show you how deep the rabbit hole goes </i> </h4>
 
-	<img src="morpheus.jpg" class="soft-frame"/>
-
-	<br>
-	<a href="red_pill.html/" class="red-pill-directory">🔴  I want the Red Pill  🔴</a>
-	
-	<a href="uploads_limit_body/" class="blue-pill-directory">🔵  I choose the Blue Pill  🔵</a>
-	
-	<br>
-	<a href="uploads_limit_body/" class="upload-directory">this directory !</a>
-	<h2>The goal is then to try with a body size == 10, &lt; to 10 and &gt; to 10 </h2>
-	<br>
-	<h2>You can open the console, and test the following CURL commands :</h2>
-
-	<h3>Command with body of size &gt; 10</h3>
-	<a href="#"
-		onclick="copyToClipboard('curl -i -s -X POST -H &quot;Content-Type: text/plain&quot; -d \'123456789-10\' http://localhost:3008', this)"
-		class="copy-curl"><span class="click-text"><b>( 🖱️CLICK ME   )</b></span>     curl -i -s -X POST -H "Content-Type: text/plain" -d '123456789-10'
-		http://localhost:3008</a>
-
-	<h3>Command with body of size == 10</h3>
-	<a href="#"
-		onclick="copyToClipboard('curl -i -s -X POST -H &quot;Content-Type: text/plain&quot; -d \'1234567890\' http://localhost:3008', this)"
-		class="copy-curl"><span class="click-text"><b>( 🖱️CLICK ME   )</b></span>     curl -i -s -X POST -H "Content-Type: text/plain" -d '1234567890'
-		http://localhost:3008</a>
-
-	<h3>Command with body of size &lt; 10</h3>
-	<a href="#"
-		onclick="copyToClipboard('curl -i -s -X POST -H &quot;Content-Type: text/plain&quot; -d \'123456789\' http://localhost:3008', this)"
-		class="copy-curl"><span class="click-text"><b>( 🖱️CLICK ME   )</b></span>     curl -i -s -X POST -H "Content-Type: text/plain" -d '123456789'
-		http://localhost:3008</a>
-	<br>
-
-	<hr style="border: 0; height: 2px; background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet); margin: 20px 0;">
+	<img src="img/morpheus.jpg" class="soft-frame"
+		style="width: 800px; height: 600px; object-fit: cover; object-position: top;" />
 
 	<br>
 	<br>
-	<img src="https://preview.redd.it/funny-cat-expressions-go-v0-ueiam9zbf2ld1.jpeg?auto=webp&s=405507f0695c110a6c8150d515fd825d00eb4b39"
-		alt="cat" class="soft-frame" style="width:500px;height:auto;">
+	<a href="red_pill.html" class="red-pill-directory">🔴 I want the Red Pill 🔴</a>
 
+	<a href="blue_pill.html" class="blue-pill-directory">🔵 I choose the Blue Pill 🔵</a>
+	<br>
+	<br>
 	<br>
 	<a href="/" class="homepage">🏠 BACK TO HOME PAGE</a>
 	<script>
@@ -156,6 +136,42 @@
 				element.innerText = originalText;
 			}, 2000);
 		}
+	</script>
+
+	<canvas id="matrix"></canvas>
+	<script>
+		const canvas = document.getElementById('matrix');
+		const ctx = canvas.getContext('2d');
+
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+
+		const letters = '0123456789qwertyuiopasdfghjklzxcvbnmアカサタナハマヤラワガザダバパイキシチニヒミリヰギジヂビピウクスツヌフムユルグズヅブプエケセテネヘメレヱゲゼデベペオコソトノホモヨロヲゴゾドボポヴ';
+		const fontSize = 16;
+		const columns = canvas.width / fontSize;
+
+		const drops = Array.from({ length: columns }).fill(1);
+
+		function draw() {
+			ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+			ctx.fillStyle = '#0F0';
+			ctx.font = `${fontSize}px monospace`;
+
+			drops.forEach((y, index) => {
+				const text = letters[Math.floor(Math.random() * letters.length)];
+				const x = index * fontSize;
+				ctx.fillText(text, x, y * fontSize);
+
+				if (y * fontSize > canvas.height && Math.random() > 0.975) {
+					drops[index] = 0;
+				}
+				drops[index]++;
+			});
+		}
+
+		setInterval(draw, 33);
 	</script>
 
 </body>
