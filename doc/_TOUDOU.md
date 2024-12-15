@@ -1,42 +1,7 @@
-## Mandatory Work but can wait
-
-- Missing `HOST` headers or double => 400 BAD REQUEST 🔴
-
-- Mettre liens HOME Firebase + Skynet 🟢🔴 (attendre Dan et Seb pour eviter les conflits)
 ## BALISES HOME BUTTON + CSS
 
-```css
-
-
-		.homepage {
-			display: inline-block;
-			font-size: 21px;
-			padding: 10px 20px;
-			background-color: #8da6ec;
-			color: white;
-			text-decoration: none;
-			border-radius: 5px;
-			transition: background-color 0.3s ease, transform 0.3s ease;
-		}
-
-		.homepage:hover {
-			background-color: #0300b2;
-			transform: scale(1.2) rotate(5deg);
-		}
-
-
-
-```
-
-```html
-
-<a href="/" class="homepage">🏠 BACK TO HOME PAGE</a>
-
-
-```
 
 ## BALISES HOME BUTTON + CSS
--  Reecrire la page HTML de LIMIT BODY🟢🔴
 -  🟢🔴
 - Mettre le noms des fichiers en mode production  🟢🔴
 - Reactiver les TimeStamps en mode production 🟢🔴
@@ -69,6 +34,8 @@ Faire en sorte que la limit body + le dosser d'upload soit plus clair, autant su
 - Finaliser master_config.ini 🟢
 - Creer un doublon de master-config avec des ports differents 🟢
 - Faire un fichier de config pour les multiples serveurs 🟢
+- Mettre liens HOME Firebase + Skynet 🟢
+-  Reecrire la page HTML de LIMIT BODY🟢
 
 
 

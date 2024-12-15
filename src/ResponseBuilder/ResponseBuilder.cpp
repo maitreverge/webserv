@@ -21,7 +21,7 @@ void	ResponseBuilder::redirectURI( void ){
 		Logger::getInstance().log(ERROR, "508 LOOP : Both _realURi and Redirection == \"/\"");
 		setError(CODE_508_LOOP_DETECTED);
 	}
-	else if (_myconfig.uri == "/" and _realURI.find(_myconfig.redirection) != std::string::npos )// ! FROM HERE, _REALURI SIZE > 1
+	else if (_myconfig.uri == "/" and _realURI.find(_myconfig.redirection) != std::string::npos)
 	{
 		Logger::getInstance().log(ERROR, "Redirection Loop Detected");
 		setError(CODE_508_LOOP_DETECTED);
@@ -69,7 +69,7 @@ void ResponseBuilder::rootMapping( void ){
  * @param strInput The file path to check.
  * @return true if the path is a directory, false otherwise.
  */
-bool ResponseBuilder::isDirectory(string &strInput) {
+bool ResponseBuilder::isDirectory( string &strInput ) {
 	
 	if ( (stat(strInput.c_str(), &_fileInfo) == 0) and (_fileInfo.st_mode & S_IFDIR))
 	{
@@ -182,7 +182,7 @@ void	ResponseBuilder::checkMethod( void ){
 
 	Logger::getInstance().log(ERROR, "method not found");
 
-	setError(CODE_405_METHOD_NOT_ALLOWED); //! WHY DONT USE SHORT CIRCUIT ? le client ne sera pas exited en cas de bad methode
+	setError(CODE_405_METHOD_NOT_ALLOWED);
 }
 
 /**
@@ -276,8 +276,6 @@ void	ResponseBuilder::getHeader( Client &inputClient, Config &inputConfig, e_err
 
 	buildHeaders();
 
-	// TO bypass the writting process // ! cf SEB ClientBody
-	// TODO ! Maybe useless check
 	if (_method == POST and _errorType != CODE_201_CREATED)
 		_method = GET;
 

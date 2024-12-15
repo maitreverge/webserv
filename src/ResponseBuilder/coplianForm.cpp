@@ -39,13 +39,13 @@ void	ResponseBuilder::initServerNames( void ){
 
 	// =========================== TEMPLATES WEBSITES ==========================
 
-	_servernameType.insert(std::make_pair("festival.com", "_websites/festival/")); // ! DONE
-	_servernameType.insert(std::make_pair("gaming.com", "_websites/cyborg_gaming/"));// ! DONE
-	_servernameType.insert(std::make_pair("villa.com", "_websites/villa_agency/"));// ! DONE
+	_servernameType.insert(std::make_pair("festival.com", "_websites/festival/"));
+	_servernameType.insert(std::make_pair("gaming.com", "_websites/cyborg_gaming/"));
+	_servernameType.insert(std::make_pair("villa.com", "_websites/villa_agency/"));
 
 	// =================== ENTRYPOINT FOR CORRECTION WEBSITE ===================
 	
-	_servernameType.insert(std::make_pair("webserv.correction", "_websites/correction/"));// ! WORK NEEDLE
+	_servernameType.insert(std::make_pair("webserv.correction", "_websites/correction/"));
 
 }
 
@@ -104,7 +104,7 @@ ResponseBuilder::ResponseBuilder( const ResponseBuilder & src) { *this = src; }
 ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 {
 	initMimes();
-	initServerNames(); //? should be added here?
+	initServerNames();
 	
 	_isDirectory = rhs._isDirectory;
 	_isFile = rhs._isFile;
@@ -114,7 +114,6 @@ ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 	_isWOK = rhs._isWOK;
 	_isXOK = rhs._isXOK;
 
-	// TODO : actualiser les variables
 	this->_mimeTypes = rhs._mimeTypes;
 	this->_realURI = rhs._realURI;
 	this->_errorType = rhs._errorType;
@@ -148,7 +147,7 @@ ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 	this->_isServerName = rhs._isServerName;
 
 
-	// ! DO NOT FUCKING TOUCH (Kernel copy stuff)
+	// ! DO NOT TOUCH (Kernel copy stuff)
 	this->_ifsStreamHead = rhs._ifsStreamHead;
 	this->_ifs.close();
 	this->_ofs.close();

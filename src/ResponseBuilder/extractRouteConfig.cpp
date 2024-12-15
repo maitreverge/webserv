@@ -52,6 +52,7 @@ void ResponseBuilder::clearingRoutes( vector< string >&routeNames, vector< strin
 	vector<string> tempRouteNames;
 	vector<string> tempRouteURIS;
 	vectorIterator itNAMES = routeNames.begin();
+
 	for (vectorIterator itURIS = routeURIS.begin(); itURIS != routeURIS.end(); ++itURIS, ++itNAMES)
 	{
 		if (std::find(tempRouteURIS.begin(), tempRouteURIS.end(), *itURIS) == tempRouteURIS.end())
@@ -187,11 +188,8 @@ void	ResponseBuilder::buildRouteConfig( string path ){
  * ensures that the extracted index starts with a '/' and does not end with a '/'.
  * 
  * @param routeNames A vector of route names to search through.
- * @param routeURIS A vector of route URIs (currently unused).
  */
-void ResponseBuilder::extractRedirectionIndex( vector< string >&routeNames, vector< string >&routeURIS ){
-
-	static_cast<void>(routeURIS); // might need later for refactoring with Dan routes
+void ResponseBuilder::extractRedirectionIndex( vector< string >&routeNames ){
 
 	typedef std::vector< string >::iterator itVector;
 
@@ -301,7 +299,7 @@ void	ResponseBuilder::extractRouteConfig( void ){
 	
 	if (not _myconfig.redirection.empty())
 	{
-		extractRedirectionIndex(routeNames, routeURIS);
+		extractRedirectionIndex(routeNames);
 	}
 }
 
@@ -319,12 +317,7 @@ void ResponseBuilder::resetMyVariables()
 	_myconfig.uploadDirectory.clear();
 	_myconfig.indexRedirection.clear();
 
-	// my variables part
-	{
-		// TODO : reset all variables
-		_parsedBoundaryToken = false;
-
-	}
+	_parsedBoundaryToken = false;
 }
 
 void	ResponseBuilder::printMyConfig( void ){

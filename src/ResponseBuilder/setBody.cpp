@@ -53,8 +53,8 @@ void	ResponseBuilder::initBoundaryTokens( void ){
 	_tokenEnd = _tokenDelim + "--";
 
 	// Append traling HTTP_SEPARATOR for easier parsing
-	_tokenDelim += "\r\n";
-	_tokenEnd += "\r\n";
+	_tokenDelim += HTTP_HEADER_SEPARATOR;
+	_tokenEnd += HTTP_HEADER_SEPARATOR;
 }
 
 /**
@@ -278,7 +278,6 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 	// ... and append it to the end of curLine
 	curLine.insert(curLine.end(), recVector2.begin(), recVector2.end());
 
-	// Clear the buffer from the client // TODO : See if it's okay to clean with SEB
 	client.messageRecv.clear();
 	
 	// While we didn't process a whole line, we write it within the buffer
@@ -298,18 +297,18 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 
 			case TOKEN_END:
 				_fileStreamName.clear();
-				duplicatesFileNames.clear(); // reset the value for calling on the next request of the same client
-				_parsedBoundaryToken = false; // reset the value for calling on the next request of the same client
+				duplicatesFileNames.clear();
+				_parsedBoundaryToken = false;
 				break;
 
 			case CONTENT_DISPOSITION:
 				extractFileBodyName(curLine, duplicatesFileNames);
 				break;
 			
-			case OTHER: // No incidence
+			case OTHER:
 				break;
 			
-			case LINE_SEPARATOR: // next processed lines will be the binary data
+			case LINE_SEPARATOR: // Next processed lines will be the binary data
 
 				this->_ofs.open(_fileStreamName.c_str(), std::ios::binary);
 
@@ -322,8 +321,8 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 				_writeReady = true;
 				break;
 
-			case BINARY_DATA:
-				// Writting actual data
+			case BINARY_DATA: // Writting actual data
+
 				this->_ofs.write(curLine.data(), static_cast<std::streamsize>(curLine.size()));
 
 				if (this->_ofs.is_open())

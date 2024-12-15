@@ -159,9 +159,11 @@ void	ResponseBuilder::checkAutho( void ){
  */
 void	ResponseBuilder::extractFileNature( string &target){
 
-	_fileName = target.substr(target.find_last_of("/") + 1); // extract file name // DOUBT for POST
+	// extract file name
+	_fileName = target.substr(target.find_last_of("/") + 1);
 
-	_fileExtension = _fileName.substr(_fileName.find_last_of(".") + 1); // extract file extension
+	// extract file extension
+	_fileExtension = _fileName.substr(_fileName.find_last_of(".") + 1);
 }				
 
 /**
@@ -265,10 +267,10 @@ void ResponseBuilder::setError(e_errorCodes code, bool skip){
 			_realURI = _config->errorPaths.at(_errorType);
 
 			if (access(_realURI.c_str(), F_OK) == -1 or access(_realURI.c_str(), R_OK) )
-				throw exception(); // inner function throw
+				throw exception(); // inner function throw...
 		}
 	}
-	catch(const std::exception& e)
+	catch(const std::exception& e) // ... catched here
 	{
 		Logger::getInstance().log(WARNING, "Required Error Page is not found. Webserv generates a new one.");
 		errorNotFoundGenerator();
