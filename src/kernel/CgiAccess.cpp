@@ -100,6 +100,7 @@ void Cgi::setBody(Client & client, bool eof)
 {
     Logger::getInstance().log(DEBUG, "Cgi Set Body", client);
 
+	this->hasError(client, "cgi exited with error code", WNOHANG);
 	this->isTimeout(client, "Timeout is over");
 	if (this->shutdownHandle(client, eof))
 		return;
