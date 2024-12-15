@@ -53,4 +53,3 @@ CookiesMap Cookies::getCookies() const
 {
 	return _cookies;
 }
-

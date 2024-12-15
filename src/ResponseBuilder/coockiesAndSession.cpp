@@ -29,15 +29,33 @@ std::string ResponseBuilder::generateUniqueToken(const std::string& clientIP)
 
 void	ResponseBuilder::buildSetCookieHeader()
 {
+	std::string userName;
 	string clientIP = Logger::ipToString(_client->address);
-	if ((_client->isConnected() == false && _client->conf->handleCookies) || 
-		_client->headerRequest.getURI() == "/accept-cookies?action=accept")
+
+	if ((_client->isConnected() == false && _client->conf->handleCookies))
 	{
 		std::string token = generateUniqueToken(clientIP);
 		stringstream streamCookie;
 		streamCookie	<< "Set-Cookie:"
 						<< SPACE
 						<< "sessionID=" << token
+						<< HTTP_HEADER_SEPARATOR
+						<< "Set-Cookie:"
+						<< SPACE
+						<< "username=" << userName
+						<< HTTP_HEADER_SEPARATOR;
+		Headers.cookie = streamCookie.str();
+	}
+	else if ((_client->isConnected() == true && _client->conf->handleCookies))
+	{
+		stringstream streamCookie;
+		streamCookie	<< "Set-Cookie:"
+						<< SPACE
+						<< "sessionID=" << _client->_server->UserSessions.begin()->second.userId
+						<< HTTP_HEADER_SEPARATOR
+						<< "Set-Cookie:"
+						<< SPACE
+						<< "username=" << _client->_server->UserSessions.begin()->second.userName
 						<< HTTP_HEADER_SEPARATOR;
 		Headers.cookie = streamCookie.str();
 	}
