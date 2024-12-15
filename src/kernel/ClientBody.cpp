@@ -30,7 +30,7 @@ void Server::isContentLengthValid(const size_t i)
 		std::stringstream ss;
 		ss << "max content size reached" << " - Content-Lenght: "
 			<< this->_clients[i].headerRequest.getHeaders().ContentLength
-			<< " - Max content size: " << this->_conf.maxBodySize << std::endl;
+			<< " - Max content size: " << this->_conf.maxBodySize;
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);
 
 		throw Server::ShortCircuitException(CODE_413_PAYLOAD_TOO_LARGE);
@@ -45,8 +45,7 @@ void Server::isBodyTooLarge(const size_t i)
 		std::stringstream ss;
 		ss << "content size" << " - Body-Size: "
 		    << this->_clients[i].bodySize << " Content-Lenght: "
-		    << this->_clients[i].headerRequest.getHeaders().ContentLength
-            << std::endl;
+		    << this->_clients[i].headerRequest.getHeaders().ContentLength;            
 		Logger::getInstance().log(ERROR, ss.str(), this->_clients[i]);	
 
 		throw Server::ShortCircuitException(CODE_413_PAYLOAD_TOO_LARGE);
