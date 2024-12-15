@@ -1,5 +1,5 @@
 HTTP/1.1 242 Connection
-Content-Length: 379
+Content-Length: 1243
 Content-Type: text/html
 
 <!DOCTYPE html>
@@ -8,13 +8,46 @@ Content-Type: text/html
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cookies</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #ff5733;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        a {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            text-decoration: none;
+            color: #fff;
+            background-color: #007bff;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        a:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+    </style>
 </head>
 <body>
     <h1>You must accept cookies to get in!</h1>
-
-    <!-- Formulaire avec un bouton qui envoie une requête GET vers /connect -->
-<a href="/connect">Click to accept cookies</a>
-
-
+    <a href="/connect">Click to accept cookies</a>
 </body>
 </html>
