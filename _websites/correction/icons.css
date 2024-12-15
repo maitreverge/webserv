@@ -8,7 +8,7 @@
 }
 
 .download:hover {
-	transform: scale(1.5);
+	transform: scale(1.2);
 }
 
 .upload {
@@ -21,7 +21,7 @@
 }
 
 .upload:hover {
-	transform: scale(1.5);
+	transform: scale(1.2);
 }
 
 .delete {
@@ -34,7 +34,7 @@
 }
 
 .delete:hover {
-	transform: scale(1.5);
+	transform: scale(1.2);
 }
 
 .question-box {
@@ -47,7 +47,7 @@
 }
 
 .question-box:hover {
-	transform: scale(1.5);
+	transform: scale(1.2);
 }
 
 .upload-file {
@@ -60,7 +60,7 @@
 }
 
 .upload-file:hover {
-	transform: scale(1.5);
+	transform: scale(1.2);
 }
 
 .server {
@@ -73,7 +73,7 @@
 }
 
 .server:hover {
-	transform: scale(1.5);
+	transform: scale(1.2);
 }
 
 .body {
@@ -86,7 +86,7 @@
 }
 
 .body:hover {
-	transform: scale(1.5);
+	transform: scale(1.2);
 }
 
 .folders {
@@ -99,7 +99,7 @@
 }
 
 .folders:hover {
-	transform: scale(1.5);
+	transform: scale(1.2);
 }
 
 .internet {
@@ -112,7 +112,7 @@
 }
 
 .internet:hover {
-	transform: scale(1.5);
+	transform: scale(1.2);
 }
 
 .listing {
@@ -125,7 +125,7 @@
 }
 
 .listing:hover {
-	transform: scale(1.5);
+	transform: scale(1.2);
 }
 
 .arrow {
@@ -138,7 +138,7 @@
 }
 
 .arrow:hover {
-	transform: scale(1.5);
+	transform: scale(1.2);
 }
 
 .internet-question {
@@ -151,7 +151,7 @@
 }
 
 .internet-question:hover {
-	transform: scale(1.5);
+	transform: scale(1.2);
 }
 
 .cookie {
@@ -164,7 +164,7 @@
 }
 
 .cookie:hover {
-	transform: scale(1.5);
+	transform: scale(1.2);
 }
 
 .flame {
@@ -177,7 +177,7 @@
 }
 
 .flame:hover {
-	transform: scale(1.5);
+	transform: scale(1.2);
 }
 
 
@@ -191,7 +191,7 @@
 }
 
 .robot:hover {
-	transform: scale(1.5);
+	transform: scale(1.2);
 }
 
 .custom-heading {
