@@ -24,7 +24,7 @@ body {
 	
 	display:inline-block;
     position:relative;					
-    width:min(70vw, 22rem);	
+    width:min(70vw, 26rem);	
     height:fit-content;	
     margin-top: 10vw;
     transform: translate(-50%);
@@ -97,7 +97,7 @@ button {
 
 	display:none;
 	position: relative;
-	top:10%;
+	top:8%;
 	width:min(70vw, 27rem);
 	aspect-ratio: 1 / 1; 
 	vertical-align: top;
@@ -109,7 +109,7 @@ button {
 #bubble, #result {
 
     position:absolute;
-    margin-left: 10%;
+    margin-left: 12%;
     width: 100%;
     height:fit-content;
     font-size: min(max(.8rem, .8vw), 1rem);
