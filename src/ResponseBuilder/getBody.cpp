@@ -26,7 +26,7 @@ bool ResponseBuilder::getBody( Client &inputClient ){
 	
 	if ( isErrorRedirect() )
 	{
-		Logger::getInstance().log(INFO, "ResponseBuilder::getBody : Redirection happended, no body is required");
+		Logger::getInstance().log(INFO, "ResponseBuilder::getBody : Redirection happended, no body is required", inputClient, L_VRB);
 		return false;
 	}
 
@@ -41,7 +41,7 @@ bool ResponseBuilder::getBody( Client &inputClient ){
 
 		if (!this->_ifs.is_open())
 		{
-			Logger::getInstance().log(ERROR, "ResponseBuilder::getBody : this->_ifs failed to open");
+			Logger::getInstance().log(ERROR, "ResponseBuilder::getBody : this->_ifs failed to open", inputClient);
 			throw Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR);
 		}
 		

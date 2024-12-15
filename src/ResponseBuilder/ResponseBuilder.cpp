@@ -28,7 +28,7 @@ void	ResponseBuilder::redirectURI( void ){
 	}
 	else
 	{
-		Logger::getInstance().log(INFO, "Regular redirection activated");
+		Logger::getInstance().log(INFO, "Regular redirection activated", L_VRB);
 		_realURI = _myconfig.redirection;
 		setError(CODE_302_FOUND);
 	}
@@ -47,7 +47,7 @@ void ResponseBuilder::rootMapping( void ){
 	if (_myconfig.root.empty())
 		return;
 	
-	Logger::getInstance().log(INFO, "ROOT MAPPING CALLED");
+	Logger::getInstance().log(INFO, "ROOT MAPPING CALLED", L_VRB);
 	if (_realURI.find(_myconfig.root) == std::string::npos)
 	{
 		Logger::getInstance().log(DEBUG, "URI BEFORE MAPPING");
@@ -105,7 +105,7 @@ void	ResponseBuilder::slashManip( string &target, bool makeRedirection ){
 		{
 			if (makeRedirection and _method == GET)
 			{
-				Logger::getInstance().log(INFO, "Wrong Typed URI, automatic 302 Redirection enabled");
+				Logger::getInstance().log(INFO, "Wrong Typed URI, automatic 302 Redirection enabled", L_VRB);
 				
 				_realURI = _originalURI + "/";
 

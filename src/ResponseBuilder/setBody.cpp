@@ -314,7 +314,7 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 
 				if (!this->_ofs.is_open())
 				{
-					Logger::getInstance().log(ERROR, "ResponseBuilder::setMultiPartPost : Stream Failed to open");
+					Logger::getInstance().log(ERROR, "ResponseBuilder::setMultiPartPost : Stream Failed to open", client);
 					throw Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR);
 				}
 
@@ -330,7 +330,7 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
 				
 				if (this->_ofs.is_open())
 				{
-					Logger::getInstance().log(ERROR, "ResponseBuilder::setMultiPartPost : Stream Failed to close");
+					Logger::getInstance().log(ERROR, "ResponseBuilder::setMultiPartPost : Stream Failed to close", client);
 					throw Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR);
 				}
 				
@@ -363,11 +363,11 @@ void	ResponseBuilder::setMultiPartPost( Client & client ){
  */
 void	ResponseBuilder::setRegularPost( Client & client ){
 
-	Logger::getInstance().log(DEBUG, "FUNCTION CALL : ResponseBuilder::setRegularPost");
+	Logger::getInstance().log(DEBUG, "FUNCTION CALL : ResponseBuilder::setRegularPost", client);
 
 	if (!this->_ofs.is_open())
 	{	
-		Logger::getInstance().log(INFO, _realURI.c_str());	
+		Logger::getInstance().log(INFO, _realURI.c_str(), client, L_VRB);	
 		
 		string targetToWrite =	_uploadTargetDirectory
 								+ generateFileName()
@@ -384,13 +384,13 @@ void	ResponseBuilder::setRegularPost( Client & client ){
         _ofs.flush();
 		if (!_ofs)
 		{
-			Logger::getInstance().log(ERROR, "ResponseBuilder::setRegularPost : Stream Failed to flush");
+			Logger::getInstance().log(ERROR, "ResponseBuilder::setRegularPost : Stream Failed to flush", client);
 			throw Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR);
 		}
     }
 	else
 	{
-		Logger::getInstance().log(ERROR, "ResponseBuilder::setRegularPost : Stream Failed to open");
+		Logger::getInstance().log(ERROR, "ResponseBuilder::setRegularPost : Stream Failed to open", client);
 		throw Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR);
     }
 
