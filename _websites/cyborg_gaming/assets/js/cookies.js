@@ -10,8 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	const sessionID = getCookie('sessionID');
+    const username = getCookie('username'); // Récupère le cookie "username"
+
 	const banner = document.getElementById('cookieBanner');
 	const connectedInfo = document.getElementById('connectedInfo');
+    const userInfo = document.getElementById('userInfo'); // L'élément pour afficher le nom d'utilisateur
 
 	if (!sessionID) {
 		// Si le cookie est absent, affiche la barre
@@ -33,5 +36,12 @@ document.addEventListener('DOMContentLoaded', () => {
 		// Si le cookie est présent, affiche l'état connecté
 		banner.style.display = 'none';
 		connectedInfo.style.display = 'block';
+
+		// Si le cookie "username" est présent, affiche le nom de l'utilisateur
+		if (username) {
+			userInfo.textContent = `You are logged in as: ${username}`;
+		} else {
+			userInfo.textContent = 'Username not found';
+		}
 	}
 });
