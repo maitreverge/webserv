@@ -10,8 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	const sessionID = getCookie('sessionID');
-    const username = getCookie('username'); // Récupère le cookie "username"
-
+    const username2 = getCookie('username'); // Récupère le cookie "username"
+	const username = username2.replace(/\+/g, ' ').trim();
 	const banner = document.getElementById('cookieBanner');
 	const connectedInfo = document.getElementById('connectedInfo');
     const userInfo = document.getElementById('userInfo'); // L'élément pour afficher le nom d'utilisateur
@@ -39,9 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		// Si le cookie "username" est présent, affiche le nom de l'utilisateur
 		if (username) {
-			userInfo.textContent = `You are logged in as: ${username}`;
+			userInfo.textContent = `You are logged in as ${username}`;
 		} else {
-			userInfo.textContent = 'Username not found';
+			userInfo.textContent = 'You accepted the cookies, you fool...';
 		}
 	}
 });

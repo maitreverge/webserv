@@ -32,7 +32,8 @@ void	ResponseBuilder::buildSetCookieHeader()
 	std::string userName;
 	string clientIP = Logger::ipToString(_client->address);
 
-	if ((_client->isConnected() == false && _client->conf->handleCookies))
+	if ((_client->isConnected() == false && _client->conf->handleCookies)  || 
+		_client->headerRequest.getURI() == "/accept-cookies?action=accept")
 	{
 		std::string token = generateUniqueToken(clientIP);
 		stringstream streamCookie;
