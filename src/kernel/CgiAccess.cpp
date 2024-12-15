@@ -73,8 +73,8 @@ void Cgi::retHandle(Client & client, ssize_t ret, std::string err,
 	Logger::getInstance().log(DEBUG, ss.str());
 	
     if (!ret)	
-        Logger::getInstance().log(DEBUG, info),	   
-			this->hasError(client, "ret handle", 0);		
+        Logger::getInstance().log(INFO, info, L_VRB),	   
+			this->hasError(client, "cgi exited with error code", 0);		
     else if (ret < 0)   
 		throw (Logger::getInstance().log(ERROR, err, client),
 			Server::ShortCircuitException(CODE_500_INTERNAL_SERVER_ERROR));    
@@ -109,7 +109,7 @@ void Cgi::setBody(Client & client, bool eof)
  	ssize_t ret = send(this->_fds[1], client.messageRecv.data(),
         client.messageRecv.size(), MSG_NOSIGNAL);
     Kernel::cleanFdSet(client);	
-	this->retHandle(client, ret, "send", "cgi exited");    			
+	this->retHandle(client, ret, "send", "end set cgi");    			
 	std::vector<char> str(client.messageRecv.data(), client.messageRecv.data()
 		+ static_cast<size_t>(ret));
 	Logger::getInstance().log(INFO, "sent to cgi", client, L_VRB);	

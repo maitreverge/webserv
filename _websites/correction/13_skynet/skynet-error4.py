@@ -2,9 +2,9 @@
 
 import sys
 
-sys.stderr = open('/dev/null', 'w')
-
 try:
+
+	sys.stderr = open('/dev/null', 'w')
 	with open("skynet.html", 'r') as html:
 		output = html.read()
 		

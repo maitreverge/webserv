@@ -5,12 +5,11 @@ import sys
 import os
 import requests
 
-sys.stderr = open('/dev/null', 'w')
-
 sys.exit(1)
 	
 try:
 
+	sys.stderr = open('/dev/null', 'w')
 	url = (
 		f"https://webservcgi-default-rtdb.europe-west1.firebasedatabase.app/"
 		f"users/user1.json"
