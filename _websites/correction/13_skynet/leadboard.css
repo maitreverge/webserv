@@ -5,3 +5,37 @@
 a {
 	display:block;
 }
+
+#img_cont {
+	position: relative;
+	width:40vw;
+	height:40vw;
+
+	background-color: red;
+}
+
+img {
+	position: absolute;
+	width:100%;
+	height:auto;
+}
+
+#redpill {
+	position: relative;
+	top: 58.5%;
+	left:21.5%;
+	width:5.0%;
+	height:auto;
+}
+
+#bluepill {
+	position: relative;
+	top: 59.2%;
+	left:67.3%;
+	width:5.0%;
+	height:auto;
+}
+
+#redpill:hover, #bluepill:hover {
+	transform: scale(1.3);
+}

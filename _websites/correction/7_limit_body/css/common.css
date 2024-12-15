@@ -41,3 +41,37 @@
 	background-color: #0300b2;
 	transform: scale(1.2) rotate(5deg);
 }
+
+#img_cont {
+	position: relative;
+	left: 50%;
+	transform: translateX(-50%);
+	width:40vw;
+	height:40vw;
+}
+
+img {
+	/* position: absolute; */
+	width:100%;
+	height:auto;
+}
+
+#redpill {
+	position: absolute;
+	top: 58.5%;
+	left:21.5%;
+	width:5.0%;
+	height:auto;
+}
+
+#bluepill {
+	position: absolute;
+	top: 59.2%;
+	left:73.3%;
+	width:5.0%;
+	height:auto;
+}
+
+#redpill:hover, #bluepill:hover {
+	transform: scale(1.3);
+}
