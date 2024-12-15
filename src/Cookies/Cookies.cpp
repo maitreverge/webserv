@@ -18,7 +18,7 @@ void	Cookies::checkSessionCookie(Headers& _Headers, Server& server, std::string 
 		}
 		else if (URI == "/connect")
 		{
-			SessionData sessionData = {value};
+			SessionData sessionData = {value, "tartampion"};
 			server.UserSessions[value] = sessionData;
 			Logger::getInstance().log(INFO, "Client Connected (Client sessionID token added to server)", client, L_VRB);
 			_cookies["sessionID"] = value;
