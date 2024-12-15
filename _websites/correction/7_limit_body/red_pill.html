@@ -12,11 +12,13 @@
 </head>
 
 <body>
+	<canvas id="matrix"></canvas>
+
 	<h1>🔴 RED PILL : CURL 🔴</h1>
 	<h2> <i>So you choosed the Red Pill...</i></h2>
-	<hr style="border: 0; height: 2px; background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet); margin: 20px 0;">
 
-
+	<br>
+	
 	<h2>The goal here is to upload files with CURL. </h2>
 	<h2>You will try 3 curl commands : with a body size == 10, &lt; to 10 and lastly &gt; to 10 </h2>
 	<br>
@@ -31,45 +33,33 @@
 	
 	<h3>Command with body of size == 10</h3>
 	<a href="#"
-		onclick="copyToClipboard('curl -i -s -X POST -H &quot;Content-Type: text/plain&quot; -d \'1234567890\' http://localhost:3008', this)"
-		class="copy-curl"><span class="click-text"><b>( 🖱️CLICK ME   )</b></span>     curl -i -s -X POST -H "Content-Type: text/plain" -d '1234567890'
-		http://localhost:3008</a>
-		
+	onclick="copyToClipboard('curl -i -s -X POST -H &quot;Content-Type: text/plain&quot; -d \'1234567890\' http://localhost:3008', this)"
+	class="copy-curl"><span class="click-text"><b>( 🖱️CLICK ME   )</b></span>     curl -i -s -X POST -H "Content-Type: text/plain" -d '1234567890'
+	http://localhost:3008</a>
+	
 	<h3>Command with body of size &lt; 10</h3>
 	<a href="#"
 	onclick="copyToClipboard('curl -i -s -X POST -H &quot;Content-Type: text/plain&quot; -d \'123456789\' http://localhost:3008', this)"
 	class="copy-curl"><span class="click-text"><b>( 🖱️CLICK ME   )</b></span>     curl -i -s -X POST -H "Content-Type: text/plain" -d '123456789'
 	http://localhost:3008</a>
-		<br>
-		
-	<hr style="border: 0; height: 2px; background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet); margin: 20px 0;">
+	<br>
+	
+	<br>
+	<br>
 	
 	<h2> You can check the uploaded data...</h2>
 	<a href="uploads_limit_body/" class="upload-directory">...in this directory !</a>
 	<br>
 	<br>
-	<hr style="border: 0; height: 2px; background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet); margin: 20px 0;">
+	<br>
 	<br>
 	<a href="index.html" class="goback">🔙 GO BACK</a>
 	<br>
 	<br>
 	<a href="/" class="homepage">🏠 BACK TO HOME PAGE</a>
-	<script>
-		function copyToClipboard(text, element) {
-			const tempInput = document.createElement('input');
-			tempInput.value = text;
-			document.body.appendChild(tempInput);
-			tempInput.select();
-			document.execCommand('copy');
-			document.body.removeChild(tempInput);
+	<script src="js/matrix.js"></script>
 
-			const originalText = element.innerText;
-			element.innerText = 'Copied';
-			setTimeout(() => {
-				element.innerText = originalText;
-			}, 2000);
-		}
-	</script>
+	<script src="js/copy.js"></script>
 
 </body>
 

@@ -4,7 +4,7 @@ const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-const letters = '0123456789qwertyuiopasdfghjklzxcvbnmアカサタナハマヤラワガザダバパイキシチニヒミリヰギジヂビピウクスツヌフムユルグズヅブプエケセテネヘメレヱゲゼデベペオコソトノホモヨロヲゴゾドボポヴ';
+const letters = '0123456789qwertyuiopasdfghjklzxcvbnmアカサタナハマヤラワガザダバパイキシチニヒミリヰギジヂビピウクスツヌフムユルグズヅブプエケセテネヘメレヱゲゼデベペオコソトホモヨロヲゴゾドボポヴ';
 const fontSize = 10;
 const columns = canvas.width / fontSize;
 
