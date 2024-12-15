@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="css/red_pill.css">
+	<link rel="stylesheet" href="css/common.css">
+
+	<title>RED PILL : CURL</title>
+
+</head>
+
+<body>
+	<canvas id="matrix"></canvas>
+
+	<h1>🔴 RED PILL : CURL 🔴</h1>
+	<h2> <i>So you choosed the Red Pill...</i></h2>
+
+	<br>
+	
+	<h2>The goal here is to upload files with CURL. </h2>
+	<h2>You will try 3 curl commands : with a body size == 10, &lt; to 10 and lastly &gt; to 10 </h2>
+	<br>
+	<br>
+	<h2>You can open the terminal, and test the following CURL commands :</h2>
+	
+	<h3>Command with body of size &gt; 10</h3>
+	<a href="#"
+	onclick="copyToClipboard('curl -i -s -X POST -H &quot;Content-Type: text/plain&quot; -d \'123456789-10\' http://localhost:3008', this)"
+	class="copy-curl"><span class="click-text"><b>( 🖱️CLICK ME   )</b></span>     curl -i -s -X POST -H "Content-Type: text/plain" -d '123456789-10'
+	http://localhost:3008</a>
+	
+	<h3>Command with body of size == 10</h3>
+	<a href="#"
+	onclick="copyToClipboard('curl -i -s -X POST -H &quot;Content-Type: text/plain&quot; -d \'1234567890\' http://localhost:3008', this)"
+	class="copy-curl"><span class="click-text"><b>( 🖱️CLICK ME   )</b></span>     curl -i -s -X POST -H "Content-Type: text/plain" -d '1234567890'
+	http://localhost:3008</a>
+	
+	<h3>Command with body of size &lt; 10</h3>
+	<a href="#"
+	onclick="copyToClipboard('curl -i -s -X POST -H &quot;Content-Type: text/plain&quot; -d \'123456789\' http://localhost:3008', this)"
+	class="copy-curl"><span class="click-text"><b>( 🖱️CLICK ME   )</b></span>     curl -i -s -X POST -H "Content-Type: text/plain" -d '123456789'
+	http://localhost:3008</a>
+	<br>
+	
+	<br>
+	<br>
+	
+	<h2> You can check the uploaded data...</h2>
+	<a href="uploads_limit_body/" class="upload-directory">...in this directory !</a>
+	<br>
+	<br>
+	<br>
+	<br>
+	<a href="index.html" class="goback">🔙 GO BACK</a>
+	<br>
+	<br>
+	<a href="/" class="homepage">🏠 BACK TO HOME PAGE</a>
+	<script src="js/matrix.js"></script>
+
+	<script src="js/copy.js"></script>
+
+</body>
+
+</html>

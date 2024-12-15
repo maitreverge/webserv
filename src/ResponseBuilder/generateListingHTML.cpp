@@ -131,7 +131,7 @@ void	ResponseBuilder::listingHTMLBuilder( void ){
 	if (_realURI != "/")
 		path += _realURI;
 
-	// ! STEP 1 : Opens the directory
+	// Opens the directory
 	DIR *dir = opendir(path.c_str());
 	if (dir == NULL)
 	{

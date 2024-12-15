@@ -59,7 +59,7 @@ void	ResponseBuilder::buildHeaders(){
 		stringstream streamContentType;
 		string contentType;
 		
-		if (_method == DELETE and _errorType == CODE_200_OK) //!COND JUMP
+		if (_method == DELETE and _errorType == CODE_200_OK)
 			contentType = "text/html";
 		else
 			contentType = extractType(_fileExtension);

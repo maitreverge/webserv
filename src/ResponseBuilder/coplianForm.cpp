@@ -39,43 +39,14 @@ void	ResponseBuilder::initServerNames( void ){
 
 	// =========================== TEMPLATES WEBSITES ==========================
 
-	_servernameType.insert(std::make_pair("festival.com", "_websites/festival/")); // ! DONE
-	_servernameType.insert(std::make_pair("gaming.com", "_websites/cyborg_gaming/"));// ! DONE
-	_servernameType.insert(std::make_pair("villa.com", "_websites/villa_agency/"));// ! DONE
+	_servernameType.insert(std::make_pair("festival.com", "_websites/festival/"));
+	_servernameType.insert(std::make_pair("gaming.com", "_websites/cyborg_gaming/"));
+	_servernameType.insert(std::make_pair("villa.com", "_websites/villa_agency/"));
 
 	// =================== ENTRYPOINT FOR CORRECTION WEBSITE ===================
 	
-	_servernameType.insert(std::make_pair("webserv.correction", "_websites/correction/"));// ! WORK NEEDLE
-	_servernameType.insert(std::make_pair("webserv.correction2", "_websites/correction/"));// ! WORK NEEDLE
+	_servernameType.insert(std::make_pair("webserv.correction", "_websites/correction/"));
 
-	// ====================== MAIN SERVER NAMES FOR CORRECTIONS ================
-	
-	// Simple configs
-	_servernameType.insert(std::make_pair("post.ok", "_websites/correction/2_post_ok/"));
-	_servernameType.insert(std::make_pair("post.ko", "_websites/correction/post_ko/"));
-	_servernameType.insert(std::make_pair("delete.ok", "_websites/correction/delete_ok/"));
-	_servernameType.insert(std::make_pair("delete.ko", "_websites/correction/delete_ko/"));
-	_servernameType.insert(std::make_pair("unknown_method", "_websites/correction/unknown_method/"));
-
-	// Real Post configs
-	_servernameType.insert(std::make_pair("post.postman", "_websites/correction/post_postman/"));
-	_servernameType.insert(std::make_pair("post.multipart", "_websites/correction/post_multipart/"));
-
-	// Main routes configs
-	_servernameType.insert(std::make_pair("cgi.ok", "_websites/correction/cgi_ok/"));
-	_servernameType.insert(std::make_pair("cgi.ko", "_websites/correction/cgi_ko/"));
-
-	_servernameType.insert(std::make_pair("redirection.ok", "_websites/correction/redirection_ok/"));
-	_servernameType.insert(std::make_pair("redirection.ko", "_websites/correction/redirection_ko/"));
-
-	_servernameType.insert(std::make_pair("root.ok", "_websites/correction/root_ok/"));
-	_servernameType.insert(std::make_pair("root.ko", "_websites/correction/root_ko/"));
-
-	_servernameType.insert(std::make_pair("listing.ok", "_websites/correction/listing_ok/"));
-	_servernameType.insert(std::make_pair("listing.ko", "_websites/correction/listing_ko/"));
-
-	// _servernameType.insert(std::make_pair("cookie.ok", "_websites/correction/"));
-	// _servernameType.insert(std::make_pair("cookie.ko", "_websites/correction/"));
 }
 
 ResponseBuilder::ResponseBuilder( void ){
@@ -133,7 +104,7 @@ ResponseBuilder::ResponseBuilder( const ResponseBuilder & src) { *this = src; }
 ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 {
 	initMimes();
-	initServerNames(); //? should be added here?
+	initServerNames();
 	
 	_isDirectory = rhs._isDirectory;
 	_isFile = rhs._isFile;
@@ -143,7 +114,6 @@ ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 	_isWOK = rhs._isWOK;
 	_isXOK = rhs._isXOK;
 
-	// TODO : actualiser les variables
 	this->_mimeTypes = rhs._mimeTypes;
 	this->_realURI = rhs._realURI;
 	this->_errorType = rhs._errorType;
@@ -177,7 +147,7 @@ ResponseBuilder & ResponseBuilder::operator=( const ResponseBuilder & rhs)
 	this->_isServerName = rhs._isServerName;
 
 
-	// ! DO NOT FUCKING TOUCH (Kernel copy stuff)
+	// ! DO NOT TOUCH (Kernel copy stuff)
 	this->_ifsStreamHead = rhs._ifsStreamHead;
 	this->_ifs.close();
 	this->_ofs.close();

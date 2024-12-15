@@ -157,7 +157,8 @@ class ResponseBuilder
 	void	initForbiddenFiles( void );
 
 	// ---------- deleteEngine.cpp
-	void	generateDeleteHTML( void );
+	void	generateDeleteHTML(void);
+	void	makeDeleteHTML(std::stringstream &result);
 	void	deleteEngine( void );
 
 	// ---------- errorNotFoundGenerator.cpp
@@ -170,7 +171,7 @@ class ResponseBuilder
 	void	clearingRoutes( vector< string >&, vector< string >& );
 	void	buildRouteConfig( string );
 	void	printMyConfig( void );
-	void	extractRedirectionIndex( vector< string >&, vector< string >& );
+	void	extractRedirectionIndex( vector< string >& );
 
 	// ---------- generateListingHTML.cpp
 	bool	foundDefaultPath( void );
