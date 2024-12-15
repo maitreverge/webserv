@@ -123,6 +123,7 @@ bool Cgi::getBody(Client & client)
 {
     Logger::getInstance().log(DEBUG, "Cgi Get Body", client);
 
+	this->hasError(client, "cgi exited with error code", WNOHANG);
 	this->isTimeout(client, "Timeout is over");
     if (!FD_ISSET(this->_fds[1], &Kernel::_readSet))  
         return Logger::getInstance().
