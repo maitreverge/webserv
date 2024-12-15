@@ -4,111 +4,27 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="body_limit.css">
-	<style>
-		body {
-			margin: 0;
-			overflow: hidden;
-			position: relative;
-			text-align: center;
-		}
-
-		canvas {
-			display: block;
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			z-index: -1;
-		}
-
-		h1,
-		h2,
-		h3,
-		h4,
-		h5,
-		h6 {
-			color: white;
-			/* Change color of <h> tags */
-		}
-
-		.homepage {
-			display: inline-block;
-			font-size: 21px;
-			padding: 10px 20px;
-			background-color: #8da6ec;
-			color: white;
-			text-decoration: none;
-			border-radius: 5px;
-			transition: background-color 0.3s ease, transform 0.3s ease;
-		}
-
-		.homepage:hover {
-			background-color: #0300b2;
-			transform: scale(1.2) rotate(5deg);
-		}
-
-		.red-pill-directory {
-			display: inline-block;
-			font-size: 18px;
-			padding: 10px 20px;
-			background-color: #f28a8a;
-			/* Green */
-			color: white;
-			text-decoration: none;
-			border-radius: 5px;
-			transition: background-color 0.3s ease;
-			cursor: pointer;
-
-		}
-
-		.red-pill-directory:hover {
-			background-color: #e30202;
-			transform: scale(1.3);
-		}
-
-		.blue-pill-directory {
-			display: inline-block;
-			font-size: 18px;
-			padding: 10px 20px;
-			background-color: #83d4f7;
-			/* Green */
-			color: white;
-			text-decoration: none;
-			border-radius: 5px;
-			transition: background-color 0.3s ease;
-			cursor: pointer;
-
-		}
-
-		.blue-pill-directory:hover {
-			background-color: #026be3;
-			transform: scale(1.3);
-		}
-
-		.click-text {
-			color: #e30202;
-		}
-	</style>
-
-	<title>Multiple Servers with Different Ports</title>
-
+	<link rel="stylesheet" href="css/index.css">
+	<link rel="stylesheet" href="css/common.css">
+	
+	<title>BODY LIMIT TESTING</title>
+	
 </head>
 
 <body>
+	<canvas id="matrix"></canvas>
 	<h1>🚦 BODY LIMIT TESTING 🚦</h1>
 	<h2> Open another terminal, and launch an instance of <i>webserv</i> with the following config :</h2>
-
+	
 	<a href="#" onclick="copyToClipboard('./webserv _websites/correction/7_limit_body/limit_body.ini', this)"
 		class="copy-link"><span class="click-text"><b>( 🖱️CLICK ME )</b></span> ./webserv
 		_websites/correction/7_limit_body/limit_body.ini</a>
-
-	<h1>👀 In the same time, pay attention to <i>limit_body.ini</i> config file 👀</h1>
-
-	<h2> Now it's time for you to upload some files...</h2>
+		
+		<h1>👀 In the same time, pay attention to <i>limit_body.ini</i> config file 👀</h1>
+		
+		<h2> Now it's time for you to upload some files...</h2>
 	<h4> <i>You can choose a way, but choose wisely...and I will show you how deep the rabbit hole goes </i> </h4>
-
+	
 	<img src="img/morpheus.jpg" class="soft-frame"
 		style="width: 800px; height: 600px; object-fit: cover; object-position: top;" />
 
@@ -121,59 +37,10 @@
 	<br>
 	<br>
 	<a href="/" class="homepage">🏠 BACK TO HOME PAGE</a>
-	<script>
-		function copyToClipboard(text, element) {
-			const tempInput = document.createElement('input');
-			tempInput.value = text;
-			document.body.appendChild(tempInput);
-			tempInput.select();
-			document.execCommand('copy');
-			document.body.removeChild(tempInput);
-
-			const originalText = element.innerText;
-			element.innerText = 'Copied';
-			setTimeout(() => {
-				element.innerText = originalText;
-			}, 2000);
-		}
-	</script>
-
-	<canvas id="matrix"></canvas>
-	<script>
-		const canvas = document.getElementById('matrix');
-		const ctx = canvas.getContext('2d');
-
-		canvas.width = window.innerWidth;
-		canvas.height = window.innerHeight;
-
-		const letters = '0123456789qwertyuiopasdfghjklzxcvbnmアカサタナハマヤラワガザダバパイキシチニヒミリヰギジヂビピウクスツヌフムユルグズヅブプエケセテネヘメレヱゲゼデベペオコソトノホモヨロヲゴゾドボポヴ';
-		const fontSize = 16;
-		const columns = canvas.width / fontSize;
-
-		const drops = Array.from({ length: columns }).fill(1);
-
-		function draw() {
-			ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-			ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-			ctx.fillStyle = '#0F0';
-			ctx.font = `${fontSize}px monospace`;
-
-			drops.forEach((y, index) => {
-				const text = letters[Math.floor(Math.random() * letters.length)];
-				const x = index * fontSize;
-				ctx.fillText(text, x, y * fontSize);
-
-				if (y * fontSize > canvas.height && Math.random() > 0.975) {
-					drops[index] = 0;
-				}
-				drops[index]++;
-			});
-		}
-
-		setInterval(draw, 33);
-	</script>
-
+	
+	<script src="js/matrix.js"></script>
+	<script src="js/copy.js"></script>
+	
 </body>
 
 </html>
