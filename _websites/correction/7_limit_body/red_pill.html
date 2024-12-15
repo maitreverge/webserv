@@ -6,6 +6,12 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="body_limit.css">
 	<style>
+		body {
+	font-family: Arial, sans-serif;
+	background: linear-gradient(to right, #eaa1a1, #ff0000);
+	text-align: center;
+	padding: 40px;
+}
 		.homepage {
 			display: inline-block;
 			font-size: 21px;
@@ -22,11 +28,27 @@
 			transform: scale(1.2) rotate(5deg);
 		}
 
+		.goback {
+			display: inline-block;
+			font-size: 21px;
+			padding: 10px 20px;
+			background-color: #8dec98;
+			color: white;
+			text-decoration: none;
+			border-radius: 5px;
+			transition: background-color 0.3s ease, transform 0.3s ease;
+		}
+
+		.goback:hover {
+			background-color: #00b22c;
+			transform: scale(1.2) rotate(-5deg);
+		}
+
 		.upload-directory {
 			display: inline-block;
 			font-size: 18px;
 			padding: 10px 20px;
-			background-color: #f78383;
+			background-color: #c583f7;
 			/* Green */
 			color: white;
 			text-decoration: none;
@@ -37,8 +59,8 @@
 		}
 
 		.upload-directory:hover {
-			background-color: #e30202;
-			transform: scale(1.3);
+			background-color: #b602e3;
+			transform: scale(1.6);
 		}
 
 		.red-pill-directory {
@@ -89,56 +111,46 @@
 </head>
 
 <body>
-	<h1>🚦 BODY LIMIT TESTING 🚦</h1>
-	<h2> Open another terminal, and launch an instance of <i>webserv</i> with the following config :</h2>
+	<h1>🔴 RED PILL : CURL 🔴</h1>
+	<h2> <i>So you choosed the Red Pill...</i></h2>
+	<hr style="border: 0; height: 2px; background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet); margin: 20px 0;">
 
-	<a href="#" onclick="copyToClipboard('./webserv _websites/correction/7_limit_body/limit_body.ini', this)"
-		class="copy-link"><span class="click-text"><b>( 🖱️CLICK ME   )</b></span> ./webserv _websites/correction/7_limit_body/limit_body.ini</a>
 
-	<h1>👀 In the same time, pay attention to <i>limit_body.ini</i> config file 👀</h1>
-
-	<h2> Now it's time for you to upload some files...</h2>
-	<h3> <i>You can choose a way, and I will show you how deep the rabbit hole goes </i> </h3>
-
-	<img src="morpheus.jpg" class="soft-frame"/>
-
+	<h2>The goal here is to upload files with CURL. </h2>
+	<h2>You will try 3 curl commands : with a body size == 10, &lt; to 10 and lastly &gt; to 10 </h2>
 	<br>
-	<a href="red_pill.html/" class="red-pill-directory">🔴  I want the Red Pill  🔴</a>
+	<br>
+	<h2>You can open the terminal, and test the following CURL commands :</h2>
 	
-	<a href="uploads_limit_body/" class="blue-pill-directory">🔵  I choose the Blue Pill  🔵</a>
-	
-	<br>
-	<a href="uploads_limit_body/" class="upload-directory">this directory !</a>
-	<h2>The goal is then to try with a body size == 10, &lt; to 10 and &gt; to 10 </h2>
-	<br>
-	<h2>You can open the console, and test the following CURL commands :</h2>
-
 	<h3>Command with body of size &gt; 10</h3>
 	<a href="#"
-		onclick="copyToClipboard('curl -i -s -X POST -H &quot;Content-Type: text/plain&quot; -d \'123456789-10\' http://localhost:3008', this)"
-		class="copy-curl"><span class="click-text"><b>( 🖱️CLICK ME   )</b></span>     curl -i -s -X POST -H "Content-Type: text/plain" -d '123456789-10'
-		http://localhost:3008</a>
-
+	onclick="copyToClipboard('curl -i -s -X POST -H &quot;Content-Type: text/plain&quot; -d \'123456789-10\' http://localhost:3008', this)"
+	class="copy-curl"><span class="click-text"><b>( 🖱️CLICK ME   )</b></span>     curl -i -s -X POST -H "Content-Type: text/plain" -d '123456789-10'
+	http://localhost:3008</a>
+	
 	<h3>Command with body of size == 10</h3>
 	<a href="#"
 		onclick="copyToClipboard('curl -i -s -X POST -H &quot;Content-Type: text/plain&quot; -d \'1234567890\' http://localhost:3008', this)"
 		class="copy-curl"><span class="click-text"><b>( 🖱️CLICK ME   )</b></span>     curl -i -s -X POST -H "Content-Type: text/plain" -d '1234567890'
 		http://localhost:3008</a>
-
+		
 	<h3>Command with body of size &lt; 10</h3>
 	<a href="#"
-		onclick="copyToClipboard('curl -i -s -X POST -H &quot;Content-Type: text/plain&quot; -d \'123456789\' http://localhost:3008', this)"
-		class="copy-curl"><span class="click-text"><b>( 🖱️CLICK ME   )</b></span>     curl -i -s -X POST -H "Content-Type: text/plain" -d '123456789'
-		http://localhost:3008</a>
-	<br>
-
+	onclick="copyToClipboard('curl -i -s -X POST -H &quot;Content-Type: text/plain&quot; -d \'123456789\' http://localhost:3008', this)"
+	class="copy-curl"><span class="click-text"><b>( 🖱️CLICK ME   )</b></span>     curl -i -s -X POST -H "Content-Type: text/plain" -d '123456789'
+	http://localhost:3008</a>
+		<br>
+		
 	<hr style="border: 0; height: 2px; background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet); margin: 20px 0;">
-
+	
+	<h2> You can check the uploaded data...</h2>
+	<a href="uploads_limit_body/" class="upload-directory">...this directory !</a>
 	<br>
 	<br>
-	<img src="https://preview.redd.it/funny-cat-expressions-go-v0-ueiam9zbf2ld1.jpeg?auto=webp&s=405507f0695c110a6c8150d515fd825d00eb4b39"
-		alt="cat" class="soft-frame" style="width:500px;height:auto;">
-
+	<hr style="border: 0; height: 2px; background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet); margin: 20px 0;">
+	<br>
+	<a href="index.html" class="goback">🔙 GO BACK</a>
+	<br>
 	<br>
 	<a href="/" class="homepage">🏠 BACK TO HOME PAGE</a>
 	<script>
