@@ -1,5 +1,5 @@
 HTTP/1.1 242 Connection
-Content-Length: 1243
+Content-Length: 1385
 Content-Type: text/html
 
 <!DOCTYPE html>
@@ -48,6 +48,11 @@ Content-Type: text/html
 </head>
 <body>
     <h1>You must accept cookies to get in!</h1>
-    <a href="/connect">Click to accept cookies</a>
+	<form action="/connect" method="GET">
+		<label for="name">Name :</label><br>
+		<input type="text" id="name" name="name" required><br><br>
+		<button type="submit">Send</button>
+	</form>
+	<br/>
 </body>
 </html>

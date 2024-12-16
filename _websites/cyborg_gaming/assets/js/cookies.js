@@ -10,8 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	const sessionID = getCookie('sessionID');
+    const username2 = getCookie('username'); // Récupère le cookie "username"
 	const banner = document.getElementById('cookieBanner');
 	const connectedInfo = document.getElementById('connectedInfo');
+    const userInfo = document.getElementById('userInfo'); // L'élément pour afficher le nom d'utilisateur
 
 	if (!sessionID) {
 		// Si le cookie est absent, affiche la barre
@@ -19,6 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		connectedInfo.style.display = 'none';
 
 		document.getElementById('acceptCookies').addEventListener('click', () => {
+			console.log("Button clicked"); // Vérifie que le bouton est cliqué
+
 			// Envoie une requête au serveur pour Accept les cookies
 			fetch('/accept-cookies?action=accept', {
 				method: 'POST',
@@ -33,5 +37,13 @@ document.addEventListener('DOMContentLoaded', () => {
 		// Si le cookie est présent, affiche l'état connecté
 		banner.style.display = 'none';
 		connectedInfo.style.display = 'block';
+
+		// Si le cookie "username" est présent, affiche le nom de l'utilisateur
+		if (username2) {
+			const username = username2.replace(/\+/g, ' ').trim();
+			userInfo.textContent = `You are logged in as ${username}`;
+		} else {
+			userInfo.textContent = 'You accepted the cookies, you fool...';
+		}
 	}
 });
