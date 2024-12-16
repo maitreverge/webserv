@@ -22,7 +22,7 @@
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
       overflow: hidden;
       display: flex;
-      flex-direction: column;
+      flex-direction: column;      
     }
 
     .chat-header {
@@ -64,12 +64,29 @@
       background-color: #f1f1f1;
       text-align: center;
     }
+
+    #button-close {
+      position: absolute;
+      right: 0;
+      width:20px;
+      height: 20px;
+      /* background-color: red; */
+    }
+
+    img {
+      width:100%;
+      height: 100%;
+      border-radius:5px;
+    }
   </style>
 </head>
 <body>
 
 <div class="chat-container" id="chat">
   <div class="chat-header">Chat with AI Assistant</div>
+<div id="button-close" onclick="chatHandle()">
+  <img src="img/button.jpeg">
+</div>
   <div class="chat-body" id="chatBody">
     <div class="message">
       <img class="avatar" src="img/sylvain_2.jpg" alt="Avatar">
@@ -101,6 +118,7 @@
     const randomMessage = messages[Math.floor(Math.random() * messages.length)];
     
     const messageElement = document.createElement("div");
+    messageElement.id = "mess"
     messageElement.className = "message";
     messageElement.innerHTML = `
       <img class="avatar" src="img/sylvain_2.jpg" alt="Avatar">
@@ -111,8 +129,20 @@
     chatBody.scrollTop = chatBody.scrollHeight;
   }
 
+  function chatHandle() {
+    const chatElement = document.getElementById("chat");
+    chatElement.style.display ="none";
+    const chatBody = document.getElementById("mess");
+    chatBody.innerHTML = '';
+
+    setTimeout(() => {
+    chatElement.style.display = "flex"; // On ré-affiche le chat après le délai
+    chatInt = setInterval(addMessage, 5000); // Relance l'intervalle toutes les 5 secondes
+  }, 3000);
+
+  }
   // Add a new message every 5 seconds
-  setInterval(addMessage, 5000);
+  chatInt = setInterval(addMessage, 1000);
 </script>
 
 </body>
