@@ -17,7 +17,7 @@ void	ResponseBuilder::buildHeaders(){
 	errorCode codes;
 	
 	stringstream	streamStatusLine,
-					// streamTimeStamp, // TODO : Put Timestamps back once webserv finished
+					streamTimeStamp,
 					streamContentLenght,
 					streamMasterHeader;
 
@@ -33,13 +33,12 @@ void	ResponseBuilder::buildHeaders(){
 						<< HTTP_HEADER_SEPARATOR;
 	Headers.statusLine = streamStatusLine.str();
 
-	// TODO : Put Timestamps back once webserv finished
 	// ! Date:
-	// streamTimeStamp		<< "Date:"
-	// 					<< SPACE 
-	// 					<< timeStamp::getTime()
-	// 					<< HTTP_HEADER_SEPARATOR;
-	// Headers.timeStamp = streamTimeStamp.str();
+	streamTimeStamp		<< "Date:"
+						<< SPACE 
+						<< timeStamp::getTime()
+						<< HTTP_HEADER_SEPARATOR;
+	Headers.timeStamp = streamTimeStamp.str();
 	
 	// ! Content-Length
 	if (not isErrorRedirect())
@@ -94,7 +93,7 @@ void	ResponseBuilder::buildHeaders(){
 	// ======================== BUILDING FINAL HEADERS ========================
 
 	streamMasterHeader	<< Headers.statusLine
-						// << Headers.timeStamp // TODO : Put Timestamps back once webserv finished
+						<< Headers.timeStamp
 						<< Headers.contentLenght
 						// Optionals
 						<< Headers.cookie

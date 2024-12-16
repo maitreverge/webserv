@@ -63,6 +63,7 @@ void ConfigFileParser::setAllConfigValues(catIt& catIt, itemIt& itemIt, valIt& v
 	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_422", CODE_422_UNPROCESSABLE_ENTITY);
 	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_431", CODE_431_REQUEST_HEADER_FIELDS_TOO_LARGE);
 	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_500", CODE_500_INTERNAL_SERVER_ERROR);
+	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_501", CODE_501_NOT_IMPLEMENTED);
 	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_502", CODE_502_BAD_GATEWAY);
 	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_503", CODE_503_SERVICE_UNAVAILABLE);
 	setConfigValue(catIt, itemIt, valIt, configStruct, "errorPage_504", CODE_504_GATEWAY_TIMEOUT);

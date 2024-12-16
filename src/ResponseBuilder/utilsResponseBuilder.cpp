@@ -470,7 +470,7 @@ string ResponseBuilder::generateRandomString(size_t length, bool underscoreNeede
 string ResponseBuilder::generateFileName( void ){
 
 	// TODO : MAKE THIS BOOL FALSE ONCE WEBSERV FINISHED
-	bool testing = true;
+	bool testing = false;
 
 	string baseName;
 
