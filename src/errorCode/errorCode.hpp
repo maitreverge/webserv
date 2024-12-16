@@ -1,9 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   errorCode.hpp                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: TryHardTeam <TryHardTeam@123.com>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/16 12:10:07 by TryHardTeam       #+#    #+#             */
+/*   Updated: 2024/12/16 12:12:00 by TryHardTeam      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #pragma once
 
 #include "utils_templates.hpp"
 #include "libraries.hpp"
 
-// ! IMPORTANT : This enum needs to be set as global for better accessing
 typedef enum
 {
 	// Informational responses

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   errorNotFoundGenerator.cpp                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: TryHardTeam <TryHardTeam@123.com>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/16 12:09:03 by TryHardTeam       #+#    #+#             */
+/*   Updated: 2024/12/16 12:09:04 by TryHardTeam      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ResponseBuilder.hpp"
 #include "Logger.hpp"
 #include <stdlib.h>

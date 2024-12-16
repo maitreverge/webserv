@@ -1,6 +1,14 @@
-/*
-	HERE IS THE MASTER .hpp FILE, WHICH ARTICULATES ALL OTHERS .hpp FILES
-*/
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   master.hpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: TryHardTeam <TryHardTeam@123.com>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/16 12:11:09 by TryHardTeam       #+#    #+#             */
+/*   Updated: 2024/12/16 12:11:17 by TryHardTeam      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "colors.hpp"
 #include "libraries.hpp"
