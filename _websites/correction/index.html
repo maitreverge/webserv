@@ -14,6 +14,8 @@
 </head>
 <body>
 
+	<!-- ADD THIS LINK https://developer.mozilla.org/en-US/docs/Web/HTTP/Status -->
+
 <!-- Header -->
 <header class="w3-container w3-theme w3-padding" id="myHeader">
 	<i onclick="unused()" class="fa fa-bars w3-xlarge w3-button w3-theme"></i> 
@@ -21,6 +23,7 @@
 	<h1 style="font-family: 'Arial', sans-serif; font-weight:bold;">WEBSERV CORRECTION WELCOME PAGE</h1>
 	  <div class="w3-padding-32">
 		<button class="w3-btn w3-xlarge w3-dark-grey w3-hover-light-grey" onclick="openVideoModal()" style="font-weight:900;">Does this button works ?</button>
+		<button class="w3-btn w3-xlarge w3-dark-grey w3-hover-light-grey" onclick="window.open('https://developer.mozilla.org/en-US/docs/Web/HTTP/Status', '_blank');" style="font-weight:900;">Link to Error Codes</button>
 	  </div>
 	</div>
   </header>
@@ -56,12 +59,12 @@
   <script>
 
   function unused()
-  {
+  {	
 	let sylvain = document.getElementById('sylvain');
 	sylvain.style.display = "block";
 	setTimeout(function() {
 		sylvain.style.display = "none";
-	}, 800);	
+	}, 1600);	
   }	
 
   function openVideoModal() {

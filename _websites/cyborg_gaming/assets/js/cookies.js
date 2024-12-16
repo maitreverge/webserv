@@ -21,8 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		connectedInfo.style.display = 'none';
 
 		document.getElementById('acceptCookies').addEventListener('click', () => {
-			console.log("Button clicked"); // Vérifie que le bouton est cliqué
-
 			// Envoie une requête au serveur pour Accept les cookies
 			fetch('/accept-cookies?action=accept', {
 				method: 'POST',

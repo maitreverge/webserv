@@ -58,7 +58,7 @@ void	ResponseBuilder::extractMethod( void ){
  * @brief Sets the content length of the response based on the size of the file at the given URI.
  * 
  * This function uses the stat system call to retrieve information about the file specified by _realURI.
- * If the file cannot be accessed due to permission issues, a 401 Unauthorized error is set.
+ * If the file cannot be accessed due to permission issues, a 403 Unauthorized error is set.
  * If the file is missing or the address is invalid, a 404 Not Found error is set.
  * If the file is successfully accessed, the content length is set to the size of the file.
  */
@@ -68,8 +68,8 @@ void	ResponseBuilder::setContentLenght(){
 	{
 		if (errno == EACCES) // permission denied
 		{
-			Logger::getInstance().log(ERROR, "401 Detected from `setContentLenght` : Permission Denied");
-			setError(CODE_401_UNAUTHORIZED, true);
+			Logger::getInstance().log(ERROR, "403 Detected from `setContentLenght` : Permission Denied");
+			setError(CODE_403_FORBIDDEN, true);
 		}
 		else if (errno == ENOENT or errno == EFAULT) // Missing file or bad adress
 		{
@@ -102,25 +102,25 @@ void	ResponseBuilder::checkAutho( void ){
 			case GET:
 				if ( _isCGI and (not _isXOK or not _isROK) )
 				{
-					Logger::getInstance().log(ERROR, "401 Detected from `checkAutho` : CGI on GET Method has incorrect permissions");
-					setError(CODE_401_UNAUTHORIZED);
+					Logger::getInstance().log(ERROR, "403 Detected from `checkAutho` : CGI on GET Method has incorrect permissions");
+					setError(CODE_403_FORBIDDEN);
 				}
 				else if (not _isROK)
 				{
-					Logger::getInstance().log(ERROR, "401 Detected from `checkAutho`, regular file on GET method has incorrect permissions");
-					setError(CODE_401_UNAUTHORIZED);
+					Logger::getInstance().log(ERROR, "403 Detected from `checkAutho`, regular file on GET method has incorrect permissions");
+					setError(CODE_403_FORBIDDEN);
 				}
 				break;
 			case POST:
 				if ( _isCGI and (not _isXOK or not _isROK) )
 				{
-					Logger::getInstance().log(ERROR, "401 Detected from `checkAutho` : CGI on POST Method has incorrect permissions");
-					setError(CODE_401_UNAUTHORIZED);
+					Logger::getInstance().log(ERROR, "403 Detected from `checkAutho` : CGI on POST Method has incorrect permissions");
+					setError(CODE_403_FORBIDDEN);
 				}
 				else if (not _isWOK)
 				{
-					Logger::getInstance().log(ERROR, "401 Detected from `checkAutho`, regular file on POST method has incorrect permissions");
-					setError(CODE_401_UNAUTHORIZED);
+					Logger::getInstance().log(ERROR, "403 Detected from `checkAutho`, regular file on POST method has incorrect permissions");
+					setError(CODE_403_FORBIDDEN);
 				}
 				if (_uploadTargetDirectory.empty())
 				{
@@ -132,19 +132,19 @@ void	ResponseBuilder::checkAutho( void ){
 			case DELETE:
 				if (not _isWOK)
 				{
-					Logger::getInstance().log(ERROR, "401 Detected from `checkAutho`, regular file on DELETE method can't be deleted due to permissions");
-					setError(CODE_401_UNAUTHORIZED);
+					Logger::getInstance().log(ERROR, "403 Detected from `checkAutho`, regular file on DELETE method can't be deleted due to permissions");
+					setError(CODE_403_FORBIDDEN);
 				}
 				break;
 			default:
 				Logger::getInstance().log(ERROR, "405 Detected from `checkAutho` default switch case");
-				setError(CODE_405_METHOD_NOT_ALLOWED);
+				setError(CODE_501_NOT_IMPLEMENTED);
 				break;
 		}
 	}
 	else
 	{
-		Logger::getInstance().log(ERROR, "405 Detected from `checkAutho`: File not Found");
+		Logger::getInstance().log(ERROR, "404 Detected from `checkAutho`: File not Found");
 		setError(CODE_404_NOT_FOUND);
 	}
 }
@@ -183,7 +183,7 @@ void	ResponseBuilder::checkNature( void ){
 			_isDirectory = true;
 			if (_method == DELETE) // ! I decided to reject DELETE methods on folders.
 			{
-				Logger::getInstance().log(ERROR, "405 Detected from `checkNature`: Delete Method for a folder detected");
+				Logger::getInstance().log(ERROR, "403 Detected from `checkNature`: Delete Method for a folder detected");
 				setError(CODE_403_FORBIDDEN);
 			}
 			else if (_method == POST)
@@ -204,8 +204,8 @@ void	ResponseBuilder::checkNature( void ){
 				// POST
 				if (!_isCGI)
 				{
-					Logger::getInstance().log(ERROR, "401 Detected from `checkNature`: POST on a non-CGI file");
-					setError(CODE_401_UNAUTHORIZED);
+					Logger::getInstance().log(ERROR, "403 Detected from `checkNature`: POST on a non-CGI file");
+					setError(CODE_403_FORBIDDEN);
 				}
 				else
 					extractFileNature( _realURI );
@@ -222,8 +222,8 @@ void	ResponseBuilder::checkNature( void ){
 	{
 		if (errno == EACCES)
 		{
-			Logger::getInstance().log(ERROR, "401 Detected from `checkNature`: Can't access file");
-			setError(CODE_401_UNAUTHORIZED);
+			Logger::getInstance().log(ERROR, "403 Detected from `checkNature`: Can't access file");
+			setError(CODE_403_FORBIDDEN);
 			return;
 		}
 		else if (errno == ENOENT or errno == EFAULT) // EFAULT The provided path is invalid OR points to a restricted memory space.

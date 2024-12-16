@@ -8,7 +8,7 @@
 void	ResponseBuilder::checkSessionIdCookie(Client &inputClient)
 {
 	if (inputClient.conf->handleCookies && inputClient.isConnected() == false)
-		throw Server::ShortCircuitException(CODE_242_CONNECTION);
+		throw Server::ShortCircuitException(CODE_401_UNAUTHORIZED);
 }
 
 std::string ResponseBuilder::generateUniqueToken(const std::string& clientIP)
