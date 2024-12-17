@@ -41,3 +41,7 @@ curl -X POST http://localhost:1512 -H "Content-Type: text/plain" --data "BODY IS
 
 commande curl test cookies:
 curl -v -s -c cookies.txt -b cookies.txt -I http://localhost:1510 -H "Cookie: key1=value1; key2=value2"
+
+
+RESOLVE
+curl --resolve example.com:80:127.0.0.1 http://example.com/

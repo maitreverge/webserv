@@ -6,7 +6,7 @@
 /*   By: TryHardTeam <TryHardTeam@123.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 12:09:24 by TryHardTeam       #+#    #+#             */
-/*   Updated: 2024/12/16 12:09:25 by TryHardTeam      ###   ########.fr       */
+/*   Updated: 2024/12/17 10:57:08 by TryHardTeam      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ void Server::printVector(Client & client, const std::vector<char> & response,
 
 	for (size_t i = 0; i < response.size(); i++)
 	{
-		if (i > 1000 && ~Logger::getInstance()._flags & L_UNR)
+		if (i > 700 && ~Logger::getInstance()._flags & L_UNR)
 		{
 			ss << std::endl << HIGH_INTENSITY_YELLOW << "[...]" << color;
 			break ;

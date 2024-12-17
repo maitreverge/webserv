@@ -6,7 +6,7 @@
 /*   By: TryHardTeam <TryHardTeam@123.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 12:08:33 by TryHardTeam       #+#    #+#             */
-/*   Updated: 2024/12/16 12:08:47 by TryHardTeam      ###   ########.fr       */
+/*   Updated: 2024/12/17 10:58:04 by TryHardTeam      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -482,7 +482,7 @@ string ResponseBuilder::generateRandomString(size_t length, bool underscoreNeede
 string ResponseBuilder::generateFileName( void ){
 
 	// TODO : MAKE THIS BOOL FALSE ONCE WEBSERV FINISHED
-	bool testing = false;
+	bool testing = true;
 
 	string baseName;
 

@@ -6,7 +6,7 @@
 /*   By: TryHardTeam <TryHardTeam@123.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 12:08:35 by TryHardTeam       #+#    #+#             */
-/*   Updated: 2024/12/16 12:08:36 by TryHardTeam      ###   ########.fr       */
+/*   Updated: 2024/12/17 10:57:49 by TryHardTeam      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -386,7 +386,7 @@ void	ResponseBuilder::setRegularPost( Client & client ){
 								+ _setBodyExtension;
 		
 		// need to oppen it in append mode for seekp 
-		this->_ofs.open(targetToWrite.c_str(), std::ios::binary | std::ios::app);
+		this->_ofs.open(targetToWrite.c_str(), std::ios::binary | std::ios::trunc);
 	}
 
     if (_ofs.is_open())

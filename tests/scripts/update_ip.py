@@ -17,7 +17,7 @@ if not os.path.isfile(ip_fichier):
 # Création de fichier s'il n'existe pas
 if not os.path.isfile(fichier):
     with open(fichier, 'w') as f:
-        f.write('http://0.0.0.0:1510\n')  # Ajouter une URL par défaut
+        f.write('http://0.0.0.0:1024\n')  # Ajouter une URL par défaut
 
 try:
 	# Lecture de la nouvelle adresse IP depuis le fichier
