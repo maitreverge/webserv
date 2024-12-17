@@ -1,6 +1,0 @@
-id : mju75189@inohm.com
-
-login : webserv
-
-password : password
-

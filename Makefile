@@ -1,9 +1,9 @@
-# executables name
+# Executables name
 NAME = webserv
 TEST_NAME = tests/webtest
 DEBUG_NAME = debug_webserv
 
-# compiler + flags
+# Compiler + flags
 CXX = c++
 GXX = g++
 CFLAGS = $(HDRFLAGS) -g -Wall -Wextra -Werror -Wconversion -std=c++98
@@ -16,13 +16,13 @@ GTEST_DIR = ./googletest
 GTEST_INCLUDE = $(GTEST_DIR)/$(GTEST_DIR)/include
 GTEST_LIB = $(GTEST_DIR)/build/lib
 
-# headers
+# Headers
 HDRDIRS := $(shell find . \( -name '*.h' -o -name '*.hpp' -o -name '*.tpp' \) \
 	-exec dirname {} \; | sort -u)
 HDRFLAGS := $(foreach dir, $(HDRDIRS), -I$(dir))
 HDR = $(shell find . \( -name "*.hpp" -o -name "*.h" -o -name "*.tpp" \))
 
-# directories
+# Directories
 SRC_DIR = src
 TEST_DIR = tests
 OBJ_DIR = objects
@@ -39,7 +39,7 @@ OBJ = $(SRC:%.cpp=$(OBJ_DIR)/%.o)
 TEST_OBJ = $(TEST_SRC:%.cpp=$(TEST_OBJ_DIR)/%.o)
 OBJ_DEBUG = $(SRC:%.cpp=$(OBJ_DIR_DEBUG)/%.o)
 
-# neat temp file (design flag)
+# Neat temp file (design flag)
 TEMP_FILE = .compiled
 TEMP_FILE_DEBUG = .compiled_debug
 
@@ -88,6 +88,7 @@ $(OBJ_DIR_DEBUG)/%.o : %.cpp $(HDR)
 
 $(NAME) : $(OBJ)
 
+# Installing OpenAI pip package for Skynet CGIs
 	@{ \
 		python3 -m pip install --upgrade pip --user -q --no-warn-script-location; \
 		pip install --upgrade openai --user -q --no-warn-script-location; \
