@@ -4,7 +4,7 @@
 
 ## 🚀 SYNOPSIS
 
-The `webserv` project at 42 school challenges students to build a fully functional HTTP server in the C++ language.
+The `webserv` project challenges students to build a fully functional HTTP/1.1 server in the C++ language.
 
 This endeavor requires a profound understanding of network programming, socket management, and the HTTP protocol. Students are tasked with implementing a server capable of handling multiple simultaneous connections, serving static files, and managing dynamic content.
 
