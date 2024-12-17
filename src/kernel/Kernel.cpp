@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kernel.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: TryHardTeam <TryHardTeam@123.com>          +#+  +:+       +#+        */
+/*   By: seblin <seblin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 12:09:28 by TryHardTeam       #+#    #+#             */
-/*   Updated: 2024/12/16 12:09:29 by TryHardTeam      ###   ########.fr       */
+/*   Updated: 2024/12/17 12:26:32 by seblin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,8 @@ void Kernel::launch()
 		struct timeval timeout = {SLCT_TIMEOUT, 0};
 		Kernel::_readSet = Kernel::_writeSet = Kernel::_actualSet;
 		if (Logger::getInstance()._logLevel[EVAL])	
-			Logger::getInstance().log(WARNING, "\e[31;103mselect\e[0m");					
+			Logger::getInstance().log(WARNING, "\e[31;103mselect\e[0m"),
+				sleep(1);					
 		if (select(Kernel::_maxFd + 1, &Kernel::_readSet, &Kernel::_writeSet,
 			0, &timeout) < 0) 
 		{	
