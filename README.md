@@ -62,9 +62,6 @@ The Makefile will automatically install all required dependencies and compile th
 
 Once the build process is complete, you can start the server and configure it as needed.
 
-4. Launch the main website by 
-
-
 ## 🛠️ Configuration  
 
 The server configuration can be customized in detail to suit specific needs. Rather than detailing all the configuration options here, please refer to the configuration file located at:
