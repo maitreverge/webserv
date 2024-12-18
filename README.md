@@ -62,6 +62,8 @@ The Makefile will automatically install all required dependencies and compile th
 
 Once the build process is complete, you can start the server and configure it as needed.
 
+4. Launch the main website by 
+
 
 ## 🛠️ Configuration  
 
@@ -146,19 +148,21 @@ While the `webserv` project demonstrates the fundamentals of an HTTP server, it 
 
 - **No HTTPS Support**: The server only supports HTTP, without SSL/TLS encryption.
 - **Limited Protocol Support**: The server is based on HTTP/1.1 and does not support newer versions like HTTP/2 or HTTP/3.
+- **Limited HTTP Methods**: Server only support the following HTTP Methods : **GET**, **POST** and **DELETE**.
 - **No WebSocket Support**: The server cannot handle WebSocket connections for real-time bidirectional communication.
 - **Basic Caching**: There is no advanced caching mechanism for HTTP responses.
 - **Scalability**: The server is designed for small-scale use and does not support distributed or horizontally scaled systems.
 - **No Authentication**: The server does not include authentication or access control features.
 - **Limited CGI Support**: While CGI is supported, the implementation is basic and does not cover advanced use cases.
+- **Browser Compatibility**: The server is fully compatible with *Google Chrome*. Others browsers should work just fine, but very specific features might not.
 
 ## 🧑‍💻 Authors  
 
 This project was developed by the following contributors:
 
 - **Florian VERGE** ([@flverge](https://github.com/maitreverge)) – Responsible for implementing the core server logic and handling HTTP request parsing.
-- **Sébastien VIDOT** ([@svidot](https://github.com/sierra182)) – Focused on the server configuration system and error handling.
-- **Dan SYLVAIN** ([@dsylvain](https://github.com/dansylvain)) – Worked on CGI support and dynamic content handling.
+- **Sébastien VIDOT** ([@svidot](https://github.com/sierra182)) – Focused on the server configuration system, sockets, core UNIX sys-calls and error handling.
+- **Dan SYLVAIN** ([@dsylvain](https://github.com/dansylvain)) – Worked on CGI support, config file parsing, dynamic content handling and responsible for the test-driven development.
 
 The project started in September 2024 and was completed over the course of ten weeks.
 
