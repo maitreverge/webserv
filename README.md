@@ -1,6 +1,3 @@
-# Webserv Project Documentation
-A lightweight and efficient HTTP web server, built in C++ as part of the 42 project, inspired by Nginx and Apache.
-
 <p align="center">
   <img src="img/webserv.png" width="70%"/>
 </p>
