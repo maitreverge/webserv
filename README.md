@@ -169,4 +169,5 @@ This project is licensed under the [MIT License](LICENSE), except where noted.
 "Everything is permitted except that which is forbidden."  
 - The 42 Philosophy of Open Source  
 
-Feel free to use, modify, or share this project, as long as it doesn’t involve sending it to a Vogon poetry reading. 😉
+## 🤝 CONTRIBUTION
+Contributions are open, open a Github Issue or submit a PR 🚀
