@@ -96,6 +96,15 @@ You can choose the level of verbosity for the logs by using the -h flag to displ
 ```
 This will show you the available log levels and other configuration options for adjusting the output according to your preferences.
 
+3. Correction Website:
+Launch webserv with the default config file : 
+```bash
+./webserv
+```
+and go to this URL :
+
+http://webserv.correction.localhost:1234/
+
 
 ## 🗂️ Project Structure  
 
@@ -160,7 +169,7 @@ This project was developed by the following contributors:
 
 The project started in September 2024 and was completed over the course of ten weeks.
 
-Special thanks to **Sylvain Duriff** for his invaluable contribution of deep cosmic insight that kept the team going.  
+Special thanks to **Sylvain Duriff** for his invaluable contribution of deep cosmic insight that kept the team going. 
   
 ## 📜 License  
 
